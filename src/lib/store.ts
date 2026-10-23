@@ -252,4 +252,15 @@ export const paths = {
   action: (code: string, uid: string) => `rooms/${code}/actions/${uid}`,
   player: (code: string, uid: string) => `rooms/${code}/players/${uid}`,
   vote: (code: string, uid: string) => `rooms/${code}/votes/${uid}`,
+  /* --------------------------------------------------------- secret code */
+  sc: (code: string) => `rooms/${code}/sc`,
+  scKeys: (code: string) => `rooms/${code}/scKeys`,
+  scKey: (code: string, uid: string) => `rooms/${code}/scKeys/${uid}`,
+  scGuesses: (code: string) => `rooms/${code}/scGuesses`,
+  scGuess: (code: string, uid: string) => `rooms/${code}/scGuesses/${uid}`,
+  /* ---------------------------------------------------------- sea battle */
+  sb: (code: string) => `rooms/${code}/sb`,
+  sbKeys: (code: string) => `rooms/${code}/sbKeys`,
+  sbKey: (code: string, uid: string) => `rooms/${code}/sbKeys/${uid}`,
+  sbShots: (code: string, uid: string) => `rooms/${code}/sb/shots/${uid}`,
 }

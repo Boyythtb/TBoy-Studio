@@ -1,11 +1,16 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Landing from './screens/Landing'
 import Join from './screens/Join'
 
-const Host = lazy(() => import('./screens/Host'))
-const PlayerScreen = lazy(() => import('./screens/Player'))
+const Portal = lazy(() => import('./screens/Portal'))
+const Landing = lazy(() => import('./screens/Landing'))
 const Guides = lazy(() => import('./screens/Guides'))
+const Host = lazy(() => import('./screens/Host'))
+const PlayGate = lazy(() => import('./screens/PlayGate'))
+const SecretCodeLanding = lazy(() => import('./screens/SecretCodeLanding'))
+const BattleLanding = lazy(() => import('./screens/BattleLanding'))
+const SecretCodeHost = lazy(() => import('./screens/SecretCodeHost'))
+const BattleHost = lazy(() => import('./screens/BattleHost'))
 
 function Splash() {
   return (
@@ -20,13 +25,18 @@ export default function App() {
     <BrowserRouter>
       <Suspense fallback={<Splash />}>
         <Routes>
-          <Route path="/" element={<Landing />} />
+          <Route path="/" element={<Portal />} />
+          <Route path="/ma-soi" element={<Landing />} />
+          <Route path="/ma-soi/host" element={<Landing />} />
+          <Route path="/secret-code" element={<SecretCodeLanding />} />
+          <Route path="/sea-battle" element={<BattleLanding />} />
           <Route path="/join" element={<Join />} />
           <Route path="/guides" element={<Guides />} />
           <Route path="/host/:code" element={<Host />} />
-          <Route path="/host" element={<Landing />} />
-          <Route path="/play/:code" element={<PlayerScreen />} />
-          <Route path="*" element={<Landing />} />
+          <Route path="/secret-code/host/:code" element={<SecretCodeHost />} />
+          <Route path="/sea-battle/host/:code" element={<BattleHost />} />
+          <Route path="/play/:code" element={<PlayGate />} />
+          <Route path="*" element={<Portal />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

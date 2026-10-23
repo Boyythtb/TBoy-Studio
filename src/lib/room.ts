@@ -1,6 +1,6 @@
 import { store, paths, randomRoomCode } from './store'
 import { MAX_PLAYERS, MIN_PLAYERS, configIssue, suggestConfig } from '../game/engine'
-import { DEFAULT_CONFIG, type GameConfig, type Meta, type Player, type Room } from '../game/types'
+import { DEFAULT_CONFIG, type GameConfig, type GameId, type Meta, type Player, type Room } from '../game/types'
 
 export const HOST_KEY = 'masoi.host.v1'
 export const NAME_KEY = 'masoi.name.v1'
@@ -11,7 +11,13 @@ const pref = () => (store.mode === 'local' ? sessionStorage : localStorage)
 export const readPref = (key: string) => pref().getItem(key)
 export const writePref = (key: string, value: string) => pref().setItem(key, value)
 
-export async function createRoom(): Promise<string> {
+export const GAME_CAP: Record<GameId, number> = {
+  'ma-soi': MAX_PLAYERS,
+  'secret-code': 8,
+  'sea-battle': 2,
+}
+
+export async function createRoom(game: GameId = 'ma-soi'): Promise<string> {
   const uid = await store.ensureAuth()
   for (let attempt = 0; attempt < 10; attempt++) {
     const code = randomRoomCode(4)
@@ -20,6 +26,7 @@ export async function createRoom(): Promise<string> {
     const now = Date.now()
     const meta: Meta = {
       code,
+      game,
       hostUid: uid,
       createdAt: now,
       phase: 'lobby',
@@ -66,8 +73,9 @@ export async function joinRoom(code: string, name: string, avatar: number): Prom
 
   const players = (await store.get<Record<string, Player>>(paths.players(c))) ?? {}
   const existing = players[uid]
-  if (!existing && Object.keys(players).length >= MAX_PLAYERS) {
-    throw new Error(`Phòng đã đủ ${MAX_PLAYERS} người.`)
+  const cap = GAME_CAP[meta.game ?? 'ma-soi'] ?? MAX_PLAYERS
+  if (!existing && Object.keys(players).length >= cap) {
+    throw new Error(cap === 2 ? 'Phòng này chỉ dành cho 2 người.' : `Phòng đã đủ ${cap} người.`)
   }
 
   await store.set(paths.player(c, uid), {

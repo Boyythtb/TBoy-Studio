@@ -16,11 +16,14 @@ export type RoleId =
   | 'whitewolf'
   | 'piper'
 export type Team = 'village' | 'wolf' | 'solo'
+export type GameId = 'ma-soi' | 'secret-code' | 'sea-battle'
 export type WinReason = 'lovers' | 'jester' | 'killer' | 'whitewolf' | 'piper'
 export type Phase =
   | 'lobby'
+  | 'setup'
   | 'reveal'
   | 'night'
+  | 'play'
   | 'dawn'
   | 'discuss'
   | 'vote'
@@ -101,6 +104,7 @@ export interface Secret {
 
 export interface Meta {
   code: string
+  game?: GameId
   hostUid: string
   createdAt: number
   phase: Phase
@@ -202,8 +206,10 @@ export const DEFAULT_CONFIG: GameConfig = {
 
 export const phaseLabel: Record<Phase, string> = {
   lobby: 'Phòng chờ',
+  setup: 'Chuẩn bị',
   reveal: 'Chia vai',
   night: 'Ban đêm',
+  play: 'Đang chơi',
   dawn: 'Bình minh',
   discuss: 'Thảo luận',
   vote: 'Bỏ phiếu',

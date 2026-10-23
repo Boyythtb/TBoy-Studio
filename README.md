@@ -1,14 +1,31 @@
-# Ma Sói — Đêm trong làng
+# TBOY Studio — Game đêm cho mọi người
 
 **Bản chạy thật: https://ma-soi.pages.dev** (Cloudflare Pages; dữ liệu realtime qua Firebase project `ma-soi-2026`, region `asia-southeast1`).
 
-Party game Ma Sói cho một màn hình chung (TV/laptop) và mỗi người một điện thoại làm tay cầm.
+Cổng game party: một màn hình chung (TV/laptop) + mỗi người một điện thoại làm tay cầm.
 Không cần cài app: quét QR hoặc nhập mã phòng 4 ký tự là vào.
 
-- **Host** mở `/host` trên màn hình chung. Màn hình này chạy toàn bộ engine của ván đấu.
+| Game | Đường dẫn | Số người | Thời lượng |
+|---|---|---|---|
+| 🐺 Ma Sói | `/ma-soi` | 4–16 | 20–40 phút |
+| 🔐 Mật mã | `/secret-code` | 2–8 | 10–20 phút |
+| 🚢 Hải chiến | `/sea-battle` | 2 | 10–15 phút |
+
+- **Host** mở `/…/host` trên màn hình chung. Màn hình này chạy toàn bộ engine của ván đấu.
 - **Người chơi** mở `/play/MÃPHÒNG` trên điện thoại, nhập tên và chọn avatar.
 - Giao tiếp realtime qua **Firebase Realtime Database**; nếu chưa cấu hình Firebase thì game tự chạy ở
   chế độ **local** (nhiều tab cùng một trình duyệt) để test.
+
+## Ba trò chơi
+
+**🐺 Ma Sói** — suy luận phe phái. 16 vai chia ba phe, đêm xuống, cả làng ngủ, bầy sói thức.
+
+**🔐 Mật mã** — mỗi người giấu một mã 3 số. Đến lượt, chọn một người và đoán mã của họ; máy trả về
+số chữ số đúng vị trí (bulls) và đúng số nhưng sai vị trí (cows). Ai phá đủ số mã trước thì thắng,
+mã bị phá sẽ được đổi mới.
+
+**🚢 Hải chiến** — mỗi người đặt hạm đội 4 tàu (4/3/3/2 ô) trên lưới 8×8, rồi bắn luân phiên.
+Bắn trúng thì được bắn tiếp, bắn trượt thì nhường lượt. Chìm hết hạm đội địch là thắng.
 
 ## Tính năng
 

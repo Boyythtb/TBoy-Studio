@@ -2,28 +2,11 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Stage } from '../ui/Stage'
+import { SfxToggle } from '../ui/SfxToggle'
 import { createRoom } from '../lib/room'
+import { sfx } from '../lib/sfx'
+import { useTitle } from '../lib/useTitle'
 import { ROLES, ROLE_ORDER } from '../game/roles'
-import { sfx, sfxEnabled, setSfxEnabled } from '../lib/sfx'
-
-function SfxToggle() {
-  const [on, setOn] = useState(sfxEnabled())
-  return (
-    <button
-      type="button"
-      onClick={() => {
-        const next = !on
-        setSfxEnabled(next)
-        setOn(next)
-        if (next) sfx.tap()
-      }}
-      className="btn btn-ghost btn-sm"
-      aria-label={on ? 'Tắt âm thanh' : 'Bật âm thanh'}
-    >
-      {on ? '🔊' : '🔇'}
-    </button>
-  )
-}
 
 function HeroStack() {
   const picks = ['wolf', 'seer', 'villager'] as const
@@ -65,6 +48,7 @@ function HeroStack() {
 }
 
 export default function Landing() {
+  useTitle('Ma Sói · Đêm trong làng')
   const navigate = useNavigate()
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState<string | null>(null)
