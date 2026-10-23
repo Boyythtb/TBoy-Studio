@@ -1,6 +1,6 @@
 # Ma Sói — Đêm trong làng
 
-**Bản chạy thật: https://ma-soi-2026.web.app** (Firebase project `ma-soi-2026`, region `asia-southeast1`).
+**Bản chạy thật: https://ma-soi.pages.dev** (Cloudflare Pages; dữ liệu realtime qua Firebase project `ma-soi-2026`, region `asia-southeast1`).
 
 Party game Ma Sói cho một màn hình chung (TV/laptop) và mỗi người một điện thoại làm tay cầm.
 Không cần cài app: quét QR hoặc nhập mã phòng 4 ký tự là vào.
@@ -88,15 +88,29 @@ Luật trong `database.rules.json` đảm bảo:
 
 Người chơi không thể đọc vai của người khác, cũng không thể sửa state của ván.
 
-## Deploy lên Firebase Hosting
+## Deploy lên Cloudflare Pages
+
+Frontend chạy trên Cloudflare Pages, Firebase **chỉ dùng Realtime Database** (không dùng Hosting).
+
+Cách 1 — tự động khi push Git:
+
+1. Vào Cloudflare Dashboard → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
+2. Chọn repo `Boyythtb/ma-soi`.
+3. Build command: `npm run build` · Output directory: `dist`.
+4. Save & Deploy. Mỗi lần `git push` Cloudflare sẽ tự build lại.
+
+Cách 2 — deploy tay (đang dùng):
 
 ```bash
 npm run build
-firebase deploy --only hosting
+npx wrangler pages deploy dist --project-name=ma-soi --branch=master
 ```
 
-Sau khi deploy, mở domain `https://<project>.web.app` trên TV và dùng điện thoại quét QR trong phòng chờ.
-Nhớ thêm domain này vào **Authentication → Settings → Authorized domains** nếu Firebase yêu cầu.
+Cấu hình Firebase đã nằm trong `.env.production` nên build nào cũng tự kết nối đúng project.
+File `public/_redirects` lo phần route SPA (`/host/...`, `/play/...` không bị 404).
+
+Sau khi deploy, mở domain Pages trên TV và dùng điện thoại quét QR trong phòng chờ.
+Nếu đổi domain, thêm domain đó vào **Firebase Console → Authentication → Settings → Authorized domains**.
 
 ## Chơi trong LAN (không cần deploy)
 
