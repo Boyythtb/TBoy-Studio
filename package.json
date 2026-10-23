@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
+    "art": "node scripts/nano-banana.mjs",
     "preview": "vite preview",
     "deploy": "npm run build && wrangler pages deploy dist --project-name=ma-soi --branch=master"
   },

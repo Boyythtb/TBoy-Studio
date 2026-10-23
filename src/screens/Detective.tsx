@@ -141,10 +141,22 @@ const NEWS = {
   body: 'Theo người dân, hẻm 42 thường đông xe shipper qua lại vào buổi tối. Một số hộ dân cho rằng chỉ cần vài phút sơ hở là xe có thể bị dắt đi mà không ai để ý.',
 }
 
-const SCENES: Record<Photo['scene'], { bg: string; icon: string }> = {
-  street: { bg: 'linear-gradient(150deg,#101a2b 0%,#1d2b45 55%,#2a2033 100%)', icon: '🚲' },
-  tea: { bg: 'linear-gradient(150deg,#3a2417 0%,#5a3620 60%,#2a1a12 100%)', icon: '🧋' },
-  net: { bg: 'linear-gradient(150deg,#0f2430 0%,#163a46 60%,#0c1a22 100%)', icon: '🖥️' },
+const SCENES: Record<Photo['scene'], { bg: string; icon: string; img: string }> = {
+  street: {
+    bg: 'linear-gradient(150deg,#101a2b 0%,#1d2b45 55%,#2a2033 100%)',
+    icon: '🚲',
+    img: 'detective/hien-truong-2158.svg',
+  },
+  tea: {
+    bg: 'linear-gradient(150deg,#3a2417 0%,#5a3620 60%,#2a1a12 100%)',
+    icon: '🧋',
+    img: 'detective/tra-sua.svg',
+  },
+  net: {
+    bg: 'linear-gradient(150deg,#0f2430 0%,#163a46 60%,#0c1a22 100%)',
+    icon: '🖥️',
+    img: 'detective/quan-net.svg',
+  },
 }
 
 function BrowserApp({ found, find }: Ctx) {
@@ -264,6 +276,15 @@ function BrowserApp({ found, find }: Ctx) {
                 <div key={p.id} className="overflow-hidden rounded-xl border border-white/8 bg-white/[0.03]">
                   <div className="relative grid h-28 place-items-center" style={{ background: art.bg }}>
                     <span className="text-4xl drop-shadow-lg">{art.icon}</span>
+                    <img
+                      src={`${import.meta.env.BASE_URL}${art.img}`}
+                      alt={p.title}
+                      loading="lazy"
+                      className="absolute inset-0 h-full w-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none'
+                      }}
+                    />
                     <span className="absolute bottom-1.5 right-2 rounded bg-black/45 px-1.5 py-0.5 text-[0.55rem] text-white/80">
                       {p.time}
                     </span>

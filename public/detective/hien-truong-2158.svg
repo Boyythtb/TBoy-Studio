@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="Cửa hàng điện thoại đóng cửa ban đêm, bóng chiếc xe đạp điện xanh mint phản chiếu trên kính">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#070c16"/>
+      <stop offset=".5" stop-color="#101827"/>
+      <stop offset="1" stop-color="#1a2231"/>
+    </linearGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#232c3d"/>
+      <stop offset=".45" stop-color="#141b28"/>
+      <stop offset="1" stop-color="#080c14"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#33465f" stop-opacity=".92"/>
+      <stop offset=".4" stop-color="#182433" stop-opacity=".95"/>
+      <stop offset="1" stop-color="#0a101a" stop-opacity=".98"/>
+    </linearGradient>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1d2431"/>
+      <stop offset="1" stop-color="#121722"/>
+    </linearGradient>
+    <linearGradient id="mint" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b6f4dd"/>
+      <stop offset="1" stop-color="#4dbf9a"/>
+    </linearGradient>
+    <radialGradient id="lamp" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#ffe1b0" stop-opacity=".9"/>
+      <stop offset=".3" stop-color="#ffc274" stop-opacity=".38"/>
+      <stop offset="1" stop-color="#ffb457" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vignette" cx=".5" cy=".45" r=".75">
+      <stop offset=".55" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity=".6"/>
+    </radialGradient>
+    <filter id="blur6"><feGaussianBlur stdDeviation="6"/></filter>
+    <filter id="blur14"><feGaussianBlur stdDeviation="14"/></filter>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <pattern id="shutter" width="300" height="10" patternUnits="userSpaceOnUse">
+      <rect width="300" height="10" fill="#252d3b"/>
+      <rect y="8" width="300" height="2" fill="#161c27"/>
+    </pattern>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#sky)"/>
+
+  <!-- nhà hai bên -->
+  <rect x="0" y="120" width="150" height="370" fill="#0e1420"/>
+  <rect x="0" y="120" width="150" height="6" fill="#1c2433"/>
+  <rect x="660" y="90" width="140" height="400" fill="#0d1320"/>
+  <rect x="670" y="150" width="46" height="70" fill="#141c2a"/>
+  <rect x="736" y="150" width="46" height="70" fill="#141c2a"/>
+
+  <!-- dây điện -->
+  <path d="M0 70 Q210 120 420 78 T800 96" stroke="#2b3342" stroke-width="2" fill="none" opacity=".8"/>
+  <path d="M0 96 Q240 150 470 104 T800 128" stroke="#242b38" stroke-width="1.5" fill="none" opacity=".7"/>
+
+  <!-- đèn đường -->
+  <circle cx="120" cy="86" r="150" fill="url(#lamp)"/>
+  <rect x="116" y="86" width="8" height="430" fill="#1b212c"/>
+  <path d="M120 86 q26 -18 44 -2" stroke="#1b212c" stroke-width="6" fill="none"/>
+  <ellipse cx="164" cy="86" rx="16" ry="7" fill="#ffd79a" opacity=".9"/>
+  <ellipse cx="164" cy="86" rx="30" ry="14" fill="#ffc879" opacity=".35" filter="url(#blur6)"/>
+
+  <!-- mặt tiền cửa hàng -->
+  <rect x="415" y="110" width="330" height="390" fill="url(#wall)"/>
+  <rect x="415" y="110" width="330" height="10" fill="#232b39"/>
+  <rect x="430" y="126" width="300" height="24" fill="#141a26"/>
+  <rect x="452" y="132" width="120" height="12" rx="3" fill="#2a3342"/>
+
+  <!-- cửa cuốn hạ nửa -->
+  <rect x="430" y="156" width="300" height="118" fill="url(#shutter)"/>
+  <rect x="430" y="268" width="300" height="6" fill="#39424f"/>
+
+  <!-- kính -->
+  <rect x="430" y="274" width="300" height="212" fill="url(#glass)"/>
+  <rect x="430" y="274" width="300" height="212" fill="none" stroke="#39434f" stroke-width="3"/>
+  <path d="M430 274 L560 274 L470 486 L430 486 Z" fill="#ffffff" opacity=".05"/>
+
+  <!-- phản chiếu xe đạp điện -->
+  <g transform="translate(500 400)" opacity=".72" filter="url(#blur6)">
+    <g stroke="url(#mint)" stroke-width="5" fill="none" stroke-linecap="round">
+      <circle cx="0" cy="0" r="28"/>
+      <circle cx="104" cy="0" r="28"/>
+      <path d="M0 0 L34 -40 L78 -40 L104 0"/>
+      <path d="M34 -40 L44 -62 M78 -40 L70 -62"/>
+      <path d="M26 -62 h46"/>
+      <path d="M34 -40 L26 -6"/>
+      <path d="M78 -40 L88 -14"/>
+    </g>
+    <rect x="52" y="-56" width="26" height="30" rx="3" fill="#d8c6a2" opacity=".85"/>
+    <path d="M52 -56 h26" stroke="#b9a684" stroke-width="3"/>
+  </g>
+  <g transform="translate(500 400)" opacity=".22">
+    <circle cx="0" cy="0" r="28" fill="none" stroke="#b6f4dd" stroke-width="2"/>
+    <circle cx="104" cy="0" r="28" fill="none" stroke="#b6f4dd" stroke-width="2"/>
+  </g>
+
+  <!-- vệt sáng trên kính -->
+  <path d="M600 274 L640 274 L560 486 L520 486 Z" fill="#cfe4ff" opacity=".06"/>
+
+  <!-- mặt đất ướt -->
+  <rect y="486" width="800" height="114" fill="url(#ground)"/>
+  <ellipse cx="180" cy="560" rx="220" ry="40" fill="#2a3550" opacity=".25" filter="url(#blur14)"/>
+  <ellipse cx="610" cy="540" rx="150" ry="26" fill="#1f6b5a" opacity=".18" filter="url(#blur14)"/>
+  <ellipse cx="120" cy="520" rx="90" ry="12" fill="#ffcf8a" opacity=".12" filter="url(#blur6)"/>
+  <path d="M0 520 h800" stroke="#0a0f18" stroke-width="2" opacity=".6"/>
+
+  <!-- vũng nước phản chiếu -->
+  <ellipse cx="300" cy="556" rx="120" ry="16" fill="#8fd8c2" opacity=".08"/>
+  <ellipse cx="520" cy="572" rx="150" ry="14" fill="#8fb8ff" opacity=".06"/>
+
+  <rect width="800" height="600" fill="url(#vignette)"/>
+  <rect width="800" height="600" filter="url(#grain)" opacity=".07"/>
+</svg>

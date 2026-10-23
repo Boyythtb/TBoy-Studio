@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="Quán net nhỏ về đêm: dãy màn hình xanh phát sáng, ông chủ sau quầy soi điện thoại, ghế nhựa đỏ xanh">
+  <defs>
+    <linearGradient id="qn-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0a1a22"/>
+      <stop offset="0.55" stop-color="#08141a"/>
+      <stop offset="1" stop-color="#050b0f"/>
+    </linearGradient>
+    <linearGradient id="qn-wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#14303c"/>
+      <stop offset="1" stop-color="#0b1c24"/>
+    </linearGradient>
+    <linearGradient id="qn-floor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#16262c"/>
+      <stop offset="1" stop-color="#0a1216"/>
+    </linearGradient>
+    <linearGradient id="qn-screen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#63b8ff"/>
+      <stop offset="0.45" stop-color="#2b7fd4"/>
+      <stop offset="1" stop-color="#123a63"/>
+    </linearGradient>
+    <linearGradient id="qn-counter" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a343c"/>
+      <stop offset="1" stop-color="#111820"/>
+    </linearGradient>
+    <radialGradient id="qn-phone" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#ffe1a8" stop-opacity="0.95"/>
+      <stop offset="0.5" stop-color="#ffb95e" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#ff9d3c" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="qn-vig" cx="50%" cy="46%" r="78%">
+      <stop offset="0.5" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.75"/>
+    </radialGradient>
+    <filter id="qn-glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+    <filter id="qn-glow2" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="5"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#qn-bg)"/>
+  <rect y="70" width="800" height="330" fill="url(#qn-wall)"/>
+
+  <g opacity="0.5" fill="#0a151b">
+    <rect x="40" y="96" width="120" height="16" rx="3"/>
+    <rect x="40" y="122" width="96" height="12" rx="3"/>
+    <rect x="600" y="98" width="150" height="14" rx="3"/>
+    <rect x="620" y="124" width="110" height="10" rx="3"/>
+    <rect x="356" y="100" width="88" height="58" rx="4" fill="#0d1d24"/>
+  </g>
+
+  <rect x="196" y="34" width="300" height="12" rx="6" fill="#dff6ff" opacity="0.9" filter="url(#qn-glow2)"/>
+  <rect x="196" y="34" width="300" height="12" rx="6" fill="#eafaff"/>
+  <rect x="196" y="34" width="300" height="12" rx="6" fill="#dff6ff" opacity="0.6" filter="url(#qn-glow)"/>
+
+  <g>
+    <rect x="86" y="196" width="152" height="96" rx="6" fill="#05090c" stroke="#1d2b33" stroke-width="2"/>
+    <rect x="94" y="204" width="136" height="80" rx="3" fill="url(#qn-screen)" opacity="0.95"/>
+    <rect x="94" y="204" width="136" height="80" rx="3" fill="#7cc6ff" opacity="0.18" filter="url(#qn-glow)"/>
+    <rect x="118" y="292" width="12" height="26" fill="#101a20"/>
+    <rect x="70" y="318" width="184" height="10" rx="3" fill="#1b262d"/>
+  </g>
+  <g>
+    <rect x="266" y="196" width="152" height="96" rx="6" fill="#05090c" stroke="#1d2b33" stroke-width="2"/>
+    <rect x="274" y="204" width="136" height="80" rx="3" fill="url(#qn-screen)"/>
+    <rect x="274" y="204" width="136" height="80" rx="3" fill="#7cc6ff" opacity="0.16" filter="url(#qn-glow)"/>
+    <rect x="298" y="292" width="12" height="26" fill="#101a20"/>
+    <rect x="250" y="318" width="184" height="10" rx="3" fill="#1b262d"/>
+  </g>
+  <g>
+    <rect x="446" y="196" width="152" height="96" rx="6" fill="#05090c" stroke="#1d2b33" stroke-width="2"/>
+    <rect x="454" y="204" width="136" height="80" rx="3" fill="url(#qn-screen)" opacity="0.9"/>
+    <rect x="454" y="204" width="136" height="80" rx="3" fill="#7cc6ff" opacity="0.14" filter="url(#qn-glow)"/>
+    <rect x="478" y="292" width="12" height="26" fill="#101a20"/>
+    <rect x="430" y="318" width="184" height="10" rx="3" fill="#1b262d"/>
+  </g>
+
+  <rect y="360" width="800" height="240" fill="url(#qn-floor)"/>
+  <g stroke="#2b7fd4" stroke-opacity="0.12" stroke-width="2">
+    <path d="M120 380 L60 600"/>
+    <path d="M300 380 L290 600"/>
+    <path d="M500 380 L560 600"/>
+  </g>
+
+  <g>
+    <rect x="566" y="330" width="234" height="132" rx="6" fill="url(#qn-counter)"/>
+    <rect x="566" y="330" width="234" height="10" rx="4" fill="#3b4750"/>
+    <rect x="596" y="356" width="70" height="52" rx="4" fill="#0c1418" stroke="#25313a"/>
+    <rect x="604" y="364" width="54" height="36" rx="2" fill="#173340" opacity="0.8"/>
+    <circle cx="704" cy="392" r="18" fill="#0b1116" stroke="#26323b"/>
+    <path d="M690 388 h28" stroke="#3d4b55" stroke-width="2"/>
+  </g>
+
+  <g>
+    <circle cx="700" cy="286" r="30" fill="#101a20"/>
+    <path d="M652 336 q48 -34 96 0 l6 34 q-54 16 -108 0 Z" fill="#101a20"/>
+    <circle cx="700" cy="286" r="30" fill="#2a3a44" opacity="0.45"/>
+    <rect x="686" y="300" width="26" height="40" rx="4" fill="#0a0f13" transform="rotate(-12 699 320)"/>
+    <circle cx="700" cy="318" r="52" fill="url(#qn-phone)" opacity="0.55" filter="url(#qn-glow2)"/>
+    <circle cx="688" cy="282" r="2.4" fill="#8fd6ff" opacity="0.7"/>
+    <circle cx="711" cy="282" r="2.4" fill="#8fd6ff" opacity="0.7"/>
+  </g>
+
+  <g>
+    <path d="M128 470 l40 -8 10 46 -42 8 Z" fill="#b8402f"/>
+    <path d="M118 512 l62 -12 8 18 -64 12 Z" fill="#8f2f22"/>
+    <path d="M126 470 l44 -8" stroke="#e2664f" stroke-width="3" opacity="0.6"/>
+  </g>
+  <g>
+    <path d="M258 486 l40 -8 10 44 -42 8 Z" fill="#2f6fb8"/>
+    <path d="M248 526 l62 -12 8 18 -64 12 Z" fill="#22518a"/>
+    <path d="M256 486 l44 -8" stroke="#5b9ade" stroke-width="3" opacity="0.6"/>
+  </g>
+
+  <g stroke="#0d1519" stroke-width="3" fill="none" opacity="0.9">
+    <path d="M60 560 q60 -18 120 4 t120 -2"/>
+    <path d="M420 574 q70 -22 140 0"/>
+  </g>
+
+  <rect width="800" height="600" fill="url(#qn-vig)"/>
+</svg>
