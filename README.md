@@ -2,21 +2,22 @@
 
 **Bản chạy thật: https://ma-soi.pages.dev** (Cloudflare Pages; dữ liệu realtime qua Firebase project `ma-soi-2026`, region `asia-southeast1`).
 
-Cổng game party: một màn hình chung (TV/laptop) + mỗi người một điện thoại làm tay cầm.
-Không cần cài app: quét QR hoặc nhập mã phòng 4 ký tự là vào.
+Cổng gồm ba game party (một màn hình chung trên TV/laptop + mỗi người một điện thoại làm tay cầm)
+và một game trinh thám chơi một mình. Không cần cài app: quét QR hoặc nhập mã phòng 4 ký tự là vào.
 
 | Game | Đường dẫn | Số người | Thời lượng |
 |---|---|---|---|
 | 🐺 Ma Sói | `/ma-soi` | 4–16 | 20–40 phút |
 | 🔐 Mật mã | `/secret-code` | 2–8 | 10–20 phút |
 | 🚢 Hải chiến | `/sea-battle` | 2 | 10–15 phút |
+| 🕵️ Thám Tử Bàn Phím | `/detective` | 1 | 20–40 phút |
 
 - **Host** mở `/…/host` trên màn hình chung. Màn hình này chạy toàn bộ engine của ván đấu.
 - **Người chơi** mở `/play/MÃPHÒNG` trên điện thoại, nhập tên và chọn avatar.
 - Giao tiếp realtime qua **Firebase Realtime Database**; nếu chưa cấu hình Firebase thì game tự chạy ở
   chế độ **local** (nhiều tab cùng một trình duyệt) để test.
 
-## Ba trò chơi
+## Bốn trò chơi
 
 **🐺 Ma Sói** — suy luận phe phái. 16 vai chia ba phe, đêm xuống, cả làng ngủ, bầy sói thức.
 
@@ -26,6 +27,11 @@ mã bị phá sẽ được đổi mới.
 
 **🚢 Hải chiến** — mỗi người đặt hạm đội 4 tàu (4/3/3/2 ô) trên lưới 8×8, rồi bắn luân phiên.
 Bắn trúng thì được bắn tiếp, bắn trượt thì nhường lượt. Chìm hết hạm đội địch là thắng.
+
+**🕵️ Thám Tử Bàn Phím** — trinh thám một người, không cần phòng. Mở máy tính “macQuê” của anh Tùng,
+đọc chat Zola, lướt Cộc Cốc (tin tức, đơn ship, ảnh, thùng rác), ghi manh mối vào Sổ vụ án rồi gửi tên
+thủ phạm trong Hồ sơ. Sai ba lần là hồ sơ đóng. Vụ đầu tiên: “Chiếc xe đạp điện” ở Hẻm 42. Tiến trình
+lưu bằng localStorage, không dùng Firebase.
 
 ## Tính năng
 
@@ -144,11 +150,13 @@ nên muốn nhiều điện thoại thật thì cần cấu hình Firebase ở t
 ```
 src/
   game/        types, roles, engine thuần, conductor (state machine của host)
-  lib/         store (local/Firebase), room, avatars, sfx
+  detective/   dữ liệu vụ án (case1) + tiến trình lưu localStorage
+  lib/         store (local/Firebase), room, avatars, sfx, paths
   hooks/       useRoom, useNow
-  ui/          Stage, Avatar, Timer, Qr, RoleCard, Forest
+  ui/          Stage, Avatar, Timer, Qr, RoleCard, Forest, PhoneJoin
   host/        Lobby, Night, Day (dawn/discuss/vote/verdict/hunter), Over
-  screens/     Landing, Join, Guides, Host, Player
+  screens/     Portal, Landing, Join, Guides, Host, Player, PlayGate, GameLanding,
+               SecretCode*, Battle*, Detective
 ```
 
 ## Luật chơi tóm tắt

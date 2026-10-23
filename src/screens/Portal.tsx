@@ -35,6 +35,16 @@ const GAMES = [
     desc: 'Đặt hạm đội trên lưới 8×8 rồi bắn từng phát. Bắn trúng thì được bắn tiếp.',
     accent: '#8eb4ff',
   },
+  {
+    to: '/detective',
+    icon: '🕵️',
+    name: 'Thám Tử Bàn Phím',
+    tag: 'Trinh thám · một người',
+    players: '1 người',
+    time: '20–40 phút',
+    desc: 'Mở máy tính của anh Tùng, đọc tin nhắn, lướt web, soi ảnh và tìm ra ai đã lấy chiếc xe đạp điện.',
+    accent: '#ffc861',
+  },
 ]
 
 export default function Portal() {
