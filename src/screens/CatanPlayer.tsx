@@ -200,6 +200,8 @@ export default function CatanPlayer() {
             currentTurnUid={state.currentTurn}
             dice1={state.dice1}
             dice2={state.dice2}
+            rolling={rolling}
+            onRollClick={isMyTurn && !state.diceRolled ? handleRollDice : undefined}
           />
         </div>
 

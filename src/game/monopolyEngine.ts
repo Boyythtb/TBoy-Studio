@@ -74,6 +74,15 @@ export interface MonopolyPlayerState {
   bankrupt: boolean
 }
 
+export interface MonopolyEventCard {
+  type: 'chance' | 'tax' | 'jail' | 'go' | 'rent' | 'parking'
+  title: string
+  desc: string
+  icon: string
+  amount?: number
+  playerUid: string
+}
+
 export interface MonopolyState {
   code: string
   phase: 'lobby' | 'playing' | 'over'
@@ -86,6 +95,7 @@ export interface MonopolyState {
   diceRolled: boolean
   canBuyProperty: boolean
   canUpgradeProperty: boolean
+  lastEvent: MonopolyEventCard | null
   winner: string | null
   logs: Array<{ id: string; text: string; time: number }>
   turnEndsAt: number
@@ -93,15 +103,29 @@ export interface MonopolyState {
 }
 
 export async function monopolyStart(code: string, players: Record<string, Player>): Promise<void> {
-  const uids = Object.keys(players).sort((a, b) => (players[a]?.joinedAt ?? 0) - (players[b]?.joinedAt ?? 0)).slice(0, 4)
-  if (uids.length < 2) return
+  let uids = Object.keys(players).sort((a, b) => (players[a]?.joinedAt ?? 0) - (players[b]?.joinedAt ?? 0)).slice(0, 4)
+  if (uids.length < 1) return
+
+  // Nếu chỉ có 1 người chơi, tự động thêm 1 Bot AI
+  if (uids.length === 1) {
+    const botUid = `bot-monopoly-${Date.now()}`
+    await store.set(paths.player(code, botUid), {
+      uid: botUid,
+      name: 'Bot Tỷ Phú 🎩',
+      avatar: 4,
+      alive: true,
+      ready: true,
+      joinedAt: Date.now() + 50,
+    })
+    uids = [...uids, botUid]
+  }
 
   const pStates: Record<string, MonopolyPlayerState> = {}
   uids.forEach((uid) => {
     const p = players[uid]
     pStates[uid] = {
       uid,
-      name: p?.name || 'Cơ thủ',
+      name: p?.name || (uid.startsWith('bot-') ? 'Bot Tỷ Phú 🎩' : 'Cơ thủ'),
       avatar: p?.avatar ?? 0,
       money: 1500,
       position: 0,
@@ -123,6 +147,7 @@ export async function monopolyStart(code: string, players: Record<string, Player
     diceRolled: false,
     canBuyProperty: false,
     canUpgradeProperty: false,
+    lastEvent: null,
     winner: null,
     logs: [
       { id: `start-${Date.now()}`, text: 'Ván Cờ Tỷ Phú Mini bắt đầu! Mỗi người nhận 1500$ vốn.', time: Date.now() },
@@ -196,6 +221,7 @@ export async function monopolyRollDice(code: string, state: MonopolyState): Prom
   const currentTile = MONOPOLY_TILES[newPos]
   let canBuy = false
   let canUpgrade = false
+  let eventCard: MonopolyEventCard | null = null
 
   // Xử lý sự kiện theo ô đáp xuống
   if (currentTile.type === 'property' && currentTile.propertyId !== undefined) {
@@ -214,6 +240,14 @@ export async function monopolyRollDice(code: string, state: MonopolyState): Prom
         const payAmount = Math.min(p.money, Math.round(rent))
         p.money -= payAmount
         owner.money += payAmount
+        eventCard = {
+          type: 'rent',
+          title: `Trả Tiền Thuê Đất: ${prop.name}`,
+          desc: `${p.name} đáp trúng khu đất của ${owner.name}, bị thu phí thuê ${payAmount}$!`,
+          icon: '🏠',
+          amount: -payAmount,
+          playerUid: turnUid,
+        }
         logs.unshift({
           id: `rent-${Date.now()}`,
           text: `🏠 ${p.name} trả ${payAmount}$ tiền thuê đất [${prop.name}] cho ${owner.name}!`,
@@ -230,19 +264,70 @@ export async function monopolyRollDice(code: string, state: MonopolyState): Prom
   } else if (currentTile.type === 'jail') {
     p.inJail = true
     p.jailTurns = 0
+    eventCard = {
+      type: 'jail',
+      title: 'Bị Bắt Vào Tù! 🚔',
+      desc: `${p.name} bị cảnh sát tạm giam vì vi phạm quy định đô thị. Bị giữ chân 2 lượt!`,
+      icon: '⛓️',
+      amount: 0,
+      playerUid: turnUid,
+    }
     logs.unshift({ id: `to-jail-${Date.now()}`, text: `🚔 ${p.name} đạp trúng ô VÀO TÙ!`, time: Date.now() })
   } else if (currentTile.type === 'tax') {
     const tax = 100
     p.money = Math.max(0, p.money - tax)
+    eventCard = {
+      type: 'tax',
+      title: `Nộp ${currentTile.name}`,
+      desc: `${p.name} phải nộp ${tax}$ vào ngân sách kho bạc nhà nước!`,
+      icon: '💸',
+      amount: -tax,
+      playerUid: turnUid,
+    }
     logs.unshift({ id: `tax-${Date.now()}`, text: `💸 ${p.name} phải nộp thuế 100$ cho ngân hàng!`, time: Date.now() })
+  } else if (currentTile.type === 'parking') {
+    eventCard = {
+      type: 'parking',
+      title: 'Bãi Đỗ Xe Công Viên',
+      desc: `${p.name} đỗ xe nghỉ ngơi thư giãn giữa đô thị náo nhiệt, không tốn đồng nào!`,
+      icon: '🚗',
+      amount: 0,
+      playerUid: turnUid,
+    }
+    logs.unshift({ id: `parking-${Date.now()}`, text: `🚗 ${p.name} nghỉ ngơi tại Bãi Đỗ Xe`, time: Date.now() })
+  } else if (currentTile.type === 'start') {
+    eventCard = {
+      type: 'go',
+      title: 'Trạm Khởi Hành',
+      desc: `Đáp trúng trạm Khởi Hành! Nhận thưởng khích lệ phát triển đô thị +200$!`,
+      icon: '🏁',
+      amount: 200,
+      playerUid: turnUid,
+    }
   } else if (currentTile.type === 'chance') {
-    // Vận may ngẫu nhiên
-    const rewards = [100, 150, -50, 200, -80]
-    const rw = rewards[Math.floor(Math.random() * rewards.length)]
-    p.money = Math.max(0, p.money + rw)
+    // Vận may ngẫu nhiên phong phú
+    const CHANCE_POOL = [
+      { title: 'Trúng Thưởng Dự Án', desc: 'Dự án bất động sản được duyệt, nhận thưởng 200$!', icon: '🎁', amount: 200 },
+      { title: 'Cổ Phiếu Tăng Kịch Trần', desc: 'Danh mục chứng khoán xanh tím, chốt lãi rủng rỉnh 150$!', icon: '📈', amount: 150 },
+      { title: 'Trúng Xổ Số Đặc Biệt', desc: 'Cầm trên tay tờ vé số độc đắc may mắn, lĩnh ngay 250$!', icon: '⭐', amount: 250 },
+      { title: 'Sửa Chữa Bất Động Sản', desc: 'Cơn bão đi qua làm tốc mái khu biệt thự, tốn 100$ trùng tu!', icon: '🔨', amount: -100 },
+      { title: 'Vi Phạm Giao Thông', desc: 'Phóng siêu xe quá tốc độ trên phố đi bộ, đóng phạt 80$!', icon: '🚦', amount: -80 },
+      { title: 'Tiệc Sinh Nhật Đại Gia', desc: 'Các đối thủ gửi phong bì chúc mừng sinh nhật, nhận 120$!', icon: '🎂', amount: 120 },
+      { title: 'Nghỉ Dưỡng Resort 5 Sao', desc: 'Tự thưởng chuyến du lịch xả hơi cao cấp, thanh toán 90$!', icon: '🏖️', amount: -90 },
+    ]
+    const chosen = CHANCE_POOL[Math.floor(Math.random() * CHANCE_POOL.length)]
+    p.money = Math.max(0, p.money + chosen.amount)
+    eventCard = {
+      type: 'chance',
+      title: chosen.title,
+      desc: chosen.desc,
+      icon: chosen.icon,
+      amount: chosen.amount,
+      playerUid: turnUid,
+    }
     logs.unshift({
       id: `chance-${Date.now()}`,
-      text: rw > 0 ? `🎁 Cơ Hội: ${p.name} trúng thưởng +${rw}$!` : `⚠️ Cơ Hội: ${p.name} bị phạt ${Math.abs(rw)}$ phí bảo trì!`,
+      text: chosen.amount > 0 ? `🎁 Thẻ Cơ Hội [${chosen.title}]: ${p.name} nhận +${chosen.amount}$!` : `⚠️ Thẻ Cơ Hội [${chosen.title}]: ${p.name} mất ${Math.abs(chosen.amount)}$!`,
       time: Date.now(),
     })
   }
@@ -261,6 +346,7 @@ export async function monopolyRollDice(code: string, state: MonopolyState): Prom
     diceRolled: true,
     canBuyProperty: canBuy,
     canUpgradeProperty: canUpgrade,
+    lastEvent: eventCard,
     logs: logs.slice(0, 35),
     updatedAt: Date.now(),
   })
@@ -347,14 +433,45 @@ export async function monopolyEndTurn(code: string): Promise<void> {
     diceRolled: false,
     canBuyProperty: false,
     canUpgradeProperty: false,
+    lastEvent: null,
     turnEndsAt: Date.now() + 35_000,
     updatedAt: Date.now(),
   })
 }
 
-/** Conductor Tick loop */
+/** Conductor Tick loop: Tự động đổi lượt & Bot AI tự chơi */
 export async function monopolyTick(code: string, state: MonopolyState, now: number): Promise<boolean> {
   if (state.phase !== 'playing' || !state.currentTurn) return false
+
+  // 1. Tự động xử lý cho BOT AI
+  if (state.currentTurn.startsWith('bot-')) {
+    const botUid = state.currentTurn
+    const p = state.players[botUid]
+    if (!p) return false
+
+    // Bot chưa đổ xúc xắc -> Đổ xúc xắc
+    if (!state.diceRolled) {
+      await monopolyRollDice(code, state)
+      return true
+    }
+
+    // Bot đã đổ xúc xắc -> Mua đất hoặc nâng cấp nếu có tiền
+    if (state.diceRolled) {
+      if (state.canBuyProperty) {
+        await monopolyBuyProperty(code, state)
+        return true
+      }
+      if (state.canUpgradeProperty && p.money >= 350) {
+        await monopolyUpgradeProperty(code, state)
+        return true
+      }
+      // Kết thúc lượt của Bot
+      await monopolyEndTurn(code)
+      return true
+    }
+  }
+
+  // 2. Hết giờ -> Tự động chuyển lượt
   if (state.turnEndsAt && now > state.turnEndsAt) {
     await monopolyEndTurn(code)
     return true

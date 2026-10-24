@@ -176,6 +176,9 @@ export default function MonopolyPlayer() {
             currentTurnUid={state.currentTurn}
             dice1={state.dice1}
             dice2={state.dice2}
+            rolling={rolling}
+            lastEvent={state.lastEvent}
+            onRollClick={isMyTurn && !state.diceRolled ? handleRollDice : undefined}
           />
         </div>
 

@@ -5,6 +5,7 @@ import {
   type HexTile,
   type ResourceType,
 } from '../game/catanEngine'
+import { Dice3D } from './Dice3D'
 
 function getHexPolygonPoints(cx: number, cy: number, r: number = 78): string {
   const points: string[] = []
@@ -22,11 +23,38 @@ interface CatanBoardProps {
   currentTurnUid?: string | null
   dice1?: number | null
   dice2?: number | null
+  rolling?: boolean
+  onRollClick?: () => void
 }
 
-export function CatanBoard({ players, dice1, dice2 }: CatanBoardProps) {
+export function CatanBoard({ players, dice1, dice2, rolling = false, onRollClick }: CatanBoardProps) {
   return (
     <div className="relative mx-auto aspect-square w-full max-w-[660px] rounded-3xl bg-slate-950 p-2 sm:p-4 border-2 border-emerald-500/30 shadow-[0_16px_50px_rgba(0,0,0,0.9),0_0_30px_rgba(16,185,129,0.15)] select-none">
+      {/* VÙNG XÚC XẮC 3D TRUNG TÂM ĐẢO CATAN */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center justify-center pointer-events-auto">
+        <div className="flex items-center gap-2">
+          <Dice3D
+            value={dice1 ?? null}
+            rolling={rolling}
+            onClick={onRollClick}
+            disabled={!onRollClick || rolling}
+            size={52}
+          />
+          <Dice3D
+            value={dice2 ?? null}
+            rolling={rolling}
+            onClick={onRollClick}
+            disabled={!onRollClick || rolling}
+            size={52}
+          />
+        </div>
+        {onRollClick && !rolling && (
+          <span className="mt-1 text-[0.62rem] font-black text-amber-400 bg-slate-950/90 px-2.5 py-0.5 rounded-full border border-amber-500/40 shadow animate-pulse">
+            CHẠM ĐỔ 2 XÚC XẮC
+          </span>
+        )}
+      </div>
+
       <svg viewBox="0 0 600 600" className="w-full h-full drop-shadow-2xl">
         <defs>
           <radialGradient id="oceanGrad" cx="50%" cy="50%" r="50%">

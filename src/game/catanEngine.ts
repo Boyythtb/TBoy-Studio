@@ -65,8 +65,22 @@ export interface CatanState {
 const PLAYER_COLORS = ['#ef4444', '#3b82f6', '#eab308', '#22c55e']
 
 export async function catanStart(code: string, players: Record<string, Player>): Promise<void> {
-  const uids = Object.keys(players).sort((a, b) => (players[a]?.joinedAt ?? 0) - (players[b]?.joinedAt ?? 0)).slice(0, 4)
-  if (uids.length < 2) return
+  let uids = Object.keys(players).sort((a, b) => (players[a]?.joinedAt ?? 0) - (players[b]?.joinedAt ?? 0)).slice(0, 4)
+  if (uids.length < 1) return
+
+  // Nếu chỉ có 1 người, tự thêm 1 Bot Catan
+  if (uids.length === 1) {
+    const botUid = `bot-catan-${Date.now()}`
+    await store.set(paths.player(code, botUid), {
+      uid: botUid,
+      name: 'Bot Đảo Chủ 🏝️',
+      avatar: 5,
+      alive: true,
+      ready: true,
+      joinedAt: Date.now() + 50,
+    })
+    uids = [...uids, botUid]
+  }
 
   const pStates: Record<string, CatanPlayerState> = {}
 
@@ -78,7 +92,7 @@ export async function catanStart(code: string, players: Record<string, Player>):
 
     pStates[uid] = {
       uid,
-      name: p?.name || 'Cơ thủ',
+      name: p?.name || (uid.startsWith('bot-') ? 'Bot Đảo Chủ 🏝️' : 'Cơ thủ'),
       avatar: p?.avatar ?? 0,
       color,
       resources: { wood: 1, brick: 1, sheep: 1, wheat: 1, ore: 0 },
@@ -295,9 +309,38 @@ export async function catanEndTurn(code: string): Promise<void> {
   })
 }
 
-/** Conductor Tick loop */
+/** Conductor Tick loop: Tự động đổi lượt & Bot AI tự chơi */
 export async function catanTick(code: string, state: CatanState, now: number): Promise<boolean> {
   if (state.phase !== 'playing' || !state.currentTurn) return false
+
+  // 1. Tự động xử lý cho BOT AI
+  if (state.currentTurn.startsWith('bot-')) {
+    const botUid = state.currentTurn
+    const p = state.players[botUid]
+    if (!p) return false
+
+    // Bot chưa đổ xúc xắc -> Đổ xúc xắc
+    if (!state.diceRolled) {
+      await catanRollDice(code, state)
+      return true
+    }
+
+    // Bot đã đổ xúc xắc -> Nâng cấp thành phố nếu đủ tài nguyên, hoặc kết thúc lượt
+    if (state.diceRolled) {
+      // Nếu có thể nâng cấp thành phố (3 đá + 2 lúa)
+      if (p.resources.ore >= 3 && p.resources.wheat >= 2) {
+        const targetSettlement = p.settlements.find((s) => !s.isCity)
+        if (targetSettlement) {
+          await catanUpgradeCity(code, state)
+          return true
+        }
+      }
+      await catanEndTurn(code)
+      return true
+    }
+  }
+
+  // 2. Hết giờ -> Tự động chuyển lượt
   if (state.turnEndsAt && now > state.turnEndsAt) {
     await catanEndTurn(code)
     return true

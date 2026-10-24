@@ -97,6 +97,38 @@ export async function joinRoom(code: string, name: string, avatar: number): Prom
   writePref(AVATAR_KEY, String(avatar))
 }
 
+export async function addBotPlayer(code: string): Promise<string> {
+  const c = code.trim().toUpperCase()
+  const meta = await store.get<Meta>(paths.meta(c))
+  if (!meta) throw new Error('Không tìm thấy phòng.')
+  const players = (await store.get<Record<string, Player>>(paths.players(c))) ?? {}
+  const count = Object.keys(players).length
+  const cap = GAME_CAP[meta.game ?? 'ma-soi'] ?? 4
+  if (count >= cap) {
+    throw new Error(`Phòng đã đủ ${cap} người chơi.`)
+  }
+
+  const botNames = ['Bot Siêu Tốc 🤖', 'Bot Tỷ Phú 🎩', 'Bot Cờ Thủ 🐴', 'Bot Đảo Chủ 🏝️', 'Bot Bá Đạo ⚔️']
+  const botUid = `bot-${Date.now()}-${Math.floor(Math.random() * 1000)}`
+  const botName = botNames[count % botNames.length]
+  const botAvatar = count % 8
+
+  await store.set(paths.player(c, botUid), {
+    uid: botUid,
+    name: botName,
+    avatar: botAvatar,
+    alive: true,
+    ready: true,
+    joinedAt: Date.now(),
+  })
+  return botUid
+}
+
+export async function removeBotPlayer(code: string, botUid: string): Promise<void> {
+  const c = code.trim().toUpperCase()
+  await store.remove(paths.player(c, botUid))
+}
+
 export async function deleteRoom(code: string): Promise<void> {
   const c = code.trim().toUpperCase()
   await store.remove(`rooms/${c}`)

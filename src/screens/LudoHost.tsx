@@ -8,12 +8,14 @@ import { SfxToggle } from '../ui/SfxToggle'
 import { LudoBoard } from '../ui/LudoBoard'
 import { useGameRoom } from '../hooks/useGameRoom'
 import { paths, store } from '../lib/store'
-import { joinUrl, joinRoom, deleteRoom } from '../lib/room'
+import { joinUrl, joinRoom, deleteRoom, addBotPlayer, removeBotPlayer } from '../lib/room'
 import { sfx } from '../lib/sfx'
 import {
   ludoStart,
+  ludoRollDice,
   ludoMoveToken,
   ludoTick,
+  canMoveToken,
   COLOR_CONFIG,
   type LudoColor,
   type LudoState,
@@ -29,6 +31,7 @@ export default function LudoHost() {
   const [hostName, setHostName] = useState('')
   const [isJoining, setIsJoining] = useState(false)
   const [isStarting, setIsStarting] = useState(false)
+  const [isRolling, setIsRolling] = useState(false)
   const busy = useRef(false)
 
   const url = joinUrl(code)
@@ -68,6 +71,22 @@ export default function LudoHost() {
     }
   }
 
+  const handleAddBot = async () => {
+    try {
+      sfx.tap()
+      await addBotPlayer(code)
+    } catch (e: unknown) {
+      alert(e instanceof Error ? e.message : 'Không thể thêm bot')
+    }
+  }
+
+  const handleRemoveBot = async (botUid: string) => {
+    try {
+      sfx.tap()
+      await removeBotPlayer(code, botUid)
+    } catch {}
+  }
+
   const handleExitRoom = async () => {
     try {
       await deleteRoom(code)
@@ -76,7 +95,7 @@ export default function LudoHost() {
   }
 
   const handleStart = async () => {
-    if (order.length < 2 || isStarting) return
+    if (order.length < 1 || isStarting) return
     setIsStarting(true)
     try {
       sfx.win()
@@ -84,6 +103,25 @@ export default function LudoHost() {
     } finally {
       setIsStarting(false)
     }
+  }
+
+  const handleHostRollDice = async () => {
+    if (!state || state.diceRolled || isRolling) return
+    sfx.vote()
+    setIsRolling(true)
+    setTimeout(async () => {
+      try {
+        await ludoRollDice(code, state)
+      } finally {
+        setIsRolling(false)
+      }
+    }, 600)
+  }
+
+  const handleHostMove = async (tokenId: number) => {
+    if (!state || !state.diceRolled) return
+    sfx.tap()
+    await ludoMoveToken(code, state, tokenId)
   }
 
   // Lobby Screen
@@ -137,9 +175,15 @@ export default function LudoHost() {
                     <span className="text-xs font-bold text-slate-200">
                       Cơ thủ đã vào ({order.length}/4)
                     </span>
-                    <span className="text-[0.68rem] text-amber-400 font-semibold">
-                      Tối thiểu 2 người
-                    </span>
+                    {order.length < 4 && (
+                      <button
+                        type="button"
+                        onClick={handleAddBot}
+                        className="rounded-xl bg-purple-600/30 hover:bg-purple-600/50 border border-purple-500/40 px-2.5 py-1 text-[0.7rem] font-bold text-purple-300 transition-all active:scale-95"
+                      >
+                        + Thêm Bot (AI) 🤖
+                      </button>
+                    )}
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 max-h-44 sm:max-h-48 overflow-y-auto pr-1">
@@ -147,11 +191,12 @@ export default function LudoHost() {
                       const p = players[pUid]
                       const color = ['red', 'green', 'yellow', 'blue'][idx] as LudoColor
                       const cfg = COLOR_CONFIG[color]
+                      const isBot = pUid.startsWith('bot-')
 
                       return (
                         <div
                           key={pUid}
-                          className="flex items-center gap-2 rounded-2xl border border-slate-800 bg-slate-950/60 p-2.5"
+                          className="relative flex items-center gap-2 rounded-2xl border border-slate-800 bg-slate-950/60 p-2.5"
                         >
                           <Avatar index={p?.avatar ?? 0} size={32} name={p?.name} />
                           <div className="min-w-0 flex-1">
@@ -160,6 +205,16 @@ export default function LudoHost() {
                               Phe {cfg.name}
                             </span>
                           </div>
+                          {isBot && (
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveBot(pUid)}
+                              className="absolute top-1.5 right-1.5 h-5 w-5 rounded-full bg-slate-800 hover:bg-rose-600 text-slate-400 hover:text-white flex items-center justify-center text-[0.65rem] font-bold transition-colors"
+                              title="Xóa Bot"
+                            >
+                              ✕
+                            </button>
+                          )}
                         </div>
                       )
                     })}
@@ -188,14 +243,14 @@ export default function LudoHost() {
 
                   {isHostPlaying && (
                     <div className="mt-3 flex items-center justify-between rounded-xl border border-emerald-500/30 bg-emerald-950/20 px-3 py-1.5 text-xs text-emerald-300">
-                      <span>⭐ Bạn đã tham gia vào ván đấu</span>
+                      <span>⭐ Bạn đã tham gia ván đấu (chơi trên máy tính)</span>
                       <Link
                         to={`/play/${code}`}
                         target="_blank"
                         rel="noreferrer"
                         className="rounded-lg bg-emerald-600 px-2 py-0.5 text-[0.68rem] font-bold text-white hover:bg-emerald-500"
                       >
-                        Mở tay cầm (Tab mới) ➔
+                        Mở tay cầm ➔
                       </Link>
                     </div>
                   )}
@@ -204,7 +259,7 @@ export default function LudoHost() {
                 <div className="mt-4 pt-3 border-t border-slate-800/80">
                   <button
                     onClick={handleStart}
-                    disabled={order.length < 2 || isStarting}
+                    disabled={order.length < 1 || isStarting}
                     className="w-full rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 py-3.5 text-sm font-black text-white shadow-xl hover:brightness-110 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     {isStarting ? 'Đang chuẩn bị đường đua…' : 'BẮT ĐẦU VÁN ĐUA! 🐴'}
@@ -224,18 +279,37 @@ export default function LudoHost() {
   const currentTurnState = currentTurnUid ? state.players[currentTurnUid] : null
   const currentCfg = currentTurnState ? COLOR_CONFIG[currentTurnState.color] : null
 
+  // Kiểm tra xem Host có thể điều khiển trực tiếp trên PC không (nếu là lượt của host hoặc host đại diện điều khiển)
+  const isMyTurn = Boolean(
+    currentTurnUid &&
+    (currentTurnUid === uid || (!uid && !currentTurnUid.startsWith('bot-')) || (isHost && isHostPlaying && currentTurnUid === uid))
+  )
+
+  const selectableTokenIds =
+    isMyTurn && state.diceRolled && state.diceValue !== null && currentTurnState
+      ? currentTurnState.tokens
+          .filter((t) => canMoveToken(t, state.diceValue!, currentTurnState.color))
+          .map((t) => t.id)
+      : []
+
   return (
     <Stage>
-      <div className="mx-auto flex min-h-dvh max-w-6xl flex-col px-4 pb-12 sm:px-6">
-        {/* Header */}
-        <header className="flex items-center justify-between py-4 border-b border-slate-800">
+      <div className="mx-auto flex h-dvh max-h-screen max-w-7xl flex-col px-3 sm:px-6 pb-2 overflow-hidden">
+        {/* Header Compact */}
+        <header className="flex items-center justify-between py-2 sm:py-3 border-b border-slate-800 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 rounded-xl bg-slate-900/80 px-3 py-1.5 border border-slate-800">
+            <button
+              onClick={handleExitRoom}
+              className="text-xs text-slate-400 hover:text-white px-2 py-1 rounded-lg bg-slate-900 border border-slate-800"
+            >
+              ← Rời bàn
+            </button>
+            <div className="flex items-center gap-2 rounded-xl bg-slate-900/80 px-3 py-1 border border-slate-800">
               <span className="text-xs">📱</span>
               <span className="font-mono text-xs font-black text-amber-400">{code}</span>
             </div>
-            <span className="rounded-full bg-amber-950/80 px-2.5 py-0.5 text-[0.65rem] font-black text-amber-300 border border-amber-800">
-              CÁ NGỰA CHIẾN THUẬT
+            <span className="hidden sm:inline rounded-full bg-amber-950/80 px-2.5 py-0.5 text-[0.65rem] font-black text-amber-300 border border-amber-800">
+              CỜ CÁ NGỰA CHIẾN THUẬT
             </span>
           </div>
 
@@ -245,76 +319,110 @@ export default function LudoHost() {
                 to={`/play/${code}`}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-xl bg-emerald-600/30 border border-emerald-500/40 px-3 py-1.5 text-xs font-bold text-emerald-300 hover:bg-emerald-600/50 transition-all"
+                className="hidden sm:inline-flex rounded-xl bg-emerald-600/30 border border-emerald-500/40 px-3 py-1 text-xs font-bold text-emerald-300 hover:bg-emerald-600/50 transition-all"
               >
-                🎮 Mở tay cầm của bạn ➔
+                🎮 Mở tay cầm ➔
               </Link>
             )}
             <SfxToggle />
           </div>
         </header>
 
-        {/* Main Play Area: Board & Status Info */}
-        <main className="mt-4 flex flex-1 flex-col lg:flex-row gap-6 items-center justify-center">
-          {/* Left / Center: Ludo Board */}
-          <div className="flex-1 flex justify-center w-full">
-            <LudoBoard
-              players={state.players}
-              currentTurnUid={state.currentTurn}
-              myUid={uid}
-              diceValue={state.diceValue}
-              onTokenClick={(tokenId) => {
-                void ludoMoveToken(code, state, tokenId)
-              }}
-            />
-          </div>
-
-          {/* Right: Turn info & Live Event Log */}
-          <div className="w-full lg:w-80 flex flex-col gap-4">
-            {/* Turn Card */}
-            <div className="rounded-3xl bg-slate-900/80 p-5 border border-slate-800 shadow-xl backdrop-blur-md">
+        {/* Main 3-Column Desktop Layout (No scroll on desktop!) */}
+        <main className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[290px_1fr_290px] gap-3 sm:gap-5 items-center justify-center my-auto overflow-hidden py-1">
+          {/* CỘT TRÁI: Lượt hiện tại & Điều khiển máy tính */}
+          <div className="flex flex-col gap-3 h-full max-h-[calc(100vh-80px)] overflow-y-auto pr-1">
+            {/* Thẻ lượt đi */}
+            <div className="rounded-3xl bg-slate-900/90 p-4 border border-slate-800 shadow-xl backdrop-blur-md shrink-0">
               <p className="text-[0.65rem] font-bold uppercase tracking-widest text-slate-400">
                 LƯỢT ĐUA HIỆN TẠI
               </p>
               <div className="mt-2 flex items-center gap-3">
                 <Avatar index={currentTurnPlayer?.avatar ?? 0} size={42} name={currentTurnPlayer?.name} />
-                <div>
-                  <h3 className="text-lg font-black text-white">{currentTurnPlayer?.name}</h3>
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-base font-black text-white truncate">{currentTurnPlayer?.name}</h3>
                   {currentCfg && (
                     <span className={`text-xs font-bold ${currentCfg.text}`}>
-                      Chiến mã {currentCfg.name}
+                      Phe {currentCfg.name}
                     </span>
                   )}
                 </div>
               </div>
 
-              {/* Trạng thái lượt lắc xúc xắc */}
-              <div className="mt-4 rounded-2xl bg-slate-950/60 p-3 border border-slate-800 text-center">
+              {/* Trạng thái xúc xắc */}
+              <div className="mt-3 rounded-2xl bg-slate-950/70 p-3 border border-slate-800 text-center">
                 {state.diceRolled ? (
                   <div>
-                    <span className="text-[0.68rem] text-slate-400 block font-semibold">KẾT QUẢ ĐỔ XÚC XẮC:</span>
-                    <span className="font-mono text-3xl font-black text-amber-400">🎲 {state.diceValue} điểm</span>
+                    <span className="text-[0.65rem] text-slate-400 block font-semibold">KẾT QUẢ ĐỔ XÚC XẮC:</span>
+                    <span className="font-mono text-2xl font-black text-amber-400">🎲 {state.diceValue} điểm</span>
                   </div>
                 ) : (
                   <p className="text-xs text-slate-300 font-medium animate-pulse">
-                    📱 Đang chờ <span className="font-bold text-amber-400">{currentTurnPlayer?.name}</span> lắc xúc xắc trên điện thoại…
+                    {currentTurnUid?.startsWith('bot-') ? '🤖 Bot đang tính nước đi…' : 'Chờ người chơi lắc xúc xắc…'}
                   </p>
                 )}
               </div>
 
               {state.canRollAgain && (
                 <p className="mt-2 text-center text-xs font-black text-amber-400 animate-pulse">
-                  🎉 Đổ được 6! Được đổ thêm 1 lượt nữa!
+                  🎉 Đổ được 6! Được đổ thêm lượt nữa!
                 </p>
               )}
             </div>
 
-            {/* Bảng Điểm & Ngựa về đích */}
-            <div className="rounded-3xl bg-slate-900/80 p-4 border border-slate-800">
+            {/* BẢNG ĐIỀU KHIỂN CHƠI TRỰC TIẾP TRÊN MÁY TÍNH (NẾU LÀ LƯỢT CỦA BẠN) */}
+            {isMyTurn && (
+              <div className="rounded-3xl bg-slate-900/90 p-4 border border-amber-500/40 shadow-xl shrink-0">
+                <p className="text-[0.65rem] font-bold uppercase tracking-widest text-amber-400 mb-2">
+                  🎮 ĐIỀU KHIỂN MÁY TÍNH
+                </p>
+
+                {!state.diceRolled ? (
+                  <button
+                    onClick={handleHostRollDice}
+                    disabled={isRolling}
+                    className="w-full rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 py-3 text-xs font-black text-white shadow-lg hover:brightness-110 active:scale-95 transition-all"
+                  >
+                    {isRolling ? 'ĐANG LẮC XÚC XẮC… 🎲' : '🎲 BẤM LẮC XÚC XẮC NGAY!'}
+                  </button>
+                ) : selectableTokenIds.length > 0 ? (
+                  <div className="space-y-1.5">
+                    <p className="text-[0.65rem] font-bold text-emerald-400 text-center">
+                      CHỌN NGỰA ĐỂ ĐI:
+                    </p>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {selectableTokenIds.map((tId) => {
+                        const token = currentTurnState?.tokens.find((t) => t.id === tId)
+                        const isBase = token?.pos === -1
+                        return (
+                          <button
+                            key={tId}
+                            onClick={() => handleHostMove(tId)}
+                            className="rounded-xl bg-emerald-600/90 hover:bg-emerald-500 p-2 text-white font-bold text-center text-xs shadow transition-all active:scale-95 border border-white/20"
+                          >
+                            <span>🐴</span>
+                            <span className="block text-[0.62rem] font-black mt-0.5">
+                              {isBase ? `Xuất Chuồng #${tId + 1}` : `Đi Ngựa #${tId + 1}`}
+                            </span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="rounded-xl bg-rose-950/40 p-2 text-center text-[0.68rem] text-rose-300 font-bold border border-rose-800/40">
+                    Không có ngựa nào đi được! Tự chuyển lượt…
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* BẢNG XẾP HẠNG */}
+            <div className="rounded-3xl bg-slate-900/80 p-3.5 border border-slate-800 shrink-0">
               <p className="text-[0.65rem] font-bold uppercase tracking-widest text-slate-400 mb-2">
                 BẢNG XẾP HẠNG
               </p>
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {state.order.map((pUid) => {
                   const p = players[pUid]
                   const pSt = state.players[pUid]
@@ -326,33 +434,50 @@ export default function LudoHost() {
                       key={pUid}
                       className="flex items-center justify-between rounded-xl bg-slate-950/40 p-2 border border-slate-800/80"
                     >
-                      <div className="flex items-center gap-2">
-                        <span className={`h-3 w-3 rounded-full ${cfg.bg}`} />
-                        <span className="text-xs font-bold text-slate-200">{p?.name}</span>
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className={`h-2.5 w-2.5 rounded-full ${cfg.bg} shrink-0`} />
+                        <span className="text-xs font-bold text-slate-200 truncate">{p?.name}</span>
                       </div>
-                      <span className="text-xs font-black text-amber-400">
-                        {pSt.score}/2 về đích 🏆
+                      <span className="text-xs font-black text-amber-400 shrink-0">
+                        {pSt.score}/2 🏆
                       </span>
                     </div>
                   )
                 })}
               </div>
             </div>
+          </div>
 
+          {/* CỘT GIỮA: BÀN CỜ LUDO CO GIÃN THEO MÀN HÌNH + XÚC XẮC Ở GIỮA */}
+          <div className="flex items-center justify-center w-full h-full max-h-[calc(100vh-90px)]">
+            <LudoBoard
+              players={state.players}
+              currentTurnUid={state.currentTurn}
+              myUid={uid}
+              diceValue={state.diceValue}
+              rolling={isRolling}
+              onRollClick={isMyTurn && !state.diceRolled ? handleHostRollDice : undefined}
+              onTokenClick={handleHostMove}
+              selectableTokenIds={selectableTokenIds}
+            />
+          </div>
+
+          {/* CỘT PHẢI: DIỄN BIẾN ĐƯỜNG ĐUA & QUY TẮC NHANH */}
+          <div className="flex flex-col gap-3 h-full max-h-[calc(100vh-80px)] overflow-hidden">
             {/* Live Logs */}
-            <div className="rounded-3xl bg-slate-900/80 p-4 border border-slate-800 max-h-52 overflow-y-auto">
-              <p className="text-[0.65rem] font-bold uppercase tracking-widest text-slate-400 mb-2">
+            <div className="flex-1 flex flex-col rounded-3xl bg-slate-900/80 p-4 border border-slate-800 min-h-0 overflow-hidden shadow-xl">
+              <p className="text-[0.65rem] font-bold uppercase tracking-widest text-slate-400 mb-2 shrink-0">
                 DIỄN BIẾN ĐƯỜNG ĐUA
               </p>
-              <div className="space-y-1.5 text-[0.7rem]">
+              <div className="flex-1 space-y-2 overflow-y-auto pr-1 text-[0.7rem]">
                 {state.logs.map((log) => (
                   <p
                     key={log.id}
-                    className={`leading-relaxed ${
+                    className={`leading-relaxed p-1.5 rounded-lg bg-slate-950/40 border border-slate-800/50 ${
                       log.type === 'kick'
-                        ? 'text-rose-400 font-bold'
+                        ? 'text-rose-400 font-bold border-rose-900/40'
                         : log.type === 'home'
-                        ? 'text-amber-400 font-bold'
+                        ? 'text-amber-400 font-bold border-amber-900/40'
                         : 'text-slate-300'
                     }`}
                   >
@@ -361,10 +486,18 @@ export default function LudoHost() {
                 ))}
               </div>
             </div>
+
+            {/* Quy tắc nhanh */}
+            <div className="rounded-3xl bg-slate-900/60 p-3 border border-slate-800 text-[0.65rem] text-slate-400 space-y-1 shrink-0">
+              <p className="font-bold text-amber-400">💡 Mẹo Chiến Thuật:</p>
+              <p>• Đổ 1 hoặc 6 để xuất quân ra đường đua.</p>
+              <p>• Đạp trúng ô đối thủ sẽ đá họ về chuồng!</p>
+              <p>• Đưa đủ 2 ngựa về đích để giành chiến thắng.</p>
+            </div>
           </div>
         </main>
 
-        {/* Modal thông báo chiến thắng */}
+        {/* Winner modal */}
         <AnimatePresence>
           {state.phase === 'over' && state.winner && (
             <motion.div
@@ -378,31 +511,32 @@ export default function LudoHost() {
                 animate={{ scale: 1, y: 0 }}
                 className="w-full max-w-md rounded-3xl bg-slate-900 p-6 text-center border-2 border-amber-500 shadow-2xl"
               >
-                <span className="text-5xl block mb-2">👑</span>
-                <p className="text-xs font-bold uppercase tracking-widest text-amber-400">
-                  NHÀ VÔ ĐỊCH ĐƯỜNG ĐUA
-                </p>
-                <h2 className="mt-1 text-3xl font-black text-white">
-                  {players[state.winner]?.name}
+                <span className="text-6xl block mb-2">🏆</span>
+                <h2 className="text-2xl font-black text-amber-400 uppercase tracking-wider">
+                  QUÁN QUÂN ĐƯỜNG ĐUA!
                 </h2>
-                <p className="mt-2 text-xs text-slate-300">
-                  Đã xuất sắc đưa toàn bộ chiến mã về đích đầu tiên!
-                </p>
-
-                <div className="mt-6 flex justify-center gap-3">
-                  <button
-                    onClick={handleStart}
-                    className="rounded-2xl bg-amber-500 px-6 py-2.5 text-xs font-black text-slate-950 hover:bg-amber-400"
-                  >
-                    Ván Đua Mới 🔄
-                  </button>
-                  <Link
-                    to="/"
-                    className="rounded-2xl bg-slate-800 px-5 py-2.5 text-xs font-bold text-slate-300 hover:text-white"
-                  >
-                    Trang chủ
-                  </Link>
+                <div className="mt-4 flex flex-col items-center">
+                  <Avatar
+                    index={players[state.winner]?.avatar ?? 0}
+                    size={64}
+                    name={players[state.winner]?.name}
+                  />
+                  <h3 className="mt-2 text-xl font-black text-white">
+                    {players[state.winner]?.name}
+                  </h3>
+                  <p className="mt-1 text-xs text-slate-400">
+                    Đã xuất sắc đưa 2 chiến mã cập bến vinh quang đầu tiên!
+                  </p>
                 </div>
+                <button
+                  onClick={() => {
+                    void deleteRoom(code)
+                    navigate('/ludo')
+                  }}
+                  className="mt-6 w-full rounded-2xl bg-amber-500 py-3 text-xs font-black text-slate-950 hover:bg-amber-400 transition-colors shadow-lg"
+                >
+                  VỀ PHÒNG CHỜ CHƠI LẠI
+                </button>
               </motion.div>
             </motion.div>
           )}

@@ -4,6 +4,7 @@ import {
   type LudoPlayerState,
   type LudoToken,
 } from '../game/ludoEngine'
+import { Dice3D } from './Dice3D'
 
 // 52 Tọa độ (x, y) trên lưới 15x15 của đường ray
 export const TRACK_COORDS: Array<[number, number]> = [
@@ -70,6 +71,8 @@ interface LudoBoardProps {
   currentTurnUid: string | null
   myUid?: string | null
   diceValue: number | null
+  rolling?: boolean
+  onRollClick?: () => void
   onTokenClick?: (tokenId: number) => void
   selectableTokenIds?: number[]
 }
@@ -78,6 +81,9 @@ export function LudoBoard({
   players,
   currentTurnUid,
   myUid,
+  diceValue,
+  rolling = false,
+  onRollClick,
   onTokenClick,
   selectableTokenIds = [],
 }: LudoBoardProps) {
@@ -93,7 +99,7 @@ export function LudoBoard({
 
   Object.entries(players).forEach(([pUid, pState]) => {
     const isMyTurn = pUid === currentTurnUid
-    const isMe = pUid === myUid
+    const isMe = !myUid || pUid === myUid
 
     pState.tokens.forEach((token) => {
       let x = 0
@@ -131,7 +137,23 @@ export function LudoBoard({
   })
 
   return (
-    <div className="relative mx-auto aspect-square w-full max-w-[520px] rounded-3xl bg-slate-950 p-2 sm:p-3 border-2 border-slate-800 shadow-[0_12px_40px_rgba(0,0,0,0.8),inset_0_0_20px_rgba(15,23,42,0.9)] select-none">
+    <div className="relative mx-auto aspect-square w-full max-w-[540px] rounded-3xl bg-slate-950 p-2 sm:p-3 border-2 border-slate-800 shadow-[0_12px_40px_rgba(0,0,0,0.8),inset_0_0_20px_rgba(15,23,42,0.9)] select-none">
+      {/* VÙNG XÚC XẮC 3D TRUNG TÂM BÀN CỜ */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center justify-center pointer-events-auto">
+        <Dice3D
+          value={diceValue}
+          rolling={rolling}
+          onClick={onRollClick}
+          disabled={!onRollClick || rolling}
+          size={56}
+        />
+        {onRollClick && !rolling && (
+          <span className="mt-1 text-[0.62rem] font-black text-amber-400 bg-slate-950/90 px-2 py-0.5 rounded-full border border-amber-500/40 shadow animate-pulse">
+            CHẠM ĐỔ
+          </span>
+        )}
+      </div>
+
       <svg viewBox="0 0 600 600" className="w-full h-full drop-shadow-md">
         <defs>
           <radialGradient id="redGrad" cx="50%" cy="50%" r="50%">

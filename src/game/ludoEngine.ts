@@ -144,8 +144,22 @@ export function getRandomCard(): SkillCard {
 
 /** Khởi tạo game Cá Ngựa */
 export async function ludoStart(code: string, players: Record<string, Player>): Promise<void> {
-  const uids = Object.keys(players).sort((a, b) => (players[a]?.joinedAt ?? 0) - (players[b]?.joinedAt ?? 0)).slice(0, 4)
-  if (uids.length < 2) return
+  let uids = Object.keys(players).sort((a, b) => (players[a]?.joinedAt ?? 0) - (players[b]?.joinedAt ?? 0)).slice(0, 4)
+  if (uids.length < 1) return
+
+  // Nếu chỉ có 1 người chơi, tự động thêm 1 Bot AI để đua cùng
+  if (uids.length === 1) {
+    const botUid = `bot-ludo-${Date.now()}`
+    await store.set(paths.player(code, botUid), {
+      uid: botUid,
+      name: 'Bot Chiến Mã 🤖',
+      avatar: 3,
+      alive: true,
+      ready: true,
+      joinedAt: Date.now() + 50,
+    })
+    uids = [...uids, botUid]
+  }
 
   const colors: Record<string, LudoColor> = {}
   const playerStates: Record<string, LudoPlayerState> = {}
@@ -472,10 +486,53 @@ export function getNextTurn(order: string[], currentUid: string): string {
   return order[(idx + 1) % order.length]
 }
 
-/** Conductor Tick loop: Tự động đổi lượt nếu người chơi hết giờ */
+/** Conductor Tick loop: Tự động đổi lượt nếu người chơi hết giờ & Bot AI tự chơi */
 export async function ludoTick(code: string, state: LudoState, now: number): Promise<boolean> {
   if (state.phase !== 'playing' || !state.currentTurn) return false
 
+  // 1. Tự động xử lý nước đi cho BOT AI
+  if (state.currentTurn.startsWith('bot-')) {
+    const botUid = state.currentTurn
+    const pState = state.players[botUid]
+    if (!pState) return false
+
+    // Bot chưa đổ xúc xắc -> Đổ xúc xắc
+    if (!state.diceRolled) {
+      await ludoRollDice(code, state)
+      return true
+    }
+
+    // Bot đã đổ xúc xắc -> Tìm quân cờ hợp lệ để đi
+    if (state.diceRolled && state.diceValue !== null) {
+      const dice = state.diceValue
+      const validTokens = pState.tokens.filter((t) => canMoveToken(t, dice, pState.color))
+      if (validTokens.length > 0) {
+        // Ưu tiên:
+        // 1. Nước đi đá văng ngựa đối thủ
+        // 2. Xuất chuồng (pos === -1)
+        // 3. Tiến xa nhất
+        let chosen = validTokens[0]
+        const kickMove = validTokens.find((t) => {
+          const cfg = COLOR_CONFIG[pState.color]
+          const targetPos = t.pos === -1 ? cfg.startTrackIdx : (t.pos + dice) % 52
+          return Object.entries(state.players).some(
+            ([otherUid, otherP]) => otherUid !== botUid && otherP.tokens.some((ot) => ot.pos === targetPos && !ot.hasShield)
+          )
+        })
+        if (kickMove) {
+          chosen = kickMove
+        } else {
+          const exitBaseMove = validTokens.find((t) => t.pos === -1)
+          if (exitBaseMove) chosen = exitBaseMove
+        }
+
+        await ludoMoveToken(code, state, chosen.id)
+        return true
+      }
+    }
+  }
+
+  // 2. Hết giờ -> Tự động chuyển lượt
   if (state.turnEndsAt && now > state.turnEndsAt) {
     const nextTurnUid = getNextTurn(state.order, state.currentTurn)
     await store.update(paths.ludo(code), {

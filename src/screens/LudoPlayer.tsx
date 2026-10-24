@@ -168,6 +168,8 @@ export default function LudoPlayer() {
             currentTurnUid={state.currentTurn}
             myUid={uid}
             diceValue={state.diceValue}
+            rolling={rolling}
+            onRollClick={isMyTurn && !state.diceRolled ? handleRollDice : undefined}
             selectableTokenIds={selectableTokenIds}
             onTokenClick={handleMove}
           />

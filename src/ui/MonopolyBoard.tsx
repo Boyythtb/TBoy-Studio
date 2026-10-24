@@ -1,10 +1,12 @@
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   MONOPOLY_TILES,
+  type MonopolyEventCard,
   type MonopolyPlayerState,
   type Property,
 } from '../game/monopolyEngine'
 import { Avatar } from './Avatar'
+import { Dice3D } from './Dice3D'
 
 export const MONOPOLY_COORDS: Array<[number, number]> = [
   [5, 5], // 0: Start
@@ -35,6 +37,9 @@ interface MonopolyBoardProps {
   currentTurnUid: string | null
   dice1?: number | null
   dice2?: number | null
+  rolling?: boolean
+  lastEvent?: MonopolyEventCard | null
+  onRollClick?: () => void
 }
 
 const PLAYER_BADGE_COLORS: string[] = [
@@ -50,6 +55,9 @@ export function MonopolyBoard({
   currentTurnUid,
   dice1,
   dice2,
+  rolling = false,
+  lastEvent,
+  onRollClick,
 }: MonopolyBoardProps) {
   const uids = Object.keys(players)
 
@@ -157,37 +165,95 @@ export function MonopolyBoard({
             gridColumn: '2 / 6',
             gridRow: '2 / 6',
           }}
-          className="flex flex-col items-center justify-center rounded-2xl bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-4 text-center border-2 border-amber-500/30 shadow-2xl relative overflow-hidden"
+          className="flex flex-col items-center justify-center rounded-2xl bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-2 sm:p-4 text-center border-2 border-amber-500/30 shadow-2xl relative overflow-hidden"
         >
-          <div className="absolute -top-12 -right-12 w-44 h-44 rounded-full bg-amber-500/15 blur-3xl" />
-          <div className="absolute -bottom-12 -left-12 w-44 h-44 rounded-full bg-yellow-500/15 blur-3xl" />
+          <div className="absolute -top-12 -right-12 w-44 h-44 rounded-full bg-amber-500/15 blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-12 -left-12 w-44 h-44 rounded-full bg-yellow-500/15 blur-3xl pointer-events-none" />
 
-          <span className="text-5xl block mb-1 drop-shadow-lg">🎩</span>
-          <h2 className="text-2xl sm:text-3xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-400 to-orange-500 uppercase drop-shadow-md">
-            CỜ TỶ PHÚ
-          </h2>
-          <p className="text-[0.7rem] sm:text-[0.75rem] tracking-wider text-amber-300 uppercase font-bold mt-1">
-            Đô Thị Bất Động Sản Việt Nam
-          </p>
+          {/* Nếu có sự kiện vừa xảy ra (Cơ hội, Thuế, Vào tù, Tiền thuê...) */}
+          <AnimatePresence mode="wait">
+            {lastEvent ? (
+              <motion.div
+                key={lastEvent.title}
+                initial={{ scale: 0.85, opacity: 0, y: 10 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.85, opacity: 0 }}
+                className="w-full max-w-xs rounded-2xl bg-slate-950/95 border-2 border-amber-400 p-3 sm:p-4 shadow-2xl backdrop-blur-md z-20 flex flex-col items-center"
+              >
+                <span className="text-3xl sm:text-4xl mb-1">{lastEvent.icon}</span>
+                <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[0.62rem] font-black text-amber-300 uppercase tracking-wider mb-1">
+                  {lastEvent.type === 'chance'
+                    ? '✨ THẺ CƠ HỘI'
+                    : lastEvent.type === 'jail'
+                    ? '🚔 TẠM GIAM'
+                    : lastEvent.type === 'tax'
+                    ? '💸 THUẾ PHÍ'
+                    : lastEvent.type === 'parking'
+                    ? '🚗 BÃI ĐỖ XE'
+                    : '🏠 TIỀN THUÊ ĐẤT'}
+                </span>
+                <h4 className="text-xs sm:text-sm font-black text-white">{lastEvent.title}</h4>
+                <p className="mt-1 text-[0.65rem] sm:text-xs text-slate-300 leading-snug">
+                  {lastEvent.desc}
+                </p>
+                {lastEvent.amount !== undefined && lastEvent.amount !== 0 && (
+                  <span
+                    className={`mt-1.5 text-sm sm:text-base font-black ${
+                      lastEvent.amount > 0 ? 'text-emerald-400' : 'text-rose-400'
+                    }`}
+                  >
+                    {lastEvent.amount > 0 ? `+${lastEvent.amount}$` : `${lastEvent.amount}$`}
+                  </span>
+                )}
+              </motion.div>
+            ) : (
+              <div className="flex flex-col items-center z-10">
+                <span className="text-3xl sm:text-4xl block mb-0.5 drop-shadow-lg">🎩</span>
+                <h2 className="text-lg sm:text-2xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-400 to-orange-500 uppercase drop-shadow-md">
+                  CỜ TỶ PHÚ
+                </h2>
+                <p className="text-[0.6rem] sm:text-[0.7rem] tracking-wider text-amber-300 uppercase font-bold">
+                  Đô Thị Bất Động Sản Việt Nam
+                </p>
 
-          {/* Cặp xúc xắc ở trung tâm */}
-          {dice1 && dice2 ? (
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="mt-5 flex items-center gap-3 bg-slate-950/90 px-5 py-2.5 rounded-2xl border border-amber-500/40 shadow-xl"
-            >
-              <span className="font-mono text-3xl font-black text-amber-400">{dice1}</span>
-              <span className="text-slate-400 text-xl font-bold">+</span>
-              <span className="font-mono text-3xl font-black text-amber-400">{dice2}</span>
-              <span className="text-slate-400 text-xl font-bold">=</span>
-              <span className="font-mono text-3xl font-black text-emerald-400">{dice1 + dice2}</span>
-            </motion.div>
-          ) : (
-            <p className="mt-4 text-xs text-slate-400 font-medium">
-              Chờ người có lượt đổ xúc xắc trên điện thoại…
-            </p>
-          )}
+                {/* Vùng Xúc Xắc 3D Trực Tiếp Ở Giữa Bàn Cờ */}
+                <div className="mt-3 flex flex-col items-center">
+                  <div className="flex items-center gap-3">
+                    <Dice3D
+                      value={dice1 ?? null}
+                      rolling={rolling}
+                      onClick={onRollClick}
+                      disabled={!onRollClick || rolling}
+                      size={54}
+                    />
+                    <Dice3D
+                      value={dice2 ?? null}
+                      rolling={rolling}
+                      onClick={onRollClick}
+                      disabled={!onRollClick || rolling}
+                      size={54}
+                    />
+                  </div>
+
+                  {onRollClick && !rolling && (
+                    <button
+                      type="button"
+                      onClick={onRollClick}
+                      className="mt-2 text-[0.65rem] font-black text-slate-950 bg-gradient-to-r from-amber-400 to-yellow-400 px-3 py-1 rounded-full shadow-lg hover:brightness-110 active:scale-95 transition-all animate-bounce"
+                    >
+                      🎲 CHẠM ĐỂ ĐỔ 2 XÚC XẮC!
+                    </button>
+                  )}
+
+                  {dice1 && dice2 && !rolling && (
+                    <span className="mt-1.5 text-xs font-black text-amber-400">
+                      Tổng điểm: {dice1 + dice2} ({dice1} + {dice2})
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>
