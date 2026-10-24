@@ -105,6 +105,20 @@ export const CLUES: Record<string, ClueDef> = {
     title: 'Hộp đèn pin sau bãi cỏ',
     detail: 'Hộp đèn pin nhựa trắng nằm sau bãi cỏ, có dấu tay bùn đỏ và chữ “T” viết bút xoá. Trang dùng hộp này để soi ổ khoá khi mất điện.',
   },
+  'tu-xuat-hien': {
+    id: 'tu-xuat-hien',
+    tag: 'photo',
+    title: 'Tú vào hẻm lúc 20:58',
+    detail:
+      'Camera toà nhà bên cạnh ghi cảnh Tú — chủ nợ của Trang — đi vào hẻm 42 đúng lúc hội chợ mất điện, tay cầm một túi vải.',
+  },
+  'tu-o-quan-phuc': {
+    id: 'tu-o-quan-phuc',
+    tag: 'web',
+    title: 'Tú ngồi quán Phúc đến 21:25',
+    detail:
+      'Bill quán Phúc: 20:57 Tú gọi một trà đá, 21:25 mới trả tiền. Phúc xác nhận Tú ngồi bàn ngoài suốt, không vào khu hòm quỹ.',
+  },
 }
 
 export const SUSPECTS: Suspect[] = [
@@ -114,6 +128,7 @@ export const SUSPECTS: Suspect[] = [
   { id: 'hung', name: 'Chú Hùng', role: 'Bảo vệ hội chợ', avatar: '🛡️', note: 'Đi tuần quanh hòm quỹ. Khai nhìn thấy Khoa.' },
   { id: 'phuc', name: 'Phúc', role: 'Chủ quán nước', avatar: '🍹', note: 'Gian hàng sát hòm quỹ, đóng cửa lúc 20:45.' },
   { id: 'nga', name: 'Nga', role: 'Bán vé số', avatar: '🎟️', note: 'Ngồi đầu hẻm, nói thấy một người áo tối chạy ra.' },
+  { id: 'tu', name: 'Tú', role: 'Chủ nợ của Trang', avatar: '💸', note: 'Bị camera thấy vào hẻm lúc 20:58, giữa lúc mất điện.' },
 ]
 
 export const CONVS: Conv[] = [
@@ -198,6 +213,19 @@ export const CONVS: Conv[] = [
       { id: 'tr2', from: 'them', time: '21:43', text: 'Giày em dính bùn hả? Chắc lúc đi đổ rác. Bãi rác cũng có bùn mà.', clue: 'trang-giay' },
       { id: 'tr3', from: 'me', time: '21:44', text: 'Bãi rác khô ráo. Chỉ bãi cỏ sau hòm quỹ có bùn đỏ.' },
       { id: 'tr4', from: 'them', time: '21:45', text: 'Thôi được. Em có vay anh Tú 8 triệu. Nhưng em chưa trả, em thề.' },
+    ],
+  },
+  {
+    id: 'tu',
+    name: 'Tú',
+    avatar: '💸',
+    sub: 'Hoạt động 7 phút trước',
+    preview: 'Tôi đến đòi nợ, không lấy tiền.',
+    requires: ['cat-dien'],
+    messages: [
+      { id: 'tu1', from: 'them', time: '21:48', text: 'Tôi vào hẻm lúc 20:58 đòi tiền. Trang bảo 21:30 sẽ chuyển, tôi ra quán Phúc ngồi.', clue: 'tu-xuat-hien' },
+      { id: 'tu2', from: 'them', time: '21:49', text: 'Phúc giữ bill của tôi: 20:57 gọi trà đá, 21:25 trả tiền. Tôi ngồi bàn ngoài, không lại gần hòm quỹ.', clue: 'tu-o-quan-phuc' },
+      { id: 'tu3', from: 'them', time: '21:50', text: '21:32 cô ấy chuyển đủ 8 triệu. Nếu tôi lấy tiền hòm thì cô ấy lấy đâu ra mà trả?' },
     ],
   },
 ]

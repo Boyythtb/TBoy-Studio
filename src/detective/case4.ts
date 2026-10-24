@@ -124,6 +124,34 @@ export const CLUES: Record<string, ClueDef> = {
     title: 'Ghi chú của Khải: “21:47”',
     detail: 'Trong ghi chú điện thoại Khải: “21:47 — gặp a.Đ ở hầm, kiểm tra két, mang sổ.” Con số 21:47 cũng là mã két mà Đạt vừa đổi.',
   },
+  'bay-xuat-hien': {
+    id: 'bay-xuat-hien',
+    tag: 'photo',
+    title: 'Bảy vào hẻm sau lúc 21:18',
+    detail:
+      'Camera hẻm sau ghi cảnh Bảy — chủ nợ 250 triệu của Đạt — đi vào lúc 21:18, tay xách ba lô, đúng lúc cả block mất điện.',
+  },
+  'bay-o-quan-nhau': {
+    id: 'bay-o-quan-nhau',
+    tag: 'web',
+    title: 'Bảy ngồi quán Ốc 17 đến 21:40',
+    detail:
+      'Bill quán Ốc 17 cách chung cư 2 km: 20:45 Bảy vào, 21:40 mới ra, bốn người cùng bàn xác nhận. 21:50 Bảy nhận 200 triệu chuyển khoản từ Đạt.',
+  },
+  'duy-muon-chia': {
+    id: 'duy-muon-chia',
+    tag: 'chat',
+    title: 'Duy mượn chìa tủ điện lúc 20:00',
+    detail:
+      'Tin nhắn Duy gửi Tư: “Chú cho cháu mượn chìa tủ điện, cháu kiểm tra aptomat tầng hầm.” Tư đồng ý; Duy trả chìa lúc 20:20 trước khi đi bệnh viện.',
+  },
+  'duy-o-benh-vien': {
+    id: 'duy-o-benh-vien',
+    tag: 'web',
+    title: 'Duy ở bệnh viện từ 20:35',
+    detail:
+      'Camera bệnh viện quận ghi Duy vào lúc 20:35, ngồi chờ mẹ đến 22:00. Điện thoại Duy phát wifi bệnh viện suốt khung giờ mất điện.',
+  },
 }
 
 export const SUSPECTS: Suspect[] = [
@@ -133,6 +161,8 @@ export const SUSPECTS: Suspect[] = [
   { id: 'lan', name: 'Lan', role: 'Kế toán', avatar: '🧾', note: 'Biết mã két. Nghỉ ốm từ 20:00, có camera xác nhận rời đi.' },
   { id: 'huy', name: 'Huy', role: 'Cư dân tầng 5', avatar: '🧑‍⚖️', note: 'Từng kiện toà nhà vì thấm trần. Đêm đó ở nhà, vợ chứng kiến.' },
   { id: 'nga', name: 'Nga', role: 'Tạp hoá tầng 1', avatar: '🏪', note: 'Thấy Đạt vứt túi đen sau chung cư lúc 21:30.' },
+  { id: 'bay', name: 'Bảy', role: 'Chủ nợ của Đạt', avatar: '💰', note: 'Bị camera thấy vào hẻm sau lúc 21:18, giữa lúc mất điện.' },
+  { id: 'duy', name: 'Duy', role: 'Kỹ thuật viên mới, cháu Đạt', avatar: '🧑‍🔧', note: 'Từng mượn chìa tủ điện lúc 20:00.' },
 ]
 
 export const CONVS: Conv[] = [
@@ -234,6 +264,32 @@ export const CONVS: Conv[] = [
       { id: 'n1', from: 'them', time: '22:18', text: 'Khoảng 21:30 tôi thấy anh Đạt đi ra hẻm sau, tay xách túi đen, mặt tái lắm.', clue: 'dat-giay' },
       { id: 'n2', from: 'them', time: '22:19', text: 'Anh ấy vứt túi vào thùng rác cạnh nhà tôi. Tôi tò mò nhìn: găng tay, cuốn sổ nâu, mẩu giấy.', clue: 'tui-den' },
       { id: 'n3', from: 'them', time: '22:20', text: 'Mẩu giấy ghi “2147”. Tôi chép lại rồi, sợ anh ấy quay lại lấy.' },
+    ],
+  },
+  {
+    id: 'bay',
+    name: 'Bảy',
+    avatar: '💰',
+    sub: 'Hoạt động 9 phút trước',
+    preview: 'Tôi đòi nợ, không cướp két.',
+    requires: ['so-no'],
+    messages: [
+      { id: 'by1', from: 'them', time: '22:12', text: 'Tôi vào hẻm đòi tiền thật, nhưng Đạt hẹn 21:30. Tôi ra quán Ốc 17 ngồi.', clue: 'bay-xuat-hien' },
+      { id: 'by2', from: 'them', time: '22:13', text: 'Bill quán với bốn người bàn bên xác nhận tôi ngồi đến 21:40. 21:50 tôi mới nhận được 200 triệu.', clue: 'bay-o-quan-nhau' },
+      { id: 'by3', from: 'them', time: '22:14', text: 'Nếu tôi cướp két thì việc gì Đạt phải chuyển tiền cho tôi sau đó?' },
+    ],
+  },
+  {
+    id: 'duy',
+    name: 'Duy',
+    avatar: '🧑‍🔧',
+    sub: 'Hoạt động 11 phút trước',
+    preview: 'Cháu ở bệnh viện với mẹ.',
+    requires: ['mat-dien'],
+    messages: [
+      { id: 'dy1', from: 'them', time: '22:16', text: 'Cháu mượn chìa tủ điện lúc 20:00 để kiểm tra aptomat, trả lại 20:20 rồi đi bệnh viện.', clue: 'duy-muon-chia' },
+      { id: 'dy2', from: 'them', time: '22:17', text: '20:35 cháu ở bệnh viện với mẹ, camera với wifi bệnh viện đều ghi. Cháu không có mặt lúc mất điện.', clue: 'duy-o-benh-vien' },
+      { id: 'dy3', from: 'them', time: '22:18', text: 'Chú Đạt gọi cháu về trông toà nhà tối nay, nhưng mẹ cháu nhập viện nên cháu xin nghỉ.' },
     ],
   },
 ]

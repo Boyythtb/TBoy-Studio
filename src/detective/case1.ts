@@ -152,6 +152,20 @@ export const CLUES: Record<string, ClueDef> = {
     detail:
       '22:10, bài đăng trên diễn đàn hẻm: “Nhà có cam thì đưa, đừng để tôi nói tên.” Tài khoản “d.ship.42” trùng tên đăng nhập GiaoNhanh của Dũng.',
   },
+  'son-xuat-hien': {
+    id: 'son-xuat-hien',
+    tag: 'photo',
+    title: 'Sơn dắt xe vào hẻm lúc 21:38',
+    detail:
+      'Camera nhà đối diện ghi cảnh Sơn — shipper cùng hãng với Dũng — dắt một chiếc xe đạp thường vào hẻm 42 lúc 21:38, mắt nhìn về phía sân cô Lan.',
+  },
+  'son-don-hang': {
+    id: 'son-don-hang',
+    tag: 'chat',
+    title: 'Sơn đang giao đơn 2152 lúc 21:44',
+    detail:
+      'Biên lai GiaoNhanh: đơn 2152 giao cho chị Hoa ở hẻm 46 lúc 21:44, có ảnh xác nhận mặt Sơn. Cách hẻm 42 hai con hẻm, không thể có mặt đúng lúc xe biến mất.',
+  },
 }
 
 export const SUSPECTS: Suspect[] = [
@@ -183,6 +197,7 @@ export const SUSPECTS: Suspect[] = [
     avatar: '🖥️',
     note: 'Cho Dũng vay tiền. Tối nay ngồi quán tới 22:30.',
   },
+  { id: 'son', name: 'Sơn', role: 'Shipper cùng hãng', avatar: '🛵', note: 'Tranh đơn với Dũng. Camera thấy dắt xe vào hẻm 42 lúc 21:38.' },
 ]
 
 export const CONVS: Conv[] = [
@@ -330,6 +345,19 @@ export const CONVS: Conv[] = [
       },
       { id: 'h3', from: 'them', time: '22:03', text: 'Tối nay nó nhận đơn quanh hẻm mình, tôi thấy nó chạy qua quán lúc 9h rưỡi.' },
       { id: 'h4', from: 'me', time: '22:04', text: 'Anh nhớ chính xác không?' },
+    ],
+  },
+  {
+    id: 'son',
+    name: 'Sơn Ship',
+    avatar: '🛵',
+    sub: 'Hoạt động 4 phút trước',
+    preview: 'Tôi vào hẻm trả hàng cho khách.',
+    requires: ['mat-xe'],
+    messages: [
+      { id: 'sn1', from: 'them', time: '22:08', text: 'Tôi có vào hẻm 42 lúc 21:38, nhưng là trả hàng cho nhà số 12. Xe tôi dắt theo vì hết xăng.', clue: 'son-xuat-hien' },
+      { id: 'sn2', from: 'them', time: '22:09', text: '21:44 tôi còn giao đơn 2152 ở hẻm 46, có ảnh xác nhận. Cách đó hai con hẻm.', clue: 'son-don-hang' },
+      { id: 'sn3', from: 'them', time: '22:10', text: 'Tôi với Dũng tranh đơn thật, nhưng tôi không lấy xe. Anh xem ảnh giao hàng đi.' },
     ],
   },
 ]

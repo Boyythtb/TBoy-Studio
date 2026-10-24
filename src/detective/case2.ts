@@ -88,6 +88,20 @@ export const CLUES: Record<string, ClueDef> = {
     detail:
       'Bà Mai kể: vách sau tủ đồ bị mọt, hở một khe đủ lách bàn tay. Không cần chìa vẫn lấy được đồ nếu biết chỗ.',
   },
+  'hao-gan-tu': {
+    id: 'hao-gan-tu',
+    tag: 'photo',
+    title: 'Hào đứng trước dãy tủ lúc 20:28',
+    detail:
+      'Camera sân ghi cảnh Hào — khách quen — đứng trước dãy tủ đồ, tay đặt lên cánh tủ số 7. Đó là tủ của anh ta; tủ chị Hạnh là số 3.',
+  },
+  'hao-o-san-2': {
+    id: 'hao-o-san-2',
+    tag: 'web',
+    title: 'Hào chơi ở sân 2 từ 20:30 đến 21:00',
+    detail:
+      'Camera sân 2 ghi Hào vào sân lúc 20:30, ra lúc 21:00. Bill nước 20:32 ghi tên Hào. Điện thoại chị Hạnh mất trong khoảng 20:35–20:44.',
+  },
 }
 
 export const SUSPECTS: Suspect[] = [
@@ -102,6 +116,7 @@ export const SUSPECTS: Suspect[] = [
   { id: 'ba-mai', name: 'Bà Mai', role: 'Lau dọn', avatar: '🧹', note: 'Giữ chìa tủ. Về trước 20:30.' },
   { id: 'tuan', name: 'Tuấn', role: 'HLV cầu lông', avatar: '🏸', note: 'Đang dạy trên sân 2 từ 20:00 đến 21:00.' },
   { id: 'hanh', name: 'Hạnh', role: 'Chủ sân', avatar: '🔑', note: 'Chủ chiếc điện thoại bị mất.' },
+  { id: 'hao', name: 'Hào', role: 'Khách chơi cầu lông', avatar: '🏸', note: 'Bị camera thấy trước dãy tủ lúc 20:28. Từng mượn điện thoại chị Hạnh.' },
 ]
 
 export const CONVS: Conv[] = [
@@ -175,6 +190,19 @@ export const CONVS: Conv[] = [
       { id: 's2', from: 'them', time: '21:03', text: 'Mà chị Hạnh cứ giục tiền sân, tôi bảo cuối tháng trả. Có 6 triệu chứ mấy.', clue: 'son-no-tien' },
       { id: 's3', from: 'them', time: '21:04', text: 'Điện thoại 5 triệu thì tôi mua được, việc gì phải lấy.', requires: ['tin-nhan-ban'] },
       { id: 's4', from: 'me', time: '21:05', text: 'Anh biết khe hở sau tủ không?' },
+    ],
+  },
+  {
+    id: 'hao',
+    name: 'Hào',
+    avatar: '🏸',
+    sub: 'Hoạt động 6 phút trước',
+    preview: 'Tủ số 7 là tủ của tôi.',
+    requires: ['mat-dt'],
+    messages: [
+      { id: 'ha1', from: 'them', time: '21:10', text: 'Tôi có đứng ở dãy tủ lúc 20:28, nhưng tủ số 7 là tủ của tôi. Tôi lấy vợt rồi ra sân.', clue: 'hao-gan-tu' },
+      { id: 'ha2', from: 'them', time: '21:11', text: 'Từ 20:30 đến 21:00 tôi ở sân 2, camera với bill nước đều ghi. Điện thoại chị Hạnh mất lúc 20:35 mà.', clue: 'hao-o-san-2' },
+      { id: 'ha3', from: 'them', time: '21:12', text: 'Tôi từng mượn máy chị Hạnh, chị ấy không cho trước mặt cả sân. Nhưng tôi đâu có lấy.' },
     ],
   },
 ]
