@@ -12,6 +12,7 @@ const BattleLanding = lazy(() => import('./screens/BattleLanding'))
 const SecretCodeHost = lazy(() => import('./screens/SecretCodeHost'))
 const BattleHost = lazy(() => import('./screens/BattleHost'))
 const Detective = lazy(() => import('./screens/Detective'))
+const TruthOrDare = lazy(() => import('./screens/TruthOrDare'))
 
 function Splash() {
   return (
@@ -37,6 +38,7 @@ export default function App() {
           <Route path="/secret-code/host/:code" element={<SecretCodeHost />} />
           <Route path="/sea-battle/host/:code" element={<BattleHost />} />
           <Route path="/detective" element={<Detective />} />
+          <Route path="/truth-or-dare" element={<TruthOrDare />} />
           <Route path="/play/:code" element={<PlayGate />} />
           <Route path="*" element={<Portal />} />
         </Routes>

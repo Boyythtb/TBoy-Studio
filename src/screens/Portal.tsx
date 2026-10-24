@@ -42,6 +42,18 @@ const GAMES = [
     glow: 'rgba(56, 189, 248, 0.25)',
   },
   {
+    to: '/truth-or-dare',
+    icon: '🌶️',
+    name: 'Sự Thật & Thử Thách 18+',
+    tag: 'Bàn Nhậu · Người lớn 18+',
+    players: '2–20 người',
+    time: 'Tới bến',
+    desc: 'Vòng xoay chai bia, câu hỏi bóc mẽ và thử thách nóng bỏng dành riêng cho các buổi nhậu tuổi 30.',
+    accent: '#f43f5e',
+    badgeColor: '#fb7185',
+    glow: 'rgba(244, 63, 94, 0.35)',
+  },
+  {
     to: '/detective',
     icon: '🕵️',
     name: 'Thám Tử Bàn Phím',
