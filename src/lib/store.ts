@@ -265,4 +265,10 @@ export const paths = {
   sbShots: (code: string, uid: string) => `rooms/${code}/sb/shots/${uid}`,
   /* ------------------------------------------------------- truth or dare */
   tod: (code: string) => `rooms/${code}/tod`,
+  /* ----------------------------------------------------------------- ludo */
+  ludo: (code: string) => `rooms/${code}/ludo`,
+  /* ------------------------------------------------------------- monopoly */
+  monopoly: (code: string) => `rooms/${code}/monopoly`,
+  /* ---------------------------------------------------------------- catan */
+  catan: (code: string) => `rooms/${code}/catan`,
 }

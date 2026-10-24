@@ -16,6 +16,9 @@ export const GAME_CAP: Record<GameId, number> = {
   'secret-code': 8,
   'sea-battle': 2,
   'truth-or-dare': 20,
+  'ludo': 4,
+  'monopoly': 4,
+  'catan': 4,
 }
 
 export async function createRoom(game: GameId = 'ma-soi'): Promise<string> {
