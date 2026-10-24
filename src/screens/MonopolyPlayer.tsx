@@ -88,7 +88,7 @@ export default function MonopolyPlayer() {
 
   if (loading) {
     return (
-      <PhoneShell code={code}>
+      <PhoneShell code={code} accent="#f59e0b">
         <div className="flex flex-1 items-center justify-center">
           <div className="h-9 w-9 animate-spin rounded-full border-2 border-white/10 border-t-amber-400" />
         </div>
@@ -98,7 +98,7 @@ export default function MonopolyPlayer() {
 
   if (!meta) {
     return (
-      <PhoneShell code={code}>
+      <PhoneShell code={code} accent="#f59e0b">
         <div className="flex flex-1 flex-col items-center justify-center text-center">
           <p className="display text-2xl text-parchment/85">Không tìm thấy phòng</p>
           <Link to="/" className="btn btn-primary btn-md mt-6">
@@ -111,21 +111,22 @@ export default function MonopolyPlayer() {
 
   if (!me) {
     return (
-      <PhoneShell code={code}>
-        <JoinForm code={code} onJoined={() => undefined} />
+      <PhoneShell code={code} accent="#f59e0b">
+        <JoinForm code={code} onJoined={() => undefined} accent="#f59e0b" />
       </PhoneShell>
     )
   }
 
   if (!state || state.phase === 'lobby') {
     return (
-      <PhoneShell code={code}>
+      <PhoneShell code={code} accent="#f59e0b">
         <LobbyWait
           code={code}
           players={order.map((id) => players[id])}
           me={me}
           icon="🎩"
           text="Chờ chủ phòng bắt đầu ván Cờ Tỷ Phú Mini!"
+          accent="#f59e0b"
         />
       </PhoneShell>
     )
