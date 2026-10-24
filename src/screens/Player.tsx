@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Stage } from '../ui/Stage'
@@ -10,9 +10,9 @@ import { paths, store } from '../lib/store'
 import { AVATARS } from '../lib/avatars'
 import { joinRoom, leaveRoom, readPref, NAME_KEY, AVATAR_KEY, MAX_PLAYERS } from '../lib/room'
 import { roleDef } from '../game/roles'
-import { currentStep } from '../game/conductor'
+import { currentStep, hostTick } from '../game/conductor'
 import { WOLF_ROLES } from '../game/engine'
-import type { Meta, Player, PlayerAction, RoleId, Secret } from '../game/types'
+import type { Meta, Player, PlayerAction, RoleId, Room, Secret } from '../game/types'
 import { NONE } from '../game/types'
 import { sfx } from '../lib/sfx'
 
@@ -1294,10 +1294,38 @@ export default function PlayerScreen() {
   const room = useRoom(code, 'player')
   const [justJoined, setJustJoined] = useState(false)
   const [showRole, setShowRole] = useState(false)
+  const busy = useRef(false)
 
   const meta = room.meta
   const me = room.me
   const uid = room.uid
+
+  // Host fallback loop: If host plays on this screen/phone, keep werewolf day/night cycle ticking smoothly
+  useEffect(() => {
+    if (!room.isHost || !meta) return
+    const id = window.setInterval(() => {
+      if (busy.current) return
+      const snapshot: Room = {
+        meta,
+        players: Object.fromEntries(room.players.map((p) => [p.uid, p])),
+        votes: room.votes,
+      }
+      busy.current = true
+      hostTick({
+        code,
+        room: snapshot,
+        secrets: room.secrets,
+        actions: room.actions,
+        night: room.night,
+        now: Date.now(),
+      })
+        .catch(() => undefined)
+        .finally(() => {
+          busy.current = false
+        })
+    }, 400)
+    return () => window.clearInterval(id)
+  }, [code, room.isHost, meta, room.players, room.votes, room.secrets, room.actions, room.night])
 
   useEffect(() => {
     if (meta) document.title = `Ma Sói · ${meta.code}`

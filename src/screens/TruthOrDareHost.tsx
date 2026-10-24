@@ -13,6 +13,7 @@ import { sfx } from '../lib/sfx'
 import {
   todStart,
   todSpin,
+  todCheckWatchdog,
   todSelectType,
   todComplete,
   todDrink,
@@ -62,6 +63,15 @@ export default function TruthOrDareHost() {
     })
     return () => unsub()
   }, [code])
+
+  // Watchdog: Tự giải phóng trạng thái spinning nếu mạng lag
+  useEffect(() => {
+    if (!code || !state || state.step !== 'spinning') return
+    const id = setInterval(() => {
+      void todCheckWatchdog(code, state)
+    }, 1000)
+    return () => clearInterval(id)
+  }, [code, state])
 
   const handleStart = async () => {
     if (order.length < 2 || isStarting) return
@@ -320,30 +330,36 @@ export default function TruthOrDareHost() {
           {/* Central Controls */}
           <div className="mt-3 flex items-center gap-3">
             {Boolean(uid && state.spinnerUid === uid) ? (
-              <button
-                onClick={handleSpin}
-                disabled={currentStep === 'spinning'}
-                className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-rose-600 via-pink-600 to-amber-500 px-6 py-2.5 text-sm font-black text-white shadow-xl hover:brightness-110 active:scale-95 transition-all shadow-rose-950/80"
-              >
-                <span>🍾</span>
-                <span>{currentStep === 'spinning' ? 'Đang Xoay Chai…' : 'BẤM QUAY CHAI! 🚀'}</span>
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleSpin}
+                  disabled={currentStep === 'spinning'}
+                  className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-rose-600 via-pink-600 to-amber-500 px-6 py-2.5 text-sm font-black text-white shadow-xl hover:brightness-110 active:scale-95 transition-all shadow-rose-950/80"
+                >
+                  <span>🍾</span>
+                  <span>{currentStep === 'spinning' ? 'Đang Xoay Chai…' : 'BẤM QUAY CHAI! 🚀'}</span>
+                </button>
+                <button
+                  onClick={() => todNextTurn(code, state, players)}
+                  className="rounded-2xl bg-slate-900 border border-slate-800 px-4 py-2 text-xs font-bold text-slate-400 hover:text-white transition-colors"
+                >
+                  Chuyển lượt ➔
+                </button>
+              </div>
             ) : (
-              <button
-                onClick={handleSpin}
-                disabled={currentStep === 'spinning'}
-                className="flex items-center gap-2 rounded-2xl bg-slate-900 border border-slate-800 px-5 py-2 text-xs font-bold text-slate-300 hover:text-white transition-all disabled:opacity-50"
-              >
-                <span>🍾</span>
-                <span>Quay Hộ {spinnerPlayer?.name}</span>
-              </button>
+              <div className="flex items-center gap-2">
+                <div className="rounded-2xl bg-slate-900/90 border border-slate-800 px-4 py-2 text-xs font-semibold text-slate-300">
+                  ⏳ Đang đợi <span className="text-amber-400 font-black">{spinnerPlayer?.name}</span> ấn quay trên điện thoại…
+                </div>
+                <button
+                  onClick={() => todNextTurn(code, state, players)}
+                  className="rounded-2xl bg-slate-900 border border-slate-800 px-3 py-2 text-[0.72rem] font-bold text-slate-400 hover:text-white transition-colors"
+                  title="Nếu người chơi bị mất kết nối, bấm để chuyển lượt"
+                >
+                  Đổi người quay ➔
+                </button>
+              </div>
             )}
-            <button
-              onClick={() => todNextTurn(code, state, players)}
-              className="rounded-2xl bg-slate-900 border border-slate-800 px-4 py-2 text-xs font-bold text-slate-400 hover:text-white transition-colors"
-            >
-              Chuyển lượt ➔
-            </button>
           </div>
 
           {/* Reveal Card Section */}

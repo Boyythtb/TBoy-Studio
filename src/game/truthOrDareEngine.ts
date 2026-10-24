@@ -14,6 +14,7 @@ export interface TodState {
   // Trạng thái cụ thể trong ván
   step: TodStep
   spinAngle: number
+  spinningSince?: number
   card: CardItem | null
   cardType: 'truth' | 'dare' | null
   drinks: Record<string, number>
@@ -84,6 +85,7 @@ export async function todSpin(code: string, state: TodState, players: Record<str
     spinAngle: finalAngle,
     activeUid: targetUid,
     step: 'spinning',
+    spinningSince: Date.now(),
     card: null,
     cardType: null,
     updatedAt: Date.now(),
@@ -104,6 +106,23 @@ export async function todSpin(code: string, state: TodState, players: Record<str
       /* ignore */
     }
   }, 2800)
+}
+
+/** Tự động kiểm tra và phục hồi nếu vòng quay bị lag hoặc treo quá 3.2 giây */
+export async function todCheckWatchdog(code: string, state: TodState): Promise<void> {
+  if (state.step === 'spinning') {
+    const elapsed = Date.now() - (state.spinningSince || state.updatedAt || 0)
+    if (elapsed > 3200) {
+      try {
+        await store.update(paths.tod(code), {
+          step: 'picking',
+          updatedAt: Date.now(),
+        })
+      } catch {
+        /* ignore */
+      }
+    }
+  }
 }
 
 export async function todSelectType(code: string, state: TodState, type: 'truth' | 'dare'): Promise<void> {

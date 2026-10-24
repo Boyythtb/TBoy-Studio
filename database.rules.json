@@ -39,40 +39,41 @@
         },
         "sc": {
           ".read": "auth != null",
-          ".write": "auth != null && root.child('rooms').child($code).child('meta').child('hostUid').val() === auth.uid"
+          ".write": "auth != null"
         },
         "scKeys": {
-          ".read": "auth != null && root.child('rooms').child($code).child('meta').child('hostUid').val() === auth.uid",
-          ".write": "auth != null && root.child('rooms').child($code).child('meta').child('hostUid').val() === auth.uid",
+          ".read": "auth != null",
+          ".write": "auth != null",
           "$uid": {
-            ".read": "auth != null && auth.uid === $uid",
-            ".write": "auth != null && (auth.uid === $uid || root.child('rooms').child($code).child('meta').child('hostUid').val() === auth.uid)"
+            ".read": "auth != null",
+            ".write": "auth != null"
           }
         },
         "scGuesses": {
-          ".read": "auth != null && root.child('rooms').child($code).child('meta').child('hostUid').val() === auth.uid",
-          ".write": "auth != null && root.child('rooms').child($code).child('meta').child('hostUid').val() === auth.uid",
+          ".read": "auth != null",
+          ".write": "auth != null",
           "$uid": {
-            ".write": "auth != null && (auth.uid === $uid || root.child('rooms').child($code).child('meta').child('hostUid').val() === auth.uid)"
+            ".write": "auth != null"
           }
         },
         "sb": {
           ".read": "auth != null",
-          ".write": "auth != null && root.child('rooms').child($code).child('meta').child('hostUid').val() === auth.uid",
+          ".write": "auth != null",
           "shots": {
             ".read": "auth != null",
+            ".write": "auth != null",
             "$uid": {
               ".read": "auth != null",
-              ".write": "auth != null && (auth.uid === $uid || root.child('rooms').child($code).child('meta').child('hostUid').val() === auth.uid)"
+              ".write": "auth != null"
             }
           }
         },
         "sbKeys": {
-          ".read": "auth != null && root.child('rooms').child($code).child('meta').child('hostUid').val() === auth.uid",
-          ".write": "auth != null && root.child('rooms').child($code).child('meta').child('hostUid').val() === auth.uid",
+          ".read": "auth != null",
+          ".write": "auth != null",
           "$uid": {
-            ".read": "auth != null && auth.uid === $uid",
-            ".write": "auth != null && (auth.uid === $uid || root.child('rooms').child($code).child('meta').child('hostUid').val() === auth.uid)"
+            ".read": "auth != null",
+            ".write": "auth != null"
           }
         },
         "tod": {

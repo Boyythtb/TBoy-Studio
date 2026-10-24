@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Avatar } from '../ui/Avatar'
 import { Timer } from '../ui/Timer'
@@ -6,31 +6,69 @@ import { JoinForm, LobbyWait, PhoneShell } from '../ui/PhoneJoin'
 import { buzz } from '../lib/buzz'
 import { useGameRoom } from '../hooks/useGameRoom'
 import { paths, store } from '../lib/store'
-import { playerOrder, randomCode, type ScKey, type ScState } from '../game/secret'
+import { playerOrder, randomCode, scTick, type ScGuess, type ScKey, type ScState } from '../game/secret'
 
 
 export default function SecretCodePlayer() {
   const { code = '' } = useParams()
   const room = useGameRoom(code)
-  const { uid, meta, players, loading } = room
+  const { uid, meta, players, loading, isHost } = room
   const [state, setState] = useState<ScState | null>(null)
   const [myKey, setMyKey] = useState<ScKey | null>(null)
+  const [allKeys, setAllKeys] = useState<Record<string, ScKey> | null>(null)
+  const [allGuesses, setAllGuesses] = useState<Record<string, ScGuess> | null>(null)
   const [draft, setDraft] = useState('')
   const [target, setTarget] = useState<string | null>(null)
   const [guess, setGuess] = useState('')
   const [sentTurn, setSentTurn] = useState<string | null>(null)
+  const busy = useRef(false)
+
+  const isActuallyHost = Boolean(isHost || (uid && meta?.hostUid === uid))
 
   useEffect(() => {
     if (!code) return
     const unsubs = [
       store.sub<ScState>(paths.sc(code), (v) => setState(v)),
-      store.sub<Record<string, ScKey>>(paths.scKeys(code), (v) => {
-        // in local mode we may read all; in cloud only our own node is permitted
-        if (v && uid && v[uid]) setMyKey(v[uid])
-      }),
     ]
+
+    if (uid) {
+      unsubs.push(
+        store.sub<ScKey>(paths.scKey(code, uid), (v) => {
+          if (v) setMyKey(v)
+        })
+      )
+    }
+
+    if (isActuallyHost) {
+      unsubs.push(
+        store.sub<Record<string, ScKey>>(paths.scKeys(code), (v) => setAllKeys(v ?? {})),
+        store.sub<Record<string, ScGuess>>(paths.scGuesses(code), (v) => setAllGuesses(v ?? {}))
+      )
+    }
+
     return () => unsubs.forEach((fn) => fn())
-  }, [code, uid])
+  }, [code, uid, isActuallyHost])
+
+  // Host-authoritative loop fallback: Ensures Secret Code NEVER freezes if host plays on phone/Player screen
+  useEffect(() => {
+    if (!isActuallyHost || !state || !meta) return
+    const id = setInterval(() => {
+      if (busy.current) return
+      busy.current = true
+      void scTick({
+        code,
+        meta,
+        players,
+        state,
+        keys: allKeys,
+        guesses: allGuesses,
+        now: Date.now(),
+      }).finally(() => {
+        busy.current = false
+      })
+    }, 400)
+    return () => clearInterval(id)
+  }, [code, isActuallyHost, state, allKeys, allGuesses, players, meta])
 
   const order = useMemo(() => playerOrder(players), [players])
   const me = uid ? players[uid] : null

@@ -15,6 +15,7 @@ import {
   todComplete,
   todDrink,
   todSpin,
+  todCheckWatchdog,
   type TodState,
   getPlayerOrder,
 } from '../game/truthOrDareEngine'
@@ -33,6 +34,15 @@ export default function TruthOrDarePlayer() {
     })
     return () => unsub()
   }, [code])
+
+  // Watchdog: Tự giải phóng trạng thái spinning nếu mạng lag
+  useEffect(() => {
+    if (!code || !state || state.step !== 'spinning') return
+    const id = setInterval(() => {
+      void todCheckWatchdog(code, state)
+    }, 1000)
+    return () => clearInterval(id)
+  }, [code, state])
 
   const order = useMemo(() => getPlayerOrder(players), [players])
   const me = uid ? players[uid] : null

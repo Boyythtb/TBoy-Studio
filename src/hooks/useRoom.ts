@@ -35,6 +35,8 @@ export function useRoom(code: string, mode: RoomMode) {
     }
   }, [])
 
+  const isHost = Boolean(uid && meta?.hostUid === uid)
+
   useEffect(() => {
     if (!code) return
     const stops: Array<() => void> = []
@@ -42,19 +44,21 @@ export function useRoom(code: string, mode: RoomMode) {
     stops.push(store.sub<Record<string, Player>>(paths.players(code), setPlayersMap))
     stops.push(store.sub<Record<string, string>>(paths.votes(code), (v) => setVotes(v ?? {})))
 
-    if (mode === 'host') {
+    if (mode === 'host' || isHost) {
       stops.push(store.sub<Record<string, Secret>>(paths.secrets(code), (v) => setSecrets(v ?? {})))
       stops.push(
         store.sub<Record<string, PlayerAction>>(paths.actions(code), (v) => setActions(v ?? {})),
       )
       stops.push(store.sub<NightState>(paths.night(code), setNight))
-    } else if (uid) {
+    }
+    
+    if (uid) {
       stops.push(store.sub<Secret>(paths.secret(code, uid), setMySecret))
       stops.push(store.sub<PlayerAction>(paths.action(code, uid), setMyAction))
     }
 
     return () => stops.forEach((stop) => stop())
-  }, [code, mode, uid])
+  }, [code, mode, uid, isHost])
 
   useEffect(() => {
     if (meta) return

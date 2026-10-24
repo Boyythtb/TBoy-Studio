@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Timer } from '../ui/Timer'
 import { BattleGrid } from '../ui/BattleGrid'
@@ -14,6 +14,7 @@ import {
   countHits,
   opponentOf,
   playerOrder,
+  sbTick,
   type Cell,
   type Fleet,
   type SbState,
@@ -22,19 +23,46 @@ import {
 export default function BattlePlayer() {
   const { code = '' } = useParams()
   const room = useGameRoom(code)
-  const { uid, meta, players, loading } = room
+  const { uid, meta, players, loading, isHost } = room
   const [state, setState] = useState<SbState | null>(null)
   const [myFleet, setMyFleet] = useState<Fleet | null>(null)
+  const [allKeys, setAllKeys] = useState<Record<string, Fleet> | null>(null)
   const [placed, setPlaced] = useState<Cell[][]>([])
   const [orientation, setOrientation] = useState<'h' | 'v'>('h')
   const [notice, setNotice] = useState('')
+  const busy = useRef(false)
+
+  const isActuallyHost = Boolean(isHost || (uid && meta?.hostUid === uid))
 
   useEffect(() => {
     if (!code) return
     const unsubs = [store.sub<SbState>(paths.sb(code), (v) => setState(v))]
     if (uid) unsubs.push(store.sub<Fleet>(paths.sbKey(code, uid), (v) => setMyFleet(v ?? null)))
+    if (isActuallyHost) {
+      unsubs.push(store.sub<Record<string, Fleet>>(paths.sbKeys(code), (v) => setAllKeys(v ?? {})))
+    }
     return () => unsubs.forEach((fn) => fn())
-  }, [code, uid])
+  }, [code, uid, isActuallyHost])
+
+  // Host-authoritative loop fallback: Ensures Sea Battle NEVER freezes when host plays on player screen
+  useEffect(() => {
+    if (!isActuallyHost || !state || !meta) return
+    const id = setInterval(() => {
+      if (busy.current) return
+      busy.current = true
+      void sbTick({
+        code,
+        meta,
+        players,
+        state,
+        keys: allKeys ?? {},
+        now: Date.now(),
+      }).finally(() => {
+        busy.current = false
+      })
+    }, 400)
+    return () => clearInterval(id)
+  }, [code, isActuallyHost, state, allKeys, players, meta])
 
   const order = useMemo(() => playerOrder(players), [players])
   const me = uid ? players[uid] : null
