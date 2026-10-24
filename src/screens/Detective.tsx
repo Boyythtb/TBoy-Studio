@@ -145,17 +145,17 @@ const SCENES: Record<Photo['scene'], { bg: string; icon: string; img: string }> 
   street: {
     bg: 'linear-gradient(150deg,#101a2b 0%,#1d2b45 55%,#2a2033 100%)',
     icon: '🚲',
-    img: 'detective/hien-truong-2158.svg',
+    img: 'detective/hien-truong-2158.jpg',
   },
   tea: {
     bg: 'linear-gradient(150deg,#3a2417 0%,#5a3620 60%,#2a1a12 100%)',
     icon: '🧋',
-    img: 'detective/tra-sua.svg',
+    img: 'detective/tra-sua.jpg',
   },
   net: {
     bg: 'linear-gradient(150deg,#0f2430 0%,#163a46 60%,#0c1a22 100%)',
     icon: '🖥️',
-    img: 'detective/quan-net.svg',
+    img: 'detective/quan-net.jpg',
   },
 }
 

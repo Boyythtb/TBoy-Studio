@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "art": "node scripts/nano-banana.mjs",
+    "art:cf": "node scripts/cloudflare-flux.mjs",
     "preview": "vite preview",
     "deploy": "npm run build && wrangler pages deploy dist --project-name=ma-soi --branch=master"
   },
