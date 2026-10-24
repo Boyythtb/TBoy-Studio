@@ -69,11 +69,11 @@ export default function TruthOrDareHost() {
   if (!state || state.phase === 'lobby') {
     return (
       <Stage mode="blood">
-        <div className="mx-auto flex min-h-dvh max-w-4xl flex-col px-4 pb-12 sm:px-6">
-          <header className="flex items-center justify-between py-4 border-b border-rose-900/60">
+        <div className="mx-auto flex h-dvh max-w-5xl flex-col justify-between p-4 sm:p-6 overflow-hidden">
+          <header className="flex items-center justify-between pb-3 border-b border-rose-900/60 shrink-0">
             <Link
               to="/truth-or-dare"
-              className="flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-white transition-colors"
+              className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-bold text-slate-300 hover:bg-white/10 hover:text-white transition-colors"
             >
               ← Thoát phòng
             </Link>
@@ -86,100 +86,104 @@ export default function TruthOrDareHost() {
             <SfxToggle />
           </header>
 
-          <main className="mt-6 flex flex-1 flex-col items-center justify-center text-center">
-            {/* Room Code Badge */}
-            <div className="rounded-3xl bg-slate-900/90 p-6 border border-rose-500/40 shadow-[0_8px_32px_rgba(244,63,94,0.25)] backdrop-blur-md max-w-sm w-full">
-              <p className="text-[0.72rem] font-bold uppercase tracking-widest text-slate-400">
-                MÃ VÀO BÀN NHẬU
-              </p>
-              <h1 className="mt-1 font-mono text-5xl font-black tracking-widest text-white drop-shadow-md">
-                {code}
-              </h1>
+          <main className="flex-1 flex items-center justify-center my-auto overflow-hidden py-2">
+            <div className="grid w-full max-w-4xl grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
+              {/* Left Column: Room Code & QR */}
+              <div className="flex flex-col items-center justify-center rounded-3xl bg-slate-900/90 p-5 border border-rose-500/40 shadow-[0_8px_32px_rgba(244,63,94,0.2)] backdrop-blur-md text-center">
+                <p className="text-[0.7rem] font-bold uppercase tracking-widest text-slate-400">
+                  MÃ VÀO BÀN NHẬU
+                </p>
+                <h1 className="mt-0.5 font-mono text-4xl sm:text-5xl font-black tracking-widest text-white drop-shadow-md">
+                  {code}
+                </h1>
 
-              {/* QR Code */}
-              <div className="mt-4 flex justify-center">
-                <div className="rounded-2xl bg-white p-3 shadow-lg">
-                  <Qr value={url} size={150} />
+                {/* QR Code */}
+                <div className="mt-3 flex justify-center">
+                  <div className="rounded-2xl bg-white p-2.5 shadow-lg">
+                    <Qr value={url} size={130} />
+                  </div>
                 </div>
+
+                <p className="mt-3 text-[0.7rem] text-slate-300 font-medium leading-relaxed">
+                  Mở camera quét mã hoặc truy cập{' '}
+                  <span className="font-bold text-rose-400">tboy-studio.pages.dev/join</span>
+                </p>
               </div>
 
-              <p className="mt-3 text-[0.72rem] text-slate-300 font-medium">
-                Mở camera quét mã hoặc truy cập{' '}
-                <span className="font-bold text-rose-400">tboy-studio.pages.dev/join</span>
-              </p>
-            </div>
+              {/* Right Column: Players List & Actions */}
+              <div className="flex flex-col justify-between rounded-3xl bg-slate-900/80 p-5 border border-slate-800 backdrop-blur-md">
+                <div>
+                  <div className="flex items-center justify-between mb-2.5 px-1">
+                    <span className="text-xs font-bold text-slate-200">
+                      Anh em đã vào bàn ({order.length})
+                    </span>
+                    <span className="text-[0.68rem] text-rose-400 font-semibold">
+                      Tối thiểu 2 người
+                    </span>
+                  </div>
 
-            {/* Joined Players */}
-            <div className="mt-6 w-full max-w-md">
-              <div className="flex items-center justify-between mb-2 px-1">
-                <span className="text-xs font-bold text-slate-300">
-                  Anh em đã vào bàn ({order.length})
-                </span>
-                <span className="text-[0.68rem] text-rose-400 font-semibold">
-                  Tối thiểu 2 người
-                </span>
-              </div>
+                  <div className="grid grid-cols-2 gap-2 max-h-44 sm:max-h-48 overflow-y-auto pr-1">
+                    {order.map((uid) => {
+                      const p = players[uid]
+                      if (!p) return null
+                      return (
+                        <div
+                          key={uid}
+                          className="flex items-center gap-2 rounded-xl bg-slate-950/70 p-2 border border-slate-800/80"
+                        >
+                          <Avatar index={p.avatar} size={28} name={p.name} />
+                          <span className="truncate text-xs font-bold text-slate-100">{p.name}</span>
+                        </div>
+                      )
+                    })}
+                  </div>
 
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 max-h-44 overflow-y-auto pr-1">
-                {order.map((uid) => {
-                  const p = players[uid]
-                  if (!p) return null
-                  return (
-                    <div
-                      key={uid}
-                      className="flex items-center gap-2 rounded-2xl bg-slate-900/80 p-2.5 border border-slate-800"
-                    >
-                      <Avatar index={p.avatar} size={30} name={p.name} />
-                      <span className="truncate text-xs font-bold text-slate-100">{p.name}</span>
+                  {order.length === 0 && (
+                    <div className="rounded-2xl border border-dashed border-slate-800 p-6 text-center text-xs text-slate-500">
+                      Đang đợi anh em quét mã vào bàn…
                     </div>
-                  )
-                })}
-              </div>
-
-              {order.length === 0 && (
-                <div className="rounded-2xl border border-dashed border-slate-800 p-6 text-center text-xs text-slate-500">
-                  Đang đợi anh em quét mã vào bàn…
+                  )}
                 </div>
-              )}
-            </div>
 
-            {/* Host quick join */}
-            {!hostMe && (
-              <div className="mt-4 flex gap-2 w-full max-w-md">
-                <input
-                  type="text"
-                  value={hostName}
-                  onChange={(e) => setHostName(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleHostJoin()}
-                  placeholder="Tên của chủ xị (để cùng chơi)…"
-                  maxLength={14}
-                  className="flex-1 rounded-xl bg-slate-900 border border-rose-500/40 px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none"
-                />
-                <button
-                  onClick={handleHostJoin}
-                  disabled={isJoining}
-                  className="rounded-xl bg-rose-700 hover:bg-rose-600 px-3.5 py-2 text-xs font-black text-white transition-colors"
-                >
-                  {isJoining ? 'Đang vào…' : '+ Chủ Xị Tham Gia'}
-                </button>
+                <div className="mt-4 pt-3 border-t border-slate-800/80 flex flex-col gap-3">
+                  {/* Host quick join */}
+                  {!hostMe && (
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={hostName}
+                        onChange={(e) => setHostName(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleHostJoin()}
+                        placeholder="Tên chủ xị (để cùng chơi)…"
+                        maxLength={14}
+                        className="flex-1 rounded-xl bg-slate-950 border border-rose-500/40 px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none"
+                      />
+                      <button
+                        onClick={handleHostJoin}
+                        disabled={isJoining}
+                        className="rounded-xl bg-rose-700 hover:bg-rose-600 px-3.5 py-2 text-xs font-black text-white transition-colors shrink-0"
+                      >
+                        {isJoining ? 'Đang vào…' : '+ Chủ Xị Tham Gia'}
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Start Button */}
+                  <button
+                    onClick={handleStart}
+                    disabled={order.length < 2}
+                    className={`w-full rounded-2xl py-3 text-xs sm:text-sm font-black shadow-lg transition-all ${
+                      order.length >= 2
+                        ? 'bg-gradient-to-r from-rose-600 to-amber-600 text-white hover:brightness-110 active:scale-95 shadow-rose-950/60'
+                        : 'bg-slate-800 text-slate-500 cursor-not-allowed'
+                    }`}
+                  >
+                    {order.length < 2
+                      ? `Cần thêm ${2 - order.length} người nữa để bắt đầu`
+                      : 'BẮT ĐẦU VÒNG XOAY BÀN NHẬU 🚀'}
+                  </button>
+                </div>
               </div>
-            )}
-
-            {/* Start Button */}
-            <div className="mt-6 w-full max-w-md">
-              <button
-                onClick={handleStart}
-                disabled={order.length < 2}
-                className={`w-full rounded-2xl py-3.5 text-sm font-black shadow-xl transition-all ${
-                  order.length >= 2
-                    ? 'bg-gradient-to-r from-rose-600 to-amber-600 text-white hover:brightness-110 active:scale-95 shadow-rose-950/60'
-                    : 'bg-slate-800 text-slate-500 cursor-not-allowed'
-                }`}
-              >
-                {order.length < 2
-                  ? `Cần thêm ${2 - order.length} người nữa để bắt đầu`
-                  : 'BẮT ĐẦU VÒNG XOAY BÀN NHẬU 🚀'}
-              </button>
             </div>
           </main>
         </div>

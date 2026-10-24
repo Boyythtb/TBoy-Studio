@@ -93,6 +93,12 @@ export async function joinRoom(code: string, name: string, avatar: number): Prom
   writePref(AVATAR_KEY, String(avatar))
 }
 
+export async function leaveRoom(code: string): Promise<void> {
+  const uid = await store.ensureAuth()
+  const c = code.trim().toUpperCase()
+  await store.remove(paths.player(c, uid))
+}
+
 export async function updateConfig(code: string, config: GameConfig) {
   await store.update(paths.meta(code), { config })
 }

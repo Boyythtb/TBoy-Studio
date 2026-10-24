@@ -8,7 +8,7 @@ import { Timer } from '../ui/Timer'
 import { useRoom, useNow } from '../hooks/useRoom'
 import { paths, store } from '../lib/store'
 import { AVATARS } from '../lib/avatars'
-import { joinRoom, readPref, NAME_KEY, AVATAR_KEY, MAX_PLAYERS } from '../lib/room'
+import { joinRoom, leaveRoom, readPref, NAME_KEY, AVATAR_KEY, MAX_PLAYERS } from '../lib/room'
 import { roleDef } from '../game/roles'
 import { currentStep } from '../game/conductor'
 import { WOLF_ROLES } from '../game/engine'
@@ -25,13 +25,29 @@ const buzz = (ms = 18) => {
 }
 
 function Shell({ children, code }: { children: React.ReactNode; code: string }) {
+  const handleExit = async () => {
+    try {
+      await leaveRoom(code)
+    } catch {}
+    window.location.href = '/'
+  }
+
   return (
     <Stage>
       <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-4 pt-3">
-        <div className="flex flex-1 flex-col">{children}</div>
-        <div className="pt-2 pb-1 text-center text-[0.55rem] tracking-[0.3em] text-mute/60 uppercase">
-          phòng {code}
+        <div className="flex items-center justify-between pb-2 border-b border-white/5">
+          <button
+            onClick={handleExit}
+            className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors"
+          >
+            <span>←</span>
+            <span>Thoát phòng</span>
+          </button>
+          <span className="font-mono text-xs font-bold text-slate-400 uppercase tracking-widest">
+            {code}
+          </span>
         </div>
+        <div className="flex flex-1 flex-col">{children}</div>
       </div>
     </Stage>
   )
@@ -172,6 +188,20 @@ function LobbyWait({ meta, players, me }: { meta: Meta; players: Player[]; me: P
           />
         ))}
       </div>
+
+      <button
+        type="button"
+        onClick={async () => {
+          try {
+            await leaveRoom(meta.code)
+          } catch {}
+          window.location.href = '/'
+        }}
+        className="mt-6 inline-flex items-center gap-1.5 rounded-xl bg-white/5 border border-white/10 px-4 py-2 text-xs font-semibold text-parchment/80 hover:bg-white/10 hover:text-white transition-colors"
+      >
+        <span>←</span>
+        <span>Rời phòng chờ</span>
+      </button>
     </div>
   )
 }

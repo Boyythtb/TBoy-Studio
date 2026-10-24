@@ -113,6 +113,12 @@ export default function BattleHost() {
       <div className="mx-auto flex min-h-dvh max-w-6xl flex-col px-6 py-6 lg:px-10">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 text-[0.68rem] tracking-[0.3em] text-mute uppercase">
+            <Link
+              to="/sea-battle"
+              className="flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[0.72rem] font-medium tracking-normal text-parchment/80 normal-case transition hover:bg-white/10 hover:text-parchment"
+            >
+              ← Thoát phòng
+            </Link>
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#7be0c0]" />
             Hải chiến
             <span className="rounded-full border border-white/10 px-2 py-0.5 tracking-normal text-mute normal-case">{code}</span>

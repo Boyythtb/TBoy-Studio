@@ -1,17 +1,37 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Stage } from './Stage'
 import { Avatar } from './Avatar'
 import { AVATARS } from '../lib/avatars'
-import { joinRoom, readPref, NAME_KEY, AVATAR_KEY } from '../lib/room'
+import { joinRoom, leaveRoom, readPref, NAME_KEY, AVATAR_KEY } from '../lib/room'
 import { buzz } from '../lib/buzz'
 import type { Player } from '../game/types'
 
 export function PhoneShell({ code, children }: { code: string; children: React.ReactNode }) {
+  const navigate = useNavigate()
+  const handleExit = async () => {
+    try {
+      await leaveRoom(code)
+    } catch {}
+    navigate('/')
+  }
+
   return (
     <Stage>
       <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-4 pt-3">
+        <div className="flex items-center justify-between pb-2 border-b border-white/5">
+          <button
+            onClick={handleExit}
+            className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors"
+          >
+            <span>←</span>
+            <span>Thoát phòng</span>
+          </button>
+          <span className="font-mono text-xs font-bold text-slate-400 uppercase tracking-widest">
+            {code}
+          </span>
+        </div>
         <div className="flex flex-1 flex-col">{children}</div>
-        <div className="pt-2 pb-1 text-center text-[0.55rem] tracking-[0.3em] text-mute/60 uppercase">phòng {code}</div>
       </div>
     </Stage>
   )
@@ -121,7 +141,21 @@ export function LobbyWait({
       <div className="mt-7 text-4xl" style={{ filter: `drop-shadow(0 0 20px ${accent}55)` }}>
         {icon}
       </div>
-      <p className="mt-4 text-[0.6rem] tracking-[0.3em] text-mute uppercase">{code}</p>
+      <p className="mt-3 text-[0.6rem] tracking-[0.3em] text-mute uppercase">{code}</p>
+
+      <button
+        type="button"
+        onClick={async () => {
+          try {
+            await leaveRoom(code)
+          } catch {}
+          window.location.href = '/'
+        }}
+        className="mt-6 inline-flex items-center gap-1.5 rounded-xl bg-white/5 border border-white/10 px-4 py-2 text-xs font-semibold text-parchment/80 hover:bg-white/10 hover:text-white transition-colors"
+      >
+        <span>←</span>
+        <span>Rời phòng chờ</span>
+      </button>
     </div>
   )
 }
