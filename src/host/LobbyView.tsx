@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Avatar } from '../ui/Avatar'
 import { Qr } from '../ui/Qr'
 import { MIN_PLAYERS, configIssue, specialCount, suggestConfig } from '../game/engine'
 import { ROLES, ROLE_ORDER } from '../game/roles'
 import type { GameConfig, Meta, Player, RoleId } from '../game/types'
-import { deleteRoom, updateConfig } from '../lib/room'
+import { deleteRoom, updateConfig, joinRoom } from '../lib/room'
 import { store } from '../lib/store'
 import { sfx } from '../lib/sfx'
 
@@ -90,10 +90,25 @@ export function LobbyView({ code, meta, players, onStart, starting }: Props) {
   const navigate = useNavigate()
   const [copied, setCopied] = useState(false)
   const [showConfig, setShowConfig] = useState(true)
+  const [hostName, setHostName] = useState('')
+  const [isJoining, setIsJoining] = useState(false)
   const config = meta.config
   const issue = configIssue(config, players.length)
   const villagers = Math.max(0, players.length - config.wolves - specialCount(config))
   const link = `${window.location.origin}/play/${code}`
+
+  const isHostPlaying = Boolean(meta.hostUid && players.some((p) => p.uid === meta.hostUid))
+
+  const handleHostJoin = async () => {
+    const trimmed = hostName.trim() || 'Chủ làng'
+    setIsJoining(true)
+    try {
+      await joinRoom(code, trimmed, Math.floor(Math.random() * 8))
+      setHostName('')
+    } finally {
+      setIsJoining(false)
+    }
+  }
 
   const handleExit = async () => {
     try {
@@ -221,6 +236,41 @@ export function LobbyView({ code, meta, players, onStart, starting }: Props) {
                   </motion.div>
                 ))}
               </AnimatePresence>
+            </div>
+          )}
+
+          {!isHostPlaying && players.length < 16 && (
+            <div className="mt-4 flex gap-2 rounded-2xl border border-violet/30 bg-violet/5 p-3">
+              <input
+                type="text"
+                value={hostName}
+                onChange={(e) => setHostName(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleHostJoin()}
+                placeholder="Tên của bạn để cùng chơi…"
+                maxLength={14}
+                className="flex-1 rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none"
+              />
+              <button
+                onClick={handleHostJoin}
+                disabled={isJoining}
+                className="rounded-xl bg-violet hover:brightness-110 px-3.5 py-2 text-xs font-bold text-white transition-colors shrink-0"
+              >
+                {isJoining ? 'Đang vào…' : '+ Chủ phòng tham gia'}
+              </button>
+            </div>
+          )}
+
+          {isHostPlaying && (
+            <div className="mt-4 flex items-center justify-between rounded-2xl border border-emerald-500/30 bg-emerald-950/20 px-3.5 py-2 text-xs text-emerald-300">
+              <span className="font-semibold">⭐ Bạn đã tham gia vào danh sách người chơi</span>
+              <Link
+                to={`/play/${code}`}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-lg bg-emerald-600 hover:bg-emerald-500 px-2.5 py-1 text-[0.72rem] font-bold text-white transition-colors"
+              >
+                Mở thẻ vai của bạn (Tab mới) ➔
+              </Link>
             </div>
           )}
 

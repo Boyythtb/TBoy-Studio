@@ -8,7 +8,7 @@ import { Timer } from '../ui/Timer'
 import { SfxToggle } from '../ui/SfxToggle'
 import { useGameRoom } from '../hooks/useGameRoom'
 import { paths, store } from '../lib/store'
-import { joinUrl, deleteRoom } from '../lib/room'
+import { joinUrl, deleteRoom, joinRoom } from '../lib/room'
 import { playerOrder, scReset, scStart, scTick, type ScGuess, type ScKey, type ScState } from '../game/secret'
 import type { Player } from '../game/types'
 
@@ -50,7 +50,23 @@ export default function SecretCodeHost() {
   const [guesses, setGuesses] = useState<Record<string, ScGuess> | null>(null)
   const [targetScore, setTargetScore] = useState(3)
   const [starting, setStarting] = useState(false)
+  const [hostName, setHostName] = useState('')
+  const [isJoining, setIsJoining] = useState(false)
   const busy = useRef(false)
+
+  const uid = room.uid
+  const isHostPlaying = Boolean(uid && players[uid])
+
+  const handleHostJoin = async () => {
+    const trimmed = hostName.trim() || 'Chủ phòng'
+    setIsJoining(true)
+    try {
+      await joinRoom(code, trimmed, Math.floor(Math.random() * 8))
+      setHostName('')
+    } finally {
+      setIsJoining(false)
+    }
+  }
 
   const handleExit = async () => {
     try {
@@ -85,6 +101,9 @@ export default function SecretCodeHost() {
     setStarting(true)
     try {
       await scStart(code, players, targetScore, 45)
+      if (isHostPlaying) {
+        navigate(`/play/${code}`)
+      }
     } finally {
       setStarting(false)
     }
@@ -199,6 +218,39 @@ export default function SecretCodeHost() {
                 </div>
               )}
 
+              {!isHostPlaying && order.length < 8 && (
+                <div className="mt-4 flex gap-2 rounded-2xl border border-[#7be0c0]/30 bg-[#7be0c0]/5 p-3">
+                  <input
+                    type="text"
+                    value={hostName}
+                    onChange={(e) => setHostName(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleHostJoin()}
+                    placeholder="Tên của bạn để cùng đoán mã…"
+                    maxLength={14}
+                    className="flex-1 rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none"
+                  />
+                  <button
+                    onClick={handleHostJoin}
+                    disabled={isJoining}
+                    className="rounded-xl bg-[#7be0c0] hover:brightness-110 px-3.5 py-2 text-xs font-bold text-night-950 transition-colors shrink-0"
+                  >
+                    {isJoining ? 'Đang vào…' : '+ Chủ phòng tham gia'}
+                  </button>
+                </div>
+              )}
+
+              {isHostPlaying && (
+                <div className="mt-4 flex items-center justify-between rounded-2xl border border-emerald-500/30 bg-emerald-950/20 px-3.5 py-2 text-xs text-emerald-300">
+                  <span className="font-semibold">⭐ Bạn đã tham gia chơi</span>
+                  <Link
+                    to={`/play/${code}`}
+                    className="rounded-lg bg-emerald-600 hover:bg-emerald-500 px-2.5 py-1 text-[0.72rem] font-bold text-white transition-colors"
+                  >
+                    Mở màn hình đoán mã của bạn ➔
+                  </Link>
+                </div>
+              )}
+
               <div className="mt-auto flex items-end justify-between gap-4 pt-6">
                 <p className="text-[0.68rem] leading-relaxed text-mute">
                   {order.length < 2 ? 'Cần ít nhất 2 người để bắt đầu.' : 'Mỗi người sẽ đặt một mật mã 3 số bí mật.'}
@@ -255,6 +307,14 @@ export default function SecretCodeHost() {
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#7be0c0]" />
             Mật mã · phòng {code}
           </div>
+          {isHostPlaying && (
+            <Link
+              to={`/play/${code}`}
+              className="rounded-xl bg-[#7be0c0] hover:brightness-110 px-3.5 py-1.5 text-xs font-black text-night-950 shadow-md transition-all"
+            >
+              🎮 Mở màn hình đoán mã của bạn ➔
+            </Link>
+          )}
           <div className="flex items-center gap-2 pr-24">
             <SfxToggle />
           </div>

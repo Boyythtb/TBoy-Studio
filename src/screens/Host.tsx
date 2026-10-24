@@ -37,6 +37,7 @@ export default function Host() {
   }, [room])
 
   const meta = room.meta
+  const isHostPlaying = Boolean(room.uid && room.players.some((p) => p.uid === room.uid))
 
   /* host-authoritative loop */
   useEffect(() => {
@@ -192,6 +193,19 @@ export default function Host() {
           <span className={`h-1.5 w-1.5 rounded-full ${meta.phase === 'lobby' ? 'bg-violet' : 'bg-amber'}`} />
           {code} · {phaseLabel[meta.phase]}
         </div>
+        {meta.phase !== 'lobby' && isHostPlaying && (
+          <div className="pointer-events-auto">
+            <a
+              href={`/play/${code}`}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-violet to-fuchsia-600 px-3.5 py-1.5 text-[0.72rem] font-bold text-white shadow-lg transition-all hover:brightness-110"
+            >
+              <span>🎭</span>
+              <span>Mở thẻ vai & bảng vote của bạn ➔</span>
+            </a>
+          </div>
+        )}
         <div className="pointer-events-auto flex items-center gap-1.5">
           <button
             onClick={toggleFullscreen}
