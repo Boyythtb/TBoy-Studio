@@ -34,10 +34,67 @@ interface Ctx {
 }
 
 /* ------------------------------------------------------------------ Zola */
+
+const SUSPECT_CONTRADICTIONS: Record<
+  string,
+  {
+    culpritClues: string[]
+    suspectName: string
+    breakdownMsg: string
+    breakdownDetail: string
+  }
+> = {
+  // Case 1
+  dung: {
+    culpritClues: ['don-hang-2147', 'anh-phan-chieu'],
+    suspectName: 'Dũng Shipper',
+    breakdownMsg: '“Ơ... các anh có dữ liệu định vị đơn hàng lúc 21:47 thật sao?! Cả ảnh kính cửa hàng lúc 21:58 nữa... Em... em khai thật, em dắt xe cô Lan đi...”',
+    breakdownDetail: 'Bóc trần lời khai nói dối về từ 21:15. Bằng chứng định vị GPS và ảnh phản chiếu đã buộc Dũng phải cúi đầu nhận tội!',
+  },
+  // Case 2
+  son: {
+    culpritClues: ['son-ao-do', 'son-no-tien', 'lo-hong-tu'],
+    suspectName: 'Sơn Nhặt Cầu',
+    breakdownMsg: '“Ảnh người áo đỏ đứng sát vách tủ đồ... Ai chụp được vậy?! Thôi được rồi, em nợ chị Hạnh 6 triệu quá hạn nên thò tay qua khe nóc tủ lấy trộm máy!”',
+    breakdownDetail: 'Bóc trần thủ đoạn luồn tay qua khe nóc tủ đồ và trang phục áo khoác đỏ lúc 20:20!',
+  },
+  // Case 3
+  trang: {
+    culpritClues: ['trang-giay', 'chuyen-tien-trng', 'tin-nhan-do'],
+    suspectName: 'Trang Bán Bánh',
+    breakdownMsg: '“Vết bùn đỏ trên giày trắng... sao anh biết bãi rác không có bùn đỏ?! Lệnh chuyển khoản 8 triệu... Em xin lỗi, em vay nợ nặng lãi của anh Tú nên mới cạy hòm!”',
+    breakdownDetail: 'Chứng cứ địa chất bùn đỏ sau bệ hòm quỹ và lệnh chuyển khoản 8 triệu lúc 21:32 đã đập tan mọi lời ngụy biện!',
+  },
+  // Case 4
+  dat: {
+    culpritClues: ['khai-ghi-am', 'tui-den', 'ma-ket', 'chuyen-khoan'],
+    suspectName: 'Quản lý Đạt',
+    breakdownMsg: '“Khải... lúc đó cậu ấy vẫn kịp bật ghi âm sao?! Tôi không cố ý hại Khải... Tôi bị chủ nợ Bảy ép đến chân tường rồi nên mới dàn cảnh mất điện!”',
+    breakdownDetail: 'File ghi âm 21:12 và túi đen chứa sổ nợ đã vạch mặt kẻ chủ mưu cướp két sắt!',
+  },
+  // Case 5
+  vu: {
+    culpritClues: ['nhiet-do-am-tra', 'di-chuc-truat-quyen', 'lo-doc-non-bo', 'then-cai-chi-cuoc'],
+    suspectName: 'Bác sĩ Vũ Hoàng',
+    breakdownMsg: '“Không thể nào... Làm sao các người biết nhiệt độ ấm trà thông minh đun từ 21:30... Và bản di chúc xé vụn... Kế hoạch phòng kín hoàn hảo của tôi...”',
+    breakdownDetail: 'Nhiệt động học tách trà vạch trần giờ chết giả 22:15, bản di chúc truất quyền thừa kế 30 tỷ và lọ độc Aconitine chứa vân tay đã kết tội tên sát nhân!',
+  },
+  yen: {
+    culpritClues: ['chuyen-khoan-yen', 'tin-nhan-bi-mat'],
+    suspectName: 'Yến Giúp Việc',
+    breakdownMsg: '“Em lạy anh công an... Bác sĩ Vũ chuyển cọc 200 triệu bảo em đúng 21:20 ngắt cầu dao tầng 2... Em chỉ đứng canh dưới bếp thôi mà!”',
+    breakdownDetail: 'Lệnh chuyển khoản cọc và tin nhắn Zola khôi phục đã lật tẩy vai trò đồng phạm tiếp tay ngắt camera!',
+  },
+}
+
 function ZolaApp({ found, find }: Ctx) {
-  const { convs: CONVS, case: caseMeta } = usePack()
+  const { convs: CONVS, case: caseMeta, clues: CLUES } = usePack()
   const [active, setActive] = useState<string | null>(null)
   const [inspectToast, setInspectToast] = useState<{ text: string; success: boolean } | null>(null)
+  const [confrontOpen, setConfrontOpen] = useState(false)
+  const [selectedClueForConfront, setSelectedClueForConfront] = useState<string | null>(null)
+  const [confessedSuspects, setConfessedSuspects] = useState<Record<string, boolean>>({})
+
   const convs = CONVS.filter((c) => !c.requires || c.requires.every((r) => found.has(r)))
   const conv = convs.find((c) => c.id === active) ?? null
   const msgs = conv ? conv.messages.filter((m) => !m.requires || m.requires.every((r) => found.has(r))) : []
@@ -45,7 +102,7 @@ function ZolaApp({ found, find }: Ctx) {
 
   useEffect(() => {
     if (scroller.current) scroller.current.scrollTop = scroller.current.scrollHeight
-  }, [active, msgs.length])
+  }, [active, msgs.length, confessedSuspects])
 
   useEffect(() => {
     if (!inspectToast) return
@@ -71,6 +128,26 @@ function ZolaApp({ found, find }: Ctx) {
     } else {
       setInspectToast({
         text: '🔍 Lời khai này bình thường, không phát hiện dấu hiệu mâu thuẫn.',
+        success: false,
+      })
+    }
+  }
+
+  const handleConfront = () => {
+    if (!conv || !selectedClueForConfront) return
+    const contradiction = SUSPECT_CONTRADICTIONS[conv.id]
+
+    if (contradiction && contradiction.culpritClues.includes(selectedClueForConfront)) {
+      setConfessedSuspects((prev) => ({ ...prev, [conv.id]: true }))
+      setConfrontOpen(false)
+      setSelectedClueForConfront(null)
+      setInspectToast({
+        text: '⚡ ĐỐI CHẤT THÀNH CÔNG! Nghi phạm đã sụp đổ và khai nhận sự thật!',
+        success: true,
+      })
+    } else {
+      setInspectToast({
+        text: '❌ Đối tượng phản bác: "Bằng chứng này không chứng minh được tôi liên quan! Đừng vu khống!"',
         success: false,
       })
     }
@@ -149,11 +226,21 @@ function ZolaApp({ found, find }: Ctx) {
           </div>
         </div>
 
-        <div className="flex items-center gap-1 text-slate-400">
-          <button className="grid h-7 w-7 place-items-center rounded-lg hover:bg-slate-800 hover:text-white transition-colors" title="Gọi thoại">
+        <div className="flex items-center gap-2">
+          {SUSPECT_CONTRADICTIONS[conv.id] && (
+            <button
+              onClick={() => setConfrontOpen(true)}
+              className="flex items-center gap-1 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-2.5 py-1 text-[0.62rem] font-bold text-slate-950 shadow-md hover:brightness-110 transition-all active:scale-95"
+              title="Đưa ra chứng cứ để đối chất và bẻ gãy lời khai"
+            >
+              <span>⚖️</span>
+              <span>Đối chất</span>
+            </button>
+          )}
+          <button className="grid h-7 w-7 place-items-center rounded-lg hover:bg-slate-800 hover:text-white transition-colors text-slate-400" title="Gọi thoại">
             📞
           </button>
-          <button className="grid h-7 w-7 place-items-center rounded-lg hover:bg-slate-800 hover:text-white transition-colors" title="Gọi video">
+          <button className="grid h-7 w-7 place-items-center rounded-lg hover:bg-slate-800 hover:text-white transition-colors text-slate-400" title="Gọi video">
             📹
           </button>
         </div>
@@ -162,7 +249,7 @@ function ZolaApp({ found, find }: Ctx) {
       {/* Chat Wallpaper Container */}
       <div 
         ref={scroller} 
-        className="flex-1 space-y-3 overflow-y-auto px-4 py-4"
+        className="flex-1 space-y-3 overflow-y-auto px-4 py-4 relative"
         style={{
           background: 'radial-gradient(circle at 50% 30%, #0d1527 0%, #060913 100%)',
           backgroundImage: `
@@ -178,7 +265,7 @@ function ZolaApp({ found, find }: Ctx) {
             {caseMeta?.time ? `Vụ án · ${caseMeta.time}` : 'Hôm nay'}
           </span>
           <span className="rounded-full bg-cyan-950/70 px-3 py-0.5 text-[0.58rem] font-medium text-cyan-300 border border-cyan-500/30">
-            💡 Chạm vào lời khai khả nghi để bóc trần mâu thuẫn
+            💡 Chạm vào lời khai để soi mâu thuẫn · Nhấn “Đối chất” để bẻ gãy alibi
           </span>
         </div>
 
@@ -256,7 +343,96 @@ function ZolaApp({ found, find }: Ctx) {
             </div>
           )
         })}
+
+        {/* Confession Card if suspect broken down */}
+        {confessedSuspects[conv.id] && SUSPECT_CONTRADICTIONS[conv.id] && (
+          <div className="my-3 rounded-2xl border-2 border-amber-400/80 bg-gradient-to-b from-amber-950/60 to-slate-950/95 p-3.5 shadow-[0_0_25px_rgba(245,158,11,0.3)] animate-fadeIn">
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="text-base">⚡</span>
+              <span className="text-[0.68rem] font-bold uppercase tracking-wider text-amber-300">
+                ĐỐI CHẤT THÀNH CÔNG · NGHI PHẠM ĐÃ THÚ NHẬN!
+              </span>
+            </div>
+            <p className="text-[0.76rem] font-semibold text-white leading-relaxed italic">
+              {SUSPECT_CONTRADICTIONS[conv.id].breakdownMsg}
+            </p>
+            <p className="mt-2 text-[0.64rem] text-slate-300 border-t border-amber-500/30 pt-1.5">
+              {SUSPECT_CONTRADICTIONS[conv.id].breakdownDetail}
+            </p>
+          </div>
+        )}
       </div>
+
+      {/* Confrontation Drawer Modal */}
+      {confrontOpen && (
+        <div className="absolute inset-0 z-40 flex flex-col justify-end bg-black/75 backdrop-blur-sm animate-fadeIn">
+          <div className="max-h-[85%] rounded-t-3xl border-t border-slate-700 bg-slate-950 p-4 shadow-2xl flex flex-col">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
+              <div className="flex items-center gap-2">
+                <span className="text-base">⚖️</span>
+                <div>
+                  <h4 className="text-[0.8rem] font-bold text-white">ĐỐI CHẤT: {conv.name}</h4>
+                  <p className="text-[0.6rem] text-amber-400">Chọn 1 manh mối để vạch trần lời ngụy biện của đối tượng</p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setConfrontOpen(false)
+                  setSelectedClueForConfront(null)
+                }}
+                className="grid h-7 w-7 place-items-center rounded-lg bg-slate-800 text-slate-400 hover:text-white text-xs"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* List of clues from found */}
+            <div className="flex-1 overflow-y-auto py-3 space-y-2 max-h-[45vh]">
+              {found.size === 0 ? (
+                <div className="p-6 text-center text-slate-400 text-[0.72rem]">
+                  Sổ tay hiện chưa có manh mối nào. Hãy soi hiện trường hoặc nhật ký trước!
+                </div>
+              ) : (
+                Array.from(found).map((cid) => {
+                  const c = CLUES[cid]
+                  if (!c) return null
+                  const isSelected = selectedClueForConfront === cid
+                  return (
+                    <button
+                      key={cid}
+                      onClick={() => setSelectedClueForConfront(cid)}
+                      className={`w-full text-left p-2.5 rounded-xl border transition-all flex items-start gap-2.5 ${
+                        isSelected
+                          ? 'border-amber-400 bg-amber-950/40 shadow-[0_0_12px_rgba(245,158,11,0.3)]'
+                          : 'border-slate-800 bg-slate-900/60 hover:bg-slate-800/80'
+                      }`}
+                    >
+                      <span className="text-sm mt-0.5">{TAGS[c.tag] ?? '📌'}</span>
+                      <div className="min-w-0 flex-1">
+                        <p className={`text-[0.74rem] font-bold ${isSelected ? 'text-amber-300' : 'text-slate-200'}`}>
+                          {c.title}
+                        </p>
+                        <p className="text-[0.64rem] text-slate-400 line-clamp-2 mt-0.5">{c.detail}</p>
+                      </div>
+                    </button>
+                  )
+                })
+              )}
+            </div>
+
+            <div className="pt-2.5 border-t border-slate-800">
+              <button
+                onClick={handleConfront}
+                disabled={!selectedClueForConfront}
+                className="w-full py-2.5 rounded-xl font-bold text-[0.74rem] bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 hover:brightness-110 disabled:opacity-40 transition-all shadow-lg flex items-center justify-center gap-1.5"
+              >
+                <span>⚡</span>
+                <span>Trình bằng chứng này để bẻ gãy lời khai</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Floating feedback toast in Zola */}
       {inspectToast && (
@@ -303,51 +479,97 @@ function PhotoInspectModal({
   const [activeHotspot, setActiveHotspot] = useState<number | null>(
     photo.hotspots && photo.hotspots.length > 0 ? 0 : null
   )
+  const [lightMode, setLightMode] = useState<'normal' | 'uv'>('normal')
 
   const hs = activeHotspot !== null && photo.hotspots ? photo.hotspots[activeHotspot] : null
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-3 sm:p-5 backdrop-blur-md">
-      <div className="relative flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-950 shadow-2xl">
+      <div className={`relative flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border transition-all duration-300 shadow-2xl ${
+        lightMode === 'uv' ? 'border-purple-500/80 bg-slate-950 shadow-[0_0_35px_rgba(168,85,247,0.35)]' : 'border-slate-700/80 bg-slate-950'
+      }`}>
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-800 bg-slate-900/90 px-4 py-2.5">
           <div className="flex items-center gap-2.5 min-w-0">
-            <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-cyan-950 text-cyan-400 border border-cyan-500/40 text-sm">
-              🔬
+            <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-lg border text-sm transition-colors ${
+              lightMode === 'uv' ? 'bg-purple-950 text-purple-300 border-purple-500/50' : 'bg-cyan-950 text-cyan-400 border border-cyan-500/40'
+            }`}>
+              {lightMode === 'uv' ? '🟣' : '🔬'}
             </span>
             <div className="min-w-0">
               <p className="truncate text-[0.82rem] font-bold text-white tracking-tight">{photo.title}</p>
               <p className="text-[0.6rem] text-cyan-400/90 font-medium">
-                {photo.time} · Giám định dấu vết vật chứng & điểm khả nghi
+                {photo.time} · {lightMode === 'uv' ? 'Chế độ đèn UV cực tím soi huỳnh quang' : 'Giám định dấu vết vật chứng & điểm khả nghi'}
               </p>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="grid h-7 w-7 place-items-center rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors text-xs"
-            aria-label="Đóng kính lúp"
-          >
-            ✕
-          </button>
+
+          <div className="flex items-center gap-2">
+            {/* Forensic Light Mode Toggle */}
+            <div className="flex items-center gap-1 rounded-xl bg-slate-950/80 border border-slate-800 p-0.5">
+              <button
+                onClick={() => setLightMode('normal')}
+                className={`rounded-lg px-2 py-0.5 text-[0.6rem] font-bold transition-all ${
+                  lightMode === 'normal'
+                    ? 'bg-slate-700 text-white shadow'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                🔦 Thường
+              </button>
+              <button
+                onClick={() => setLightMode('uv')}
+                className={`rounded-lg px-2 py-0.5 text-[0.6rem] font-bold transition-all flex items-center gap-1 ${
+                  lightMode === 'uv'
+                    ? 'bg-purple-600 text-white shadow-[0_0_12px_rgba(168,85,247,0.8)]'
+                    : 'text-purple-300 hover:text-white'
+                }`}
+              >
+                <span>🟣</span> Đèn UV CSI
+              </button>
+            </div>
+
+            <button
+              onClick={onClose}
+              className="grid h-7 w-7 place-items-center rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors text-xs"
+              aria-label="Đóng kính lúp"
+            >
+              ✕
+            </button>
+          </div>
         </div>
 
         {/* Image Canvas with Interactive Hotspots */}
-        <div className="relative flex-1 overflow-hidden bg-black grid place-items-center min-h-[220px] max-h-[46vh]">
+        <div className={`relative flex-1 overflow-hidden bg-black grid place-items-center min-h-[220px] max-h-[46vh] transition-all duration-300 ${
+          lightMode === 'uv' ? 'shadow-[inset_0_0_60px_rgba(147,51,234,0.4)]' : ''
+        }`}>
           <img
             src={`${import.meta.env.BASE_URL}${photo.img ?? 'detective/bia-vu-an.jpg'}`}
             alt={photo.title}
-            className="max-h-[46vh] w-auto max-w-full object-contain select-none"
+            style={{
+              filter: lightMode === 'uv' ? 'brightness(0.65) contrast(1.9) hue-rotate(240deg) saturate(2.2)' : 'none',
+            }}
+            className="max-h-[46vh] w-auto max-w-full object-contain select-none transition-all duration-300"
           />
 
           {/* Grid inspection overlay */}
           <div
-            className="pointer-events-none absolute inset-0 opacity-15"
+            className={`pointer-events-none absolute inset-0 transition-opacity ${lightMode === 'uv' ? 'opacity-25' : 'opacity-15'}`}
             style={{
               backgroundImage:
-                'linear-gradient(rgba(14, 165, 233, 0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(14, 165, 233, 0.4) 1px, transparent 1px)',
+                lightMode === 'uv'
+                  ? 'linear-gradient(rgba(168, 85, 247, 0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(168, 85, 247, 0.5) 1px, transparent 1px)'
+                  : 'linear-gradient(rgba(14, 165, 233, 0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(14, 165, 233, 0.4) 1px, transparent 1px)',
               backgroundSize: '24px 24px',
             }}
           />
+
+          {/* UV Mode Tag */}
+          {lightMode === 'uv' && (
+            <div className="pointer-events-none absolute top-2 left-2 rounded-md bg-purple-950/90 border border-purple-500/50 px-2 py-0.5 text-[0.55rem] font-bold text-purple-200 shadow-md">
+              🟣 ĐANG QUÉT HUỲNH QUANG UV (365nm): Phát hiện dấu vết phản quang
+            </div>
+          )}
 
           {/* Hotspot Markers */}
           {photo.hotspots?.map((h, idx) => {
@@ -365,12 +587,20 @@ function PhotoInspectModal({
                 <span className="relative flex h-8 w-8 items-center justify-center">
                   <span
                     className={`absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping ${
-                      isFound ? 'bg-emerald-400' : isSelected ? 'bg-amber-400' : 'bg-cyan-400'
+                      lightMode === 'uv'
+                        ? 'bg-lime-400'
+                        : isFound
+                        ? 'bg-emerald-400'
+                        : isSelected
+                        ? 'bg-amber-400'
+                        : 'bg-cyan-400'
                     }`}
                   />
                   <span
                     className={`relative grid h-6 w-6 place-items-center rounded-full border-2 text-[0.62rem] font-bold shadow-md transition-transform group-hover:scale-125 ${
-                      isFound
+                      lightMode === 'uv'
+                        ? 'border-lime-200 bg-lime-400 text-slate-950 shadow-[0_0_18px_#84cc16,0_0_30px_#22c55e]'
+                        : isFound
                         ? 'border-emerald-300 bg-emerald-600 text-white'
                         : isSelected
                         ? 'border-amber-300 bg-amber-500 text-slate-950 scale-110 shadow-[0_0_12px_rgba(245,158,11,0.6)]'
@@ -380,7 +610,11 @@ function PhotoInspectModal({
                     {isFound ? '✓' : idx + 1}
                   </span>
                 </span>
-                <span className="absolute left-1/2 top-7 -translate-x-1/2 whitespace-nowrap rounded-md bg-slate-900/95 px-2 py-0.5 text-[0.58rem] font-bold text-slate-200 border border-slate-700/80 pointer-events-none opacity-90 group-hover:opacity-100 shadow-md">
+                <span className={`absolute left-1/2 top-7 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-0.5 text-[0.58rem] font-bold pointer-events-none opacity-90 group-hover:opacity-100 shadow-md ${
+                  lightMode === 'uv'
+                    ? 'bg-purple-950/95 text-lime-300 border border-purple-500/80 shadow-[0_0_10px_rgba(132,204,22,0.3)]'
+                    : 'bg-slate-900/95 text-slate-200 border border-slate-700/80'
+                }`}>
                   {h.label}
                 </span>
               </button>
@@ -397,7 +631,9 @@ function PhotoInspectModal({
                 onClick={() => setActiveHotspot(idx)}
                 className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[0.65rem] font-bold transition-all shrink-0 ${
                   activeHotspot === idx
-                    ? 'bg-amber-500/20 text-amber-300 border border-amber-400/50'
+                    ? lightMode === 'uv'
+                      ? 'bg-purple-600/30 text-lime-300 border border-lime-400/50'
+                      : 'bg-amber-500/20 text-amber-300 border border-amber-400/50'
                     : 'bg-slate-800/80 text-slate-400 hover:bg-slate-700 hover:text-white'
                 }`}
               >
@@ -413,8 +649,10 @@ function PhotoInspectModal({
           {hs ? (
             <div>
               <div className="flex items-center justify-between gap-2">
-                <span className="text-[0.74rem] font-bold text-amber-300 flex items-center gap-1.5">
-                  <span>🎯</span> {hs.label}
+                <span className={`text-[0.74rem] font-bold flex items-center gap-1.5 ${
+                  lightMode === 'uv' ? 'text-lime-300' : 'text-amber-300'
+                }`}>
+                  <span>{lightMode === 'uv' ? '🟣' : '🎯'}</span> {hs.label}
                 </span>
                 {hs.hint && (
                   <span className="text-[0.6rem] text-slate-400 italic">
@@ -422,6 +660,14 @@ function PhotoInspectModal({
                   </span>
                 )}
               </div>
+
+              {lightMode === 'uv' && (
+                <div className="mt-1.5 mb-1.5 flex items-center gap-1.5 text-[0.62rem] font-bold text-lime-300 bg-purple-950/70 border border-purple-500/40 px-2 py-1 rounded-lg">
+                  <span>🔬</span>
+                  <span>PHÂN TÍCH HUỲNH QUANG UV: Dấu vết hoá chất / sợi cước / vết bùn phát quang rõ nét dưới tia 365nm!</span>
+                </div>
+              )}
+
               <p className="mt-1.5 text-[0.74rem] leading-relaxed text-slate-200 whitespace-pre-line bg-slate-950/80 p-2.5 rounded-xl border border-slate-800/80">
                 {hs.detail}
               </p>
@@ -858,42 +1104,305 @@ function BrowserApp({ found, find }: Ctx) {
 }
 
 /* --------------------------------------------------------------- notes */
+
+const EVIDENCE_SUSPECT_LINKS: Record<string, { suspectId: string; reason: string }[]> = {
+  // Case 1: Dũng
+  'don-hang-2147': [{ suspectId: 'dung', reason: 'Định vị GPS chứng minh Dũng nhận đơn tại Hẻm 42 đúng 21:47!' }],
+  'anh-phan-chieu': [{ suspectId: 'dung', reason: 'Mặt kính cửa hàng phản chiếu Dũng dắt xe xanh mint lúc 21:58!' }],
+  'tin-nhan-nhap': [{ suspectId: 'dung', reason: 'Bản nháp tin nhắn trong máy Dũng: "Cô Lan ơi mai em trả xe"!' }],
+  'dung-khai-21h15': [{ suspectId: 'dung', reason: 'Dũng khai về phòng từ 21:15 để ngụy tạo chứng cứ ngoại phạm!' }],
+  'hung-cho-vay': [{ suspectId: 'dung', reason: 'Dũng nợ tiền tiệm sửa xe Hùng nên túng quẫn làm liều!' }],
+
+  // Case 2: Sơn
+  'son-ao-do': [{ suspectId: 'son', reason: 'Ảnh chụp lúc 20:20: Sơn mặc áo khoác đỏ đứng sát vách tủ đồ!' }],
+  'son-no-tien': [{ suspectId: 'son', reason: 'Sơn nợ chị Hạnh 6 triệu quá hạn, nháp rao bán máy 5 triệu!' }],
+  'lo-hong-tu': [{ suspectId: 'son', reason: 'Sơn lợi dụng khe hở nóc tủ để thò tay rút điện thoại!' }],
+
+  // Case 3: Trang
+  'trang-giay': [{ suspectId: 'trang', reason: 'Giày vải trắng của Trang dính bùn đỏ chỉ có ở sau bệ hòm quỹ!' }],
+  'chuyen-tien-trng': [{ suspectId: 'trang', reason: 'Trang chuyển khoản gấp 8 triệu cho chủ nợ Tú lúc 21:32!' }],
+  'tin-nhan-do': [{ suspectId: 'trang', reason: 'Tin nhắn hẹn chủ nợ: "Tối nay xong chuyển 8tr"!' }],
+  'hop-den': [{ suspectId: 'trang', reason: 'Hộp đèn pin mang chữ "T" của Trang in dấu tay bùn cạnh hòm quỹ!' }],
+
+  // Case 4: Đạt
+  'khai-ghi-am': [{ suspectId: 'dat', reason: 'Bản ghi âm 21:12 ghi lại khoảnh khắc Đạt tấn công Khải ở tầng hầm!' }],
+  'tui-den': [{ suspectId: 'dat', reason: 'Đạt ném túi đen chứa găng tay và sổ nợ vào thùng rác lúc 21:30!' }],
+  'ma-ket': [{ suspectId: 'dat', reason: 'Đạt đổi mã két thành 2147 và trực tiếp nhập mã mở két!' }],
+  'chuyen-khoan': [{ suspectId: 'dat', reason: 'Đạt duyệt chuyển khoản 200 triệu công ty cho chủ nợ Bảy!' }],
+  'dat-giay': [{ suspectId: 'dat', reason: 'Camera hẻm sau quay cảnh Đạt xách túi đen rời chung cư!' }],
+
+  // Case 5: Vũ & Yến
+  'nhiet-do-am-tra': [{ suspectId: 'vu', reason: 'Ấm trà đun lúc 21:30 chứng minh Vũ đập vỡ đồng hồ ngụy tạo alibi 22:15!' }],
+  'di-chuc-truat-quyen': [{ suspectId: 'vu', reason: 'Động cơ sát hại: Ông Khang truất quyền thừa kế 30 tỷ của Vũ!' }],
+  'lo-doc-non-bo': [{ suspectId: 'vu', reason: 'Dấu vân tay ngón trỏ của Bác sĩ Vũ in trên lọ độc Aconitine!' }],
+  'then-cai-chi-cuoc': [{ suspectId: 'vu', reason: 'Vũ dùng chỉ cước câu cá giật then cài cửa sổ tạo hiện trường phòng kín!' }],
+  'vet-bun-ban-cong': [{ suspectId: 'vu', reason: 'Vết bùn đế giày da Pierre Cardin size 42 của Vũ trên thành ban công!' }],
+  'chuyen-khoan-yen': [
+    { suspectId: 'yen', reason: 'Yến nhận cọc 200 triệu từ Vũ để tiếp tay ngắt điện!' },
+    { suspectId: 'vu', reason: 'Vũ chuyển cọc 200 triệu mua chuộc người giúp việc!' },
+  ],
+  'tin-nhan-bi-mat': [
+    { suspectId: 'yen', reason: 'Yến nhận lệnh ngắt cầu dao tầng 2 lúc 21:20 và canh cửa!' },
+    { suspectId: 'vu', reason: 'Vũ nhắn tin chỉ đạo Yến ngắt cầu dao camera!' },
+  ],
+}
+
 function NotesApp({ found }: { found: Set<string> }) {
-  const { clues: CLUES } = usePack()
+  const { clues: CLUES, suspects: SUSPECTS } = usePack()
+  const [tab, setTab] = useState<'list' | 'mindmap'>('mindmap')
+  const [selectedSuspect, setSelectedSuspect] = useState<string | null>(null)
+  const [selectedClue, setSelectedClue] = useState<string | null>(null)
+  const [links, setLinks] = useState<{ suspectId: string; clueId: string; reason: string }[]>([])
+  const [feedback, setFeedback] = useState<{ text: string; success: boolean } | null>(null)
+
   const list = Array.from(found)
+
+  useEffect(() => {
+    if (!feedback) return
+    const t = setTimeout(() => setFeedback(null), 2500)
+    return () => clearTimeout(t)
+  }, [feedback])
+
+  const handleCreateLink = () => {
+    if (!selectedSuspect || !selectedClue) return
+
+    // Check if already linked
+    if (links.some((l) => l.suspectId === selectedSuspect && l.clueId === selectedClue)) {
+      setFeedback({ text: '📌 Liên kết này đã được thiết lập từ trước.', success: true })
+      return
+    }
+
+    const matches = EVIDENCE_SUSPECT_LINKS[selectedClue]
+    const match = matches?.find((m) => m.suspectId === selectedSuspect)
+
+    if (match) {
+      setLinks((prev) => [...prev, { suspectId: selectedSuspect, clueId: selectedClue, reason: match.reason }])
+      setSelectedClue(null)
+      setFeedback({ text: '✨ XÂU CHUỖI THÀNH CÔNG! Đã liên kết chứng cứ buộc tội đanh thép!', success: true })
+    } else {
+      setFeedback({ text: '❌ Chưa đủ cơ sở trực tiếp để gắn manh mối này với đối tượng đã chọn.', success: false })
+    }
+  }
+
   return (
-    <div className="flex h-full flex-col bg-[#0b0f19]">
-      <div className="flex items-center justify-between border-b border-slate-800 bg-slate-900/90 px-4 py-3">
-        <p className="text-sm font-bold text-white tracking-tight">Sổ tay điều tra viên</p>
-        <span className="rounded-full bg-cyan-950/60 border border-cyan-500/40 px-2.5 py-0.5 text-[0.64rem] font-bold text-cyan-400">
-          {list.length}/{Object.keys(CLUES).length} manh mối
-        </span>
+    <div className="flex h-full flex-col bg-[#0b0f19] relative">
+      {/* Top Header */}
+      <div className="flex items-center justify-between border-b border-slate-800 bg-slate-900/90 px-4 py-2.5">
+        <div className="flex items-center gap-2">
+          <p className="text-sm font-bold text-white tracking-tight">Sổ tay điều tra</p>
+          <span className="rounded-full bg-cyan-950/60 border border-cyan-500/40 px-2.5 py-0.5 text-[0.6rem] font-bold text-cyan-400">
+            {list.length}/{Object.keys(CLUES).length} manh mối
+          </span>
+        </div>
+
+        {/* Tab Switch */}
+        <div className="flex items-center gap-1 bg-slate-950 rounded-xl p-0.5 border border-slate-800">
+          <button
+            onClick={() => setTab('mindmap')}
+            className={`rounded-lg px-2.5 py-1 text-[0.62rem] font-bold transition-all flex items-center gap-1 ${
+              tab === 'mindmap' ? 'bg-cyan-600 text-white shadow' : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            <span>🕸️</span> Sơ đồ suy luận
+          </button>
+          <button
+            onClick={() => setTab('list')}
+            className={`rounded-lg px-2.5 py-1 text-[0.62rem] font-bold transition-all flex items-center gap-1 ${
+              tab === 'list' ? 'bg-slate-700 text-white shadow' : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            <span>📋</span> Danh sách
+          </button>
+        </div>
       </div>
-      <div className="flex-1 space-y-2.5 overflow-y-auto p-3.5">
-        {list.length === 0 && (
-          <div className="py-12 px-4 text-center">
-            <span className="text-3xl">📓</span>
-            <p className="mt-2 text-[0.74rem] font-medium leading-relaxed text-slate-400">
-              Sổ tay hiện đang trống. Hãy đọc tin nhắn Zola, lướt web và soi hiện trường để thu thập chứng cứ.
+
+      {/* Floating Feedback Toast */}
+      {feedback && (
+        <div
+          className={`absolute bottom-3 left-1/2 -translate-x-1/2 z-40 max-w-[90%] rounded-2xl px-4 py-2 text-[0.68rem] font-bold shadow-2xl backdrop-blur-md border pointer-events-none transition-all ${
+            feedback.success
+              ? 'bg-emerald-950/95 text-emerald-300 border-emerald-500/60 shadow-emerald-900/50'
+              : 'bg-slate-900/95 text-slate-300 border-slate-700 shadow-black'
+          }`}
+        >
+          {feedback.text}
+        </div>
+      )}
+
+      {/* TAB 1: SƠ ĐỒ SUY LUẬN (MIND MAP CORKBOARD) */}
+      {tab === 'mindmap' && (
+        <div className="flex-1 overflow-y-auto p-3.5 space-y-3">
+          <div className="rounded-2xl border border-cyan-500/30 bg-gradient-to-r from-slate-900 to-cyan-950/20 p-3 shadow">
+            <p className="text-[0.62rem] font-bold text-cyan-300 uppercase tracking-wider flex items-center gap-1.5">
+              <span>🕸️</span> BẢNG NỐI DÂY CHỨNG CỨ & LẬP LUẬN BUỘC TỘI
+            </p>
+            <p className="mt-1 text-[0.65rem] text-slate-300">
+              Chạm chọn 1 <strong className="text-white">Nghi phạm</strong> + 1 <strong className="text-white">Manh mối</strong> rồi nhấn nút <strong className="text-cyan-400">“Nối dây chứng cứ”</strong> để hoàn thiện chuỗi lập luận kết tội.
             </p>
           </div>
-        )}
-        {list.map((id) => {
-          const c = CLUES[id]
-          if (!c) return null
-          return (
-            <div key={id} className="rounded-2xl border border-slate-800 bg-slate-900/70 p-3.5 shadow-sm transition-all hover:border-slate-700">
-              <p className="text-[0.78rem] font-bold text-white flex items-center gap-1.5">
-                <span className="grid h-6 w-6 place-items-center rounded-lg bg-slate-800 border border-slate-700 text-xs">
-                  {TAGS[c.tag] ?? '📌'}
-                </span>
-                {c.title}
-              </p>
-              <p className="mt-2 text-[0.72rem] leading-relaxed text-slate-300 pl-7">{c.detail}</p>
+
+          {/* Suspects Selector Row */}
+          <div>
+            <p className="text-[0.62rem] font-bold text-slate-400 uppercase tracking-wider mb-2">
+              1. Chọn đối tượng tình nghi:
+            </p>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {SUSPECTS.map((s) => {
+                const isSelected = selectedSuspect === s.id
+                const suspectLinks = links.filter((l) => l.suspectId === s.id)
+                return (
+                  <button
+                    key={s.id}
+                    onClick={() => setSelectedSuspect(s.id)}
+                    className={`p-2 rounded-xl border text-left transition-all ${
+                      isSelected
+                        ? 'border-cyan-400 bg-cyan-950/50 shadow-[0_0_15px_rgba(6,182,212,0.3)] ring-1 ring-cyan-400'
+                        : 'border-slate-800 bg-slate-900/60 hover:bg-slate-800/80'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl">{s.avatar}</span>
+                      <div className="min-w-0 flex-1">
+                        <p className={`truncate text-[0.74rem] font-bold ${isSelected ? 'text-cyan-300' : 'text-white'}`}>
+                          {s.name}
+                        </p>
+                        <p className="truncate text-[0.58rem] text-slate-400">{s.role}</p>
+                      </div>
+                    </div>
+                    {suspectLinks.length > 0 && (
+                      <div className="mt-1.5 flex items-center gap-1 text-[0.56rem] font-bold text-emerald-400">
+                        <span>🔴 {suspectLinks.length} liên kết</span>
+                      </div>
+                    )}
+                  </button>
+                )
+              })}
             </div>
-          )
-        })}
-      </div>
+          </div>
+
+          {/* Clues Selector Row */}
+          <div>
+            <p className="text-[0.62rem] font-bold text-slate-400 uppercase tracking-wider mb-2">
+              2. Chọn manh mối đối chiếu:
+            </p>
+            {list.length === 0 ? (
+              <p className="text-[0.65rem] text-slate-500 italic p-3 text-center">
+                Chưa có manh mối nào trong sổ tay. Hãy khám nghiệm hiện trường hoặc thẩm vấn Zola trước!
+              </p>
+            ) : (
+              <div className="flex gap-2 overflow-x-auto pb-1">
+                {list.map((cid) => {
+                  const c = CLUES[cid]
+                  if (!c) return null
+                  const isSelected = selectedClue === cid
+                  const isLinkedWithCurrent = selectedSuspect
+                    ? links.some((l) => l.suspectId === selectedSuspect && l.clueId === cid)
+                    : false
+
+                  return (
+                    <button
+                      key={cid}
+                      onClick={() => setSelectedClue(cid)}
+                      className={`shrink-0 w-44 p-2.5 rounded-xl border text-left transition-all ${
+                        isSelected
+                          ? 'border-amber-400 bg-amber-950/40 shadow-[0_0_15px_rgba(245,158,11,0.3)] ring-1 ring-amber-400'
+                          : isLinkedWithCurrent
+                          ? 'border-emerald-500/40 bg-emerald-950/20'
+                          : 'border-slate-800 bg-slate-900/60 hover:bg-slate-800/80'
+                      }`}
+                    >
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <span>{TAGS[c.tag] ?? '📌'}</span>
+                        <span className={`truncate text-[0.7rem] font-bold ${isSelected ? 'text-amber-300' : 'text-slate-200'}`}>
+                          {c.title}
+                        </span>
+                      </div>
+                      <p className="text-[0.6rem] text-slate-400 line-clamp-2 leading-relaxed">{c.detail}</p>
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Action Button: Nối dây */}
+          <button
+            onClick={handleCreateLink}
+            disabled={!selectedSuspect || !selectedClue}
+            className="w-full py-2.5 rounded-xl font-bold text-[0.74rem] bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:brightness-110 disabled:opacity-40 transition-all shadow-lg flex items-center justify-center gap-2"
+          >
+            <span>🔗</span>
+            <span>Nối dây chứng cứ kết tội</span>
+          </button>
+
+          {/* Established Mind Map Connections */}
+          <div className="pt-2 border-t border-slate-800">
+            <p className="text-[0.62rem] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between">
+              <span>Chuỗi chứng cứ đã xác lập ({links.length}):</span>
+              {links.length >= 3 && (
+                <span className="text-emerald-400 font-bold">⚖️ ĐỦ CƠ SỞ CÁO BUỘC THỦ PHẠM!</span>
+              )}
+            </p>
+
+            {links.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-slate-800 p-6 text-center text-slate-500 text-[0.68rem]">
+                Chưa có liên kết suy luận nào. Hãy chọn nghi phạm và manh mối để nối dây!
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {links.map((l, idx) => {
+                  const s = SUSPECTS.find((sp) => sp.id === l.suspectId)
+                  const c = CLUES[l.clueId]
+                  return (
+                    <div
+                      key={idx}
+                      className="rounded-xl border border-red-500/40 bg-gradient-to-r from-red-950/30 via-slate-900 to-slate-900/80 p-3 shadow-md"
+                    >
+                      <div className="flex items-center gap-2 text-[0.72rem] font-bold text-white mb-1">
+                        <span>{s?.avatar} {s?.name}</span>
+                        <span className="text-red-400 font-mono">🔴───🔗───🔴</span>
+                        <span className="text-cyan-300 truncate">{c?.title}</span>
+                      </div>
+                      <p className="text-[0.66rem] text-slate-300 leading-relaxed pl-2 border-l-2 border-red-500/50">
+                        {l.reason}
+                      </p>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* TAB 2: DANH SÁCH MANH MỐI */}
+      {tab === 'list' && (
+        <div className="flex-1 space-y-2.5 overflow-y-auto p-3.5">
+          {list.length === 0 && (
+            <div className="py-12 px-4 text-center">
+              <span className="text-3xl">📓</span>
+              <p className="mt-2 text-[0.74rem] font-medium leading-relaxed text-slate-400">
+                Sổ tay hiện đang trống. Hãy đọc tin nhắn Zola, lướt web và soi hiện trường để thu thập chứng cứ.
+              </p>
+            </div>
+          )}
+          {list.map((id) => {
+            const c = CLUES[id]
+            if (!c) return null
+            return (
+              <div key={id} className="rounded-2xl border border-slate-800 bg-slate-900/70 p-3.5 shadow-sm transition-all hover:border-slate-700">
+                <p className="text-[0.78rem] font-bold text-white flex items-center gap-1.5">
+                  <span className="grid h-6 w-6 place-items-center rounded-lg bg-slate-800 border border-slate-700 text-xs">
+                    {TAGS[c.tag] ?? '📌'}
+                  </span>
+                  {c.title}
+                </p>
+                <p className="mt-2 text-[0.72rem] leading-relaxed text-slate-300 pl-7">{c.detail}</p>
+              </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }
