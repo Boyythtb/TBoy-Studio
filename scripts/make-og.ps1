@@ -1,8 +1,13 @@
+param(
+  [string]$Source = 'public\detective\hien-truong-2158.jpg',
+  [string]$Out = 'public\og.jpg'
+)
+
 Add-Type -AssemblyName System.Drawing
 
 $root = Split-Path -Parent $PSScriptRoot
-$srcPath = Join-Path $root 'public\detective\hien-truong-2158.jpg'
-$outPath = Join-Path $root 'public\og.jpg'
+$srcPath = Join-Path $root $Source
+$outPath = Join-Path $root $Out
 
 $src = [System.Drawing.Image]::FromFile($srcPath)
 $w = 1200
@@ -37,4 +42,4 @@ $g.Dispose()
 $bmp.Dispose()
 $src.Dispose()
 
-Write-Output ("og.jpg: {0} bytes" -f (Get-Item $outPath).Length)
+Write-Output ("{0}: {1} bytes" -f $Out, (Get-Item $outPath).Length)

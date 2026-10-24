@@ -101,6 +101,14 @@ export const PRESETS = {
       'headlight still on, helmet hanging on the mirror, damp concrete floor, pipes on the ceiling, ' +
       'harsh fluorescent light, no people, CCTV angle. ' + STYLE,
   },
+  'bia-cong-game': {
+    out: 'public/detective/bia-cong-game.png',
+    ratio: '4:3',
+    prompt:
+      'A cozy Vietnamese game night table seen from above at night: playing cards, a board game with small tokens, ' +
+      'a laptop showing a dark purple game lobby with no readable text, paper lanterns, snacks and glasses of tea, ' +
+      'warm amber and violet lighting, cinematic, inviting, no people, no text. ' + STYLE,
+  },
   'case4-ket-sat': {
     out: 'public/detective/case4-ket-sat.png',
     ratio: '4:3',
