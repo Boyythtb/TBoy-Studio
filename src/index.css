@@ -4,20 +4,24 @@
   --font-sans: "Be Vietnam Pro", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-display: "Playfair Display", "Be Vietnam Pro", Georgia, serif;
 
-  --color-night-950: #04040a;
-  --color-night-900: #080812;
-  --color-night-800: #0e0e1c;
-  --color-night-700: #16162a;
-  --color-night-600: #212140;
+  /* Mystic Midnight - Đêm trăng & Rừng lạnh */
+  --color-night-950: #060913;
+  --color-night-900: #0a0f1d;
+  --color-night-800: #0f172a;
+  --color-night-700: #1e293b;
+  --color-night-600: #334155;
 
-  --color-moon: #cac5ff;
-  --color-violet: #7d6dff;
-  --color-violet-soft: #a99cff;
-  --color-blood: #e0433a;
-  --color-blood-soft: #ff6a5c;
-  --color-amber: #f0b44e;
-  --color-parchment: #f1edfa;
-  --color-mute: #8d88a8;
+  --color-moon: #e2e8f0;
+  --color-parchment: #f8fafc;
+  --color-mute: #94a3b8;
+
+  --color-blood: #ef4444;
+  --color-blood-deep: #b91c1c;
+  --color-blood-soft: #f87171;
+
+  --color-mystic-cyan: #06b6d4;
+  --color-mystic-blue: #38bdf8;
+  --color-torch: #f59e0b;
 }
 
 /* ------------------------------------------------------------------ base */
@@ -34,7 +38,7 @@ body,
 
 body {
   margin: 0;
-  background: #04040a;
+  background: #060913;
   color: var(--color-parchment);
   font-family: var(--font-sans);
   font-feature-settings: "ss01" on;
@@ -44,20 +48,20 @@ body {
 }
 
 ::selection {
-  background: rgba(125, 109, 255, 0.35);
+  background: rgba(6, 182, 212, 0.35);
 }
 
 /* thin scrollbars */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
+  scrollbar-color: rgba(226, 232, 240, 0.16) transparent;
 }
 *::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 *::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(226, 232, 240, 0.16);
   border-radius: 99px;
 }
 
@@ -65,32 +69,39 @@ body {
 
 .display {
   font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.015em;
-  line-height: 0.95;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
 }
 
 .eyebrow {
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.32em;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--color-mute);
+  color: var(--color-mystic-cyan);
 }
 
 .text-glow {
-  text-shadow: 0 0 40px rgba(169, 156, 255, 0.45), 0 0 90px rgba(125, 109, 255, 0.25);
+  text-shadow: 0 0 35px rgba(56, 189, 248, 0.28), 0 2px 10px rgba(0, 0, 0, 0.8);
 }
 
 .grad-moon {
-  background: linear-gradient(180deg, #ffffff 0%, #dcd7ff 45%, #a498ff 100%);
+  background: linear-gradient(180deg, #ffffff 0%, #e2e8f0 45%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.grad-cyan {
+  background: linear-gradient(180deg, #ffffff 0%, #a5f3fc 35%, #06b6d4 75%, #0891b2 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .grad-blood {
-  background: linear-gradient(180deg, #ffd9d2 0%, #ff7a66 55%, #c22f27 100%);
+  background: linear-gradient(180deg, #fecaca 0%, #ef4444 50%, #991b1b 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -105,24 +116,24 @@ body {
   overflow: hidden;
   isolation: isolate;
   background:
-    radial-gradient(120% 90% at 78% 4%, rgba(78, 63, 190, 0.42) 0%, rgba(20, 17, 48, 0.2) 42%, transparent 68%),
-    radial-gradient(90% 70% at 12% 96%, rgba(46, 29, 96, 0.4) 0%, transparent 60%),
-    linear-gradient(180deg, #07070f 0%, #05050c 55%, #040409 100%);
+    radial-gradient(120% 90% at 75% 2%, rgba(56, 189, 248, 0.14) 0%, rgba(15, 23, 42, 0.45) 38%, transparent 70%),
+    radial-gradient(85% 65% at 15% 95%, rgba(6, 182, 212, 0.09) 0%, transparent 60%),
+    linear-gradient(180deg, #060913 0%, #0a0f1d 50%, #04060c 100%);
   transition: background 1.6s ease;
 }
 
 .stage[data-mode="day"] {
   background:
-    radial-gradient(110% 80% at 50% 108%, rgba(240, 140, 60, 0.38) 0%, rgba(120, 34, 40, 0.22) 38%, transparent 70%),
-    radial-gradient(80% 60% at 15% 0%, rgba(86, 84, 168, 0.3) 0%, transparent 60%),
-    linear-gradient(180deg, #151020 0%, #180f1c 60%, #0b0710 100%);
+    radial-gradient(110% 80% at 50% 108%, rgba(245, 158, 11, 0.2) 0%, rgba(30, 41, 59, 0.35) 40%, transparent 70%),
+    radial-gradient(80% 60% at 20% 0%, rgba(56, 189, 248, 0.15) 0%, transparent 60%),
+    linear-gradient(180deg, #0a0f1d 0%, #0f172a 60%, #060913 100%);
 }
 
 .stage[data-mode="blood"] {
   background:
-    radial-gradient(100% 70% at 50% 0%, rgba(190, 46, 38, 0.3) 0%, transparent 62%),
-    radial-gradient(90% 80% at 50% 110%, rgba(60, 8, 12, 0.6) 0%, transparent 70%),
-    linear-gradient(180deg, #0a0509 0%, #0c0508 100%);
+    radial-gradient(100% 70% at 50% 0%, rgba(239, 68, 68, 0.28) 0%, transparent 65%),
+    radial-gradient(90% 80% at 50% 110%, rgba(185, 28, 28, 0.45) 0%, transparent 70%),
+    linear-gradient(180deg, #0b0507 0%, #070305 100%);
 }
 
 .stage-stars {
@@ -249,16 +260,78 @@ body {
 /* --------------------------------------------------------------- surfaces */
 
 .glass {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.025) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.45) 0%, rgba(15, 23, 42, 0.75) 100%);
+  border: 1px solid rgba(226, 232, 240, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 16px 40px -20px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
 }
 
 .glass-dark {
-  background: rgba(8, 8, 18, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(18px);
+  background: rgba(10, 15, 29, 0.9);
+  border: 1px solid rgba(226, 232, 240, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 20px 50px -25px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Mystic Midnight Card */
+.cyber-card,
+.luxury-card,
+.midnight-card {
+  position: relative;
+  border-radius: 1.5rem;
+  background: linear-gradient(160deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.85) 100%);
+  border: 1px solid rgba(226, 232, 240, 0.1);
+  box-shadow: 0 14px 35px -15px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.cyber-card::before,
+.luxury-card::before,
+.midnight-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.4), transparent);
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.cyber-card:hover,
+.luxury-card:hover,
+.midnight-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(56, 189, 248, 0.3);
+  box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.9), 0 0 25px -10px rgba(56, 189, 248, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.cyber-card:hover::before,
+.luxury-card:hover::before,
+.midnight-card:hover::before {
+  opacity: 1;
+}
+
+.neon-tag,
+.luxury-tag,
+.midnight-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(226, 232, 240, 0.15);
+  color: #e2e8f0;
 }
 
 /* ------------------------------------------------------------------ buttons */
@@ -270,47 +343,59 @@ body {
   gap: 0.55em;
   border-radius: 999px;
   font-weight: 600;
-  letter-spacing: -0.01em;
-  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease, background 0.25s ease,
-    opacity 0.2s ease;
+  letter-spacing: 0.01em;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
   border: 1px solid transparent;
   user-select: none;
   white-space: nowrap;
 }
 .btn:active {
-  transform: scale(0.965);
+  transform: scale(0.975);
 }
 .btn:disabled {
-  opacity: 0.4;
+  opacity: 0.35;
   cursor: not-allowed;
   transform: none;
 }
 
+/* Mystic Blue Action Button */
 .btn-primary {
-  background: linear-gradient(180deg, #9a8bff 0%, #6f5cf5 55%, #5747d6 100%);
-  color: #0a0718;
-  box-shadow: 0 10px 34px -10px rgba(125, 109, 255, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  background: linear-gradient(135deg, #38bdf8 0%, #0284c7 60%, #0369a1 100%);
+  color: #ffffff;
+  box-shadow: 0 8px 24px -6px rgba(2, 132, 199, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.35);
   font-weight: 700;
 }
 .btn-primary:hover:not(:disabled) {
-  box-shadow: 0 16px 44px -10px rgba(125, 109, 255, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  background: linear-gradient(135deg, #7dd3fc 0%, #0ea5e9 60%, #0284c7 100%);
+  box-shadow: 0 12px 30px -4px rgba(2, 132, 199, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  transform: translateY(-1.5px);
 }
 
+/* Blood Werewolf Button */
 .btn-blood {
-  background: linear-gradient(180deg, #ff7b6b 0%, #e0433a 55%, #b32b24 100%);
-  color: #1a0503;
-  box-shadow: 0 10px 34px -10px rgba(224, 67, 58, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  background: linear-gradient(135deg, #f87171 0%, #ef4444 50%, #b91c1c 100%);
+  color: #ffffff;
+  box-shadow: 0 8px 24px -6px rgba(239, 68, 68, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.35);
   font-weight: 700;
 }
+.btn-blood:hover:not(:disabled) {
+  box-shadow: 0 12px 30px -4px rgba(239, 68, 68, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  transform: translateY(-1.5px);
+}
 
+/* Night Slate Ghost Button */
 .btn-ghost {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(15, 23, 42, 0.6);
+  border-color: rgba(226, 232, 240, 0.12);
   color: var(--color-parchment);
+  backdrop-filter: blur(12px);
 }
 .btn-ghost:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(30, 41, 59, 0.8);
+  border-color: rgba(56, 189, 248, 0.4);
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
 .btn-sm {

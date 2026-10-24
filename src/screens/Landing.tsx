@@ -11,34 +11,44 @@ import { ROLES, ROLE_ORDER } from '../game/roles'
 function HeroStack() {
   const picks = ['wolf', 'seer', 'villager'] as const
   return (
-    <div className="relative mx-auto h-[340px] w-[260px] sm:h-[420px] sm:w-[300px]">
+    <div className="relative mx-auto h-[350px] w-[270px] sm:h-[430px] sm:w-[310px]">
       {picks.map((id, i) => {
         const def = ROLES[id]
-        const rot = [-11, 6, 0][i]
-        const x = [-34, 30, 0][i]
-        const y = [16, -8, 0][i]
+        const rot = [-10, 5, 0][i]
+        const x = [-32, 28, 0][i]
+        const y = [14, -6, 0][i]
+        const isWolf = def.team === 'wolf'
         return (
           <motion.div
             key={id}
             initial={{ opacity: 0, y: 40, rotate: 0 }}
             animate={{ opacity: 1, y, rotate: rot, x }}
-            transition={{ delay: 0.15 + i * 0.12, duration: 0.8, ease: [0.2, 0.8, 0.2, 1] }}
-            className="absolute inset-0 overflow-hidden rounded-[26px] border border-white/12"
+            transition={{ delay: 0.15 + i * 0.12, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0 overflow-hidden rounded-[26px] border border-slate-700/60"
             style={{
               zIndex: i + 1,
-              background: `radial-gradient(120% 80% at 50% 0%, ${def.glow} 0%, rgba(10,9,20,0.95) 60%, #07070f 100%)`,
-              boxShadow: `0 30px 80px -40px ${def.accent}aa, inset 0 1px 0 rgba(255,255,255,0.14)`,
+              background: isWolf
+                ? 'radial-gradient(120% 90% at 50% 0%, rgba(239,68,68,0.3) 0%, rgba(15,23,42,0.98) 60%, #060913 100%)'
+                : 'radial-gradient(120% 90% at 50% 0%, rgba(56,189,248,0.22) 0%, rgba(15,23,42,0.98) 60%, #060913 100%)',
+              boxShadow: isWolf
+                ? '0 25px 60px -20px rgba(239,68,68,0.35), inset 0 1px 0 rgba(255,255,255,0.18)'
+                : '0 25px 60px -20px rgba(56,189,248,0.3), inset 0 1px 0 rgba(255,255,255,0.18)',
             }}
           >
             <div className="flex h-full flex-col items-center justify-center px-6 text-center">
-              <div className="mb-4 text-6xl" style={{ filter: `drop-shadow(0 0 24px ${def.glow})` }}>
+              <div 
+                className="mb-4 text-6xl transition-transform duration-300 hover:scale-105" 
+                style={{ filter: isWolf ? 'drop-shadow(0 0 24px rgba(239,68,68,0.6))' : 'drop-shadow(0 0 24px rgba(56,189,248,0.5))' }}
+              >
                 {def.icon}
               </div>
-              <p className="eyebrow mb-1">{def.team === 'wolf' ? 'Phe Sói' : 'Phe Dân'}</p>
-              <h3 className="display text-3xl" style={{ color: def.accent }}>
+              <p className="eyebrow mb-1.5 font-bold text-[0.66rem] tracking-[0.25em]" style={{ color: isWolf ? '#f87171' : '#38bdf8' }}>
+                {isWolf ? 'PHE MA SÓI' : 'PHE DÂN LÀNG'}
+              </p>
+              <h3 className="display text-3xl font-bold tracking-tight text-white font-serif" style={{ color: isWolf ? '#ef4444' : '#f8fafc' }}>
                 {def.name}
               </h3>
-              <p className="mt-2 text-[0.72rem] leading-relaxed text-parchment/60">{def.tagline}</p>
+              <p className="mt-2.5 text-[0.76rem] leading-relaxed text-slate-300 font-medium">{def.tagline}</p>
             </div>
           </motion.div>
         )
@@ -116,13 +126,17 @@ export default function Landing() {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.18 }}
-              className="mt-8 flex flex-wrap items-center gap-3"
+              className="mt-8 flex flex-wrap items-center gap-3.5"
             >
-              <button className="btn btn-primary btn-lg" onClick={create} disabled={creating}>
-                {creating ? 'Đang mở phòng…' : 'Tạo phòng'}
-                <span aria-hidden>→</span>
+              <button 
+                className="btn btn-blood btn-lg px-8 text-[0.96rem]"
+                onClick={create} 
+                disabled={creating}
+              >
+                {creating ? 'Đang mở phòng…' : 'Mở phòng Ma Sói'}
+                <span aria-hidden className="text-sm">🐺</span>
               </button>
-              <Link to="/join" className="btn btn-ghost btn-lg">
+              <Link to="/join" className="btn btn-ghost btn-lg px-7 text-[0.96rem]">
                 Vào phòng
               </Link>
             </motion.div>
@@ -131,20 +145,20 @@ export default function Landing() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2 text-[0.72rem] text-mute"
+              className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2 text-[0.74rem] font-medium text-slate-400"
             >
               <span className="flex items-center gap-1.5">
-                <i className="h-1.5 w-1.5 rounded-full bg-violet" /> 4–16 người
+                <i className="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#38bdf8]" /> 4–16 người
               </span>
               <span className="flex items-center gap-1.5">
-                <i className="h-1.5 w-1.5 rounded-full bg-amber" /> 20–40 phút
+                <i className="h-1.5 w-1.5 rounded-full bg-amber-400 shadow-[0_0_8px_#fbbf24]" /> 20–40 phút
               </span>
               <span className="flex items-center gap-1.5">
-                <i className="h-1.5 w-1.5 rounded-full bg-blood" /> Miễn phí
+                <i className="h-1.5 w-1.5 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444]" /> Miễn phí
               </span>
             </motion.div>
 
-            {error && <p className="mt-4 text-sm text-blood-soft">{error}</p>}
+            {error && <p className="mt-4 text-sm text-red-400 font-semibold">{error}</p>}
           </div>
 
           <div className="hidden lg:block">
@@ -152,40 +166,46 @@ export default function Landing() {
           </div>
         </section>
 
-        <section className="mt-6 grid gap-4 sm:grid-cols-3">
+        <section className="mt-8 grid gap-4 sm:grid-cols-3">
           {[
-            { icon: '📺', title: 'Mở trên TV', text: 'Tạo phòng trên laptop, TV hay tablet — màn hình chung của cả bàn.' },
-            { icon: '📱', title: 'Quét mã vào phòng', text: 'Mỗi người quét QR hoặc nhập mã 4 ký tự. Không cài đặt gì cả.' },
-            { icon: '🌙', title: 'Chơi và nghi ngờ', text: 'Điện thoại giữ bí mật vai của bạn. Màn hình chung kể lại câu chuyện.' },
+            { icon: '📺', title: 'Màn hình trung tâm', text: 'Mở bàn trên TV hoặc Laptop — làm bảng thông báo điều phối câu chuyện của cả làng.' },
+            { icon: '📱', title: 'Điện thoại nhận vai', text: 'Quét mã QR hoặc nhập 4 ký tự để kết nối ngay. Điện thoại giữ tuyệt mật vai trò của bạn.' },
+            { icon: '🌙', title: 'Đêm tối & Bầu cử', text: 'Sói thức dậy cắn người trong bóng tối. Ban ngày cả làng thảo luận và treo cổ kẻ tình nghi.' },
           ].map((s) => (
-            <div key={s.title} className="glass rounded-2xl p-5">
+            <div 
+              key={s.title} 
+              className="midnight-card p-6"
+            >
               <div className="mb-3 text-2xl">{s.icon}</div>
-              <h3 className="text-sm font-semibold text-parchment">{s.title}</h3>
-              <p className="mt-1.5 text-[0.78rem] leading-relaxed text-mute">{s.text}</p>
+              <h3 className="text-sm font-bold text-white tracking-tight">{s.title}</h3>
+              <p className="mt-2 text-[0.82rem] leading-relaxed text-slate-300 font-normal">{s.text}</p>
             </div>
           ))}
         </section>
 
-        <section className="mt-14">
-          <div className="mb-5 flex items-end justify-between">
-            <h2 className="display text-2xl text-parchment/90">{ROLE_ORDER.length} vai, một ngôi làng</h2>
-            <Link to="/guides" className="text-xs text-mute hover:text-parchment">
-              Xem luật →
+        <section className="mt-16">
+          <div className="mb-6 flex items-end justify-between border-b border-slate-800/80 pb-4">
+            <div>
+              <span className="eyebrow text-cyan-400 font-bold">Danh sách vai diễn</span>
+              <h2 className="display text-2xl font-serif text-white tracking-tight mt-1">{ROLE_ORDER.length} vai trò trong ngôi làng</h2>
+            </div>
+            <Link to="/guides" className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
+              Luật chơi chi tiết →
             </Link>
           </div>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-5">
             {ROLE_ORDER.map((id) => {
               const def = ROLES[id]
               return (
                 <div
                   key={id}
-                  className="group rounded-2xl border border-white/8 bg-white/[0.03] p-4 transition-colors hover:bg-white/[0.06]"
+                  className="group relative rounded-2xl border border-slate-800 bg-slate-900/60 p-4 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800/80"
                 >
-                  <div className="text-2xl">{def.icon}</div>
-                  <div className="mt-3 text-[0.8rem] font-semibold" style={{ color: def.accent }}>
+                  <div className="text-2xl transition-transform duration-300 group-hover:scale-105">{def.icon}</div>
+                  <div className="mt-3 text-[0.84rem] font-bold tracking-tight" style={{ color: def.accent }}>
                     {def.name}
                   </div>
-                  <div className="mt-1 text-[0.68rem] leading-snug text-mute">{def.tagline}</div>
+                  <div className="mt-1 text-[0.72rem] leading-snug text-slate-400">{def.tagline}</div>
                 </div>
               )
             })}

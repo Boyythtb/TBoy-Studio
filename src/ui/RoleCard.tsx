@@ -21,18 +21,18 @@ export function RoleCard({ role, flipped, onFlip, className = '', showDesc = tru
         <button
           type="button"
           onClick={onFlip}
-          className="flip-face absolute inset-0 grid place-items-center overflow-hidden rounded-[28px] border border-white/12 bg-night-900 text-center"
+          className="flip-face absolute inset-0 grid place-items-center overflow-hidden rounded-[26px] border border-cyan-500/30 bg-[#0a0f1d] text-center transition-all duration-300 hover:border-cyan-400/60"
           style={{
             background:
-              'radial-gradient(120% 90% at 50% 0%, rgba(125,109,255,0.28) 0%, rgba(10,9,20,0.9) 55%, #07070f 100%)',
-            boxShadow: '0 40px 90px -40px rgba(125,109,255,0.6), inset 0 1px 0 rgba(255,255,255,0.12)',
+              'radial-gradient(120% 90% at 50% 0%, rgba(56,189,248,0.2) 0%, rgba(15,23,42,0.98) 55%, #060913 100%)',
+            boxShadow: '0 25px 60px -20px rgba(0,0,0,0.9), 0 0 25px -5px rgba(56,189,248,0.2), inset 0 1px 0 rgba(255,255,255,0.18)',
           }}
           aria-label="Mở vai của bạn"
         >
           <div className="pointer-events-none absolute inset-0 opacity-[0.16]">
             <svg viewBox="0 0 200 200" className="h-full w-full">
               {[86, 68, 50, 32].map((r) => (
-                <circle key={r} cx="100" cy="100" r={r} fill="none" stroke="#cac5ff" strokeWidth="0.4" />
+                <circle key={r} cx="100" cy="100" r={r} fill="none" stroke="#38bdf8" strokeWidth="0.5" />
               ))}
               {Array.from({ length: 24 }).map((_, i) => {
                 const a = (i / 24) * Math.PI * 2
@@ -43,57 +43,62 @@ export function RoleCard({ role, flipped, onFlip, className = '', showDesc = tru
                     y1={100 + Math.sin(a) * 50}
                     x2={100 + Math.cos(a) * 86}
                     y2={100 + Math.sin(a) * 86}
-                    stroke="#cac5ff"
-                    strokeWidth="0.3"
+                    stroke="#38bdf8"
+                    strokeWidth="0.4"
                   />
                 )
               })}
             </svg>
           </div>
           <div className="relative px-6">
-            <div className="mb-4 text-[3.2rem] leading-none opacity-90" style={{ filter: 'drop-shadow(0 0 24px rgba(125,109,255,0.7))' }}>
+            <div className="mb-4 text-[3.6rem] leading-none" style={{ filter: 'drop-shadow(0 0 24px rgba(56,189,248,0.5))' }}>
               🐺
             </div>
-            <p className="eyebrow mb-2">Vai của bạn</p>
-            <p className="display text-2xl text-parchment/90">Chạm để mở</p>
-            <p className="mt-3 text-xs text-mute">Đừng để ai nhìn màn hình</p>
+            <p className="eyebrow mb-2 font-bold text-[0.66rem] tracking-[0.25em] text-cyan-400">DANH TÍNH BÍ MẬT</p>
+            <p className="display text-2xl font-serif text-white font-bold">Chạm để lật bài</p>
+            <p className="mt-3 text-xs text-slate-400 font-medium">🛡️ Giữ kín trước mắt người khác</p>
           </div>
         </button>
 
         {/* front */}
         <div
-          className="flip-face flip-back sheen absolute inset-0 overflow-hidden rounded-[28px] border border-white/15 text-center"
+          className="flip-face flip-back sheen absolute inset-0 overflow-hidden rounded-[26px] border text-center transition-all"
           style={{
-            background: `radial-gradient(120% 80% at 50% 0%, ${def.glow} 0%, rgba(10,9,20,0.96) 58%, #07070f 100%)`,
-            boxShadow: `0 40px 100px -42px ${def.accent}aa, inset 0 1px 0 rgba(255,255,255,0.16)`,
+            borderColor: isWolf ? 'rgba(239,68,68,0.5)' : 'rgba(56,189,248,0.4)',
+            background: isWolf
+              ? 'radial-gradient(120% 90% at 50% 0%, rgba(239,68,68,0.25) 0%, rgba(15,23,42,0.98) 60%, #060913 100%)'
+              : 'radial-gradient(120% 90% at 50% 0%, rgba(56,189,248,0.2) 0%, rgba(15,23,42,0.98) 60%, #060913 100%)',
+            boxShadow: isWolf
+              ? '0 30px 70px -25px rgba(239,68,68,0.4), inset 0 1px 0 rgba(255,255,255,0.2)'
+              : '0 30px 70px -25px rgba(56,189,248,0.35), inset 0 1px 0 rgba(255,255,255,0.2)',
           }}
         >
-          <div className="flex h-full flex-col items-center justify-center px-5 py-6">
+          <div className="flex h-full flex-col items-center justify-center px-6 py-7">
             <motion.div
-              initial={{ scale: 0.6, opacity: 0 }}
-              animate={flipped ? { scale: 1, opacity: 1 } : { scale: 0.6, opacity: 0 }}
-              transition={{ delay: 0.35, type: 'spring', stiffness: 180, damping: 16 }}
-              className="mb-3 text-[3.4rem] leading-none"
-              style={{ filter: `drop-shadow(0 0 26px ${def.glow})` }}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={flipped ? { scale: 1, opacity: 1 } : { scale: 0.8, opacity: 0 }}
+              transition={{ delay: 0.3, type: 'spring', stiffness: 180, damping: 18 }}
+              className="mb-4 text-[3.8rem] leading-none"
+              style={{ filter: isWolf ? 'drop-shadow(0 0 24px rgba(239,68,68,0.6))' : 'drop-shadow(0 0 24px rgba(56,189,248,0.6))' }}
             >
               {def.icon}
             </motion.div>
             <span
-              className="mb-2 rounded-full px-2.5 py-1 text-[0.58rem] font-bold tracking-[0.2em] uppercase"
+              className="mb-2.5 rounded-full px-3 py-1 text-[0.62rem] font-bold tracking-[0.2em] uppercase border"
               style={{
-                background: isWolf ? 'rgba(224,67,58,0.18)' : 'rgba(125,109,255,0.18)',
-                color: isWolf ? '#ff9c92' : '#c9c0ff',
-                border: `1px solid ${isWolf ? 'rgba(224,67,58,0.35)' : 'rgba(125,109,255,0.35)'}`,
+                background: isWolf ? 'rgba(239,68,68,0.18)' : 'rgba(56,189,248,0.15)',
+                color: isWolf ? '#f87171' : '#7dd3fc',
+                borderColor: isWolf ? 'rgba(239,68,68,0.4)' : 'rgba(56,189,248,0.35)',
               }}
             >
-              {isWolf ? 'Phe Sói' : 'Phe Dân'}
+              {isWolf ? 'PHE MA SÓI' : 'PHE DÂN LÀNG'}
             </span>
-            <h2 className="display text-3xl" style={{ color: def.accent }}>
+            <h2 className="display text-3xl font-serif text-white font-bold" style={{ color: def.accent }}>
               {def.name}
             </h2>
-            <p className="mt-2 max-w-[24ch] text-[0.78rem] leading-relaxed text-parchment/70">{def.tagline}</p>
+            <p className="mt-2.5 max-w-[24ch] text-[0.84rem] font-semibold leading-relaxed text-slate-200">{def.tagline}</p>
             {showDesc && (
-              <p className="mt-3 max-w-[30ch] text-[0.68rem] leading-relaxed text-mute">{def.desc}</p>
+              <p className="mt-3.5 max-w-[30ch] text-[0.72rem] leading-relaxed text-slate-400 font-normal">{def.desc}</p>
             )}
           </div>
         </div>

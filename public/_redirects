@@ -1,4 +1,1 @@
-/join      /  200
-/guides    /  200
-/host/*    /  200
-/play/*    /  200
+/*    /index.html   200

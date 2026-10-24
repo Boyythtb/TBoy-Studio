@@ -6,7 +6,7 @@ export default function SecretCodeLanding() {
       game="secret-code"
       icon="🔐"
       name="Mật Mã"
-      accent="#7be0c0"
+      accent="#06b6d4"
       tagline="Giấu một con số. Đoán của người khác."
       desc="Mỗi người giữ kín một mật mã 3 chữ số. Đến lượt, bạn chọn một người và đoán mã của họ — máy sẽ nói bạn đúng bao nhiêu vị trí. Ai bẻ được nhiều mã nhất trước thì thắng."
       players="2–8 người"

@@ -9,41 +9,49 @@ const GAMES = [
     to: '/ma-soi',
     icon: '🐺',
     name: 'Ma Sói',
-    tag: 'Suy luận · phe phái',
+    tag: 'Suy luận · Phe phái',
     players: '4–16 người',
     time: '20–40 phút',
-    desc: 'Cả làng ngủ, bầy sói thức. Tìm ra kẻ mang nanh trước khi trời sáng.',
-    accent: '#ff6a5c',
+    desc: 'Cả làng ngủ, bầy sói thức. Tìm ra kẻ mang nanh vuốt trước khi ánh bình minh xuất hiện.',
+    accent: '#ef4444',
+    badgeColor: '#f87171',
+    glow: 'rgba(239, 68, 68, 0.25)',
   },
   {
     to: '/secret-code',
     icon: '🔐',
-    name: 'Mật mã',
-    tag: 'Suy luận · đối kháng',
+    name: 'Mật Mã',
+    tag: 'Trí tuệ · Đối kháng',
     players: '2–8 người',
     time: '10–20 phút',
-    desc: 'Mỗi người giấu một mật mã 3 số. Đến lượt, đoán mã của người khác — đúng vị trí, đúng số?',
-    accent: '#7be0c0',
+    desc: 'Mỗi người cất giấu một mật mã 3 số. Lần lượt suy luận và giải mã khóa của đối phương.',
+    accent: '#06b6d4',
+    badgeColor: '#67e8f9',
+    glow: 'rgba(6, 182, 212, 0.25)',
   },
   {
     to: '/sea-battle',
     icon: '🚢',
-    name: 'Hải chiến',
-    tag: 'Chiến thuật · 1v1',
+    name: 'Hải Chiến',
+    tag: 'Chiến thuật · Đấu tay đôi',
     players: '2 người',
     time: '10–15 phút',
-    desc: 'Đặt hạm đội trên lưới 8×8 rồi bắn từng phát. Bắn trúng thì được bắn tiếp.',
-    accent: '#8eb4ff',
+    desc: 'Bố trí hạm đội trên hải đồ 8×8, tung phát bắn pháo hạm quyết định để đánh chìm tàu địch.',
+    accent: '#38bdf8',
+    badgeColor: '#7dd3fc',
+    glow: 'rgba(56, 189, 248, 0.25)',
   },
   {
     to: '/detective',
     icon: '🕵️',
     name: 'Thám Tử Bàn Phím',
-    tag: 'Trinh thám · một người',
+    tag: 'Trinh thám · Một người',
     players: '1 người',
     time: '20–40 phút',
-    desc: 'Mở máy tính của anh Tùng, đọc tin nhắn, lướt web, soi ảnh và tìm ra ai đã lấy chiếc xe đạp điện.',
-    accent: '#ffc861',
+    desc: 'Mở máy tính hiện trường của anh Tùng, bóc tách tin nhắn, soi ảnh và tìm ra thủ phạm thực sự.',
+    accent: '#f59e0b',
+    badgeColor: '#fcd34d',
+    glow: 'rgba(245, 158, 11, 0.25)',
   },
 ]
 
@@ -52,75 +60,116 @@ export default function Portal() {
   return (
     <Stage>
       <div className="mx-auto flex min-h-dvh max-w-6xl flex-col px-5 pb-16 sm:px-8">
-        <header className="flex items-center justify-between py-5">
-          <Link to="/" className="flex items-center gap-2.5">
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-white/8 text-lg hairline">🎲</span>
-            <span className="text-[0.82rem] font-bold tracking-[0.28em] text-parchment/80 uppercase">TBOY Studio</span>
+        <header className="flex items-center justify-between py-6 border-b border-slate-800/80">
+          <Link to="/" className="group flex items-center gap-3">
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-slate-800/80 text-xl border border-slate-700/80 shadow-[0_4px_16px_rgba(0,0,0,0.5)] transition-colors group-hover:border-cyan-500/50">
+              🎲
+            </span>
+            <div className="flex flex-col">
+              <span className="text-[0.88rem] font-bold tracking-[0.25em] text-slate-100 uppercase">
+                TBOY STUDIO
+              </span>
+              <span className="text-[0.62rem] tracking-wider text-slate-400 uppercase font-medium">Boardgame Đêm Trăng</span>
+            </div>
           </Link>
-          <div className="flex items-center gap-2">
-            <Link to="/join" className="btn btn-ghost btn-sm">
+          <div className="flex items-center gap-3">
+            <Link to="/join" className="btn btn-ghost btn-sm text-xs font-semibold">
               Vào phòng
             </Link>
             <SfxToggle />
           </div>
         </header>
 
-        <section className="py-10 sm:py-14">
-          <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="eyebrow mb-4">
-            Game tiệc · một màn hình, nhiều điện thoại
-          </motion.p>
+        <section className="py-12 sm:py-16">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            className="inline-flex items-center gap-2 mb-4 px-3.5 py-1 rounded-full bg-slate-900/90 border border-cyan-500/30 text-[0.68rem] font-bold tracking-wider text-cyan-400 uppercase shadow-[0_0_15px_rgba(6,182,212,0.15)]"
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
+            Một màn hình trung tâm · Nhiều điện thoại kết nối
+          </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 }}
-            className="display max-w-3xl text-[clamp(2.7rem,7.5vw,4.8rem)] text-glow"
+            className="display max-w-3xl text-[clamp(2.9rem,7.5vw,5rem)] tracking-tight font-serif text-glow"
           >
-            <span className="grad-moon">Đêm nay</span> <span className="italic text-parchment">chơi gì?</span>
+            <span className="grad-moon">Đêm nay</span> <span className="italic grad-cyan">chơi gì?</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.12 }}
-            className="mt-5 max-w-xl text-[0.95rem] leading-relaxed text-parchment/60"
+            className="mt-4 max-w-xl text-[0.98rem] leading-relaxed text-slate-300 font-normal"
           >
-            Chọn một trò, mở phòng trên laptop/TV, cả bàn quét mã QR bằng điện thoại. Không cần cài app,
-            không cần tài khoản.
+            Mở phòng trên TV hoặc Laptop, mọi người quét mã QR bằng điện thoại để bắt đầu ván đấu. 
+            Không cần cài đặt, không cần đăng ký.
           </motion.p>
         </section>
 
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <section className="grid gap-5 sm:grid-cols-2">
           {GAMES.map((g, i) => (
             <motion.div
               key={g.to}
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 + i * 0.07 }}
-              className="glass group flex flex-col rounded-3xl p-6 transition-transform hover:-translate-y-0.5"
+              transition={{ delay: 0.1 + i * 0.06 }}
+              className="midnight-card group flex flex-col p-7 transition-all duration-300"
             >
-              <div className="flex items-start justify-between">
-                <span className="text-4xl">{g.icon}</span>
-                <span className="rounded-full border border-white/10 px-2.5 py-1 text-[0.6rem] tracking-[0.16em] text-mute uppercase">
-                  {g.players}
-                </span>
+              <div className="flex items-start justify-between gap-4">
+                <div 
+                  className="grid h-15 w-15 place-items-center rounded-2xl text-3xl shadow-inner border border-slate-700/60 transition-transform duration-300 group-hover:scale-105"
+                  style={{
+                    background: `radial-gradient(circle at 30% 30%, ${g.accent}20, rgba(15, 23, 42, 0.9))`,
+                    boxShadow: `0 8px 20px -6px ${g.glow}`,
+                  }}
+                >
+                  {g.icon}
+                </div>
+                <div className="flex flex-col items-end gap-1.5">
+                  <span 
+                    className="midnight-tag"
+                    style={{ borderColor: `${g.accent}40`, color: g.badgeColor }}
+                  >
+                    ● {g.players}
+                  </span>
+                  <span className="text-[0.7rem] font-medium text-slate-400">{g.time}</span>
+                </div>
               </div>
-              <h2 className="display mt-5 text-2xl" style={{ color: g.accent }}>
-                {g.name}
-              </h2>
-              <p className="mt-1 text-[0.65rem] tracking-[0.18em] text-mute uppercase">{g.tag}</p>
-              <p className="mt-3 flex-1 text-[0.82rem] leading-relaxed text-parchment/60">{g.desc}</p>
-              <div className="mt-5 flex items-center justify-between border-t border-white/8 pt-4">
-                <span className="text-[0.68rem] text-mute">{g.time}</span>
-                <Link to={g.to} className="text-[0.78rem] font-medium text-parchment/85 group-hover:text-parchment">
-                  Chơi →
+
+              <div className="mt-6 flex-1">
+                <h2 className="display text-2xl font-bold tracking-tight text-white transition-colors" style={{ color: g.accent }}>
+                  {g.name}
+                </h2>
+                <p className="mt-1 text-[0.68rem] font-bold tracking-[0.16em] uppercase text-cyan-400/80">{g.tag}</p>
+                <p className="mt-3 text-[0.88rem] leading-relaxed text-slate-300 font-normal">{g.desc}</p>
+              </div>
+
+              <div className="mt-7 flex items-center justify-between border-t border-slate-800/80 pt-5">
+                <span className="text-[0.72rem] text-slate-400 font-medium">Sẵn sàng nhập cuộc</span>
+                <Link 
+                  to={g.to} 
+                  className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[0.82rem] font-bold text-white transition-all shadow-md group-hover:shadow-lg"
+                  style={{
+                    background: `linear-gradient(135deg, ${g.accent}, rgba(15, 23, 42, 0.9))`,
+                    boxShadow: `0 4px 14px -3px ${g.glow}`,
+                  }}
+                >
+                  Bắt đầu <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
                 </Link>
               </div>
             </motion.div>
           ))}
         </section>
 
-        <footer className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-white/8 pt-6 text-[0.7rem] text-mute">
-          <span className="tracking-[0.28em] uppercase">TBOY STUDIO</span>
-          <span>Không cần cài app · Miễn phí</span>
+        <footer className="mt-16 flex flex-wrap items-center justify-between gap-4 border-t border-slate-800/80 pt-6 text-[0.72rem] text-slate-400">
+          <div className="flex items-center gap-2">
+            <span className="font-bold tracking-[0.25em] text-slate-300 uppercase">TBOY STUDIO</span>
+            <span className="text-slate-600">•</span>
+            <span>Ma Sói & Boardgame tiệc</span>
+          </div>
+          <span className="text-cyan-400/80">Hoàn toàn miễn phí · Mở web chơi ngay</span>
         </footer>
       </div>
     </Stage>

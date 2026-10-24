@@ -6,7 +6,7 @@ export default function BattleLanding() {
       game="sea-battle"
       icon="🚢"
       name="Hải Chiến"
-      accent="#8eb4ff"
+      accent="#38bdf8"
       tagline="Hai hạm đội. Một vùng biển. Không có chỗ cho may mắn."
       desc="Mỗi người giấu 4 con tàu trên lưới 8×8, rồi lần lượt bắn vào vùng biển của đối phương. Bắn trúng thì được bắn tiếp — bắn trượt thì nhường lượt. Ai đánh chìm cả hạm đội trước sẽ thắng."
       players="đúng 2 người"

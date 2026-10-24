@@ -46,6 +46,27 @@ export function Stage({ mode = 'night', children, className = '', moon = true, f
         ))}
       </div>
       {moon && <div className="stage-moon floaty" aria-hidden />}
+      {/* Mystic Midnight Moonlit Fog & Aura */}
+      <div
+        className="pointer-events-none absolute -top-48 -left-48 h-[650px] w-[650px] rounded-full opacity-20 blur-[140px]"
+        style={{
+          background:
+            mode === 'blood'
+              ? 'radial-gradient(circle, #ef4444 0%, #b91c1c 40%, transparent 70%)'
+              : 'radial-gradient(circle, #38bdf8 0%, #0284c7 45%, transparent 70%)',
+        }}
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute -bottom-48 -right-48 h-[650px] w-[650px] rounded-full opacity-15 blur-[140px]"
+        style={{
+          background:
+            mode === 'blood'
+              ? 'radial-gradient(circle, #991b1b 0%, transparent 70%)'
+              : 'radial-gradient(circle, #06b6d4 0%, #0f172a 50%, transparent 70%)',
+        }}
+        aria-hidden
+      />
       {fog && <div className="stage-fog" aria-hidden />}
       {fog && <div className="stage-fog b" aria-hidden />}
       <div className="grain" aria-hidden />
