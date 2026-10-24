@@ -62,7 +62,8 @@
           "shots": {
             ".read": "auth != null",
             "$uid": {
-              ".write": "auth != null && ((auth.uid === $uid && !data.exists() && newData.val() === 'pending') || root.child('rooms').child($code).child('meta').child('hostUid').val() === auth.uid)"
+              ".read": "auth != null",
+              ".write": "auth != null && (auth.uid === $uid || root.child('rooms').child($code).child('meta').child('hostUid').val() === auth.uid)"
             }
           }
         },

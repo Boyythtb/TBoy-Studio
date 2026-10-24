@@ -68,7 +68,7 @@ export default function TruthOrDareHost() {
     setStartError(null)
     try {
       sfx.win()
-      await todStart(code, players)
+      await todStart(code, players, uid || undefined)
     } catch (err) {
       console.error('Failed to start truth or dare:', err)
       setStartError(err instanceof Error ? err.message : 'Không thể bắt đầu, vui lòng thử lại!')
@@ -78,12 +78,14 @@ export default function TruthOrDareHost() {
   }
 
   const handleSpin = async () => {
-    if (!state) return
+    if (!state || state.step === 'spinning') return
     sfx.vote()
     await todSpin(code, state, players)
   }
 
-  const activePlayer = state?.activeUid ? players[state.activeUid] : null
+  const spinnerPlayer = state?.spinnerUid ? players[state.spinnerUid] : null
+  const victimPlayer = state?.activeUid ? players[state.activeUid] : null
+  const currentStep = state?.step || 'waiting_spin'
 
   // Lobby Screen
   if (!state || state.phase === 'lobby') {
@@ -252,21 +254,50 @@ export default function TruthOrDareHost() {
         <main className="mt-4 flex flex-1 flex-col items-center">
           {/* Active Player Notification Banner */}
           <div className="w-full max-w-lg rounded-2xl bg-gradient-to-r from-rose-950/80 via-slate-900/90 to-amber-950/80 p-3 text-center border border-rose-500/30 shadow-lg backdrop-blur-md">
-            <p className="text-[0.65rem] font-bold uppercase tracking-widest text-slate-400">
-              NGƯỜI BỊ CHỈ ĐỊNH ĐÊM NAY
-            </p>
-            <h2 className="text-2xl font-black text-white flex items-center justify-center gap-2 mt-0.5">
-              <span>🎯</span>
-              <span className="text-rose-400 drop-shadow-[0_0_12px_rgba(244,63,94,0.6)]">
-                {activePlayer?.name || 'Chưa chọn'}
-              </span>
-            </h2>
-            <div className="mt-1 flex items-center justify-center gap-2 text-xs text-amber-300 font-semibold">
-              <span>Đã uống phạt:</span>
-              <span className="rounded-full bg-amber-500/20 px-2.5 py-0.5 border border-amber-500/40 font-black">
-                🍻 {state.drinks?.[state.activeUid || ''] ?? 0} ly
-              </span>
-            </div>
+            {currentStep === 'waiting_spin' ? (
+              <>
+                <p className="text-[0.65rem] font-bold uppercase tracking-widest text-rose-400">
+                  LƯỢT QUAY TÌM NẠN NHÂN TIẾP THEO
+                </p>
+                <h2 className="text-2xl font-black text-white flex items-center justify-center gap-2 mt-0.5">
+                  <span>🍾</span>
+                  <span className="text-amber-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.6)]">
+                    {spinnerPlayer?.name || 'Chủ xị'}
+                  </span>
+                </h2>
+                <p className="mt-1 text-xs text-slate-300">
+                  Chờ <span className="text-white font-bold">{spinnerPlayer?.name}</span> ấn quay chai trên điện thoại…
+                </p>
+              </>
+            ) : currentStep === 'spinning' ? (
+              <>
+                <p className="text-[0.65rem] font-bold uppercase tracking-widest text-amber-400">
+                  VÒNG QUAY ĐANG CHẠY
+                </p>
+                <h2 className="text-2xl font-black text-white flex items-center justify-center gap-2 mt-0.5">
+                  <span className="animate-spin">🍾</span>
+                  <span className="text-rose-400">Đang tìm nạn nhân…</span>
+                </h2>
+              </>
+            ) : (
+              <>
+                <p className="text-[0.65rem] font-bold uppercase tracking-widest text-slate-400">
+                  NGƯỜI BỊ CHỈ ĐỊNH ĐÊM NAY
+                </p>
+                <h2 className="text-2xl font-black text-white flex items-center justify-center gap-2 mt-0.5">
+                  <span>🎯</span>
+                  <span className="text-rose-400 drop-shadow-[0_0_12px_rgba(244,63,94,0.6)]">
+                    {victimPlayer?.name || 'Chưa chọn'}
+                  </span>
+                </h2>
+                <div className="mt-1 flex items-center justify-center gap-2 text-xs text-amber-300 font-semibold">
+                  <span>Đã uống phạt:</span>
+                  <span className="rounded-full bg-amber-500/20 px-2.5 py-0.5 border border-amber-500/40 font-black">
+                    🍻 {state.drinks?.[state.activeUid || ''] ?? 0} ly
+                  </span>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Circle Ring & Bottle */}
@@ -280,7 +311,7 @@ export default function TruthOrDareHost() {
               const radius = 115
               const x = Math.cos(rad) * radius
               const y = Math.sin(rad) * radius
-              const isSelected = uid === state.activeUid
+              const isSelected = currentStep === 'waiting_spin' ? uid === state.spinnerUid : uid === state.activeUid
 
               return (
                 <div
@@ -296,7 +327,7 @@ export default function TruthOrDareHost() {
                     <Avatar index={p.avatar} size={38} name={p.name} />
                     {isSelected && (
                       <span className="absolute -top-2 -right-2 grid h-5 w-5 place-items-center rounded-full bg-rose-600 text-[0.65rem] text-white font-black shadow-md border border-white">
-                        🎯
+                        {currentStep === 'waiting_spin' ? '🍾' : '🎯'}
                       </span>
                     )}
                   </div>
@@ -341,25 +372,49 @@ export default function TruthOrDareHost() {
           <div className="mt-3 flex items-center gap-3">
             <button
               onClick={handleSpin}
-              className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-rose-600 to-amber-600 px-6 py-2.5 text-sm font-black text-white shadow-lg hover:brightness-110 active:scale-95 transition-all shadow-rose-950/50"
+              disabled={currentStep === 'spinning'}
+              className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-rose-600 to-amber-600 px-6 py-2.5 text-sm font-black text-white shadow-lg hover:brightness-110 active:scale-95 transition-all shadow-rose-950/50 disabled:opacity-50"
             >
               <span>🍾</span>
-              <span>Xoay Chai Chọn Lượt</span>
+              <span>{currentStep === 'spinning' ? 'Đang Xoay Chai…' : 'Xoay Chai (Quay Hộ)'}</span>
             </button>
             <button
               onClick={() => todNextTurn(code, state, players)}
               className="rounded-2xl bg-slate-900 border border-slate-800 px-4 py-2.5 text-xs font-bold text-slate-300 hover:text-white transition-colors"
             >
-              Chuyền lượt ➔
+              Đổi người quay ➔
             </button>
           </div>
 
           {/* Reveal Card Section */}
           <div className="mt-5 w-full max-w-lg">
-            {!state.card ? (
+            {currentStep === 'waiting_spin' && (
               <div className="rounded-3xl bg-slate-900/60 p-5 border border-slate-800/80 text-center backdrop-blur-md">
-                <p className="text-xs font-bold text-slate-400">
-                  Đang đợi <span className="text-rose-400 font-black">{activePlayer?.name}</span> chọn trên điện thoại:
+                <span className="text-3xl block mb-2">🍻</span>
+                <p className="text-xs font-bold text-slate-300">
+                  Lượt của <span className="text-amber-400 font-black">{spinnerPlayer?.name}</span> quay chai!
+                </p>
+                <p className="mt-1 text-[0.7rem] text-slate-400">
+                  {spinnerPlayer?.name} hãy mở điện thoại và bấm nút xoay chai để tìm người tiếp theo.
+                </p>
+              </div>
+            )}
+
+            {currentStep === 'spinning' && (
+              <div className="rounded-3xl bg-slate-900/60 p-5 border border-rose-500/40 text-center backdrop-blur-md">
+                <p className="text-xs font-bold text-amber-300 animate-pulse">
+                  Chai đang quay tròn… Cả bàn cùng chờ xem ai dính chưởng!
+                </p>
+              </div>
+            )}
+
+            {currentStep === 'picking' && (
+              <div className="rounded-3xl bg-slate-900/60 p-5 border border-slate-800/80 text-center backdrop-blur-md">
+                <p className="text-xs font-bold text-slate-300">
+                  🎯 Mũi chai đã chỉ vào <span className="text-rose-400 font-black">{victimPlayer?.name}</span>!
+                </p>
+                <p className="mt-1 text-[0.7rem] text-slate-400">
+                  Đang đợi {victimPlayer?.name} chọn trên điện thoại (hoặc Host chọn hộ):
                 </p>
                 <div className="mt-3 flex justify-center gap-3">
                   <button
@@ -376,7 +431,9 @@ export default function TruthOrDareHost() {
                   </button>
                 </div>
               </div>
-            ) : (
+            )}
+
+            {currentStep === 'acting' && state.card && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.9, y: 15 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -395,7 +452,7 @@ export default function TruthOrDareHost() {
                 </div>
 
                 <p className="mt-2 text-xs font-bold text-slate-400">
-                  Dành riêng cho <span className="text-white underline font-black">{activePlayer?.name}</span>:
+                  Dành riêng cho <span className="text-white underline font-black">{victimPlayer?.name}</span>:
                 </p>
 
                 <h3 className="mt-3 text-lg font-black leading-snug text-white sm:text-xl drop-shadow-md min-h-[60px] flex items-center justify-center">
