@@ -85,8 +85,8 @@ export function MonopolyBoard({
                 backgroundColor: ownerColor ? `${ownerColor}12` : undefined,
               }}
               className={`relative flex flex-col justify-between rounded-xl p-1 sm:p-1.5 border overflow-hidden shadow-md transition-all ${
-                owner ? 'border-2 shadow-lg' : 'border-slate-800/80 bg-slate-950'
-              }`}
+                owner ? 'border-2 shadow-lg' : 'border-slate-800/80 bg-slate-950/90'
+              } ${playersHere.length > 0 ? 'ring-1 ring-amber-400/60' : ''}`}
             >
               {/* Header màu sắc / Cờ chủ sở hữu */}
               {prop ? (
@@ -124,10 +124,14 @@ export function MonopolyBoard({
                     <>
                       <span className="text-amber-300 font-black">
                         {prop.houses === 4
-                          ? '🏨 Khách Sạn'
-                          : prop.houses > 0
-                          ? `🏡 ${prop.houses} Sao`
-                          : 'Đất trống'}
+                          ? '🏨'
+                          : prop.houses === 3
+                          ? '🏡🏡🏡'
+                          : prop.houses === 2
+                          ? '🏡🏡'
+                          : prop.houses === 1
+                          ? '🏡'
+                          : '·'}
                       </span>
                       <span className="text-emerald-400 font-extrabold">
                         {Math.round(prop.baseRent * (1 + prop.houses * 1.5))}$

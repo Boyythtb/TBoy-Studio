@@ -128,7 +128,7 @@ export default function CatanPlayer() {
 
   if (loading) {
     return (
-      <PhoneShell code={code}>
+      <PhoneShell code={code} accent="#10b981">
         <div className="flex flex-1 items-center justify-center">
           <div className="h-9 w-9 animate-spin rounded-full border-2 border-white/10 border-t-emerald-400" />
         </div>
@@ -138,7 +138,7 @@ export default function CatanPlayer() {
 
   if (!meta) {
     return (
-      <PhoneShell code={code}>
+      <PhoneShell code={code} accent="#10b981">
         <div className="flex flex-1 flex-col items-center justify-center text-center">
           <p className="display text-2xl text-parchment/85">Không tìm thấy phòng</p>
           <Link to="/" className="btn btn-primary btn-md mt-6">
@@ -151,7 +151,7 @@ export default function CatanPlayer() {
 
   if (!me) {
     return (
-      <PhoneShell code={code}>
+      <PhoneShell code={code} accent="#10b981">
         <JoinForm code={code} onJoined={() => undefined} />
       </PhoneShell>
     )
@@ -159,7 +159,7 @@ export default function CatanPlayer() {
 
   if (!state || state.phase === 'lobby') {
     return (
-      <PhoneShell code={code}>
+      <PhoneShell code={code} accent="#10b981">
         <LobbyWait
           code={code}
           players={order.map((id) => players[id])}
@@ -172,7 +172,7 @@ export default function CatanPlayer() {
   }
 
   return (
-    <PhoneShell code={code}>
+    <PhoneShell code={code} accent="#10b981">
       <div className="flex flex-1 flex-col justify-between h-full max-h-screen overflow-hidden select-none pb-1">
         {/* Floating Notification Toast */}
         <AnimatePresence>
