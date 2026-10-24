@@ -35,6 +35,15 @@ import {
   SUSPECTS as SUSPECTS4,
   TRASH as TRASH4,
 } from './case4'
+import {
+  CASE as CASE5,
+  CLUES as CLUES5,
+  CONVS as CONVS5,
+  ORDERS as ORDERS5,
+  PHOTOS as PHOTOS5,
+  SUSPECTS as SUSPECTS5,
+  TRASH as TRASH5,
+} from './case5'
 
 export interface CaseMeta {
   no: string
@@ -143,5 +152,24 @@ export const CASES: CasePack[] = [
     photos: PHOTOS4,
     suspects: SUSPECTS4,
     trash: TRASH4,
+  },
+  {
+    id: 'an-mang',
+    difficulty: 'Siêu khó',
+    maxTries: 2,
+    code: { value: '2130', hint: 'Mã 4 số: Giờ thực tế ấm trà thông minh đun sôi pha tách trà độc (dạng HHMM).' },
+    accomplice: 'yen',
+    news: {
+      title: 'Kỳ án phòng kín Hẻm 42: Nhà sưu tầm cổ vật tử vong bên tách trà độc',
+      lead: 'Đêm mưa bão 17/10, ông Hoàng Khang được phát hiện tử vong gục trên bàn trà. Cửa phòng trà khoá then cài bên trong, đồng hồ trên tay nạn nhân vỡ kẹt ở 22:15, nhưng nhiều bằng chứng khoa học cho thấy đây là vụ mưu sát được tính toán tinh vi.',
+      body: 'Pháp y phát hiện chất kịch độc Aconitine trong chén trà và sợi chỉ cước vướng ở chốt then cài cửa sổ. Bản thảo di chúc 30 tỷ vừa được soạn thảo chiều cùng ngày đã biến mất bí ẩn.',
+    },
+    case: CASE5,
+    clues: CLUES5,
+    convs: CONVS5,
+    orders: ORDERS5,
+    photos: PHOTOS5,
+    suspects: SUSPECTS5,
+    trash: TRASH5,
   },
 ]
