@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Stage } from '../ui/Stage'
 import { Avatar } from '../ui/Avatar'
 import { SfxToggle } from '../ui/SfxToggle'
+import { PhoneShell, JoinForm, LobbyWait } from '../ui/PhoneJoin'
 import { useGameRoom } from '../hooks/useGameRoom'
 import { paths, store } from '../lib/store'
 import { buzz } from '../lib/buzz'
@@ -12,13 +13,15 @@ import {
   todSelectType,
   todComplete,
   todDrink,
+  getPlayerOrder,
   type TodState,
 } from '../game/truthOrDareEngine'
 
 export default function TruthOrDarePlayer() {
   const { code = '' } = useParams()
-  const { uid, players } = useGameRoom(code)
+  const { uid, meta, players, loading } = useGameRoom(code)
   const [state, setState] = useState<TodState | null>(null)
+  const order = useMemo(() => getPlayerOrder(players), [players])
   const me = uid ? players[uid] : null
 
   useEffect(() => {
@@ -39,54 +42,69 @@ export default function TruthOrDarePlayer() {
     }
   }, [isMyTurn])
 
-  // If in Lobby
-  if (!state || state.phase === 'lobby') {
+  // 1. Loading
+  if (loading) {
     return (
-      <Stage mode="blood">
-        <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4 pb-8">
-          <header className="flex items-center justify-between py-4 border-b border-rose-900/60">
-            <div className="flex items-center gap-2">
-              <span className="text-xl">🌶️</span>
-              <span className="text-xs font-black tracking-wider text-rose-400 uppercase">
-                PHÒNG {code}
-              </span>
-            </div>
-            <SfxToggle />
-          </header>
-
-          <main className="mt-8 flex flex-1 flex-col items-center justify-center text-center">
-            {me && (
-              <div className="rounded-3xl bg-slate-900/90 p-6 border border-rose-500/30 shadow-xl w-full">
-                <div className="flex justify-center">
-                  <Avatar index={me.avatar} size={64} name={me.name} />
-                </div>
-                <h2 className="mt-3 text-xl font-black text-white">{me.name}</h2>
-                <p className="mt-1 text-xs text-rose-400 font-bold">
-                  ✓ Đã vào bàn nhậu thành công
-                </p>
-
-                <div className="mt-6 rounded-2xl bg-slate-950/80 p-4 border border-slate-800 text-xs text-slate-400">
-                  <div className="h-5 w-5 mx-auto mb-2 animate-spin rounded-full border-2 border-rose-500 border-t-transparent" />
-                  Đang đợi chủ xị bắt đầu vòng xoay…
-                </div>
-              </div>
-            )}
-          </main>
+      <PhoneShell code={code}>
+        <div className="flex flex-1 items-center justify-center">
+          <div className="h-9 w-9 animate-spin rounded-full border-2 border-white/10 border-t-rose-500" />
         </div>
-      </Stage>
+      </PhoneShell>
     )
   }
 
-  // Active Game Player Interface
+  // 2. Room not found
+  if (!meta) {
+    return (
+      <PhoneShell code={code}>
+        <div className="flex flex-1 flex-col items-center justify-center text-center">
+          <p className="display text-2xl text-white font-bold">Không tìm thấy phòng</p>
+          <p className="mt-2 text-xs text-slate-400">
+            Mã phòng <span className="font-mono text-rose-400 font-bold">{code}</span> không tồn tại hoặc đã kết thúc.
+          </p>
+          <Link to="/" className="btn btn-primary btn-md mt-6">
+            Về trang chủ
+          </Link>
+        </div>
+      </PhoneShell>
+    )
+  }
+
+  // 3. Not joined yet -> Show Join Form (Enter Name & Pick Avatar!)
+  if (!me) {
+    return (
+      <PhoneShell code={code}>
+        <JoinForm code={code} accent="#f43f5e" onJoined={() => undefined} />
+      </PhoneShell>
+    )
+  }
+
+  // 4. In Lobby (Waiting for Host to start)
+  if (!state || state.phase === 'lobby') {
+    return (
+      <PhoneShell code={code}>
+        <LobbyWait
+          code={code}
+          players={order.map((id) => players[id])}
+          me={me}
+          icon="🌶️"
+          accent="#f43f5e"
+          text="Bạn đã vào bàn nhậu! Nâng ly bia sẵn sàng chờ chủ xị bấm bắt đầu vòng xoay…"
+        />
+      </PhoneShell>
+    )
+  }
+
+  // 5. Active Game Interface
   return (
     <Stage mode="blood">
       <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4 pb-8">
         {/* Header */}
         <header className="flex items-center justify-between py-3 border-b border-rose-900/60">
           <div className="flex items-center gap-2">
-            {me && <Avatar index={me.avatar} size={28} name={me.name} />}
+            <Avatar index={me.avatar} size={28} name={me.name} />
             <span className="text-xs font-bold text-white truncate max-w-[120px]">
-              {me?.name}
+              {me.name}
             </span>
           </div>
 
@@ -98,14 +116,14 @@ export default function TruthOrDarePlayer() {
           </div>
         </header>
 
-        {/* Turn Status */}
+        {/* Turn Status Notification */}
         <div className="mt-3">
           {isMyTurn ? (
             <motion.div
               initial={{ scale: 0.95 }}
               animate={{ scale: [1, 1.02, 1] }}
-              transition={{ repeat: Infinity, duration: 2 }}
-              className="rounded-2xl bg-gradient-to-r from-rose-600 to-amber-600 p-3 text-center text-white font-black text-sm shadow-lg shadow-rose-900/50"
+              transition={{ repeat: Infinity, duration: 1.8 }}
+              className="rounded-2xl bg-gradient-to-r from-rose-600 to-amber-600 p-3 text-center text-white font-black text-sm shadow-lg shadow-rose-950/60 border border-white/20"
             >
               🔥 ĐẾN LƯỢT BẠN RỒI! HÃY CHỌN SỐ PHẬN:
             </motion.div>
@@ -121,7 +139,7 @@ export default function TruthOrDarePlayer() {
 
         {/* Content Area */}
         <main className="mt-4 flex flex-1 flex-col justify-center">
-          {/* If no card yet */}
+          {/* Phase 1: Card is not picked yet */}
           {!state.card ? (
             <div>
               {isMyTurn ? (
@@ -137,7 +155,7 @@ export default function TruthOrDarePlayer() {
                     }}
                     className="group w-full rounded-3xl bg-gradient-to-b from-cyan-900/60 to-slate-950 p-6 border-2 border-cyan-500/60 text-center shadow-xl active:scale-95 transition-all"
                   >
-                    <span className="text-4xl block mb-2">🌶️</span>
+                    <span className="text-4xl block mb-2 group-hover:scale-110 transition-transform">🌶️</span>
                     <span className="text-xl font-black text-cyan-300 block">SỰ THẬT 18+</span>
                     <span className="text-xs text-slate-400 mt-1 block">
                       Khai sạch bí mật phòng the & chuyện nhạy cảm
@@ -151,7 +169,7 @@ export default function TruthOrDarePlayer() {
                     }}
                     className="group w-full rounded-3xl bg-gradient-to-b from-rose-900/60 to-slate-950 p-6 border-2 border-rose-500/60 text-center shadow-xl active:scale-95 transition-all"
                   >
-                    <span className="text-4xl block mb-2">🔥</span>
+                    <span className="text-4xl block mb-2 group-hover:scale-110 transition-transform">🔥</span>
                     <span className="text-xl font-black text-rose-300 block">THỬ THÁCH TƯƠNG TÁC</span>
                     <span className="text-xs text-slate-400 mt-1 block">
                       Hành động táo bạo với người trong bàn nhậu
@@ -162,28 +180,28 @@ export default function TruthOrDarePlayer() {
                 <div className="rounded-3xl bg-slate-900/80 p-8 text-center border border-slate-800">
                   <div className="text-4xl mb-3 animate-bounce">🍾</div>
                   <h3 className="text-base font-black text-white">
-                    {activePlayer?.name} đang chuẩn bị chọn
+                    {activePlayer?.name} đang chuẩn bị chọn…
                   </h3>
                   <p className="mt-1 text-xs text-slate-400">
-                    Hãy chuẩn bị cốc bia trên tay để sẵn sàng chúc mừng hoặc phạt uống!
+                    Hãy nâng ly bia trên tay sẵn sàng để cổ vũ hoặc phạt uống!
                   </p>
                 </div>
               )}
             </div>
           ) : (
-            /* Card is Revealed */
+            /* Phase 2: Card is Revealed */
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               className={`rounded-3xl p-6 text-center shadow-2xl border backdrop-blur-xl ${
                 state.card.type === 'truth'
-                  ? 'bg-gradient-to-b from-cyan-950/90 to-slate-950 border-cyan-500/60 shadow-cyan-950/50'
-                  : 'bg-gradient-to-b from-rose-950/90 to-slate-950 border-rose-500/60 shadow-rose-950/50'
+                  ? 'bg-gradient-to-b from-cyan-950/95 to-slate-950 border-cyan-500/60 shadow-cyan-950/50'
+                  : 'bg-gradient-to-b from-rose-950/95 to-slate-950 border-rose-500/60 shadow-rose-950/50'
               }`}
             >
               <div className="inline-flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1 text-[0.68rem] font-black border border-white/10 uppercase">
                 {state.card.type === 'truth' ? (
-                  <span className="text-cyan-400">🌶️ SỰ THẬT 18+</span>
+                  <span className="text-cyan-400">🌶️ SỰ THẬT 18+ TÁO BẠO</span>
                 ) : (
                   <span className="text-rose-400">🔥 THỬ THÁCH TƯƠNG TÁC</span>
                 )}
@@ -204,13 +222,13 @@ export default function TruthOrDarePlayer() {
               )}
 
               <div className="mt-4 rounded-xl bg-amber-500/10 p-2.5 border border-amber-500/30 text-amber-300 text-xs font-bold flex items-center justify-center gap-2">
-                <span>🍺 Nếu không dám:</span>
+                <span>🍺 Nếu né tránh:</span>
                 <span className="rounded bg-amber-500 px-2 py-0.5 text-black font-black">
                   PHẠT {state.card.penalty} LY BIA
                 </span>
               </div>
 
-              {/* Action Buttons for Active Player or Anyone */}
+              {/* Action Buttons */}
               {isMyTurn ? (
                 <div className="mt-6 space-y-2.5">
                   <button
@@ -234,7 +252,7 @@ export default function TruthOrDarePlayer() {
                   </button>
                 </div>
               ) : (
-                <div className="mt-6">
+                <div className="mt-6 space-y-2">
                   <p className="text-xs text-slate-400 italic">
                     Đang quan sát <span className="text-white font-bold">{activePlayer?.name}</span> thực hiện…
                   </p>
@@ -243,9 +261,18 @@ export default function TruthOrDarePlayer() {
                       sfx.death()
                       todDrink(code, state, state.card!.penalty)
                     }}
-                    className="mt-3 w-full rounded-2xl bg-rose-950/80 border border-rose-600/60 py-2.5 text-xs font-bold text-rose-300 hover:bg-rose-900 transition-colors"
+                    className="w-full rounded-2xl bg-rose-950/80 border border-rose-600/60 py-2.5 text-xs font-bold text-rose-300 hover:bg-rose-900 transition-colors"
                   >
                     🍻 Bắt Uống Phạt (Nếu né tránh)
+                  </button>
+                  <button
+                    onClick={() => {
+                      sfx.tap()
+                      todComplete(code, state)
+                    }}
+                    className="w-full rounded-2xl bg-slate-900 border border-slate-800 py-2 text-xs font-bold text-slate-400 hover:text-white transition-colors"
+                  >
+                    👏 Xác nhận đã làm xong
                   </button>
                 </div>
               )}

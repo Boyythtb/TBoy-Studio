@@ -7,7 +7,7 @@ import { Qr } from '../ui/Qr'
 import { SfxToggle } from '../ui/SfxToggle'
 import { useGameRoom } from '../hooks/useGameRoom'
 import { paths, store } from '../lib/store'
-import { joinUrl } from '../lib/room'
+import { joinUrl, joinRoom } from '../lib/room'
 import { sfx } from '../lib/sfx'
 import {
   todStart,
@@ -22,12 +22,27 @@ import {
 
 export default function TruthOrDareHost() {
   const { code = '' } = useParams()
-  const { players } = useGameRoom(code)
+  const { uid, players } = useGameRoom(code)
   const [state, setState] = useState<TodState | null>(null)
   const [showQr, setShowQr] = useState(false)
   const [showLeaderboard, setShowLeaderboard] = useState(false)
+  const [hostName, setHostName] = useState('')
+  const [isJoining, setIsJoining] = useState(false)
   const order = useMemo(() => getPlayerOrder(players), [players])
   const url = joinUrl(code)
+
+  const hostMe = uid ? players[uid] : null
+
+  const handleHostJoin = async () => {
+    const trimmed = hostName.trim() || 'Chủ Xị'
+    setIsJoining(true)
+    try {
+      await joinRoom(code, trimmed, Math.floor(Math.random() * 8))
+      setHostName('')
+    } finally {
+      setIsJoining(false)
+    }
+  }
 
   useEffect(() => {
     if (!code) return
@@ -127,6 +142,28 @@ export default function TruthOrDareHost() {
                 </div>
               )}
             </div>
+
+            {/* Host quick join */}
+            {!hostMe && (
+              <div className="mt-4 flex gap-2 w-full max-w-md">
+                <input
+                  type="text"
+                  value={hostName}
+                  onChange={(e) => setHostName(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleHostJoin()}
+                  placeholder="Tên của chủ xị (để cùng chơi)…"
+                  maxLength={14}
+                  className="flex-1 rounded-xl bg-slate-900 border border-rose-500/40 px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none"
+                />
+                <button
+                  onClick={handleHostJoin}
+                  disabled={isJoining}
+                  className="rounded-xl bg-rose-700 hover:bg-rose-600 px-3.5 py-2 text-xs font-black text-white transition-colors"
+                >
+                  {isJoining ? 'Đang vào…' : '+ Chủ Xị Tham Gia'}
+                </button>
+              </div>
+            )}
 
             {/* Start Button */}
             <div className="mt-6 w-full max-w-md">

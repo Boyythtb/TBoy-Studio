@@ -70,7 +70,9 @@ export async function joinRoom(code: string, name: string, avatar: number): Prom
   const c = code.trim().toUpperCase()
   const meta = await store.get<Meta>(paths.meta(c))
   if (!meta) throw new Error('Không tìm thấy phòng này.')
-  if (meta.phase !== 'lobby') throw new Error('Ván đã bắt đầu, không thể vào nữa.')
+  if (meta.phase !== 'lobby' && meta.game !== 'truth-or-dare') {
+    throw new Error('Ván đã bắt đầu, không thể vào nữa.')
+  }
 
   const players = (await store.get<Record<string, Player>>(paths.players(c))) ?? {}
   const existing = players[uid]
