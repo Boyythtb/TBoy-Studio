@@ -1,5 +1,5 @@
 {
-  "name": "ma-soi",
+  "name": "tboy-studio",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,7 +10,7 @@
     "art": "node scripts/nano-banana.mjs",
     "art:cf": "node scripts/cloudflare-flux.mjs",
     "preview": "vite preview",
-    "deploy": "npm run build && wrangler pages deploy dist --project-name=ma-soi --branch=master"
+    "deploy": "npm run build && wrangler pages deploy dist --project-name=tboy-studio --branch=master"
   },
   "dependencies": {
     "firebase": "^13.1.0",
