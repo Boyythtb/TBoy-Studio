@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { CasePack } from './cases'
 
 export type CaseStatus = 'playing' | 'won' | 'lost'
@@ -17,6 +17,14 @@ const EMPTY: SaveState = { clues: [], attempts: 0, status: 'playing', unlocked: 
 
 export function saveKey(caseId: string) {
   return `tboy.detective.${caseId}.v1`
+}
+
+export function clearCaseSave(caseId: string) {
+  try {
+    localStorage.removeItem(saveKey(caseId))
+  } catch {
+    /* ignore */
+  }
 }
 
 function load(key: string): SaveState {
@@ -39,8 +47,10 @@ function load(key: string): SaveState {
 export function useCase(pack: CasePack) {
   const key = saveKey(pack.id)
   const [save, setSave] = useState<SaveState>(() => load(key))
+  const isResetting = useRef(false)
 
   useEffect(() => {
+    if (isResetting.current) return
     try {
       localStorage.setItem(key, JSON.stringify(save))
     } catch {
@@ -90,7 +100,18 @@ export function useCase(pack: CasePack) {
     [pack, save.attempts, save.status, save.stage, save.unlocked],
   )
 
-  const reset = useCallback(() => setSave(EMPTY), [])
+  const reset = useCallback(() => {
+    isResetting.current = true
+    try {
+      localStorage.removeItem(key)
+    } catch {
+      /* ignore */
+    }
+    setSave(EMPTY)
+    setTimeout(() => {
+      isResetting.current = false
+    }, 150)
+  }, [key])
 
   return {
     clues: save.clues,

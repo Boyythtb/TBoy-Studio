@@ -5,7 +5,7 @@ import { useTitle } from '../lib/useTitle'
 import type { Photo } from '../detective/case1'
 import { CASES, type CasePack } from '../detective/cases'
 import { PackCtx, usePack } from '../detective/pack'
-import { saveKey, useCase } from '../detective/useCase'
+import { saveKey, useCase, clearCaseSave } from '../detective/useCase'
 
 type AppId = 'zola' | 'browser' | 'notes' | 'file'
 
@@ -1546,6 +1546,7 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
   const [z, setZ] = useState<Record<AppId, number>>({ zola: 2, browser: 1, notes: 0, file: 0 })
   const [pos, setPos] = useState(() => Object.fromEntries(APPS.map((a) => [a.id, { x: a.x, y: a.y }])) as Record<AppId, { x: number; y: number }>)
   const [toast, setToast] = useState<string | null>(null)
+  const [showExitModal, setShowExitModal] = useState(false)
   const [result, setResult] = useState<string | null>(() =>
     status === 'won' ? 'win' : status === 'lost' ? 'lost' : null,
   )
@@ -1606,8 +1607,23 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
               Mở máy
               <span aria-hidden>⏻</span>
             </button>
+            {clues.length > 0 && (
+              <button
+                className="btn btn-ghost btn-lg text-red-400 hover:text-red-300"
+                onClick={() => {
+                  if (window.confirm('Bạn có chắc muốn xoá tiến độ và chơi lại vụ án này từ đầu?')) {
+                    reset()
+                  }
+                }}
+              >
+                🔄 Chơi lại từ đầu
+              </button>
+            )}
+            <button className="btn btn-ghost btn-lg" onClick={onExit}>
+              Đổi vụ án
+            </button>
             <Link to="/" className="btn btn-ghost btn-lg">
-              Để sau
+              Trang chủ
             </Link>
           </div>
           <p className="mt-8 max-w-md text-[0.66rem] leading-relaxed text-mute/70">
@@ -1628,7 +1644,7 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
         />
 
         {/* menu bar */}
-        <div className="relative z-40 flex h-9 items-center gap-4 border-b border-slate-800 bg-slate-900/70 px-4 text-[0.68rem] text-slate-300 backdrop-blur-md">
+        <div className="relative z-40 flex h-9 items-center gap-3 border-b border-slate-800 bg-slate-900/70 px-4 text-[0.68rem] text-slate-300 backdrop-blur-md">
           <span className="font-bold text-white">🍎 macQuê</span>
           <span className="hidden sm:inline text-slate-400">Tệp</span>
           <span className="hidden sm:inline text-slate-400">Sửa</span>
@@ -1637,6 +1653,14 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
             {CASE.title}
           </span>
           <span className="text-[0.64rem] text-cyan-400 font-semibold">{CASE.time}</span>
+          <button
+            onClick={() => setShowExitModal(true)}
+            className="flex items-center gap-1 rounded-lg border border-red-500/30 bg-red-500/15 px-2.5 py-1 text-[0.65rem] font-medium text-red-300 transition hover:bg-red-500/30 hover:border-red-500/50 hover:text-red-200"
+            title="Thoát vụ án"
+          >
+            <span>🚪</span>
+            <span>Thoát</span>
+          </button>
         </div>
 
         {/* desktop hint */}
@@ -1744,11 +1768,15 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
               </button>
             ))}
             <span className="mx-1 h-8 w-px bg-slate-700/60" />
-            <Link to="/" className="flex w-12 flex-col items-center gap-1 rounded-xl px-1 py-1.5 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-800/80" title="Trang chủ">
-              <span className="text-2xl leading-none">🏠</span>
-              <span className="text-[0.55rem] font-medium text-slate-400">Thoát</span>
+            <button
+              onClick={() => setShowExitModal(true)}
+              className="group flex w-12 flex-col items-center gap-1 rounded-xl px-1 py-1.5 transition-all duration-200 hover:-translate-y-0.5 hover:bg-red-500/20"
+              title="Thoát vụ án"
+            >
+              <span className="text-2xl leading-none transition-transform group-hover:scale-110">🚪</span>
+              <span className="text-[0.55rem] font-medium text-red-400 group-hover:text-red-300">Thoát</span>
               <i className="h-1 w-1 opacity-0" />
-            </Link>
+            </button>
           </div>
         </div>
 
@@ -1756,6 +1784,82 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
         {toast && (
           <div className="fixed bottom-24 left-1/2 z-[60] -translate-x-1/2 rounded-full border border-slate-700 bg-slate-900/90 px-4 py-2 text-[0.7rem] text-slate-200 backdrop-blur shadow-lg">
             {toast}
+          </div>
+        )}
+
+        {/* exit modal */}
+        {showExitModal && (
+          <div className="fixed inset-0 z-[80] grid place-items-center bg-black/80 px-4 backdrop-blur-md">
+            <div className="w-full max-w-md rounded-3xl border border-slate-700/80 bg-[#0c1222] p-6 shadow-2xl">
+              <div className="flex items-center gap-3">
+                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-red-500/15 border border-red-500/30 text-2xl">
+                  🚪
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white">Xác nhận thoát vụ án</h3>
+                  <p className="text-[0.72rem] text-slate-400">{CASE.title}</p>
+                </div>
+              </div>
+
+              <p className="mt-4 text-[0.78rem] text-slate-300 leading-relaxed">
+                Bạn muốn làm gì với tiến độ vụ án hiện tại?
+              </p>
+
+              <div className="mt-4 space-y-2.5">
+                <button
+                  onClick={() => {
+                    reset()
+                    setShowExitModal(false)
+                    onExit()
+                  }}
+                  className="w-full flex items-center justify-between rounded-2xl border border-red-500/40 bg-red-500/10 p-3.5 text-left transition hover:bg-red-500/20 hover:border-red-500/60 group"
+                >
+                  <div>
+                    <div className="text-[0.82rem] font-bold text-red-300 group-hover:text-red-200 flex items-center gap-1.5">
+                      <span>🔄</span> Thoát & Tạo mới lại từ đầu
+                    </div>
+                    <p className="mt-0.5 text-[0.68rem] text-slate-400">
+                      Xoá toàn bộ manh mối và lượt đoán đã lưu. Lần sau vào lại sẽ là một vụ án mới toanh.
+                    </p>
+                  </div>
+                  <span className="text-red-400 text-base font-bold group-hover:translate-x-1 transition-transform">→</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setShowExitModal(false)
+                    onExit()
+                  }}
+                  className="w-full flex items-center justify-between rounded-2xl border border-cyan-500/30 bg-cyan-500/10 p-3.5 text-left transition hover:bg-cyan-500/20 hover:border-cyan-500/50 group"
+                >
+                  <div>
+                    <div className="text-[0.82rem] font-bold text-cyan-300 group-hover:text-cyan-200 flex items-center gap-1.5">
+                      <span>💾</span> Tạm thoát & Lưu tiến độ
+                    </div>
+                    <p className="mt-0.5 text-[0.68rem] text-slate-400">
+                      Giữ nguyên {found.size} manh mối đã tìm để bạn có thể quay lại điều tra tiếp sau.
+                    </p>
+                  </div>
+                  <span className="text-cyan-400 text-base font-bold group-hover:translate-x-1 transition-transform">→</span>
+                </button>
+              </div>
+
+              <div className="mt-5 flex items-center justify-between pt-3 border-t border-slate-800">
+                <button
+                  onClick={() => setShowExitModal(false)}
+                  className="rounded-xl px-3 py-1.5 text-[0.74rem] font-medium text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 transition"
+                >
+                  ← Tiếp tục điều tra
+                </button>
+                <Link
+                  to="/"
+                  onClick={() => reset()}
+                  className="text-[0.72rem] text-slate-500 hover:text-red-400 transition underline underline-offset-4"
+                >
+                  Tạo mới & Về trang chủ
+                </Link>
+              </div>
+            </div>
           </div>
         )}
 
@@ -1781,13 +1885,25 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
                     setBooted(false)
                   }}
                 >
-                  Điều tra lại
+                  🔄 Điều tra lại (Tạo mới)
                 </button>
-                <button className="btn btn-ghost btn-md" onClick={onExit}>
-                  Danh sách vụ án
+                <button
+                  className="btn btn-ghost btn-md"
+                  onClick={() => {
+                    if (result === 'lost') reset()
+                    onExit()
+                  }}
+                >
+                  📁 Danh sách vụ án
                 </button>
-                <Link to="/" className="btn btn-ghost btn-md">
-                  Về trang chủ
+                <Link
+                  to="/"
+                  onClick={() => {
+                    if (result === 'lost') reset()
+                  }}
+                  className="btn btn-ghost btn-md"
+                >
+                  🏠 Về trang chủ
                 </Link>
               </div>
             </div>
@@ -1799,19 +1915,36 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
 }
 
 /* -------------------------------------------------------------- case list */
-function readStatus(id: string): string {
+function readStatus(id: string): { status: 'new' | 'playing' | 'won' | 'lost'; clueCount: number } {
   try {
     const raw = localStorage.getItem(saveKey(id))
-    if (!raw) return 'new'
-    const status = (JSON.parse(raw) as { status?: string }).status
-    return status === 'won' || status === 'lost' ? status : 'playing'
+    if (!raw) return { status: 'new', clueCount: 0 }
+    const parsed = JSON.parse(raw) as Partial<{ clues: string[]; attempts: number; status: string }>
+    const clues = Array.isArray(parsed.clues) ? parsed.clues : []
+    const status =
+      parsed.status === 'won' || parsed.status === 'lost'
+        ? (parsed.status as 'won' | 'lost')
+        : clues.length > 0 || (typeof parsed.attempts === 'number' && parsed.attempts > 0)
+        ? 'playing'
+        : 'new'
+    return { status, clueCount: clues.length }
   } catch {
-    return 'new'
+    return { status: 'new', clueCount: 0 }
   }
 }
 
 function CasePicker({ onPick }: { onPick: (id: string) => void }) {
   useTitle('Chọn vụ án · Thám Tử Bàn Phím')
+  const [refreshKey, setRefreshKey] = useState(0)
+
+  const handleResetCase = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation()
+    if (window.confirm('Bạn có chắc muốn đặt lại vụ án này để chơi mới từ đầu?')) {
+      clearCaseSave(id)
+      setRefreshKey((k) => k + 1)
+    }
+  }
+
   return (
     <Stage>
       <div className="mx-auto min-h-dvh max-w-4xl px-6 py-14">
@@ -1828,10 +1961,10 @@ function CasePicker({ onPick }: { onPick: (id: string) => void }) {
           {CASES.map((p) => {
             const st = readStatus(p.id)
             return (
-              <button
-                key={p.id}
+              <div
+                key={`${p.id}-${refreshKey}`}
                 onClick={() => onPick(p.id)}
-                className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-left transition hover:border-amber/40 hover:bg-white/[0.06]"
+                className="group relative cursor-pointer rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-left transition hover:border-amber/40 hover:bg-white/[0.06]"
               >
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-[0.58rem] uppercase tracking-[0.22em] text-mute">{p.case.no}</span>
@@ -1839,15 +1972,35 @@ function CasePicker({ onPick }: { onPick: (id: string) => void }) {
                     {p.difficulty}
                   </span>
                 </div>
-                <h2 className="mt-2 text-[1.05rem] font-semibold leading-snug text-parchment/90">{p.case.title}</h2>
+                <h2 className="mt-2 text-[1.05rem] font-semibold leading-snug text-parchment/90 group-hover:text-amber transition-colors">
+                  {p.case.title}
+                </h2>
                 <p className="mt-1 text-[0.64rem] text-mute">
                   📍 {p.case.place} · 🕘 {p.case.time}
                 </p>
                 <p className="mt-2 line-clamp-2 text-[0.7rem] leading-relaxed text-parchment/55">{p.case.brief}</p>
-                <p className="mt-3 text-[0.65rem] font-medium text-amber">
-                  {st === 'won' ? '✅ Đã phá án' : st === 'lost' ? '⏳ Hồ sơ đang đóng' : '▶ Vào điều tra'}
-                </p>
-              </button>
+                <div className="mt-3 flex items-center justify-between pt-2 border-t border-white/5">
+                  <span className="text-[0.68rem] font-medium text-amber">
+                    {st.status === 'won'
+                      ? '✅ Đã phá án'
+                      : st.status === 'lost'
+                      ? '⏳ Hồ sơ đang đóng'
+                      : st.status === 'playing'
+                      ? `🔍 Đang điều tra (${st.clueCount} manh mối)`
+                      : '▶ Vào điều tra'}
+                  </span>
+                  {st.status !== 'new' && (
+                    <button
+                      type="button"
+                      onClick={(e) => handleResetCase(e, p.id)}
+                      className="rounded-md border border-red-500/30 bg-red-500/10 px-2 py-0.5 text-[0.62rem] font-medium text-red-300 hover:bg-red-500/25 hover:text-red-200 transition"
+                      title="Đặt lại vụ án này về ban đầu"
+                    >
+                      🔄 Chơi mới
+                    </button>
+                  )}
+                </div>
+              </div>
             )
           })}
         </div>
