@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion'
 import { CatanBoard } from '../ui/CatanBoard'
 import { Dice3D } from '../ui/Dice3D'
 import { JoinForm, LobbyWait, PhoneShell } from '../ui/PhoneJoin'
@@ -40,6 +41,8 @@ export default function CatanPlayer() {
     const unsub = store.sub<CatanState>(paths.catan(code), (v) => setState(v))
     return () => unsub()
   }, [code])
+
+  const latestLog = state?.logs[0]
 
   const canBuildSettlement =
     myState &&
@@ -137,6 +140,24 @@ export default function CatanPlayer() {
   return (
     <PhoneShell code={code}>
       <div className="flex flex-1 flex-col justify-between h-full max-h-screen overflow-hidden select-none pb-1">
+        {/* Floating Notification Toast */}
+        <AnimatePresence>
+          {latestLog && (
+            <motion.div
+              key={latestLog.id}
+              initial={{ opacity: 0, y: -20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="fixed top-12 left-1/2 -translate-x-1/2 z-50 max-w-[90vw] pointer-events-none"
+            >
+              <div className="rounded-full bg-slate-900/95 border border-emerald-500/60 px-3.5 py-1 text-[0.7rem] font-black text-emerald-300 shadow-2xl backdrop-blur-md flex items-center gap-1.5 truncate">
+                <span>🌾</span>
+                <span className="truncate">{latestLog.text}</span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* 1. Header siêu gọn & Tab chuyển đổi chế độ */}
         <div className="shrink-0 pt-1 space-y-1.5">
           {/* Thanh điểm VP & Công trình */}

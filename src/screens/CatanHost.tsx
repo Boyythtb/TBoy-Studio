@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Stage } from '../ui/Stage'
 import { Avatar } from '../ui/Avatar'
@@ -13,6 +13,7 @@ import { sfx } from '../lib/sfx'
 import {
   catanStart,
   catanRollDice,
+  catanBuildSettlement,
   catanUpgradeCity,
   catanEndTurn,
   catanTick,
@@ -32,6 +33,7 @@ export default function CatanHost() {
   const [isJoining, setIsJoining] = useState(false)
   const [isStarting, setIsStarting] = useState(false)
   const [isRolling, setIsRolling] = useState(false)
+  const [showLogsModal, setShowLogsModal] = useState(false)
   const busy = useRef(false)
 
   const url = joinUrl(code)
@@ -118,7 +120,13 @@ export default function CatanHost() {
     }, 700)
   }
 
-  const handleHostBuild = async () => {
+  const handleHostBuildSettlement = async () => {
+    if (!state) return
+    sfx.win()
+    await catanBuildSettlement(code, state)
+  }
+
+  const handleHostUpgrade = async () => {
     if (!state) return
     sfx.win()
     await catanUpgradeCity(code, state)
@@ -245,15 +253,7 @@ export default function CatanHost() {
 
                   {isHostPlaying && (
                     <div className="mt-3 flex items-center justify-between rounded-xl border border-emerald-500/30 bg-emerald-950/20 px-3 py-1.5 text-xs text-emerald-300">
-                      <span>⭐ Bạn đã vào đảo (chơi trực tiếp trên máy tính)</span>
-                      <Link
-                        to={`/play/${code}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="rounded-lg bg-emerald-600 px-2 py-0.5 text-[0.68rem] font-bold text-white hover:bg-emerald-500"
-                      >
-                        Mở tay cầm ➔
-                      </Link>
+                      <span>⭐ Bạn đã vào đảo (chơi trực tiếp trên máy này)</span>
                     </div>
                   )}
                 </div>
@@ -285,52 +285,87 @@ export default function CatanHost() {
     (currentTurnUid === uid || (!uid && !currentTurnUid.startsWith('bot-')) || (isHost && isHostPlaying && currentTurnUid === uid))
   )
 
+  const canBuildSettlement =
+    currentPState &&
+    currentPState.resources.wood >= 1 &&
+    currentPState.resources.brick >= 1 &&
+    currentPState.resources.sheep >= 1 &&
+    currentPState.resources.wheat >= 1
+
   const canBuildCity =
     currentPState &&
     currentPState.resources.ore >= 3 &&
     currentPState.resources.wheat >= 2 &&
     currentPState.settlements.some((s) => !s.isCity)
 
+  const latestLog = state.logs[0]
+
   return (
     <Stage>
-      <div className="mx-auto flex h-dvh max-h-screen max-w-7xl flex-col px-3 sm:px-6 pb-2 overflow-hidden">
+      <div className="mx-auto flex h-dvh max-h-screen max-w-7xl flex-col px-2 sm:px-6 pb-2 overflow-hidden select-none justify-between">
+        {/* Floating Notification Toast */}
+        <AnimatePresence>
+          {latestLog && (
+            <motion.div
+              key={latestLog.id}
+              initial={{ opacity: 0, y: -20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="fixed top-12 left-1/2 -translate-x-1/2 z-50 max-w-[90vw] pointer-events-none"
+            >
+              <div className="rounded-full bg-slate-900/95 border border-emerald-500/60 px-3.5 py-1 text-[0.7rem] sm:text-xs font-black text-emerald-300 shadow-2xl backdrop-blur-md flex items-center gap-1.5 truncate">
+                <span>🌾</span>
+                <span className="truncate">{latestLog.text}</span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Header Compact */}
-        <header className="flex items-center justify-between py-2 sm:py-3 border-b border-slate-800 shrink-0">
-          <div className="flex items-center gap-3">
+        <header className="flex items-center justify-between py-1.5 sm:py-3 border-b border-slate-800 shrink-0">
+          <div className="flex items-center gap-2">
             <button
               onClick={handleExitRoom}
               className="text-xs text-slate-400 hover:text-white px-2 py-1 rounded-lg bg-slate-900 border border-slate-800"
             >
               ← Rời bàn
             </button>
-            <div className="flex items-center gap-2 rounded-xl bg-slate-900/80 px-3 py-1 border border-slate-800">
+            <div className="flex items-center gap-1.5 rounded-xl bg-slate-900/80 px-2.5 py-1 border border-slate-800">
               <span className="text-xs">📱</span>
               <span className="font-mono text-xs font-black text-emerald-400">{code}</span>
             </div>
-            <span className="hidden sm:inline rounded-full bg-emerald-950/80 px-2.5 py-0.5 text-[0.65rem] font-black text-emerald-300 border border-emerald-800">
-              KHAI PHÁ ĐẢO CATAN
-            </span>
           </div>
 
-          <div className="flex items-center gap-3">
-            {isHostPlaying && (
-              <Link
-                to={`/play/${code}`}
-                target="_blank"
-                rel="noreferrer"
-                className="hidden sm:inline-flex rounded-xl bg-emerald-600/30 border border-emerald-500/40 px-3 py-1 text-xs font-bold text-emerald-300 hover:bg-emerald-600/50 transition-all"
-              >
-                🎮 Mở tay cầm ➔
-              </Link>
+          <div className="flex items-center gap-2">
+            {currentTurnPlayer && (
+              <div className="flex items-center gap-1.5 rounded-xl bg-slate-900/90 px-2.5 py-1 border border-emerald-500/30">
+                <Avatar index={currentTurnPlayer.avatar} size={20} name={currentTurnPlayer.name} />
+                <span className="text-xs font-black text-white truncate max-w-[80px]">
+                  {currentTurnPlayer.name}
+                </span>
+                <span className="text-xs font-extrabold text-amber-400">
+                  {currentPState?.victoryPoints ?? 0}/5 VP 🏆
+                </span>
+              </div>
             )}
+
+            <button
+              type="button"
+              onClick={() => setShowLogsModal(true)}
+              className="flex items-center gap-1 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 px-2.5 py-1 text-xs font-bold text-slate-300 transition-colors"
+              title="Xem nhật ký khai phá"
+            >
+              📜 <span className="hidden sm:inline">Nhật ký</span>
+            </button>
+
             <SfxToggle />
           </div>
         </header>
 
-        {/* 3-Column Desktop Layout (No page scroll on desktop!) */}
-        <main className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[290px_1fr_290px] gap-3 sm:gap-5 items-center justify-center my-auto overflow-hidden py-1">
-          {/* CỘT TRÁI: Lượt hiện tại & Điều khiển máy tính & Tài nguyên */}
-          <div className="flex flex-col gap-3 h-full max-h-[calc(100vh-80px)] overflow-y-auto pr-1">
+        {/* Main Content Area: Desktop 3-Column / Mobile Single Viewport Zero-Scroll */}
+        <main className="flex-1 min-h-0 flex flex-col lg:grid lg:grid-cols-[290px_1fr_290px] gap-2 lg:gap-5 items-center justify-center my-auto overflow-hidden py-1 w-full">
+          {/* CỘT TRÁI (CHỈ HIỂN THỊ TRÊN DESKTOP lg:) */}
+          <div className="hidden lg:flex flex-col gap-3 h-full max-h-[calc(100vh-80px)] overflow-y-auto pr-1">
             {/* Current Turn Card */}
             <div className="rounded-3xl bg-slate-900/90 p-4 border border-slate-800 shadow-xl backdrop-blur-md shrink-0">
               <p className="text-[0.65rem] font-bold uppercase tracking-widest text-slate-400">
@@ -350,7 +385,7 @@ export default function CatanHost() {
               <div className="mt-3 rounded-2xl bg-slate-950/70 p-3 border border-slate-800 text-center">
                 {!state.diceRolled ? (
                   <p className="text-xs text-slate-300 font-medium animate-pulse">
-                    {currentTurnUid?.startsWith('bot-') ? '🤖 Bot đang đổ xúc xắc thu hoạch…' : 'Chờ người chơi đổ xúc xắc…'}
+                    {currentTurnUid?.startsWith('bot-') ? '🤖 Bot đang đổ xúc xắc thu hoạch…' : 'Chờ gieo xúc xắc…'}
                   </p>
                 ) : (
                   <div className="text-xs text-amber-400 font-bold">
@@ -360,48 +395,11 @@ export default function CatanHost() {
               </div>
             </div>
 
-            {/* BẢNG ĐIỀU KHIỂN CHƠI TRÊN MÁY TÍNH NẾU LÀ LƯỢT CỦA BẠN */}
-            {isMyTurn && (
-              <div className="rounded-3xl bg-slate-900/90 p-4 border border-emerald-500/40 shadow-xl shrink-0 space-y-2">
-                <p className="text-[0.65rem] font-bold uppercase tracking-widest text-emerald-400 mb-1">
-                  🎮 ĐIỀU KHIỂN MÁY TÍNH
-                </p>
-
-                {!state.diceRolled ? (
-                  <button
-                    onClick={handleHostRollDice}
-                    disabled={isRolling}
-                    className="w-full rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 py-3 text-xs font-black text-slate-950 shadow-lg hover:brightness-110 active:scale-95 transition-all"
-                  >
-                    {isRolling ? 'ĐANG ĐỔ 2 XÚC XẮC… 🎲' : '🎲 BẤM ĐỔ 2 XÚC XẮC NGAY!'}
-                  </button>
-                ) : (
-                  <div className="space-y-1.5">
-                    {canBuildCity && currentPState && (
-                      <button
-                        onClick={() => void handleHostBuild()}
-                        className="w-full rounded-xl bg-amber-600 hover:bg-amber-500 py-2.5 text-[0.72rem] font-black text-white shadow active:scale-95 transition-all"
-                      >
-                        🏰 NÂNG CẤP THÀNH PHỐ (+1 VP)
-                      </button>
-                    )}
-
-                    <button
-                      onClick={handleHostEndTurn}
-                      className="w-full rounded-xl bg-slate-800 hover:bg-slate-700 py-2 text-[0.72rem] font-bold text-slate-200 border border-slate-700 active:scale-95 transition-all"
-                    >
-                      KẾT THÚC LƯỢT ĐI ➔
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-
             {/* Tài nguyên người chơi */}
             {currentPState && (
               <div className="rounded-3xl bg-slate-900/80 p-3.5 border border-slate-800 shrink-0">
                 <p className="text-[0.65rem] font-bold uppercase tracking-widest text-slate-400 mb-2">
-                  KHO TÀI NGUYÊN CỦA {currentTurnPlayer?.name}
+                  TÀI NGUYÊN CỦA {currentTurnPlayer?.name}
                 </p>
                 <div className="grid grid-cols-5 gap-1.5 text-center">
                   {(Object.keys(currentPState.resources) as ResourceType[]).map((res) => (
@@ -416,10 +414,10 @@ export default function CatanHost() {
               </div>
             )}
 
-            {/* Bảng Xếp Hạng */}
+            {/* Bảng Xếp Hạng Điểm */}
             <div className="rounded-3xl bg-slate-900/80 p-3.5 border border-slate-800 shrink-0">
               <p className="text-[0.65rem] font-bold uppercase tracking-widest text-slate-400 mb-2">
-                BẢNG ĐIỂM CHIẾN THẮNG (5 VP ĐỂ THẮNG)
+                BẢNG ĐIỂM (5 VP ĐỂ THẮNG)
               </p>
               <div className="space-y-1.5">
                 {state.order.map((pUid) => {
@@ -445,8 +443,8 @@ export default function CatanHost() {
             </div>
           </div>
 
-          {/* CỘT GIỮA: BÀN CỜ CATAN CO GIÃN + 2 XÚC XẮC Ở GIỮA */}
-          <div className="flex items-center justify-center w-full h-full max-h-[calc(100vh-90px)]">
+          {/* CỘT GIỮA: BÀN CỜ CATAN TỰ CO GIÃN VỪA KHÍT KHUNG NHÌN */}
+          <div className="flex-1 min-h-0 flex items-center justify-center w-full max-h-[min(480px,56vh)] aspect-square my-auto">
             <CatanBoard
               players={state.players}
               currentTurnUid={state.currentTurn}
@@ -457,9 +455,8 @@ export default function CatanHost() {
             />
           </div>
 
-          {/* CỘT PHẢI: DIỄN BIẾN ĐẢO & LUẬT CHƠI */}
-          <div className="flex flex-col gap-3 h-full max-h-[calc(100vh-80px)] overflow-hidden">
-            {/* Live Logs */}
+          {/* CỘT PHẢI: DIỄN BIẾN KHAI PHÁ (CHỈ HIỂN THỊ TRÊN DESKTOP lg:) */}
+          <div className="hidden lg:flex flex-col gap-3 h-full max-h-[calc(100vh-80px)] overflow-hidden">
             <div className="flex-1 flex flex-col rounded-3xl bg-slate-900/80 p-4 border border-slate-800 min-h-0 overflow-hidden shadow-xl">
               <p className="text-[0.65rem] font-bold uppercase tracking-widest text-slate-400 mb-2 shrink-0">
                 DIỄN BIẾN KHAI PHÁ (LOGS)
@@ -472,16 +469,102 @@ export default function CatanHost() {
                 ))}
               </div>
             </div>
-
-            {/* Hướng dẫn nhanh */}
-            <div className="rounded-3xl bg-slate-900/60 p-3 border border-slate-800 text-[0.65rem] text-slate-400 space-y-1 shrink-0">
-              <p className="font-bold text-emerald-400">🌾 Quy Tắc Khai Phá:</p>
-              <p>• Đổ xúc xắc ra số trùng với ô lục giác nào, các làng tiếp giáp ô đó nhận tài nguyên.</p>
-              <p>• 1 Làng = 1 Điểm (VP), Thành phố = 2 Điểm (VP).</p>
-              <p>• Đạt đủ 5 Điểm (VP) sẽ trở thành Đảo Chủ chiến thắng!</p>
-            </div>
           </div>
         </main>
+
+        {/* 3. BOTTOM ACTION DOCK: CỐ ĐỊNH Ở ĐÁY MÀN HÌNH (NGAY TẦM NGÓN TAY CÁI) */}
+        <div className="shrink-0 w-full max-w-md mx-auto pt-1 pb-1">
+          {isMyTurn ? (
+            !state.diceRolled ? (
+              <button
+                onClick={handleHostRollDice}
+                disabled={isRolling}
+                className="w-full rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 py-3 text-xs sm:text-sm font-black text-slate-950 shadow-xl hover:brightness-110 active:scale-95 transition-all shadow-emerald-950/80 animate-pulse"
+              >
+                {isRolling ? 'ĐANG ĐỔ 2 XÚC XẮC… 🎲' : '🎲 BẤM ĐỔ 2 XÚC XẮC THU HOẠCH!'}
+              </button>
+            ) : (
+              <div className="space-y-1.5">
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleHostBuildSettlement}
+                    disabled={!canBuildSettlement}
+                    className="flex-1 rounded-xl bg-emerald-700 hover:bg-emerald-600 disabled:opacity-40 py-2.5 text-xs font-black text-white shadow active:scale-95 transition-all"
+                  >
+                    🏡 Xây Làng (+1 VP)
+                  </button>
+
+                  <button
+                    onClick={handleHostUpgrade}
+                    disabled={!canBuildCity}
+                    className="flex-1 rounded-xl bg-amber-600 hover:bg-amber-500 disabled:opacity-40 py-2.5 text-xs font-black text-white shadow active:scale-95 transition-all"
+                  >
+                    🏰 Lên Thành Phố (+1 VP)
+                  </button>
+                </div>
+
+                <button
+                  onClick={handleHostEndTurn}
+                  className="w-full rounded-xl bg-slate-800 hover:bg-slate-700 py-2.5 text-xs font-bold text-slate-200 border border-slate-700 active:scale-95 transition-all"
+                >
+                  HOÀN THÀNH LƯỢT ĐI ➔
+                </button>
+              </div>
+            )
+          ) : (
+            <div className="rounded-2xl bg-slate-900/70 p-2 text-center border border-slate-800 text-xs text-slate-400">
+              ⏳ Đang đợi <span className="text-emerald-400 font-bold">{currentTurnPlayer?.name}</span> thu hoạch mùa màng…
+            </div>
+          )}
+        </div>
+
+        {/* Modal Xem Nhật Ký / Lịch Sử Khai Phá Khi Người Dùng Bấm Nút 📜 */}
+        <AnimatePresence>
+          {showLogsModal && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+              onClick={() => setShowLogsModal(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.9, y: 10 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.9, y: 10 }}
+                className="w-full max-w-md rounded-3xl bg-slate-900 border border-slate-700 p-5 shadow-2xl flex flex-col max-h-[80vh]"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between pb-3 border-b border-slate-800 shrink-0">
+                  <h3 className="text-sm font-black text-white flex items-center gap-2">
+                    <span>📜</span> NHẬT KÝ KHAI PHÁ ĐẢO CATAN
+                  </h3>
+                  <button
+                    onClick={() => setShowLogsModal(false)}
+                    className="h-7 w-7 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-xs font-bold"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div className="flex-1 overflow-y-auto py-3 space-y-2 text-xs text-slate-300">
+                  {state.logs.map((log) => (
+                    <div key={log.id} className="p-2 rounded-xl bg-slate-950/60 border border-slate-800/80">
+                      {log.text}
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => setShowLogsModal(false)}
+                  className="w-full mt-2 rounded-2xl bg-slate-800 py-2.5 text-xs font-bold text-white hover:bg-slate-700 transition-colors"
+                >
+                  Đóng lại
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Winner modal */}
         <AnimatePresence>
