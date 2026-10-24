@@ -24,7 +24,7 @@ async function readEnv() {
 }
 
 const env = await readEnv()
-const token = process.env.CLOUDFLARE_API_TOKEN || env.CLOUDFLARE_API_TOKEN
+const token = process.env.CLOUDFLARE_AI_TOKEN || process.env.CLOUDFLARE_API_TOKEN || env.CLOUDFLARE_AI_TOKEN || env.CLOUDFLARE_API_TOKEN
 const account =
   process.env.CLOUDFLARE_ACCOUNT_ID || env.CLOUDFLARE_ACCOUNT_ID || 'bdb6b3ddf31824b1ab1738d1e533caf1'
 
