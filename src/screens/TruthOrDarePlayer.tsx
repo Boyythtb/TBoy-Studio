@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Stage } from '../ui/Stage'
 import { Avatar } from '../ui/Avatar'
 import { SfxToggle } from '../ui/SfxToggle'
+import { BottleWheel } from '../ui/BottleWheel'
 import { JoinForm, LobbyWait, PhoneShell } from '../ui/PhoneJoin'
 import { buzz } from '../lib/buzz'
 import { sfx } from '../lib/sfx'
@@ -44,20 +45,22 @@ export default function TruthOrDarePlayer() {
   const isVictim = Boolean(uid && state && state.activeUid === uid)
   const victimPlayer = state?.activeUid ? players[state.activeUid] : null
 
+  const currentStep = state?.step || 'waiting_spin'
+
   // Rung máy khi bị mũi chai chỉ trúng
   useEffect(() => {
-    if (isVictim && (state?.step === 'picking' || state?.step === 'acting')) {
+    if (isVictim && (currentStep === 'picking' || currentStep === 'acting')) {
       buzz(200)
       sfx.death()
     }
-  }, [isVictim, state?.step])
+  }, [isVictim, currentStep])
 
-  // Rung máy khi đến lượt mình ấn quay chai
+  // Rung máy khi đến lượt mình quay chai
   useEffect(() => {
-    if (isMySpinTurn && state?.step === 'waiting_spin') {
+    if (isMySpinTurn && currentStep === 'waiting_spin') {
       buzz(40)
     }
-  }, [isMySpinTurn, state?.step])
+  }, [isMySpinTurn, currentStep])
 
   // 1. Loading
   if (loading) {
@@ -112,14 +115,11 @@ export default function TruthOrDarePlayer() {
     )
   }
 
-  // 5. Active Game Interface
-  const currentStep = state.step || 'waiting_spin'
-
   return (
     <Stage mode="blood">
-      <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4 pb-8 justify-between">
+      <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4 pb-6 justify-between">
         {/* Header */}
-        <header className="flex items-center justify-between py-3 border-b border-rose-900/60 shrink-0">
+        <header className="flex items-center justify-between py-2.5 border-b border-rose-900/60 shrink-0">
           <div className="flex items-center gap-2">
             <Avatar index={me.avatar} size={28} name={me.name} />
             <span className="text-xs font-bold text-white truncate max-w-[120px]">
@@ -135,189 +135,212 @@ export default function TruthOrDarePlayer() {
           </div>
         </header>
 
-        {/* Main Content by Step */}
-        <main className="my-auto py-4 flex flex-1 flex-col justify-center">
+        {/* Turn Status Banner */}
+        <div className="mt-2 shrink-0">
+          {currentStep === 'waiting_spin' && (
+            isMySpinTurn ? (
+              <motion.div
+                initial={{ scale: 0.95 }}
+                animate={{ scale: [1, 1.02, 1] }}
+                transition={{ repeat: Infinity, duration: 1.5 }}
+                className="rounded-2xl bg-gradient-to-r from-amber-600 via-rose-600 to-amber-500 p-2.5 text-center text-white font-black text-xs shadow-lg border border-amber-300/40"
+              >
+                🍾 LƯỢT CỦA BẠN: HÃY BẤM QUAY CHAI!
+              </motion.div>
+            ) : (
+              <div className="rounded-2xl bg-slate-900/90 p-2.5 text-center border border-slate-800 text-xs font-bold text-slate-300">
+                🍻 Chờ <span className="text-amber-400 font-black">{spinnerPlayer?.name}</span> ấn quay chai…
+              </div>
+            )
+          )}
+
+          {currentStep === 'spinning' && (
+            <div className="rounded-2xl bg-slate-900/90 p-2.5 text-center border border-rose-500/40 text-xs font-bold text-rose-300 animate-pulse">
+              🍾 Chai đang quay tròn… Nín thở chờ nạn nhân!
+            </div>
+          )}
+
+          {currentStep === 'picking' && (
+            isVictim ? (
+              <motion.div
+                initial={{ scale: 0.95 }}
+                animate={{ scale: [1, 1.02, 1] }}
+                transition={{ repeat: Infinity, duration: 1.5 }}
+                className="rounded-2xl bg-gradient-to-r from-rose-600 to-pink-600 p-2.5 text-center text-white font-black text-xs shadow-lg border border-white/20"
+              >
+                🎯 MŨI CHAI CHỈ TRÚNG BẠN! HÃY CHỌN SỐ PHẬN:
+              </motion.div>
+            ) : (
+              <div className="rounded-2xl bg-slate-900/90 p-2.5 text-center border border-slate-800 text-xs font-bold text-slate-300">
+                🎯 Chỉ trúng <span className="text-rose-400 font-black">{victimPlayer?.name}</span>! Đang đợi chọn…
+              </div>
+            )
+          )}
+
+          {currentStep === 'acting' && (
+            <div className="rounded-2xl bg-slate-900/90 p-2.5 text-center border border-slate-800 text-xs font-bold text-slate-300">
+              🔥 Thử thách dành cho <span className="text-rose-400 font-black">{victimPlayer?.name}</span>
+            </div>
+          )}
+        </div>
+
+        {/* Central Wheel Display (Always Visible and Synchronized on all phones) */}
+        <div className="my-auto flex flex-col items-center justify-center py-1">
+          <BottleWheel
+            order={order}
+            players={players}
+            drinks={state.drinks}
+            spinAngle={state.spinAngle}
+            spinnerUid={state.spinnerUid}
+            activeUid={state.activeUid}
+            currentStep={currentStep}
+            canSpin={isMySpinTurn && currentStep === 'waiting_spin'}
+            onSpin={() => {
+              buzz(40)
+              sfx.vote()
+              void todSpin(code, state, players)
+            }}
+            compact={true}
+          />
+        </div>
+
+        {/* Action Controls Section */}
+        <div className="shrink-0 pt-2">
           <AnimatePresence mode="wait">
-            {/* GIAI ĐOẠN 1: CHỜ QUAY CHAI */}
+            {/* 1. GIAI ĐOẠN CHỜ QUAY */}
             {currentStep === 'waiting_spin' && (
-              <motion.div
-                key="waiting_spin"
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
-                className="text-center"
-              >
-                {isMySpinTurn ? (
-                  <div className="space-y-5">
-                    <div className="rounded-3xl bg-gradient-to-b from-rose-950/90 to-slate-900/90 p-6 border-2 border-rose-500/60 shadow-[0_0_30px_rgba(244,63,94,0.3)]">
-                      <span className="text-5xl block mb-2 animate-bounce">🍾</span>
-                      <p className="text-[0.7rem] uppercase tracking-widest text-rose-400 font-black">
-                        LƯỢT QUAY CỦA BẠN!
-                      </p>
-                      <h2 className="text-xl font-black text-white mt-1">
-                        Hãy quay chai để tìm nạn nhân tiếp theo
-                      </h2>
-                      <p className="text-xs text-slate-300 mt-2">
-                        Bấm nút bên dưới để khởi động vòng xoay chai trên màn hình bàn nhậu!
-                      </p>
-                    </div>
-
-                    <button
-                      onClick={() => {
-                        buzz(50)
-                        sfx.vote()
-                        void todSpin(code, state, players)
-                      }}
-                      className="w-full rounded-3xl bg-gradient-to-r from-rose-600 via-pink-600 to-amber-500 py-5 text-base font-black text-white shadow-xl hover:brightness-110 active:scale-95 transition-all shadow-rose-950/80 border border-white/20"
-                    >
-                      🍾 BẤM QUAY CHAI NGAY! 🚀
-                    </button>
-                  </div>
-                ) : (
-                  <div className="rounded-3xl bg-slate-900/80 p-8 border border-slate-800 text-center">
-                    <span className="text-5xl block mb-3 animate-spin" style={{ animationDuration: '6s' }}>🍾</span>
-                    <h3 className="text-base font-black text-white">
-                      Đang đợi <span className="text-rose-400">{spinnerPlayer?.name || 'Chủ xị'}</span> quay chai…
-                    </h3>
-                    <p className="mt-2 text-xs text-slate-400 leading-relaxed">
-                      {spinnerPlayer?.name} vừa xong lượt trước và đang nắm quyền chọn người tiếp theo!
-                    </p>
-                  </div>
-                )}
-              </motion.div>
+              isMySpinTurn ? (
+                <motion.div
+                  key="spin-btn"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  className="space-y-2"
+                >
+                  <button
+                    onClick={() => {
+                      buzz(50)
+                      sfx.vote()
+                      void todSpin(code, state, players)
+                    }}
+                    className="w-full rounded-2xl bg-gradient-to-r from-rose-600 via-pink-600 to-amber-500 py-3.5 text-sm font-black text-white shadow-xl hover:brightness-110 active:scale-95 transition-all shadow-rose-950/80 border border-white/20"
+                  >
+                    🍾 BẤM QUAY CHAI TÌM NGƯỜI TIẾP THEO! 🚀
+                  </button>
+                  <p className="text-center text-[0.68rem] text-slate-400">
+                    Chạm vào nút hoặc chạm trực tiếp vào chai bia để quay
+                  </p>
+                </motion.div>
+              ) : (
+                <div className="rounded-2xl bg-slate-900/60 p-3 border border-slate-800 text-center">
+                  <p className="text-xs text-slate-300 font-medium">
+                    Đang đợi <span className="text-amber-400 font-black">{spinnerPlayer?.name}</span> ấn quay chai trên máy của họ…
+                  </p>
+                </div>
+              )
             )}
 
-            {/* GIAI ĐOẠN 2: CHAI ĐANG QUAY */}
+            {/* 2. GIAI ĐOẠN ĐANG QUAY */}
             {currentStep === 'spinning' && (
-              <motion.div
-                key="spinning"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                className="rounded-3xl bg-slate-900/90 p-8 text-center border border-rose-500/40"
-              >
-                <div className="text-6xl mb-4 animate-spin" style={{ animationDuration: '1s' }}>🍾</div>
-                <h3 className="text-lg font-black text-white">Chai đang quay tròn…</h3>
-                <p className="mt-2 text-xs text-slate-300">
-                  Nín thở chờ xem mũi chai sẽ chỉ vào ai trong bàn nhậu!
+              <div className="rounded-2xl bg-slate-900/60 p-3 border border-slate-800 text-center">
+                <p className="text-xs text-slate-300 font-medium animate-pulse">
+                  Chai đang quay tròn trên màn hình cả bàn…
                 </p>
-              </motion.div>
+              </div>
             )}
 
-            {/* GIAI ĐOẠN 3: NẠN NHÂN CHỌN SỰ THẬT HAY THỬ THÁCH */}
+            {/* 3. GIAI ĐOẠN CHỌN THẬT HAY THÁCH */}
             {currentStep === 'picking' && (
-              <motion.div
-                key="picking"
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
-              >
-                {isVictim ? (
-                  <div className="space-y-4">
-                    <div className="rounded-2xl bg-gradient-to-r from-rose-600 to-amber-600 p-3 text-center text-white font-black text-sm shadow-lg shadow-rose-950/60 border border-white/20">
-                      🎯 MŨI CHAI ĐÃ CHỈ VÀO BẠN!
-                    </div>
+              isVictim ? (
+                <motion.div
+                  key="pick-buttons"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  className="grid grid-cols-2 gap-2.5"
+                >
+                  <button
+                    onClick={() => {
+                      sfx.reveal()
+                      void todSelectType(code, state, 'truth')
+                    }}
+                    className="rounded-2xl bg-gradient-to-b from-cyan-900/80 to-slate-950 p-3.5 border border-cyan-500/60 text-center shadow-lg active:scale-95 transition-all"
+                  >
+                    <span className="text-2xl block mb-1">🌶️</span>
+                    <span className="text-xs font-black text-cyan-300 block">SỰ THẬT 18+</span>
+                    <span className="text-[0.62rem] text-slate-400 mt-0.5 block leading-tight">
+                      Khai bí mật
+                    </span>
+                  </button>
 
-                    <p className="text-center text-xs text-slate-300 font-bold">
-                      Chọn 1 hình thức để đối mặt với anh em:
-                    </p>
-
-                    <button
-                      onClick={() => {
-                        sfx.reveal()
-                        void todSelectType(code, state, 'truth')
-                      }}
-                      className="group w-full rounded-3xl bg-gradient-to-b from-cyan-900/70 to-slate-950 p-6 border-2 border-cyan-500/60 text-center shadow-xl active:scale-95 transition-all"
-                    >
-                      <span className="text-4xl block mb-2 group-hover:scale-110 transition-transform">🌶️</span>
-                      <span className="text-xl font-black text-cyan-300 block">SỰ THẬT 18+</span>
-                      <span className="text-xs text-slate-400 mt-1 block">
-                        Khai sạch bí mật phòng the & chuyện nhạy cảm
-                      </span>
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        sfx.reveal()
-                        void todSelectType(code, state, 'dare')
-                      }}
-                      className="group w-full rounded-3xl bg-gradient-to-b from-rose-900/70 to-slate-950 p-6 border-2 border-rose-500/60 text-center shadow-xl active:scale-95 transition-all"
-                    >
-                      <span className="text-4xl block mb-2 group-hover:scale-110 transition-transform">🔥</span>
-                      <span className="text-xl font-black text-rose-300 block">THỬ THÁCH TƯƠNG TÁC</span>
-                      <span className="text-xs text-slate-400 mt-1 block">
-                        Hành động táo bạo với người trong bàn nhậu
-                      </span>
-                    </button>
-                  </div>
-                ) : (
-                  <div className="rounded-3xl bg-slate-900/80 p-8 text-center border border-slate-800">
-                    <div className="text-5xl mb-3">🎯</div>
-                    <h3 className="text-base font-black text-white">
-                      Mũi chai đã chỉ vào <span className="text-rose-400">{victimPlayer?.name || 'Ai đó'}</span>!
-                    </h3>
-                    <p className="mt-2 text-xs text-slate-400">
-                      Đang đợi {victimPlayer?.name} chọn Sự Thật hay Thử Thách…
-                    </p>
-                  </div>
-                )}
-              </motion.div>
+                  <button
+                    onClick={() => {
+                      sfx.reveal()
+                      void todSelectType(code, state, 'dare')
+                    }}
+                    className="rounded-2xl bg-gradient-to-b from-rose-900/80 to-slate-950 p-3.5 border border-rose-500/60 text-center shadow-lg active:scale-95 transition-all"
+                  >
+                    <span className="text-2xl block mb-1">🔥</span>
+                    <span className="text-xs font-black text-rose-300 block">THỬ THÁCH</span>
+                    <span className="text-[0.62rem] text-slate-400 mt-0.5 block leading-tight">
+                      Tương tác bàn nhậu
+                    </span>
+                  </button>
+                </motion.div>
+              ) : (
+                <div className="rounded-2xl bg-slate-900/60 p-3 border border-slate-800 text-center">
+                  <p className="text-xs text-slate-300 font-medium">
+                    Đang đợi <span className="text-rose-400 font-black">{victimPlayer?.name}</span> chọn Thật hay Thách trên máy của họ…
+                  </p>
+                </div>
+              )
             )}
 
-            {/* GIAI ĐOẠN 4: THỰC HIỆN CÂU HỎI HOẶC THỬ THÁCH */}
+            {/* 4. GIAI ĐOẠN ĐANG TRẢ LỜI / LÀM THỬ THÁCH */}
             {currentStep === 'acting' && state.card && (
               <motion.div
-                key="acting"
+                key="card-view"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className={`rounded-3xl p-6 text-center shadow-2xl border backdrop-blur-xl ${
+                className={`rounded-2xl p-4 text-center border shadow-xl ${
                   state.card.type === 'truth'
-                    ? 'bg-gradient-to-b from-cyan-950/95 to-slate-950 border-cyan-500/60 shadow-cyan-950/50'
-                    : 'bg-gradient-to-b from-rose-950/95 to-slate-950 border-rose-500/60 shadow-rose-950/50'
+                    ? 'bg-gradient-to-b from-cyan-950/95 to-slate-950 border-cyan-500/60'
+                    : 'bg-gradient-to-b from-rose-950/95 to-slate-950 border-rose-500/60'
                 }`}
               >
-                <div className="inline-flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1 text-[0.68rem] font-black border border-white/10 uppercase">
-                  {state.card.type === 'truth' ? (
-                    <span className="text-cyan-400">🌶️ SỰ THẬT 18+ TÁO BẠO</span>
-                  ) : (
-                    <span className="text-rose-400">🔥 THỬ THÁCH TƯƠNG TÁC</span>
-                  )}
+                <div className="inline-flex items-center gap-1 rounded-full bg-black/60 px-2 py-0.5 text-[0.6rem] font-black uppercase text-white/90">
+                  {state.card.type === 'truth' ? '🌶️ SỰ THẬT 18+' : '🔥 THỬ THÁCH TƯƠNG TÁC'}
                 </div>
 
-                <p className="mt-3 text-xs font-bold text-slate-400">
-                  Dành cho: <span className="text-white font-black">{victimPlayer?.name}</span>
+                <p className="mt-2 text-xs font-bold leading-relaxed text-white">
+                  "{state.card.text}"
                 </p>
 
-                <h3 className="mt-3 text-lg font-black leading-snug text-white drop-shadow-md min-h-[70px] flex items-center justify-center">
-                  "{state.card.text}"
-                </h3>
-
                 {state.card.note && (
-                  <p className="mt-2 text-[0.72rem] italic text-rose-300/80">
+                  <p className="mt-1 text-[0.65rem] italic text-rose-300/80">
                     💡 {state.card.note}
                   </p>
                 )}
 
-                <div className="mt-4 rounded-xl bg-amber-500/10 p-2.5 border border-amber-500/30 text-amber-300 text-xs font-bold flex items-center justify-center gap-2">
-                  <span>🍺 Nếu né tránh:</span>
-                  <span className="rounded bg-amber-500 px-2 py-0.5 text-black font-black">
-                    PHẠT {state.card.penalty} LY BIA
+                <div className="mt-2 rounded-lg bg-amber-500/10 p-1.5 border border-amber-500/30 text-amber-300 text-[0.68rem] font-bold flex items-center justify-center gap-1.5">
+                  <span>🍺 Né tránh phạt:</span>
+                  <span className="rounded bg-amber-500 px-1.5 py-0.2 text-black font-black">
+                    {state.card.penalty} LY BIA
                   </span>
                 </div>
 
-                {/* Nạn nhân bấm hoàn thành hoặc uống phạt */}
                 {isVictim ? (
-                  <div className="mt-6 space-y-2.5">
+                  <div className="mt-3 grid grid-cols-2 gap-2">
                     <button
                       onClick={() => {
                         sfx.win()
                         buzz(30)
                         void todComplete(code, state)
                       }}
-                      className="w-full rounded-2xl bg-emerald-600 py-3.5 text-xs font-black text-white hover:bg-emerald-500 active:scale-95 transition-all shadow-lg shadow-emerald-950/50"
+                      className="rounded-xl bg-emerald-600 py-2.5 text-xs font-black text-white active:scale-95 transition-all shadow-md shadow-emerald-950/50"
                     >
-                      ✅ Tôi Đã Làm Xong! (Tiếp tục quay)
+                      ✅ Đã Làm Xong!
                     </button>
 
                     <button
@@ -326,20 +349,20 @@ export default function TruthOrDarePlayer() {
                         buzz(50)
                         void todDrink(code, state, state.card!.penalty)
                       }}
-                      className="w-full rounded-2xl bg-gradient-to-r from-rose-700 to-amber-700 py-3.5 text-xs font-black text-white hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-rose-950/50"
+                      className="rounded-xl bg-gradient-to-r from-rose-700 to-amber-700 py-2.5 text-xs font-black text-white active:scale-95 transition-all shadow-md shadow-rose-950/50"
                     >
-                      🍻 Không Dám Làm - Tôi Chịu Phạt {state.card.penalty} Ly!
+                      🍻 Chịu Phạt {state.card.penalty} Ly!
                     </button>
                   </div>
                 ) : (
-                  <div className="mt-5 rounded-2xl bg-slate-900/60 p-3 border border-slate-800 text-xs text-slate-400">
-                    Chờ <span className="text-white font-bold">{victimPlayer?.name}</span> thực hiện hoặc uống phạt trước mặt cả bàn…
-                  </div>
+                  <p className="mt-2 text-[0.68rem] text-slate-400">
+                    Chờ <span className="text-white font-bold">{victimPlayer?.name}</span> thực hiện hoặc uống phạt…
+                  </p>
                 )}
               </motion.div>
             )}
           </AnimatePresence>
-        </main>
+        </div>
       </div>
     </Stage>
   )

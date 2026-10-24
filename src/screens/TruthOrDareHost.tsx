@@ -5,6 +5,7 @@ import { Stage } from '../ui/Stage'
 import { Avatar } from '../ui/Avatar'
 import { Qr } from '../ui/Qr'
 import { SfxToggle } from '../ui/SfxToggle'
+import { BottleWheel } from '../ui/BottleWheel'
 import { useGameRoom } from '../hooks/useGameRoom'
 import { paths, store } from '../lib/store'
 import { joinUrl, joinRoom, deleteRoom } from '../lib/room'
@@ -301,88 +302,47 @@ export default function TruthOrDareHost() {
           </div>
 
           {/* Circle Ring & Bottle */}
-          <div className="relative mt-4 flex h-64 w-64 items-center justify-center sm:h-80 sm:w-80">
-            {order.map((uid, idx) => {
-              const p = players[uid]
-              if (!p) return null
-              const count = order.length
-              const angle = (idx * 360) / count - 90
-              const rad = (angle * Math.PI) / 180
-              const radius = 115
-              const x = Math.cos(rad) * radius
-              const y = Math.sin(rad) * radius
-              const isSelected = currentStep === 'waiting_spin' ? uid === state.spinnerUid : uid === state.activeUid
-
-              return (
-                <div
-                  key={uid}
-                  style={{ transform: `translate(${x}px, ${y}px)` }}
-                  className="absolute flex flex-col items-center justify-center transition-all duration-300"
-                >
-                  <div
-                    className={`relative rounded-full transition-all ${
-                      isSelected ? 'scale-125 z-10' : 'opacity-85'
-                    }`}
-                  >
-                    <Avatar index={p.avatar} size={38} name={p.name} />
-                    {isSelected && (
-                      <span className="absolute -top-2 -right-2 grid h-5 w-5 place-items-center rounded-full bg-rose-600 text-[0.65rem] text-white font-black shadow-md border border-white">
-                        {currentStep === 'waiting_spin' ? '🍾' : '🎯'}
-                      </span>
-                    )}
-                  </div>
-                  <span
-                    className={`mt-1 max-w-[70px] truncate text-[0.65rem] font-bold ${
-                      isSelected ? 'text-rose-300 font-black' : 'text-slate-300'
-                    }`}
-                  >
-                    {p.name}
-                  </span>
-                  <span className="text-[0.58rem] text-amber-400 font-bold">
-                    {state.drinks?.[uid] ?? 0} 🍻
-                  </span>
-                </div>
-              )
-            })}
-
-            {/* Beer Bottle Centered */}
-            <div className="relative z-0">
-              <motion.div
-                animate={{ rotate: state.spinAngle }}
-                transition={{ duration: 2.8, ease: [0.15, 0.9, 0.3, 1] }}
-                className="grid h-32 w-32 place-items-center select-none cursor-pointer"
-                onClick={handleSpin}
-              >
-                <svg viewBox="0 0 100 100" className="h-32 w-32 filter drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
-                  <rect x="46" y="8" width="8" height="24" rx="2" fill="#d97706" />
-                  <rect x="44" y="6" width="12" height="4" rx="1" fill="#fbbf24" />
-                  <path d="M46 30 Q40 42 38 48 L62 48 Q60 42 54 30 Z" fill="#b45309" />
-                  <rect x="38" y="48" width="24" height="42" rx="4" fill="#92400e" />
-                  <rect x="39" y="56" width="22" height="24" rx="2" fill="#ef4444" />
-                  <text x="50" y="72" fontSize="9" fontWeight="bold" fill="white" textAnchor="middle">
-                    18+
-                  </text>
-                  <polygon points="50,0 43,8 57,8" fill="#f43f5e" />
-                </svg>
-              </motion.div>
-            </div>
+          <div className="mt-4 flex items-center justify-center">
+            <BottleWheel
+              order={order}
+              players={players}
+              drinks={state.drinks}
+              spinAngle={state.spinAngle}
+              spinnerUid={state.spinnerUid}
+              activeUid={state.activeUid}
+              currentStep={currentStep}
+              canSpin={Boolean(uid && state.spinnerUid === uid && currentStep === 'waiting_spin')}
+              onSpin={handleSpin}
+              compact={false}
+            />
           </div>
 
           {/* Central Controls */}
           <div className="mt-3 flex items-center gap-3">
-            <button
-              onClick={handleSpin}
-              disabled={currentStep === 'spinning'}
-              className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-rose-600 to-amber-600 px-6 py-2.5 text-sm font-black text-white shadow-lg hover:brightness-110 active:scale-95 transition-all shadow-rose-950/50 disabled:opacity-50"
-            >
-              <span>🍾</span>
-              <span>{currentStep === 'spinning' ? 'Đang Xoay Chai…' : 'Xoay Chai (Quay Hộ)'}</span>
-            </button>
+            {Boolean(uid && state.spinnerUid === uid) ? (
+              <button
+                onClick={handleSpin}
+                disabled={currentStep === 'spinning'}
+                className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-rose-600 via-pink-600 to-amber-500 px-6 py-2.5 text-sm font-black text-white shadow-xl hover:brightness-110 active:scale-95 transition-all shadow-rose-950/80"
+              >
+                <span>🍾</span>
+                <span>{currentStep === 'spinning' ? 'Đang Xoay Chai…' : 'BẤM QUAY CHAI! 🚀'}</span>
+              </button>
+            ) : (
+              <button
+                onClick={handleSpin}
+                disabled={currentStep === 'spinning'}
+                className="flex items-center gap-2 rounded-2xl bg-slate-900 border border-slate-800 px-5 py-2 text-xs font-bold text-slate-300 hover:text-white transition-all disabled:opacity-50"
+              >
+                <span>🍾</span>
+                <span>Quay Hộ {spinnerPlayer?.name}</span>
+              </button>
+            )}
             <button
               onClick={() => todNextTurn(code, state, players)}
-              className="rounded-2xl bg-slate-900 border border-slate-800 px-4 py-2.5 text-xs font-bold text-slate-300 hover:text-white transition-colors"
+              className="rounded-2xl bg-slate-900 border border-slate-800 px-4 py-2 text-xs font-bold text-slate-400 hover:text-white transition-colors"
             >
-              Đổi người quay ➔
+              Chuyển lượt ➔
             </button>
           </div>
 
