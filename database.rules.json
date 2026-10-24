@@ -2,6 +2,7 @@
   "rules": {
     "rooms": {
       "$code": {
+        ".write": "auth != null && (!data.exists() || !newData.exists() || root.child('rooms').child($code).child('meta').child('hostUid').val() === auth.uid)",
         "meta": {
           ".read": "auth != null",
           ".write": "auth != null && ((!data.exists() && newData.child('hostUid').val() === auth.uid) || data.child('hostUid').val() === auth.uid)"
@@ -72,6 +73,10 @@
             ".read": "auth != null && auth.uid === $uid",
             ".write": "auth != null && (auth.uid === $uid || root.child('rooms').child($code).child('meta').child('hostUid').val() === auth.uid)"
           }
+        },
+        "tod": {
+          ".read": "auth != null",
+          ".write": "auth != null"
         }
       }
     }

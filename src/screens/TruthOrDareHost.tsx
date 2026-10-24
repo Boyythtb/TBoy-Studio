@@ -29,6 +29,8 @@ export default function TruthOrDareHost() {
   const [showLeaderboard, setShowLeaderboard] = useState(false)
   const [hostName, setHostName] = useState('')
   const [isJoining, setIsJoining] = useState(false)
+  const [isStarting, setIsStarting] = useState(false)
+  const [startError, setStartError] = useState<string | null>(null)
   const order = useMemo(() => getPlayerOrder(players), [players])
   const url = joinUrl(code)
 
@@ -61,8 +63,18 @@ export default function TruthOrDareHost() {
   }, [code])
 
   const handleStart = async () => {
-    sfx.win()
-    await todStart(code, players)
+    if (order.length < 2 || isStarting) return
+    setIsStarting(true)
+    setStartError(null)
+    try {
+      sfx.win()
+      await todStart(code, players)
+    } catch (err) {
+      console.error('Failed to start truth or dare:', err)
+      setStartError(err instanceof Error ? err.message : 'Không thể bắt đầu, vui lòng thử lại!')
+    } finally {
+      setIsStarting(false)
+    }
   }
 
   const handleSpin = async () => {
@@ -180,17 +192,22 @@ export default function TruthOrDareHost() {
                   {/* Start Button */}
                   <button
                     onClick={handleStart}
-                    disabled={order.length < 2}
+                    disabled={order.length < 2 || isStarting}
                     className={`w-full rounded-2xl py-3 text-xs sm:text-sm font-black shadow-lg transition-all ${
-                      order.length >= 2
+                      order.length >= 2 && !isStarting
                         ? 'bg-gradient-to-r from-rose-600 to-amber-600 text-white hover:brightness-110 active:scale-95 shadow-rose-950/60'
                         : 'bg-slate-800 text-slate-500 cursor-not-allowed'
                     }`}
                   >
-                    {order.length < 2
+                    {isStarting
+                      ? 'Đang khởi động bàn nhậu…'
+                      : order.length < 2
                       ? `Cần thêm ${2 - order.length} người nữa để bắt đầu`
                       : 'BẮT ĐẦU VÒNG XOAY BÀN NHẬU 🚀'}
                   </button>
+                  {startError && (
+                    <p className="mt-2 text-center text-xs text-rose-400 font-semibold">{startError}</p>
+                  )}
                 </div>
               </div>
             </div>

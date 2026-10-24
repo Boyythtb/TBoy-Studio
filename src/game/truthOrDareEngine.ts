@@ -38,6 +38,11 @@ export async function todStart(code: string, players: Record<string, Player>): P
   }
 
   await store.set(paths.tod(code), state)
+  try {
+    await store.update(paths.meta(code), { phase: 'playing' })
+  } catch {
+    /* ignore */
+  }
 }
 
 export async function todSpin(code: string, state: TodState, players: Record<string, Player>): Promise<void> {
