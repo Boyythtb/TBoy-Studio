@@ -136,14 +136,16 @@ export const CONVS: Conv[] = [
     id: 'group',
     name: 'Hội chợ Hẻm 42',
     avatar: '🏮',
+    isGroup: true,
     sub: '28 thành viên',
     preview: 'Oanh: Mất tiền quỹ rồi cả nhà ơi!',
     messages: [
-      { id: 'g1', from: 'them', time: '21:21', text: 'Cả nhà ơi, hòm quỹ thiếu 8 triệu. Khoá bị cạy, tiền mất sạch.', clue: 'mat-quy' },
-      { id: 'g2', from: 'them', time: '21:22', text: 'Lúc 20:55 mất điện cả khu, đến 21:10 mới có lại. Camera cũng tắt theo.', clue: 'cat-dien' },
-      { id: 'g3', from: 'them', time: '21:24', text: 'Ai ở gần hòm quỹ lúc đó thì nhắn riêng cho tôi.' },
-      { id: 'g4', from: 'them', time: '21:25', text: 'Chú Hùng nói thấy Khoa cúi ở hòm quỹ lúc 20:48. Khoa đâu rồi?', clue: 'khoa-gan-hom' },
+      { id: 'g1', from: 'them', senderName: 'Chị Oanh (Trưởng BTC)', senderAvatar: '🎤', time: '21:21', text: 'Cả nhà ơi, hòm quỹ thiếu 8 triệu. Khoá bị cạy, tiền mất sạch.', clue: 'mat-quy' },
+      { id: 'g2', from: 'them', senderName: 'Tổ Điện', senderAvatar: '💡', time: '21:22', text: 'Lúc 20:55 mất điện cả khu, đến 21:10 mới có lại. Camera cũng tắt theo.', clue: 'cat-dien' },
+      { id: 'g3', from: 'them', senderName: 'Chị Oanh (Trưởng BTC)', senderAvatar: '🎤', time: '21:24', text: 'Ai ở gần hòm quỹ lúc đó thì nhắn riêng cho tôi.' },
+      { id: 'g4', from: 'them', senderName: 'Chú Hùng (Bảo vệ)', senderAvatar: '🛡️', time: '21:25', text: 'Chú thấy thằng Khoa cúi ở hòm quỹ lúc 20:48. Khoa đâu rồi?', clue: 'khoa-gan-hom' },
       { id: 'g5', from: 'me', time: '21:26', text: 'Mọi người giữ nguyên hiện trường. Tôi xem giúp.' },
+      { id: 'g6', from: 'them', senderName: 'Chị Oanh (Trưởng BTC)', senderAvatar: '🎤', time: '21:27', text: 'Trăm sự nhờ bạn, tiền từ thiện bà con gom góp không thể mất trắng được.' },
     ],
   },
   {
@@ -159,6 +161,8 @@ export const CONVS: Conv[] = [
       { id: 't3', from: 'them', time: '21:34', text: 'Kẻ gian cạy khoá từ phía trong. Nghĩa là hắn ở rất gần hòm trước khi cạy.', requires: ['ket-cay'] },
       { id: 't4', from: 'them', time: '21:40', text: 'Mất điện là cơ hội. Ai biết chính xác lúc nào điện tắt?', requires: ['cat-dien'] },
       { id: 't5', from: 'them', time: '21:45', text: 'Tiền mặt 8 triệu không tự nhiên bốc hơi. Kiểm tra tài khoản những người có chìa.', requires: ['chia-ket'] },
+      { id: 't6', from: 'me', time: '21:46', text: 'Em đã tìm ra lịch sử chuyển khoản 8 triệu ngay sau khi mất điện.', requires: ['chuyen-tien-trng'] },
+      { id: 't7', from: 'them', time: '21:47', text: 'Chuẩn lắm! Chỉ đích danh kẻ biển thủ trong sổ vụ án đi.', requires: ['chuyen-tien-trng'] },
     ],
   },
   {
@@ -173,6 +177,8 @@ export const CONVS: Conv[] = [
       { id: 'k2', from: 'them', time: '21:28', text: 'Tay em bỏng từ 20:40, y tế quấn băng rồi. Em còn không cầm được đũa.', clue: 'khoa-bi-thuong' },
       { id: 'k3', from: 'them', time: '21:29', text: 'Em nhắn mẹ lúc 20:45 là dọn hòm xong rồi về. Mẹ em trả lời 20:46.', clue: 'khoa-tin-nhan' },
       { id: 'k4', from: 'them', time: '21:31', text: 'Ví em còn đúng 50 nghìn, ban tổ chức xem rồi. Em thề.', clue: 'khoa-sao-ke' },
+      { id: 'k5', from: 'me', time: '21:32', text: 'Tay em đang băng bó thì không thể cạy khoá sắt được, anh đã xác nhận.' },
+      { id: 'k6', from: 'them', time: '21:33', text: 'Dạ em cảm ơn anh nhiều lắm! Em sợ bị oan rồi bố mẹ mắng em chết mất.' },
     ],
   },
   {
@@ -186,6 +192,8 @@ export const CONVS: Conv[] = [
       { id: 'o1', from: 'them', time: '21:32', text: 'Tôi giữ chìa hòm. Nhưng 20:30 tôi phải lên sân khấu trực loa, nên đưa chìa cho Trang.' , clue: 'chia-ket' },
       { id: 'o2', from: 'them', time: '21:33', text: 'Tôi dặn Trang giữ kỹ. Đến 21:15 tôi quay lại thì hòm vẫn khoá, nhưng khoá đã bị cạy.', clue: 'oanh-khai' },
       { id: 'o3', from: 'them', time: '21:34', text: 'Trang là thủ quỹ ba năm nay, tôi tin cô ấy. Nhưng… dạo này cô ấy hay nghe điện thoại ngoài.' },
+      { id: 'o4', from: 'me', time: '21:35', text: 'Chị cứ an tâm, em đang lần theo dấu vết bùn đất phía sau hòm quỹ.' },
+      { id: 'o5', from: 'them', time: '21:36', text: 'Cố gắng giúp ban tổ chức nhé, không thể để công sức của mọi người đổ sông đổ bể.' },
     ],
   },
   {
@@ -199,6 +207,8 @@ export const CONVS: Conv[] = [
       { id: 'b1', from: 'them', time: '21:36', text: 'Tôi đi tuần, đèn pin yếu. Lúc 20:48 thấy thằng Khoa cúi ở hòm quỹ, tưởng nó mở hòm.' },
       { id: 'b2', from: 'them', time: '21:37', text: 'Nhưng giờ xem lại ảnh thì nó chỉ nhặt cái vỏ hộp. Tôi già rồi, mắt kém.', clue: 'bao-ve-khai' },
       { id: 'b3', from: 'them', time: '21:38', text: 'Lúc mất điện tôi đứng ở cổng chính. Không ai ra vào. Chỉ có Trang đi về phía bãi cỏ.' },
+      { id: 'b4', from: 'me', time: '21:39', text: 'Chi tiết Trang đi về hướng bãi cỏ lúc mất điện rất quan trọng, cảm ơn chú.' },
+      { id: 'b5', from: 'them', time: '21:40', text: 'Ừ, chú thấy rõ ràng nó vội vàng bước ra từ phía đó đấy cháu.' },
     ],
   },
   {
@@ -213,6 +223,8 @@ export const CONVS: Conv[] = [
       { id: 'tr2', from: 'them', time: '21:43', text: 'Giày em dính bùn hả? Chắc lúc đi đổ rác. Bãi rác cũng có bùn mà.', clue: 'trang-giay' },
       { id: 'tr3', from: 'me', time: '21:44', text: 'Bãi rác khô ráo. Chỉ bãi cỏ sau hòm quỹ có bùn đỏ.' },
       { id: 'tr4', from: 'them', time: '21:45', text: 'Thôi được. Em có vay anh Tú 8 triệu. Nhưng em chưa trả, em thề.' },
+      { id: 'tr5', from: 'me', time: '21:46', text: 'Thế lệnh chuyển khoản 8 triệu đúng lúc 21:32 cho Tú là từ đâu ra?' },
+      { id: 'tr6', from: 'them', time: '21:47', text: 'Em... em chỉ gom tiền người nhà trả nợ gấp thôi mà! Đừng ép em...' },
     ],
   },
   {
@@ -226,6 +238,8 @@ export const CONVS: Conv[] = [
       { id: 'tu1', from: 'them', time: '21:48', text: 'Tôi vào hẻm lúc 20:58 đòi tiền. Trang bảo 21:30 sẽ chuyển, tôi ra quán Phúc ngồi.', clue: 'tu-xuat-hien' },
       { id: 'tu2', from: 'them', time: '21:49', text: 'Phúc giữ bill của tôi: 20:57 gọi trà đá, 21:25 trả tiền. Tôi ngồi bàn ngoài, không lại gần hòm quỹ.', clue: 'tu-o-quan-phuc' },
       { id: 'tu3', from: 'them', time: '21:50', text: '21:32 cô ấy chuyển đủ 8 triệu. Nếu tôi lấy tiền hòm thì cô ấy lấy đâu ra mà trả?' },
+      { id: 'tu4', from: 'me', time: '21:51', text: 'Hoá đơn ở quán Phúc của anh đã được xác thực.' },
+      { id: 'tu5', from: 'them', time: '21:52', text: 'Biết ngay mà! Tôi chỉ tới đòi đúng nợ, ai tham lam trộm cắp thì tự đi mà đền.' },
     ],
   },
 ]

@@ -124,15 +124,17 @@ export const CONVS: Conv[] = [
     id: 'group',
     name: 'Sân cầu lông 42',
     avatar: '🏸',
+    isGroup: true,
     sub: '12 thành viên',
     preview: 'Hạnh: Mất điện thoại rồi, ai thấy không?',
     messages: [
-      { id: 'g1', from: 'them', time: '20:36', text: 'Cả nhà ơi, điện thoại của tôi mất rồi. Tôi để trong tủ đồ, quay lại đã không thấy.', clue: 'mat-dt' },
-      { id: 'g2', from: 'them', time: '20:37', text: 'Tủ vẫn khoá nguyên, không có dấu cạy. Chìa chỉ có tôi, Linh với bà Mai giữ.', clue: 'ba-nguoi-giu-chia' },
-      { id: 'g3', from: 'them', time: '20:39', text: 'Camera chỉ quay cửa kho thôi. Từ 20:30 đến 20:40 không có ai ra vào.', clue: 'camera-kho' },
-      { id: 'g4', from: 'them', time: '20:41', text: 'Linh ơi, lúc đó em ở đâu?' },
-      { id: 'g5', from: 'them', time: '20:42', text: 'Em đứng quầy từ 20:15 đến 20:50, không đi đâu hết.' , clue: 'linh-khai-quay' },
+      { id: 'g1', from: 'them', senderName: 'Chị Hạnh (Chủ sân)', senderAvatar: '🏸', time: '20:36', text: 'Cả nhà ơi, điện thoại của tôi mất rồi. Tôi để trong tủ đồ, quay lại đã không thấy.', clue: 'mat-dt' },
+      { id: 'g2', from: 'them', senderName: 'Chị Hạnh (Chủ sân)', senderAvatar: '🏸', time: '20:37', text: 'Tủ vẫn khoá nguyên, không có dấu cạy. Chìa chỉ có tôi, Linh với bà Mai giữ.', clue: 'ba-nguoi-giu-chia' },
+      { id: 'g3', from: 'them', senderName: 'Kỹ Thuật Sân', senderAvatar: '📹', time: '20:39', text: 'Camera chỉ quay cửa kho thôi. Từ 20:30 đến 20:40 không có ai ra vào.', clue: 'camera-kho' },
+      { id: 'g4', from: 'them', senderName: 'Chị Hạnh (Chủ sân)', senderAvatar: '🏸', time: '20:41', text: 'Linh ơi, lúc đó em ở đâu?' },
+      { id: 'g5', from: 'them', senderName: 'Linh (Quầy nước)', senderAvatar: '🥤', time: '20:42', text: 'Em đứng quầy từ 20:15 đến 20:50, không đi đâu hết.', clue: 'linh-khai-quay' },
       { id: 'g6', from: 'me', time: '20:43', text: 'Mọi người giữ nguyên hiện trường, con xem giúp.' },
+      { id: 'g7', from: 'them', senderName: 'Chị Hạnh (Chủ sân)', senderAvatar: '🏸', time: '20:44', text: 'Cảm ơn em nhé, nhờ em xem giúp chứ máy nhiều danh bạ đối tác quan trọng lắm.' },
     ],
   },
   {
@@ -148,6 +150,8 @@ export const CONVS: Conv[] = [
       { id: 't3', from: 'them', time: '20:58', text: 'Ai nói mình đứng yên một chỗ thì kiểm tra xem chỗ đó có camera không.', requires: ['linh-khai-quay'] },
       { id: 't4', from: 'them', time: '21:05', text: 'Kẻ lấy đồ không nhất thiết phải mở cửa. Nhìn kỹ cái tủ đi.', requires: ['camera-kho'] },
       { id: 't5', from: 'them', time: '21:12', text: 'Có người mặc áo đỏ trong ảnh. Có người mặc áo đỏ ngoài đời. Đừng nhầm.', requires: ['anh-story'] },
+      { id: 't6', from: 'me', time: '21:13', text: 'Em đã nhìn ra điểm hở của vụ trộm rồi.', requires: ['anh-story'] },
+      { id: 't7', from: 'them', time: '21:14', text: 'Rất tốt. Mở sổ vụ án chốt ngay kẻ lấy cắp đi.', requires: ['anh-story'] },
     ],
   },
   {
@@ -163,6 +167,8 @@ export const CONVS: Conv[] = [
       { id: 'l3', from: 'them', time: '20:55', text: 'Em còn gọi cho bạn trai từ 20:30 đến 20:45, máy ghi âm cuộc gọi còn đó.', clue: 'linh-goi-dien' },
       { id: 'l4', from: 'me', time: '20:56', text: 'Vậy em có thấy ai lạ không?' },
       { id: 'l5', from: 'them', time: '20:57', text: 'Chỉ có anh Sơn áo đỏ đứng gần tủ lúc em chụp story. Em tưởng ảnh đang chờ bạn.' },
+      { id: 'l6', from: 'me', time: '20:58', text: 'Cảm ơn Linh, thông tin áo đỏ trong story rất quý giá.' },
+      { id: 'l7', from: 'them', time: '20:59', text: 'Dạ, mong chị Hạnh sớm tìm lại được máy chứ không mọi người cứ nhìn em ái ngại lắm.' },
     ],
   },
   {
@@ -176,6 +182,8 @@ export const CONVS: Conv[] = [
       { id: 'b1', from: 'them', time: '20:58', text: 'Tôi về từ 20:25, lúc đó tủ vẫn bình thường.' },
       { id: 'b2', from: 'them', time: '20:59', text: 'Mà cái tủ đó cũ lắm rồi, vách sau bị mọt, hở một khe đủ lách tay. Tôi nói mãi chưa ai sửa.', clue: 'lo-hong-tu' },
       { id: 'b3', from: 'them', time: '21:00', text: 'Người nào biết chỗ đó thì không cần chìa đâu.' },
+      { id: 'b4', from: 'me', time: '21:01', text: 'Cháu cảm ơn bà Mai, cháu sẽ kiểm tra ngay khe hở phía sau.' },
+      { id: 'b5', from: 'them', time: '21:02', text: 'Ừ, kiểm tra kỹ đi cháu, đừng để kẻ gian qua mặt.' },
     ],
   },
   {
@@ -190,6 +198,9 @@ export const CONVS: Conv[] = [
       { id: 's2', from: 'them', time: '21:03', text: 'Mà chị Hạnh cứ giục tiền sân, tôi bảo cuối tháng trả. Có 6 triệu chứ mấy.', clue: 'son-no-tien' },
       { id: 's3', from: 'them', time: '21:04', text: 'Điện thoại 5 triệu thì tôi mua được, việc gì phải lấy.', requires: ['tin-nhan-ban'] },
       { id: 's4', from: 'me', time: '21:05', text: 'Anh biết khe hở sau tủ không?' },
+      { id: 's5', from: 'them', time: '21:06', text: 'Khe hở nào? Tôi chỉ tới thuê sân đánh cầu, ai rảnh đâu mà soi mói phía sau tủ đồ người khác!' },
+      { id: 's6', from: 'me', time: '21:07', text: 'Nhưng story của Linh ghi rõ anh đứng sát ngay vách tủ đúng thời điểm đó.' },
+      { id: 's7', from: 'them', time: '21:08', text: '…Tôi đứng chờ bạn thôi! Đừng có nói vu vơ ép tội người khác!' },
     ],
   },
   {
@@ -203,6 +214,8 @@ export const CONVS: Conv[] = [
       { id: 'ha1', from: 'them', time: '21:10', text: 'Tôi có đứng ở dãy tủ lúc 20:28, nhưng tủ số 7 là tủ của tôi. Tôi lấy vợt rồi ra sân.', clue: 'hao-gan-tu' },
       { id: 'ha2', from: 'them', time: '21:11', text: 'Từ 20:30 đến 21:00 tôi ở sân 2, camera với bill nước đều ghi. Điện thoại chị Hạnh mất lúc 20:35 mà.', clue: 'hao-o-san-2' },
       { id: 'ha3', from: 'them', time: '21:12', text: 'Tôi từng mượn máy chị Hạnh, chị ấy không cho trước mặt cả sân. Nhưng tôi đâu có lấy.' },
+      { id: 'ha4', from: 'me', time: '21:13', text: 'Được rồi, tôi đã kiểm tra camera sân 2, bạn không ở gần tủ lúc mất máy.' },
+      { id: 'ha5', from: 'them', time: '21:14', text: 'May quá! Cảm ơn bạn đã điều tra rõ ràng minh oan cho tôi nhé.' },
     ],
   },
 ]

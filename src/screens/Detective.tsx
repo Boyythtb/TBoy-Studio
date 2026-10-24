@@ -35,7 +35,7 @@ interface Ctx {
 
 /* ------------------------------------------------------------------ Zola */
 function ZolaApp({ found, find }: Ctx) {
-  const { convs: CONVS } = usePack()
+  const { convs: CONVS, case: caseMeta } = usePack()
   const [active, setActive] = useState<string | null>(null)
   const convs = CONVS.filter((c) => !c.requires || c.requires.every((r) => found.has(r)))
   const conv = convs.find((c) => c.id === active) ?? null
@@ -145,60 +145,87 @@ function ZolaApp({ found, find }: Ctx) {
       >
         <div className="flex justify-center my-1">
           <span className="rounded-full bg-slate-800/80 px-3 py-0.5 text-[0.58rem] font-medium text-slate-400 border border-slate-700/50">
-            Hôm nay, 12 Tháng 9
+            {caseMeta?.time ? `Vụ án · ${caseMeta.time}` : 'Hôm nay'}
           </span>
         </div>
 
-        {msgs.map((m) => (
-          <div key={m.id} className={`flex ${m.from === 'me' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[85%] ${m.from === 'me' ? 'items-end' : 'items-start'}`}>
-              <div
-                className={`relative rounded-2xl px-3.5 py-2.5 text-[0.78rem] leading-relaxed shadow-md ${
-                  m.from === 'me' 
-                    ? 'bg-gradient-to-r from-sky-600 to-blue-600 text-white rounded-tr-xs shadow-blue-900/30 font-normal' 
-                    : 'bg-slate-800/95 text-slate-100 rounded-tl-xs border border-slate-700/60 shadow-black/40 font-normal'
-                }`}
-              >
-                {m.text}
-              </div>
+        {msgs.map((m) => {
+          const isGroup = !!conv.isGroup || conv.id === 'group'
+          const showAvatar = m.from === 'them'
+          const senderName = m.senderName || (isGroup ? conv.name : undefined)
+          const senderAvatar = m.senderAvatar || conv.avatar
 
-              {m.card && (
-                <div className="mt-2 flex items-center gap-3 rounded-xl border border-cyan-500/30 bg-slate-900/90 p-2.5 shadow-md">
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-cyan-950 text-xl border border-cyan-500/40">
-                    {m.card.icon}
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block truncate text-[0.74rem] font-bold text-white">{m.card.title}</span>
-                    <span className="block truncate text-[0.62rem] text-slate-400">{m.card.sub}</span>
-                  </span>
-                </div>
-              )}
-
-              {m.clue && (
-                <div className="mt-2">
-                  <button
-                    onClick={() => find(m.clue!)}
-                    disabled={found.has(m.clue)}
-                    className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-[0.66rem] font-bold shadow-sm transition-all duration-200 ${
-                      found.has(m.clue)
-                        ? 'border-emerald-500/30 bg-emerald-950/30 text-emerald-400'
-                        : 'border-amber-400/50 bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 hover:border-amber-400 shadow-[0_0_12px_rgba(245,158,11,0.2)]'
-                    }`}
+          return (
+            <div key={m.id} className={`flex ${m.from === 'me' ? 'justify-end' : 'justify-start items-start gap-2.5'}`}>
+              {showAvatar && (
+                <div className="relative shrink-0 mt-0.5">
+                  <span
+                    className="grid h-8 w-8 place-items-center rounded-xl bg-slate-800 border border-slate-700/80 text-base shadow-sm select-none"
+                    title={senderName || conv.name}
                   >
-                    <span>{found.has(m.clue) ? '✓' : '📌'}</span>
-                    {found.has(m.clue) ? 'Đã lưu vào sổ vụ án' : 'Lưu manh mối quan trọng'}
-                  </button>
+                    {senderAvatar}
+                  </span>
                 </div>
               )}
 
-              {m.time && (
-                <p className={`mt-1 text-[0.58rem] font-medium text-slate-400 ${m.from === 'me' ? 'text-right' : 'text-left'}`}>
-                  {m.time} {m.from === 'me' && <span className="text-cyan-400">✓✓</span>}
-                </p>
-              )}
+              <div className={`max-w-[82%] ${m.from === 'me' ? 'items-end' : 'items-start min-w-0'}`}>
+                {/* Tên người gửi hiển thị khi là nhóm chat hoặc có senderName */}
+                {m.from === 'them' && (isGroup || m.senderName) && (
+                  <div className="mb-1 flex items-center gap-1.5 px-0.5">
+                    <span className="text-[0.68rem] font-bold text-cyan-400 truncate">
+                      {senderName}
+                    </span>
+                  </div>
+                )}
+
+                <div
+                  className={`relative rounded-2xl px-3.5 py-2.5 text-[0.78rem] leading-relaxed shadow-md ${
+                    m.from === 'me' 
+                      ? 'bg-gradient-to-r from-sky-600 to-blue-600 text-white rounded-tr-xs shadow-blue-900/30 font-normal' 
+                      : 'bg-slate-800/95 text-slate-100 rounded-tl-xs border border-slate-700/60 shadow-black/40 font-normal'
+                  }`}
+                >
+                  {m.text}
+                </div>
+
+                {m.card && (
+                  <div className="mt-2 flex items-center gap-3 rounded-xl border border-cyan-500/30 bg-slate-900/90 p-2.5 shadow-md">
+                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-cyan-950 text-xl border border-cyan-500/40">
+                      {m.card.icon}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block truncate text-[0.74rem] font-bold text-white">{m.card.title}</span>
+                      <span className="block truncate text-[0.62rem] text-slate-400">{m.card.sub}</span>
+                    </span>
+                  </div>
+                )}
+
+                {m.clue && (
+                  <div className="mt-2">
+                    <button
+                      onClick={() => find(m.clue!)}
+                      disabled={found.has(m.clue)}
+                      className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-[0.66rem] font-bold shadow-sm transition-all duration-200 ${
+                        found.has(m.clue)
+                          ? 'border-emerald-500/30 bg-emerald-950/30 text-emerald-400'
+                          : 'border-amber-400/50 bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 hover:border-amber-400 shadow-[0_0_12px_rgba(245,158,11,0.2)]'
+                      }`}
+                    >
+                      <span>{found.has(m.clue) ? '✓' : '📌'}</span>
+                      {found.has(m.clue) ? 'Đã lưu vào sổ vụ án' : 'Lưu manh mối quan trọng'}
+                    </button>
+                  </div>
+                )}
+
+                {m.time && (
+                  <p className={`mt-1 text-[0.58rem] font-medium text-slate-400 ${m.from === 'me' ? 'text-right' : 'text-left'}`}>
+                    {m.time} {m.from === 'me' && <span className="text-cyan-400">✓✓</span>}
+                  </p>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
       {/* Realistic chat input bar */}

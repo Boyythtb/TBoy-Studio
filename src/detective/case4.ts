@@ -170,14 +170,16 @@ export const CONVS: Conv[] = [
     id: 'group',
     name: 'Chung cư 42',
     avatar: '🏢',
+    isGroup: true,
     sub: '64 thành viên',
     preview: 'BQT: Két bị mở, mất 200 triệu!',
     messages: [
-      { id: 'g1', from: 'them', time: '21:41', text: 'Cả nhà bình tĩnh. Két phòng quản lý bị mở, mất 200 triệu và cuốn sổ nợ. Không có dấu cạy.', clue: 'mat-ket' },
-      { id: 'g2', from: 'them', time: '21:42', text: 'Anh Khải bất tỉnh ở tầng hầm, đã gọi cấp cứu. Đầu anh ấy va đập, tay trầy.', clue: 'khai-bat-tinh' },
-      { id: 'g3', from: 'them', time: '21:43', text: 'Mất điện từ 21:10 đến 21:55. Thang máy kẹt, ai ở trong xin báo.', clue: 'mat-dien' },
-      { id: 'g4', from: 'them', time: '21:44', text: 'Camera hành lang tắt từ 21:08, trước cả lúc mất điện. Kỹ thuật nói không phải lỗi nguồn.', clue: 'camera-tat' },
+      { id: 'g1', from: 'them', senderName: 'Ban Quản Trị', senderAvatar: '🏢', time: '21:41', text: 'Cả nhà bình tĩnh. Két phòng quản lý bị mở, mất 200 triệu và cuốn sổ nợ. Không có dấu cạy.', clue: 'mat-ket' },
+      { id: 'g2', from: 'them', senderName: 'Bác Tư (Bảo vệ)', senderAvatar: '🛡️', time: '21:42', text: 'Anh Khải bất tỉnh ở tầng hầm, đã gọi cấp cứu. Đầu anh ấy va đập, tay trầy.', clue: 'khai-bat-tinh' },
+      { id: 'g3', from: 'them', senderName: 'Ban Quản Trị', senderAvatar: '🏢', time: '21:43', text: 'Mất điện từ 21:10 đến 21:55. Thang máy kẹt, ai ở trong xin báo.', clue: 'mat-dien' },
+      { id: 'g4', from: 'them', senderName: 'Kỹ Thuật Toà Nhà', senderAvatar: '🔧', time: '21:44', text: 'Camera hành lang tắt từ 21:08, trước cả lúc mất điện. Kỹ thuật nói không phải lỗi nguồn.', clue: 'camera-tat' },
       { id: 'g5', from: 'me', time: '21:45', text: 'Mọi người giữ nguyên hiện trường. Tôi xem giúp.' },
+      { id: 'g6', from: 'them', senderName: 'Ban Quản Trị', senderAvatar: '🏢', time: '21:46', text: 'Cảm ơn anh. Cảnh sát khu vực cũng đang trên đường đến phối hợp điều tra.' },
     ],
   },
   {
@@ -193,6 +195,8 @@ export const CONVS: Conv[] = [
       { id: 't3', from: 'them', time: '21:53', text: 'Mất điện là kịch bản, không phải tai nạn. Ai tắt được điện thì biết trước giờ.', requires: ['mat-dien'] },
       { id: 't4', from: 'them', time: '21:55', text: 'Camera tắt trước điện hai phút. Đó là dấu vết của người có quyền.', requires: ['camera-tat'] },
       { id: 't5', from: 'them', time: '21:58', text: 'Muốn mở hồ sơ cáo buộc, nhập mã 4 số. Mã nằm trong thứ Khải để lại.', requires: ['khai-ghi-am'] },
+      { id: 't6', from: 'me', time: '21:59', text: 'Em đã giải mã được 4 con số và toàn bộ đường dây thông đồng.', requires: ['khai-ghi-am'] },
+      { id: 't7', from: 'them', time: '22:00', text: 'Xuất sắc! Nhập mã mở hồ sơ và bắt gọn kẻ chủ mưu cùng đồng phạm đi!', requires: ['khai-ghi-am'] },
     ],
   },
   {
@@ -205,9 +209,11 @@ export const CONVS: Conv[] = [
     messages: [
       { id: 'd1', from: 'them', time: '21:56', text: 'Tôi ở nhà từ 20:30, không ai đến chơi. Mất điện thì tôi ngủ. Két do kế toán giữ mã, tôi không biết.', clue: 'dat-khai' },
       { id: 'd2', from: 'them', time: '21:57', text: 'Các anh cứ hỏi Lan. Cô ấy biết mã, tôi chỉ ký giấy tờ.' },
-      { id: 'd3', from: 'me', time: '21:58', text: 'Anh có biết cuốn sổ nợ màu nâu không?' },
+      { id: 'd3', from: 'me', time: '21:58', text: 'Anh có biết cuốn sổ nợ màu nâu không?', requires: ['so-no'] },
       { id: 'd4', from: 'them', time: '21:59', text: 'Sổ nợ? Tôi không biết. À… hình như trong két có cuốn sổ của công ty.', requires: ['so-no'] },
       { id: 'd5', from: 'them', time: '22:00', text: 'Két có bảo hiểm 200 triệu. Nếu bị cướp thì công ty được bồi thường, tôi chỉ làm đúng quy trình.', clue: 'hop-dong', requires: ['so-no'] },
+      { id: 'd6', from: 'me', time: '22:01', text: 'Quy trình bao gồm cả việc đổi mã két sang 2147 trước khi cắt điện sao?', requires: ['hop-dong'] },
+      { id: 'd7', from: 'them', time: '22:02', text: 'Anh ăn nói cho cẩn thận! Tôi chỉ làm việc trực tiếp với cơ quan điều tra cấp quận!', requires: ['hop-dong'] },
     ],
   },
   {
@@ -223,6 +229,8 @@ export const CONVS: Conv[] = [
       { id: 'tu3', from: 'me', time: '22:04', text: 'Camera toà bên thấy xe anh trước cửa hầm đúng 21:15.' },
       { id: 'tu4', from: 'them', time: '22:05', text: '…Tôi xuống lấy đồ. Không liên quan đến két.' },
       { id: 'tu5', from: 'them', time: '22:06', text: 'Anh Đạt chỉ bảo tôi tắt điện cho khỏi chập, không nói gì khác. Tin nhắn anh ấy còn đó.', clue: 'tin-nhan-dat' },
+      { id: 'tu6', from: 'me', time: '22:07', text: 'Tin nhắn bảo tắt điện này chính là bằng chứng xác thực lời khai của anh.' },
+      { id: 'tu7', from: 'them', time: '22:08', text: 'Tôi thề tôi chỉ làm theo lệnh quản lý thôi... Xin đừng bắt tôi chịu tội thay!' },
     ],
   },
   {
@@ -237,6 +245,8 @@ export const CONVS: Conv[] = [
       { id: 'l2', from: 'them', time: '22:09', text: 'Mã két chỉ tôi và anh Đạt biết. Nhưng 17:00 anh ấy gọi bảo đổi thành 2147 cho dễ nhớ.', clue: 'lan-xac-nhan' },
       { id: 'l3', from: 'them', time: '22:10', text: 'Tôi thấy lạ nhưng không hỏi. Anh ấy nói sinh nhật con gái.' },
       { id: 'l4', from: 'them', time: '22:11', text: '21:50 tài khoản công ty chuyển 200 triệu cho “Bảy – nhà 17”. Người duyệt là anh Đạt.', clue: 'chuyen-khoan' },
+      { id: 'l5', from: 'me', time: '22:12', text: 'Cảm ơn chị Lan, tình tiết đổi mã két là mấu chốt then chốt.' },
+      { id: 'l6', from: 'them', time: '22:13', text: 'Dạ, em chỉ khai báo sự thật thôi, mong công an sớm làm rõ trắng đen.' },
     ],
   },
   {
@@ -251,6 +261,8 @@ export const CONVS: Conv[] = [
       { id: 'k2', from: 'them', time: '22:15', text: '“Anh Đạt, sao anh ở đây—” rồi tiếng va đập. Sau đó là tiếng chìa khoá rơi và bước chân chạy lên cầu thang.' },
       { id: 'k3', from: 'them', time: '22:16', text: 'Trong ghi chú: “21:47 — gặp a.Đ ở hầm, kiểm tra két, mang sổ.”', clue: 'ma-ket' },
       { id: 'k4', from: 'them', time: '22:17', text: 'Còn một tin nhắn chưa gửi: “Nếu 22h em không lên, gọi công an.”' },
+      { id: 'k5', from: 'me', time: '22:18', text: 'File ghi âm và ghi chú khớp hoàn toàn với hiện trường.' },
+      { id: 'k6', from: 'them', time: '22:19', text: 'Bác sĩ báo anh Khải đã qua cơn nguy kịch. Chứng cứ trong máy này sẽ vạch mặt thủ phạm.' },
     ],
   },
   {

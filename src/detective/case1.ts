@@ -16,6 +16,8 @@ export interface Msg {
   clue?: string
   /** ảnh/hoá đơn đính kèm, chỉ để hiển thị */
   card?: { title: string; sub: string; icon: string }
+  senderName?: string
+  senderAvatar?: string
 }
 
 export interface Conv {
@@ -26,6 +28,7 @@ export interface Conv {
   preview: string
   requires?: string[]
   messages: Msg[]
+  isGroup?: boolean
 }
 
 export interface Photo {
@@ -205,12 +208,15 @@ export const CONVS: Conv[] = [
     id: 'group',
     name: 'Tổ dân phố 42',
     avatar: '🏘️',
+    isGroup: true,
     sub: '8 thành viên',
     preview: 'Cô Lan: Cả nhà ơi, xe của tôi mất rồi!',
     messages: [
       {
         id: 'g1',
         from: 'them',
+        senderName: 'Cô Lan',
+        senderAvatar: '👵',
         time: '21:41',
         text: 'Cả nhà ơi, xe đạp điện của tôi mất rồi! Tôi khoá trong sân, vừa ra đã không thấy.',
         clue: 'mat-xe',
@@ -218,6 +224,8 @@ export const CONVS: Conv[] = [
       {
         id: 'g2',
         from: 'them',
+        senderName: 'Ông Bảy (Bảo vệ)',
+        senderAvatar: '🧹',
         time: '21:42',
         text: 'Tôi vừa đi một vòng hẻm, không thấy. Camera hẻm hỏng từ 8h tối, tôi quên cắm lại nguồn.',
         clue: 'camera-hong',
@@ -225,22 +233,55 @@ export const CONVS: Conv[] = [
       {
         id: 'g3',
         from: 'them',
+        senderName: 'Ông Bảy (Bảo vệ)',
+        senderAvatar: '🧹',
         time: '21:43',
         text: 'Tôi đang ở viện với vợ, 21:20 mới vào. Đây là hoá đơn, mọi người xem.',
         card: { title: 'Hoa-don-benh-vien.pdf', sub: '21:20 · Bệnh viện Đa khoa', icon: '🧾' },
         clue: 'bill-vien',
       },
-      { id: 'g4', from: 'them', time: '21:44', text: 'Lúc 9h tôi còn thấy xe trong sân. Xe màu xanh mint, có túi vải treo ở yên.' },
-      { id: 'g5', from: 'them', time: '21:45', text: 'Con vừa đi học về, có thấy ai đâu cô ơi.' },
+      {
+        id: 'g4',
+        from: 'them',
+        senderName: 'Cô Lan',
+        senderAvatar: '👵',
+        time: '21:44',
+        text: 'Lúc 9h tôi còn thấy xe trong sân. Xe màu xanh mint, có túi vải treo ở yên.',
+      },
+      {
+        id: 'g5',
+        from: 'them',
+        senderName: 'Vy (402)',
+        senderAvatar: '🎧',
+        time: '21:45',
+        text: 'Con vừa đi học về, có thấy ai đâu cô ơi.',
+      },
       {
         id: 'g6',
         from: 'them',
+        senderName: 'Dũng (Shipper)',
+        senderAvatar: '🛵',
         time: '21:46',
         text: 'Em đứng đầu hẻm từ 21:20, không thấy ai dắt xe ra. Chắc ai đó đi đường khác.',
         clue: 'dung-khai-21h15',
       },
-      { id: 'g7', from: 'them', time: '21:47', text: 'Trong túi treo ở yên có sổ ghi nợ của tôi. Không có sổ thì coi như mất trắng…' },
+      {
+        id: 'g7',
+        from: 'them',
+        senderName: 'Cô Lan',
+        senderAvatar: '👵',
+        time: '21:47',
+        text: 'Trong túi treo ở yên có sổ ghi nợ của tôi. Không có sổ thì coi như mất trắng…',
+      },
       { id: 'g8', from: 'me', time: '21:48', text: 'Cô bình tĩnh, con xem giúp cô.' },
+      {
+        id: 'g9',
+        from: 'them',
+        senderName: 'Cô Lan',
+        senderAvatar: '👵',
+        time: '21:49',
+        text: 'Trông cậy cả vào cháu đấy! Tìm được cô hậu tạ chu đáo.',
+      },
     ],
   },
   {
@@ -285,6 +326,20 @@ export const CONVS: Conv[] = [
         text: 'Có người thấy gì đó nhưng chưa dám nói. Ảnh chụp đôi khi giữ được thứ mắt người ta bỏ qua.',
         requires: ['anh-phan-chieu'],
       },
+      {
+        id: 't7',
+        from: 'me',
+        time: '22:13',
+        text: 'Em đã thu thập đủ bằng chứng rồi anh Tùng.',
+        requires: ['anh-phan-chieu'],
+      },
+      {
+        id: 't8',
+        from: 'them',
+        time: '22:14',
+        text: 'Tốt! Mở sổ vụ án ra chỉ đích danh thủ phạm đi. Đừng đoán mò đấy nhé.',
+        requires: ['anh-phan-chieu'],
+      },
     ],
   },
   {
@@ -304,7 +359,27 @@ export const CONVS: Conv[] = [
         text: 'Đơn 21:47 là đơn khác, em nhận ở đầu hẻm thôi, không vào trong sân.',
         requires: ['don-hang-2147'],
       },
-      { id: 'd4', from: 'them', time: '22:03', text: 'Mà sao anh/chị biết đơn của em? Nghe ai nói?' },
+      {
+        id: 'd4',
+        from: 'them',
+        time: '22:03',
+        text: 'Mà sao anh/chị biết đơn của em? Nghe ai nói?',
+        requires: ['don-hang-2147'],
+      },
+      {
+        id: 'd5',
+        from: 'me',
+        time: '22:04',
+        text: 'Lịch sử giao hàng và camera đều lưu dữ liệu cả đấy.',
+        requires: ['don-hang-2147'],
+      },
+      {
+        id: 'd6',
+        from: 'them',
+        time: '22:05',
+        text: '...Thôi em bận giao hàng tiếp rồi, không rảnh đôi co với anh/chị!',
+        requires: ['don-hang-2147'],
+      },
     ],
   },
   {
@@ -325,6 +400,7 @@ export const CONVS: Conv[] = [
         clue: 'vy-chung-kien',
       },
       { id: 'v4', from: 'me', time: '22:07', text: 'Em đừng lo, cứ kể thật.' },
+      { id: 'v5', from: 'them', time: '22:08', text: 'Dạ, em chỉ biết có thế thôi. Có gì anh/chị giữ kín giùm em nha, em sợ bị trả thù lắm...' },
     ],
   },
   {
@@ -345,6 +421,7 @@ export const CONVS: Conv[] = [
       },
       { id: 'h3', from: 'them', time: '22:03', text: 'Tối nay nó nhận đơn quanh hẻm mình, tôi thấy nó chạy qua quán lúc 9h rưỡi.' },
       { id: 'h4', from: 'me', time: '22:04', text: 'Anh nhớ chính xác không?' },
+      { id: 'h5', from: 'them', time: '22:05', text: 'Chính xác 100%! Tôi còn ngó ra vẫy tay gọi nó cơ mà, làm sao nhầm được mặt nó.' },
     ],
   },
   {
@@ -358,6 +435,8 @@ export const CONVS: Conv[] = [
       { id: 'sn1', from: 'them', time: '22:08', text: 'Tôi có vào hẻm 42 lúc 21:38, nhưng là trả hàng cho nhà số 12. Xe tôi dắt theo vì hết xăng.', clue: 'son-xuat-hien' },
       { id: 'sn2', from: 'them', time: '22:09', text: '21:44 tôi còn giao đơn 2152 ở hẻm 46, có ảnh xác nhận. Cách đó hai con hẻm.', clue: 'son-don-hang' },
       { id: 'sn3', from: 'them', time: '22:10', text: 'Tôi với Dũng tranh đơn thật, nhưng tôi không lấy xe. Anh xem ảnh giao hàng đi.' },
+      { id: 'sn4', from: 'me', time: '22:11', text: 'Được rồi, tôi đã đối chiếu đơn 2152 của anh.' },
+      { id: 'sn5', from: 'them', time: '22:12', text: 'Cảm ơn anh. Người ngay thẳng sợ gì kiểm tra, mong anh sớm tìm ra kẻ cắp thật sự.' },
     ],
   },
 ]
