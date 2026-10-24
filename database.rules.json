@@ -80,10 +80,6 @@
           ".read": "auth != null",
           ".write": "auth != null"
         },
-        "ludo": {
-          ".read": "auth != null",
-          ".write": "auth != null"
-        },
         "monopoly": {
           ".read": "auth != null",
           ".write": "auth != null"

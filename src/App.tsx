@@ -15,8 +15,6 @@ const Detective = lazy(() => import('./screens/Detective'))
 const TruthOrDareLanding = lazy(() => import('./screens/TruthOrDareLanding'))
 const TruthOrDareHost = lazy(() => import('./screens/TruthOrDareHost'))
 const TruthOrDare = lazy(() => import('./screens/TruthOrDare'))
-const LudoLanding = lazy(() => import('./screens/LudoLanding'))
-const LudoHost = lazy(() => import('./screens/LudoHost'))
 const MonopolyLanding = lazy(() => import('./screens/MonopolyLanding'))
 const MonopolyHost = lazy(() => import('./screens/MonopolyHost'))
 const CatanLanding = lazy(() => import('./screens/CatanLanding'))
@@ -49,8 +47,6 @@ export default function App() {
           <Route path="/truth-or-dare" element={<TruthOrDareLanding />} />
           <Route path="/truth-or-dare/host/:code" element={<TruthOrDareHost />} />
           <Route path="/truth-or-dare/offline" element={<TruthOrDare />} />
-          <Route path="/ludo" element={<LudoLanding />} />
-          <Route path="/ludo/host/:code" element={<LudoHost />} />
           <Route path="/monopoly" element={<MonopolyLanding />} />
           <Route path="/monopoly/host/:code" element={<MonopolyHost />} />
           <Route path="/catan" element={<CatanLanding />} />

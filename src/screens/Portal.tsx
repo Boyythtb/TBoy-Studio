@@ -54,18 +54,6 @@ const GAMES = [
     glow: 'rgba(244, 63, 94, 0.35)',
   },
   {
-    to: '/ludo',
-    icon: '🐴',
-    name: 'Cờ Cá Ngựa Chiến Thuật',
-    tag: 'Bàn cờ · Đối kháng vui nhộn',
-    players: '2–4 người',
-    time: '10–15 phút',
-    desc: 'Lắc xúc xắc nảy lửa, đá văng ngựa đối thủ về chuồng và kích hoạt thẻ kỹ năng can thiệp kịch tính.',
-    accent: '#f59e0b',
-    badgeColor: '#fbbf24',
-    glow: 'rgba(245, 158, 11, 0.35)',
-  },
-  {
     to: '/monopoly',
     icon: '🎩',
     name: 'Cờ Tỷ Phú Mini',
