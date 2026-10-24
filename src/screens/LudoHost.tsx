@@ -13,7 +13,6 @@ import { joinUrl, joinRoom, deleteRoom } from '../lib/room'
 import { sfx } from '../lib/sfx'
 import {
   ludoStart,
-  ludoRollDice,
   ludoMoveToken,
   ludoTick,
   COLOR_CONFIG,
@@ -295,16 +294,15 @@ export default function LudoHost() {
                 <div className="text-xs text-slate-300">
                   <p className="font-semibold">Điểm xúc xắc:</p>
                   <p className="text-[0.68rem] text-slate-400">
-                    {state.diceRolled ? 'Đã đổ xong' : 'Đang chờ lắc…'}
+                    {state.diceRolled
+                      ? `Đã ra ${state.diceValue} điểm`
+                      : `Chờ ${currentTurnPlayer?.name} lắc trên điện thoại…`}
                   </p>
                 </div>
                 <Dice3D
                   value={state.diceValue}
                   rolling={!state.diceRolled && Boolean(state.currentTurn)}
-                  onClick={() => {
-                    void ludoRollDice(code, state)
-                  }}
-                  disabled={state.diceRolled}
+                  disabled={true}
                   size={52}
                 />
               </div>

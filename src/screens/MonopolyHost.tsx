@@ -12,8 +12,6 @@ import { joinUrl, joinRoom, deleteRoom } from '../lib/room'
 import { sfx } from '../lib/sfx'
 import {
   monopolyStart,
-  monopolyRollDice,
-  monopolyEndTurn,
   monopolyTick,
   type MonopolyState,
 } from '../game/monopolyEngine'
@@ -277,22 +275,16 @@ export default function MonopolyHost() {
                 </div>
               </div>
 
-              {/* Host actions if needed */}
-              <div className="mt-4 flex gap-2">
+              {/* Trạng thái lượt lắc xúc xắc */}
+              <div className="mt-4">
                 {!state.diceRolled ? (
-                  <button
-                    onClick={() => monopolyRollDice(code, state)}
-                    className="flex-1 rounded-2xl bg-amber-500 py-2.5 text-xs font-black text-slate-950 hover:bg-amber-400"
-                  >
-                    🎲 Lắc Xúc Xắc Hộ
-                  </button>
+                  <div className="rounded-2xl bg-slate-950/60 p-3 text-center border border-slate-800 text-xs text-slate-300">
+                    ⏳ Đang chờ <span className="text-amber-400 font-bold">{currentTurnPlayer?.name}</span> lắc 2 xúc xắc trên điện thoại…
+                  </div>
                 ) : (
-                  <button
-                    onClick={() => monopolyEndTurn(code)}
-                    className="flex-1 rounded-2xl bg-slate-800 py-2.5 text-xs font-bold text-slate-300 hover:text-white"
-                  >
-                    Kết Thúc Lượt ➔
-                  </button>
+                  <div className="rounded-2xl bg-slate-950/60 p-3 text-center border border-slate-800 text-xs text-emerald-400 font-bold">
+                    🎯 {currentTurnPlayer?.name} đã đổ ra {state.dice1! + state.dice2!} điểm ({state.dice1} + {state.dice2})
+                  </div>
                 )}
               </div>
             </div>

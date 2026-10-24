@@ -241,36 +241,74 @@ export function LudoBoard({
               onClick={isSelectable ? () => onTokenClick?.(token.id) : undefined}
               className={`transition-all duration-300 ${isSelectable ? 'cursor-pointer' : ''}`}
             >
+              {/* VÙNG CHẠM CẢM ỨNG SIÊU LỚN CHO ĐIỆN THOẠI (R=42) */}
+              <circle
+                cx={cx}
+                cy={cy}
+                r="42"
+                fill="transparent"
+                className={isSelectable ? 'cursor-pointer' : ''}
+              />
+
               {isSelectable && (
-                <circle
-                  cx={cx}
-                  cy={cy}
-                  r="24"
-                  fill="none"
-                  stroke="#ffffff"
-                  strokeWidth="3"
-                  className="animate-ping opacity-75"
-                />
+                <>
+                  <circle
+                    cx={cx}
+                    cy={cy}
+                    r="32"
+                    fill="none"
+                    stroke="#f59e0b"
+                    strokeWidth="4"
+                    strokeDasharray="6 6"
+                    className="animate-spin opacity-90"
+                  />
+                  <circle
+                    cx={cx}
+                    cy={cy}
+                    r="26"
+                    fill="#f59e0b"
+                    opacity="0.25"
+                    className="animate-pulse"
+                  />
+                </>
               )}
-              {/* Bóng quân cờ */}
-              <ellipse cx={cx} cy={cy + 10} rx="14" ry="6" fill="#000000" opacity="0.5" />
+
+              {/* Bóng quân cờ 3D */}
+              <ellipse cx={cx} cy={cy + 13} rx="18" ry="7" fill="#000000" opacity="0.6" />
+
+              {/* Vòng viền ngoài phát sáng */}
+              <circle
+                cx={cx}
+                cy={cy}
+                r="20"
+                fill="#0f172a"
+                stroke={isSelectable ? '#fbbf24' : hex}
+                strokeWidth={isSelectable ? 4 : 2.5}
+                className="drop-shadow-xl"
+              />
+
               {/* Thân quân cờ */}
               <circle
                 cx={cx}
                 cy={cy}
                 r="16"
                 fill={hex}
-                stroke={isSelectable ? '#ffffff' : '#0f172a'}
-                strokeWidth={isSelectable ? 3 : 2}
-                className="drop-shadow-lg"
               />
+
               {/* Icon chiến mã */}
-              <text x={cx} y={cy + 5} fontSize="14" textAnchor="middle" fill="#ffffff" fontWeight="bold">
+              <text x={cx} y={cy + 6} fontSize="17" textAnchor="middle" fill="#ffffff" fontWeight="bold">
                 🐴
               </text>
+
+              {/* Số thứ tự ngựa (1 hoặc 2) */}
+              <circle cx={cx - 10} cy={cy - 10} r="7" fill="#0f172a" stroke="#ffffff" strokeWidth="1" />
+              <text x={cx - 10} y={cy - 7} fontSize="8" textAnchor="middle" fill="#ffffff" fontWeight="bold">
+                {token.id + 1}
+              </text>
+
               {/* Khiên bảo vệ nếu có */}
               {token.hasShield && (
-                <text x={cx + 10} y={cy - 8} fontSize="13" textAnchor="middle">
+                <text x={cx + 12} y={cy - 10} fontSize="15" textAnchor="middle">
                   🛡️
                 </text>
               )}

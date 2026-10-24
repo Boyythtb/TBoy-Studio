@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { motion } from 'framer-motion'
 import { Dice3D } from '../ui/Dice3D'
 import { LudoBoard } from '../ui/LudoBoard'
 import { JoinForm, LobbyWait, PhoneShell } from '../ui/PhoneJoin'
@@ -211,25 +210,48 @@ export default function LudoPlayer() {
 
           {/* Vùng Lắc Xúc Xắc */}
           {isMyTurn && !state.diceRolled && (
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="flex flex-col items-center justify-center p-2"
-            >
+            <div className="flex flex-col items-center justify-center p-2">
               <Dice3D
                 value={state.diceValue}
                 rolling={rolling}
                 onClick={handleRollDice}
-                size={70}
+                size={74}
               />
               <button
                 onClick={handleRollDice}
                 disabled={rolling}
-                className="mt-3 w-full rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 py-3 text-sm font-black text-white shadow-xl hover:brightness-110 active:scale-95 transition-all shadow-amber-950/80"
+                className="mt-3 w-full rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 py-3.5 text-sm font-black text-white shadow-xl hover:brightness-110 active:scale-95 transition-all shadow-amber-950/80"
               >
                 🎲 BẤM ĐỂ LẮC XÚC XẮC!
               </button>
-            </motion.div>
+            </div>
+          )}
+
+          {/* Vùng Chọn Ngựa để đi (Nút Bấm To Dành Cho Điện Thoại) */}
+          {isMyTurn && state.diceRolled && selectableTokenIds.length > 0 && myState && (
+            <div className="space-y-2">
+              <p className="text-[0.68rem] font-bold text-center text-slate-300">
+                CHỌN CHIẾN MÃ MUỐN ĐI:
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                {selectableTokenIds.map((tokenId) => {
+                  const token = myState.tokens.find((t) => t.id === tokenId)
+                  const isBase = token?.pos === -1
+                  return (
+                    <button
+                      key={tokenId}
+                      onClick={() => handleMove(tokenId)}
+                      className="flex flex-col items-center justify-center rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 p-3 text-white font-bold shadow-lg active:scale-95 transition-all hover:brightness-110 border border-white/20"
+                    >
+                      <span className="text-xl">🐴</span>
+                      <span className="text-xs font-black mt-1">
+                        {isBase ? `Xuất Chuồng Ngựa ${tokenId + 1}` : `Đi Ngựa ${tokenId + 1} (+${state.diceValue} ô)`}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
           )}
 
           {/* Danh sách Thẻ Bài Kỹ Năng */}

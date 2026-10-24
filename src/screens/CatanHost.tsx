@@ -12,8 +12,6 @@ import { joinUrl, joinRoom, deleteRoom } from '../lib/room'
 import { sfx } from '../lib/sfx'
 import {
   catanStart,
-  catanRollDice,
-  catanEndTurn,
   catanTick,
   type CatanState,
 } from '../game/catanEngine'
@@ -273,21 +271,16 @@ export default function CatanHost() {
                 </div>
               </div>
 
-              <div className="mt-4 flex gap-2">
+              {/* Trạng thái thu hoạch xúc xắc */}
+              <div className="mt-4">
                 {!state.diceRolled ? (
-                  <button
-                    onClick={() => catanRollDice(code, state)}
-                    className="flex-1 rounded-2xl bg-emerald-600 py-2.5 text-xs font-black text-white hover:bg-emerald-500 shadow-md"
-                  >
-                    🎲 Đổ Xúc Xắc Mùa Màng
-                  </button>
+                  <div className="rounded-2xl bg-slate-950/60 p-3 text-center border border-slate-800 text-xs text-slate-300">
+                    ⏳ Đang chờ <span className="text-emerald-400 font-bold">{currentTurnPlayer?.name}</span> gieo xúc xắc thu hoạch mùa màng…
+                  </div>
                 ) : (
-                  <button
-                    onClick={() => catanEndTurn(code)}
-                    className="flex-1 rounded-2xl bg-slate-800 py-2.5 text-xs font-bold text-slate-300 hover:text-white"
-                  >
-                    Kết Thúc Lượt ➔
-                  </button>
+                  <div className="rounded-2xl bg-slate-950/60 p-3 text-center border border-slate-800 text-xs text-amber-300 font-bold">
+                    🌾 Xúc xắc ra số [{state.dice1! + state.dice2!}], các ô tương ứng đã phát tài nguyên!
+                  </div>
                 )}
               </div>
             </div>

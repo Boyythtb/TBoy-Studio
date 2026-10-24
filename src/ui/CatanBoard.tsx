@@ -6,7 +6,7 @@ import {
   type ResourceType,
 } from '../game/catanEngine'
 
-function getHexPolygonPoints(cx: number, cy: number, r: number = 72): string {
+function getHexPolygonPoints(cx: number, cy: number, r: number = 78): string {
   const points: string[] = []
   for (let i = 0; i < 6; i++) {
     const angle = (Math.PI / 3) * i
@@ -26,57 +26,88 @@ interface CatanBoardProps {
 
 export function CatanBoard({ players, dice1, dice2 }: CatanBoardProps) {
   return (
-    <div className="relative mx-auto aspect-square w-full max-w-[540px] rounded-3xl bg-slate-950 p-2 sm:p-4 border-2 border-slate-800 shadow-[0_12px_45px_rgba(0,0,0,0.8)] select-none">
-      <svg viewBox="0 0 600 600" className="w-full h-full drop-shadow-md">
-        {/* Nền biển đại dương */}
-        <circle cx="300" cy="300" r="280" fill="#0f172a" stroke="#0284c7" strokeWidth="4" strokeDasharray="12 6" opacity="0.6" />
+    <div className="relative mx-auto aspect-square w-full max-w-[660px] rounded-3xl bg-slate-950 p-2 sm:p-4 border-2 border-emerald-500/30 shadow-[0_16px_50px_rgba(0,0,0,0.9),0_0_30px_rgba(16,185,129,0.15)] select-none">
+      <svg viewBox="0 0 600 600" className="w-full h-full drop-shadow-2xl">
+        <defs>
+          <radialGradient id="oceanGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#0369a1" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#0f172a" stopOpacity="0.9" />
+          </radialGradient>
+        </defs>
+
+        {/* Nền biển đại dương bao quanh đảo */}
+        <circle cx="300" cy="300" r="285" fill="url(#oceanGrad)" stroke="#0284c7" strokeWidth="4" strokeDasharray="10 5" opacity="0.8" />
 
         {/* 7 Ô lục giác đất đai */}
         {CATAN_HEXES.map((hex: HexTile) => {
           const isDesert = hex.type === 'desert'
           const res = !isDesert ? RESOURCE_CONFIG[hex.type as ResourceType] : null
           const fillColor = isDesert ? '#d97706' : res?.color || '#334155'
+          const isHotNumber = hex.diceNumber === 6 || hex.diceNumber === 8
 
           return (
-            <g key={hex.id}>
+            <g key={hex.id} className="transition-transform duration-300">
               {/* Lục giác đất */}
               <polygon
-                points={getHexPolygonPoints(hex.cx, hex.cy, 76)}
+                points={getHexPolygonPoints(hex.cx, hex.cy, 80)}
                 fill={fillColor}
                 stroke="#0f172a"
-                strokeWidth="4"
-                className="drop-shadow-lg opacity-85 transition-opacity hover:opacity-100"
+                strokeWidth="5"
+                className="drop-shadow-lg opacity-90 hover:opacity-100"
+              />
+
+              {/* Họa tiết bóng mờ bên trong */}
+              <polygon
+                points={getHexPolygonPoints(hex.cx, hex.cy, 68)}
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth="1.5"
+                opacity="0.18"
               />
 
               {/* Vòng tròn số xúc xắc */}
               <circle
                 cx={hex.cx}
                 cy={hex.cy}
-                r="24"
+                r="25"
                 fill="#f8fafc"
-                stroke="#334155"
-                strokeWidth="2"
-                className="drop-shadow-sm"
+                stroke={isHotNumber ? '#ef4444' : '#64748b'}
+                strokeWidth={isHotNumber ? 3 : 2}
+                className="drop-shadow-md"
               />
               <text
                 x={hex.cx}
-                y={hex.cy + 6}
-                fontSize="18"
+                y={hex.cy + 7}
+                fontSize="20"
                 fontWeight="900"
-                fill={hex.diceNumber === 6 || hex.diceNumber === 8 ? '#dc2626' : '#1e293b'}
+                fill={isHotNumber ? '#dc2626' : '#0f172a'}
                 textAnchor="middle"
               >
                 {hex.diceNumber}
               </text>
 
               {/* Tên loại tài nguyên & Icon */}
+              <g transform={`translate(${hex.cx}, ${hex.cy - 38})`}>
+                <text
+                  fontSize="22"
+                  textAnchor="middle"
+                  className="drop-shadow"
+                >
+                  {isDesert ? '🏜️' : res?.icon}
+                </text>
+              </g>
+
+              {/* Tên tài nguyên nhỏ */}
               <text
                 x={hex.cx}
-                y={hex.cy - 35}
-                fontSize="16"
+                y={hex.cy + 48}
+                fontSize="11"
+                fontWeight="bold"
+                fill="#ffffff"
+                opacity="0.85"
                 textAnchor="middle"
               >
-                {isDesert ? '🏜️' : res?.icon}
+                {isDesert ? 'Sa Mạc' : res?.name}
               </text>
             </g>
           )
@@ -85,16 +116,15 @@ export function CatanBoard({ players, dice1, dice2 }: CatanBoardProps) {
         {/* Hiển thị các Làng & Thành phố của các người chơi */}
         {Object.values(players).map((pState) => {
           return pState.settlements.map((st) => {
-            // Tọa độ làng dựa trên hex đầu tiên
             const baseHex = CATAN_HEXES[st.hexIds[0]] || CATAN_HEXES[0]
             const angle = (pState.avatar % 6) * (Math.PI / 3) + 0.3
-            const sx = baseHex.cx + 65 * Math.cos(angle)
-            const sy = baseHex.cy + 65 * Math.sin(angle)
+            const sx = baseHex.cx + 68 * Math.cos(angle)
+            const sy = baseHex.cy + 68 * Math.sin(angle)
 
             return (
               <g key={st.id} className="transition-all duration-300">
-                <circle cx={sx} cy={sy} r="16" fill="#0f172a" stroke={pState.color} strokeWidth="3" />
-                <text x={sx} y={sy + 5} fontSize="14" textAnchor="middle">
+                <circle cx={sx} cy={sy} r="18" fill="#0f172a" stroke={pState.color} strokeWidth="3.5" className="drop-shadow-xl" />
+                <text x={sx} y={sy + 6} fontSize="16" textAnchor="middle">
                   {st.isCity ? '🏰' : '🏡'}
                 </text>
               </g>
@@ -102,11 +132,11 @@ export function CatanBoard({ players, dice1, dice2 }: CatanBoardProps) {
           })
         })}
 
-        {/* Xúc xắc ở góc nếu có */}
+        {/* Cặp xúc xắc ở góc nếu có */}
         {dice1 && dice2 && (
-          <g transform="translate(20, 20)">
-            <rect width="110" height="48" rx="14" fill="#0f172a" stroke="#38bdf8" strokeWidth="2" opacity="0.9" />
-            <text x="55" y="32" fontSize="20" fontWeight="900" fill="#ffffff" textAnchor="middle">
+          <g transform="translate(25, 25)">
+            <rect width="130" height="52" rx="16" fill="#0f172a" stroke="#10b981" strokeWidth="2.5" opacity="0.95" className="drop-shadow-lg" />
+            <text x="65" y="34" fontSize="22" fontWeight="900" fill="#ffffff" textAnchor="middle">
               🎲 {dice1 + dice2} ({dice1}+{dice2})
             </text>
           </g>
