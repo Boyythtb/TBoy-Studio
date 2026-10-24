@@ -167,11 +167,11 @@ function createLocalStore(): Store {
 /* ----------------------------------------------------------- firebase store */
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY as string | undefined,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN as string | undefined,
-  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL as string | undefined,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID as string | undefined,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID as string | undefined,
+  apiKey: import.meta.env?.VITE_FIREBASE_API_KEY as string | undefined,
+  authDomain: import.meta.env?.VITE_FIREBASE_AUTH_DOMAIN as string | undefined,
+  databaseURL: import.meta.env?.VITE_FIREBASE_DATABASE_URL as string | undefined,
+  projectId: import.meta.env?.VITE_FIREBASE_PROJECT_ID as string | undefined,
+  appId: import.meta.env?.VITE_FIREBASE_APP_ID as string | undefined,
 }
 
 export const hasCloudConfig = Boolean(firebaseConfig.apiKey && firebaseConfig.databaseURL)
