@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Stage } from '../ui/Stage'
 import { Avatar } from '../ui/Avatar'
@@ -7,7 +7,7 @@ import { Qr } from '../ui/Qr'
 import { SfxToggle } from '../ui/SfxToggle'
 import { useGameRoom } from '../hooks/useGameRoom'
 import { paths, store } from '../lib/store'
-import { joinUrl, joinRoom } from '../lib/room'
+import { joinUrl, joinRoom, deleteRoom } from '../lib/room'
 import { sfx } from '../lib/sfx'
 import {
   todStart,
@@ -22,6 +22,7 @@ import {
 
 export default function TruthOrDareHost() {
   const { code = '' } = useParams()
+  const navigate = useNavigate()
   const { uid, players } = useGameRoom(code)
   const [state, setState] = useState<TodState | null>(null)
   const [showQr, setShowQr] = useState(false)
@@ -32,6 +33,13 @@ export default function TruthOrDareHost() {
   const url = joinUrl(code)
 
   const hostMe = uid ? players[uid] : null
+
+  const handleExitRoom = async () => {
+    try {
+      await deleteRoom(code)
+    } catch {}
+    navigate('/truth-or-dare')
+  }
 
   const handleHostJoin = async () => {
     const trimmed = hostName.trim() || 'Chủ Xị'
@@ -71,12 +79,13 @@ export default function TruthOrDareHost() {
       <Stage mode="blood">
         <div className="mx-auto flex h-dvh max-w-5xl flex-col justify-between p-4 sm:p-6 overflow-hidden">
           <header className="flex items-center justify-between pb-3 border-b border-rose-900/60 shrink-0">
-            <Link
-              to="/truth-or-dare"
+            <button
+              type="button"
+              onClick={handleExitRoom}
               className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-bold text-slate-300 hover:bg-white/10 hover:text-white transition-colors"
             >
               ← Thoát phòng
-            </Link>
+            </button>
             <div className="flex items-center gap-2">
               <span className="text-xl">🌶️</span>
               <span className="text-xs font-black tracking-widest text-rose-400 uppercase">

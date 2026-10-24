@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Stage } from '../ui/Stage'
 import { Avatar } from '../ui/Avatar'
@@ -9,7 +9,7 @@ import { BattleGrid } from '../ui/BattleGrid'
 import { SfxToggle } from '../ui/SfxToggle'
 import { useGameRoom } from '../hooks/useGameRoom'
 import { paths, store } from '../lib/store'
-import { joinUrl } from '../lib/room'
+import { joinUrl, deleteRoom } from '../lib/room'
 import {
   SB_TURN_SECONDS,
   countHits,
@@ -25,6 +25,7 @@ import {
 
 export default function BattleHost() {
   const { code = '' } = useParams()
+  const navigate = useNavigate()
   const room = useGameRoom(code)
   const { meta, players, isHost } = room
   const order = useMemo(() => playerOrder(players), [players])
@@ -32,6 +33,13 @@ export default function BattleHost() {
   const [keys, setKeys] = useState<Record<string, Fleet> | null>(null)
   const [starting, setStarting] = useState(false)
   const busy = useRef(false)
+
+  const handleExit = async () => {
+    try {
+      await deleteRoom(code)
+    } catch {}
+    navigate('/sea-battle')
+  }
 
   useEffect(() => {
     if (!code) return
@@ -113,12 +121,13 @@ export default function BattleHost() {
       <div className="mx-auto flex min-h-dvh max-w-6xl flex-col px-6 py-6 lg:px-10">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 text-[0.68rem] tracking-[0.3em] text-mute uppercase">
-            <Link
-              to="/sea-battle"
+            <button
+              type="button"
+              onClick={handleExit}
               className="flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[0.72rem] font-medium tracking-normal text-parchment/80 normal-case transition hover:bg-white/10 hover:text-parchment"
             >
               ← Thoát phòng
-            </Link>
+            </button>
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#7be0c0]" />
             Hải chiến
             <span className="rounded-full border border-white/10 px-2 py-0.5 tracking-normal text-mute normal-case">{code}</span>

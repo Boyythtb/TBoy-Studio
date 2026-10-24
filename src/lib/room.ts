@@ -19,6 +19,7 @@ export const GAME_CAP: Record<GameId, number> = {
 }
 
 export async function createRoom(game: GameId = 'ma-soi'): Promise<string> {
+  void cleanupStaleRooms()
   const uid = await store.ensureAuth()
   for (let attempt = 0; attempt < 10; attempt++) {
     const code = randomRoomCode(4)
@@ -93,10 +94,51 @@ export async function joinRoom(code: string, name: string, avatar: number): Prom
   writePref(AVATAR_KEY, String(avatar))
 }
 
+export async function deleteRoom(code: string): Promise<void> {
+  const c = code.trim().toUpperCase()
+  await store.remove(`rooms/${c}`)
+  if (localStorage.getItem(HOST_KEY) === c) {
+    localStorage.removeItem(HOST_KEY)
+  }
+}
+
 export async function leaveRoom(code: string): Promise<void> {
   const uid = await store.ensureAuth()
   const c = code.trim().toUpperCase()
   await store.remove(paths.player(c, uid))
+
+  // Nếu phòng đang ở sảnh chờ và không còn người chơi nào, tự động xóa phòng
+  try {
+    const meta = await store.get<Meta>(paths.meta(c))
+    if (meta && meta.phase === 'lobby') {
+      const players = await store.get<Record<string, Player>>(paths.players(c))
+      if (!players || Object.keys(players).length === 0) {
+        await deleteRoom(c)
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+}
+
+export async function cleanupStaleRooms(): Promise<void> {
+  try {
+    const all = await store.get<Record<string, { meta?: Meta; players?: Record<string, Player> }>>('rooms')
+    if (!all) return
+    const now = Date.now()
+    const TWO_HOURS = 2 * 60 * 60 * 1000
+    for (const [code, data] of Object.entries(all)) {
+      if (!data || !data.meta) continue
+      const isLobby = data.meta.phase === 'lobby'
+      const pCount = data.players ? Object.keys(data.players).length : 0
+      const age = now - (data.meta.createdAt || 0)
+      if ((isLobby && pCount === 0 && age > 15 * 60 * 1000) || age > TWO_HOURS) {
+        await store.remove(`rooms/${code}`)
+      }
+    }
+  } catch {
+    /* ignore */
+  }
 }
 
 export async function updateConfig(code: string, config: GameConfig) {

@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Avatar } from '../ui/Avatar'
 import { Qr } from '../ui/Qr'
 import { MIN_PLAYERS, configIssue, specialCount, suggestConfig } from '../game/engine'
 import { ROLES, ROLE_ORDER } from '../game/roles'
 import type { GameConfig, Meta, Player, RoleId } from '../game/types'
-import { updateConfig } from '../lib/room'
+import { deleteRoom, updateConfig } from '../lib/room'
 import { store } from '../lib/store'
 import { sfx } from '../lib/sfx'
 
@@ -87,12 +87,20 @@ function Segmented<T extends number>({
 }
 
 export function LobbyView({ code, meta, players, onStart, starting }: Props) {
+  const navigate = useNavigate()
   const [copied, setCopied] = useState(false)
   const [showConfig, setShowConfig] = useState(true)
   const config = meta.config
   const issue = configIssue(config, players.length)
   const villagers = Math.max(0, players.length - config.wolves - specialCount(config))
   const link = `${window.location.origin}/play/${code}`
+
+  const handleExit = async () => {
+    try {
+      await deleteRoom(code)
+    } catch {}
+    navigate('/ma-soi')
+  }
 
   // Khi số người thay đổi mà cấu hình không còn hợp lệ (quá nhiều vai đặc biệt),
   // tự cân lại theo gợi ý — vẫn giữ nguyên thời gian host đã chọn.
@@ -133,12 +141,13 @@ export function LobbyView({ code, meta, players, onStart, starting }: Props) {
     <div className="mx-auto flex min-h-dvh max-w-7xl flex-col px-6 py-6 lg:px-10">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3 text-[0.68rem] tracking-[0.3em] text-mute uppercase">
-          <Link
-            to="/ma-soi"
+          <button
+            type="button"
+            onClick={handleExit}
             className="flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[0.72rem] font-medium tracking-normal text-parchment/80 normal-case transition hover:bg-white/10 hover:text-parchment"
           >
             ← Thoát phòng
-          </Link>
+          </button>
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-violet" />
           Phòng chờ
           {store.mode === 'local' && (
