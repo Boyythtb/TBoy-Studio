@@ -155,15 +155,23 @@ export function LobbyView({ code, meta, players, onStart, starting }: Props) {
   return (
     <div className="mx-auto flex min-h-dvh max-w-7xl flex-col px-6 py-6 lg:px-10">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3 text-[0.68rem] tracking-[0.3em] text-mute uppercase">
+        <div className="flex items-center gap-2 text-[0.68rem] tracking-[0.3em] text-mute uppercase">
           <button
             type="button"
             onClick={handleExit}
             className="flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[0.72rem] font-medium tracking-normal text-parchment/80 normal-case transition hover:bg-white/10 hover:text-parchment"
+            title="Thoát phòng Ma Sói"
           >
             ← Thoát phòng
           </button>
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-violet" />
+          <Link
+            to="/"
+            className="flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[0.72rem] font-medium tracking-normal text-cyan-400 normal-case transition hover:bg-white/10 hover:text-cyan-300"
+            title="Về cổng tất cả game"
+          >
+            🎲 Tất cả game
+          </Link>
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-violet ml-1" />
           Phòng chờ
           {store.mode === 'local' && (
             <span className="rounded-full border border-amber/30 bg-amber/10 px-2 py-0.5 tracking-normal text-amber normal-case">

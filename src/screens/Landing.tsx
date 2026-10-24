@@ -79,13 +79,19 @@ export default function Landing() {
   return (
     <Stage>
       <div className="mx-auto flex min-h-dvh max-w-6xl flex-col px-5 pb-16 sm:px-8">
-        <header className="flex items-center justify-between py-5">
-          <div className="flex items-center gap-2.5">
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-white/8 text-lg hairline">🐺</span>
-            <span className="text-[0.82rem] font-bold tracking-[0.28em] text-parchment/80 uppercase">Ma Sói</span>
-          </div>
+        <header className="flex items-center justify-between py-5 border-b border-white/5">
+          <Link to="/" className="group flex items-center gap-2.5">
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-white/8 text-lg hairline transition-transform group-hover:scale-105">🐺</span>
+            <div className="flex flex-col">
+              <span className="text-[0.82rem] font-bold tracking-[0.28em] text-parchment/80 uppercase group-hover:text-white transition-colors">Ma Sói</span>
+              <span className="text-[0.6rem] text-slate-400 tracking-wider uppercase font-medium">TBOY Studio</span>
+            </div>
+          </Link>
           <div className="flex items-center gap-2">
-            <Link to="/guides" className="btn btn-ghost btn-sm hidden sm:inline-flex">
+            <Link to="/" className="btn btn-ghost btn-sm text-xs font-semibold">
+              ← Tất cả game
+            </Link>
+            <Link to="/guides" className="btn btn-ghost btn-sm hidden sm:inline-flex text-xs font-semibold">
               Cách chơi
             </Link>
             <SfxToggle />
@@ -213,8 +219,10 @@ export default function Landing() {
         </section>
 
         <footer className="mt-16 flex flex-wrap items-center justify-between gap-3 border-t border-white/8 pt-6 text-[0.7rem] text-mute">
-          <span className="tracking-[0.28em] uppercase">TBOY STUDIO</span>
-          <span>Ma Sói · 4–16 người</span>
+          <Link to="/" className="tracking-[0.25em] uppercase hover:text-parchment transition-colors flex items-center gap-1.5 font-bold text-slate-300">
+            <span>←</span> TBOY STUDIO (Tất cả game)
+          </Link>
+          <span className="text-cyan-400/80">Ma Sói · 4–16 người · Chơi miễn phí</span>
         </footer>
       </div>
     </Stage>
