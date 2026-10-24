@@ -6,7 +6,6 @@ import { Avatar } from '../ui/Avatar'
 import { Qr } from '../ui/Qr'
 import { SfxToggle } from '../ui/SfxToggle'
 import { LudoBoard } from '../ui/LudoBoard'
-import { Dice3D } from '../ui/Dice3D'
 import { useGameRoom } from '../hooks/useGameRoom'
 import { paths, store } from '../lib/store'
 import { joinUrl, joinRoom, deleteRoom } from '../lib/room'
@@ -289,22 +288,18 @@ export default function LudoHost() {
                 </div>
               </div>
 
-              {/* Xúc xắc */}
-              <div className="mt-4 flex items-center justify-between rounded-2xl bg-slate-950/60 p-3 border border-slate-800">
-                <div className="text-xs text-slate-300">
-                  <p className="font-semibold">Điểm xúc xắc:</p>
-                  <p className="text-[0.68rem] text-slate-400">
-                    {state.diceRolled
-                      ? `Đã ra ${state.diceValue} điểm`
-                      : `Chờ ${currentTurnPlayer?.name} lắc trên điện thoại…`}
+              {/* Trạng thái lượt lắc xúc xắc */}
+              <div className="mt-4 rounded-2xl bg-slate-950/60 p-3 border border-slate-800 text-center">
+                {state.diceRolled ? (
+                  <div>
+                    <span className="text-[0.68rem] text-slate-400 block font-semibold">KẾT QUẢ ĐỔ XÚC XẮC:</span>
+                    <span className="font-mono text-3xl font-black text-amber-400">🎲 {state.diceValue} điểm</span>
+                  </div>
+                ) : (
+                  <p className="text-xs text-slate-300 font-medium animate-pulse">
+                    📱 Đang chờ <span className="font-bold text-amber-400">{currentTurnPlayer?.name}</span> lắc xúc xắc trên điện thoại…
                   </p>
-                </div>
-                <Dice3D
-                  value={state.diceValue}
-                  rolling={!state.diceRolled && Boolean(state.currentTurn)}
-                  disabled={true}
-                  size={52}
-                />
+                )}
               </div>
 
               {state.canRollAgain && (

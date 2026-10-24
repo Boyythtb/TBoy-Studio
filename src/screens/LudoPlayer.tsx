@@ -66,14 +66,17 @@ export default function LudoPlayer() {
 
   const handleRollDice = async () => {
     if (!isMyTurn || state?.diceRolled || rolling) return
-    buzz(40)
+    buzz(60)
     sfx.vote()
     setRolling(true)
-    try {
-      await ludoRollDice(code, state!)
-    } finally {
-      setTimeout(() => setRolling(false), 600)
-    }
+    // Cho xúc xắc xoay lộn nhào 3D trên điện thoại người chơi 700ms
+    setTimeout(async () => {
+      try {
+        await ludoRollDice(code, state!)
+      } finally {
+        setRolling(false)
+      }
+    }, 700)
   }
 
   const handleMove = async (tokenId: number) => {
@@ -208,29 +211,39 @@ export default function LudoPlayer() {
             )}
           </div>
 
-          {/* Vùng Lắc Xúc Xắc */}
-          {isMyTurn && !state.diceRolled && (
-            <div className="flex flex-col items-center justify-center p-2">
+          {/* Vùng Xúc Xắc 3D Trực Tiếp Trên Máy Người Chơi */}
+          {isMyTurn && (
+            <div className="flex flex-col items-center justify-center p-3 bg-slate-900/90 rounded-3xl border border-amber-500/30 shadow-xl">
               <Dice3D
                 value={state.diceValue}
                 rolling={rolling}
-                onClick={handleRollDice}
-                size={74}
+                onClick={!state.diceRolled ? handleRollDice : undefined}
+                disabled={state.diceRolled}
+                size={82}
               />
-              <button
-                onClick={handleRollDice}
-                disabled={rolling}
-                className="mt-3 w-full rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 py-3.5 text-sm font-black text-white shadow-xl hover:brightness-110 active:scale-95 transition-all shadow-amber-950/80"
-              >
-                🎲 BẤM ĐỂ LẮC XÚC XẮC!
-              </button>
+
+              {!state.diceRolled ? (
+                <button
+                  onClick={handleRollDice}
+                  disabled={rolling}
+                  className="mt-3.5 w-full rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 py-3.5 text-sm font-black text-white shadow-xl hover:brightness-110 active:scale-95 transition-all shadow-amber-950/80"
+                >
+                  {rolling ? 'ĐANG LẮC XÚC XẮC… 🎲' : '🎲 BẤM ĐỂ LẮC XÚC XẮC!'}
+                </button>
+              ) : (
+                <div className="mt-2 text-center">
+                  <span className="text-xs font-black text-amber-400">
+                    🎲 KẾT QUẢ: ĐỔ ĐƯỢC {state.diceValue} ĐIỂM!
+                  </span>
+                </div>
+              )}
             </div>
           )}
 
           {/* Vùng Chọn Ngựa để đi (Nút Bấm To Dành Cho Điện Thoại) */}
           {isMyTurn && state.diceRolled && selectableTokenIds.length > 0 && myState && (
-            <div className="space-y-2">
-              <p className="text-[0.68rem] font-bold text-center text-slate-300">
+            <div className="space-y-2 p-2 rounded-2xl bg-slate-900/90 border border-emerald-500/30">
+              <p className="text-[0.68rem] font-bold text-center text-emerald-400">
                 CHỌN CHIẾN MÃ MUỐN ĐI:
               </p>
               <div className="grid grid-cols-2 gap-2">
@@ -243,9 +256,9 @@ export default function LudoPlayer() {
                       onClick={() => handleMove(tokenId)}
                       className="flex flex-col items-center justify-center rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 p-3 text-white font-bold shadow-lg active:scale-95 transition-all hover:brightness-110 border border-white/20"
                     >
-                      <span className="text-xl">🐴</span>
+                      <span className="text-2xl">🐴</span>
                       <span className="text-xs font-black mt-1">
-                        {isBase ? `Xuất Chuồng Ngựa ${tokenId + 1}` : `Đi Ngựa ${tokenId + 1} (+${state.diceValue} ô)`}
+                        {isBase ? `🚀 Xuất Chuồng Ngựa ${tokenId + 1}` : `Đi Ngựa ${tokenId + 1} (+${state.diceValue} ô)`}
                       </span>
                     </button>
                   )

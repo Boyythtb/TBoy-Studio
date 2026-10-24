@@ -37,12 +37,32 @@ export const HOME_TRACKS: Record<LudoColor, Array<[number, number]>> = {
   blue: [[7, 13], [7, 12], [7, 11], [7, 10], [7, 9], [7, 8]],
 }
 
-// Tọa độ chuồng xuất phát (Base coords)
+// Tọa độ chuồng xuất phát 4 con ngựa xếp 2x2 đẹp mắt trong 4 góc chuồng
 export const BASE_COORDS: Record<LudoColor, Array<[number, number]>> = {
-  red: [[2, 2], [3, 3]],
-  green: [[12, 2], [11, 3]],
-  yellow: [[12, 12], [11, 11]],
-  blue: [[2, 12], [3, 11]],
+  red: [
+    [1.8, 1.8],
+    [3.8, 1.8],
+    [1.8, 3.8],
+    [3.8, 3.8],
+  ],
+  green: [
+    [10.8, 1.8],
+    [12.8, 1.8],
+    [10.8, 3.8],
+    [12.8, 3.8],
+  ],
+  yellow: [
+    [10.8, 10.8],
+    [12.8, 10.8],
+    [10.8, 12.8],
+    [12.8, 12.8],
+  ],
+  blue: [
+    [1.8, 10.8],
+    [3.8, 10.8],
+    [1.8, 12.8],
+    [3.8, 12.8],
+  ],
 }
 
 interface LudoBoardProps {
@@ -134,32 +154,44 @@ export function LudoBoard({
 
         {/* 1. NỀN 4 CHUỒNG (BASES) */}
         {/* Red Base (Top-Left) */}
-        <rect x="10" y="10" width="220" height="220" rx="28" fill="url(#redGrad)" stroke="#ef4444" strokeWidth="2" />
-        <circle cx="120" cy="120" r="70" fill="#0f172a" stroke="#ef4444" strokeWidth="3" strokeDasharray="4 4" />
-        <text x="120" y="70" fill="#ef4444" fontSize="16" fontWeight="900" textAnchor="middle" letterSpacing="2">
+        <rect x="10" y="10" width="220" height="220" rx="28" fill="url(#redGrad)" stroke="#ef4444" strokeWidth="2.5" />
+        <circle cx="120" cy="120" r="76" fill="#0f172a" stroke="#ef4444" strokeWidth="2" strokeDasharray="5 5" />
+        <text x="120" y="52" fill="#ef4444" fontSize="15" fontWeight="900" textAnchor="middle" letterSpacing="2">
           CHUỒNG ĐỎ
         </text>
+        {BASE_COORDS.red.map(([bx, by], idx) => (
+          <circle key={idx} cx={bx * 40 + 20} cy={by * 40 + 20} r="22" fill="#1e293b" stroke="#ef4444" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
+        ))}
 
         {/* Green Base (Top-Right) */}
-        <rect x="370" y="10" width="220" height="220" rx="28" fill="url(#greenGrad)" stroke="#22c55e" strokeWidth="2" />
-        <circle cx="480" cy="120" r="70" fill="#0f172a" stroke="#22c55e" strokeWidth="3" strokeDasharray="4 4" />
-        <text x="480" y="70" fill="#22c55e" fontSize="16" fontWeight="900" textAnchor="middle" letterSpacing="2">
+        <rect x="370" y="10" width="220" height="220" rx="28" fill="url(#greenGrad)" stroke="#22c55e" strokeWidth="2.5" />
+        <circle cx="480" cy="120" r="76" fill="#0f172a" stroke="#22c55e" strokeWidth="2" strokeDasharray="5 5" />
+        <text x="480" y="52" fill="#22c55e" fontSize="15" fontWeight="900" textAnchor="middle" letterSpacing="2">
           CHUỒNG XANH LÁ
         </text>
+        {BASE_COORDS.green.map(([bx, by], idx) => (
+          <circle key={idx} cx={bx * 40 + 20} cy={by * 40 + 20} r="22" fill="#1e293b" stroke="#22c55e" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
+        ))}
 
         {/* Yellow Base (Bottom-Right) */}
-        <rect x="370" y="370" width="220" height="220" rx="28" fill="url(#yellowGrad)" stroke="#eab308" strokeWidth="2" />
-        <circle cx="480" cy="480" r="70" fill="#0f172a" stroke="#eab308" strokeWidth="3" strokeDasharray="4 4" />
-        <text x="480" y="430" fill="#eab308" fontSize="16" fontWeight="900" textAnchor="middle" letterSpacing="2">
+        <rect x="370" y="370" width="220" height="220" rx="28" fill="url(#yellowGrad)" stroke="#eab308" strokeWidth="2.5" />
+        <circle cx="480" cy="480" r="76" fill="#0f172a" stroke="#eab308" strokeWidth="2" strokeDasharray="5 5" />
+        <text x="480" y="412" fill="#eab308" fontSize="15" fontWeight="900" textAnchor="middle" letterSpacing="2">
           CHUỒNG VÀNG
         </text>
+        {BASE_COORDS.yellow.map(([bx, by], idx) => (
+          <circle key={idx} cx={bx * 40 + 20} cy={by * 40 + 20} r="22" fill="#1e293b" stroke="#eab308" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
+        ))}
 
         {/* Blue Base (Bottom-Left) */}
-        <rect x="10" y="370" width="220" height="220" rx="28" fill="url(#blueGrad)" stroke="#3b82f6" strokeWidth="2" />
-        <circle cx="120" cy="480" r="70" fill="#0f172a" stroke="#3b82f6" strokeWidth="3" strokeDasharray="4 4" />
-        <text x="120" y="430" fill="#3b82f6" fontSize="16" fontWeight="900" textAnchor="middle" letterSpacing="2">
+        <rect x="10" y="370" width="220" height="220" rx="28" fill="url(#blueGrad)" stroke="#3b82f6" strokeWidth="2.5" />
+        <circle cx="120" cy="480" r="76" fill="#0f172a" stroke="#3b82f6" strokeWidth="2" strokeDasharray="5 5" />
+        <text x="120" y="412" fill="#3b82f6" fontSize="15" fontWeight="900" textAnchor="middle" letterSpacing="2">
           CHUỒNG XANH DƯƠNG
         </text>
+        {BASE_COORDS.blue.map(([bx, by], idx) => (
+          <circle key={idx} cx={bx * 40 + 20} cy={by * 40 + 20} r="22" fill="#1e293b" stroke="#3b82f6" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
+        ))}
 
         {/* 2. ĐƯỜNG RAY 52 Ô CHUNG */}
         {TRACK_COORDS.map(([tx, ty], i) => {

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { CatanBoard } from '../ui/CatanBoard'
+import { Dice3D } from '../ui/Dice3D'
 import { JoinForm, LobbyWait, PhoneShell } from '../ui/PhoneJoin'
 import { buzz } from '../lib/buzz'
 import { sfx } from '../lib/sfx'
@@ -74,14 +75,16 @@ export default function CatanPlayer() {
 
   const handleRollDice = async () => {
     if (!isMyTurn || state?.diceRolled || rolling) return
-    buzz(40)
+    buzz(60)
     sfx.vote()
     setRolling(true)
-    try {
-      await catanRollDice(code, state!)
-    } finally {
-      setTimeout(() => setRolling(false), 700)
-    }
+    setTimeout(async () => {
+      try {
+        await catanRollDice(code, state!)
+      } finally {
+        setRolling(false)
+      }
+    }, 700)
   }
 
   const handleBuild = async () => {
@@ -220,15 +223,42 @@ export default function CatanPlayer() {
             )}
           </div>
 
-          {/* Nút Lắc Xúc Xắc */}
-          {isMyTurn && !state.diceRolled && (
-            <button
-              onClick={handleRollDice}
-              disabled={rolling}
-              className="w-full rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 py-3.5 text-sm font-black text-white shadow-xl hover:brightness-110 active:scale-95 transition-all shadow-emerald-950/80"
-            >
-              🎲 ĐỔ XÚC XẮC THU HOẠCH TÀI NGUYÊN!
-            </button>
+          {/* Vùng Xúc Xắc 3D Trực Tiếp Trên Máy Người Chơi */}
+          {isMyTurn && (
+            <div className="flex flex-col items-center justify-center p-3 bg-slate-900/90 rounded-3xl border border-emerald-500/30 shadow-xl">
+              <div className="flex items-center gap-3">
+                <Dice3D
+                  value={state.dice1}
+                  rolling={rolling}
+                  onClick={!state.diceRolled ? handleRollDice : undefined}
+                  disabled={state.diceRolled}
+                  size={65}
+                />
+                <Dice3D
+                  value={state.dice2}
+                  rolling={rolling}
+                  onClick={!state.diceRolled ? handleRollDice : undefined}
+                  disabled={state.diceRolled}
+                  size={65}
+                />
+              </div>
+
+              {!state.diceRolled ? (
+                <button
+                  onClick={handleRollDice}
+                  disabled={rolling}
+                  className="mt-3.5 w-full rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 py-3.5 text-sm font-black text-white shadow-xl hover:brightness-110 active:scale-95 transition-all shadow-emerald-950/80"
+                >
+                  {rolling ? 'ĐANG ĐỔ XÚC XẮC… 🎲' : '🎲 ĐỔ XÚC XẮC THU HOẠCH TÀI NGUYÊN!'}
+                </button>
+              ) : (
+                <div className="mt-2 text-center">
+                  <span className="text-xs font-black text-amber-400">
+                    🌾 XÚC XẮC RA SỐ [{state.dice1! + state.dice2!}] ({state.dice1} + {state.dice2})!
+                  </span>
+                </div>
+              )}
+            </div>
           )}
 
           {/* Các nút Xây Làng / Thành Phố / Kết Thúc */}

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { MonopolyBoard } from '../ui/MonopolyBoard'
+import { Dice3D } from '../ui/Dice3D'
 import { JoinForm, LobbyWait, PhoneShell } from '../ui/PhoneJoin'
 import { buzz } from '../lib/buzz'
 import { sfx } from '../lib/sfx'
@@ -66,14 +67,16 @@ export default function MonopolyPlayer() {
 
   const handleRollDice = async () => {
     if (!isMyTurn || state?.diceRolled || rolling) return
-    buzz(40)
+    buzz(60)
     sfx.vote()
     setRolling(true)
-    try {
-      await monopolyRollDice(code, state!)
-    } finally {
-      setTimeout(() => setRolling(false), 700)
-    }
+    setTimeout(async () => {
+      try {
+        await monopolyRollDice(code, state!)
+      } finally {
+        setRolling(false)
+      }
+    }, 700)
   }
 
   const handleBuy = async () => {
@@ -197,15 +200,42 @@ export default function MonopolyPlayer() {
             )}
           </div>
 
-          {/* Nút Lắc Xúc Xắc */}
-          {isMyTurn && !state.diceRolled && (
-            <button
-              onClick={handleRollDice}
-              disabled={rolling}
-              className="w-full rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-500 to-orange-500 py-3.5 text-sm font-black text-slate-950 shadow-xl hover:brightness-110 active:scale-95 transition-all shadow-amber-950/80"
-            >
-              🎲 LẮC 2 XÚC XẮC ĐỂ ĐI!
-            </button>
+          {/* Vùng Xúc Xắc 3D Trực Tiếp Trên Máy Người Chơi */}
+          {isMyTurn && (
+            <div className="flex flex-col items-center justify-center p-3 bg-slate-900/90 rounded-3xl border border-amber-500/30 shadow-xl">
+              <div className="flex items-center gap-3">
+                <Dice3D
+                  value={state.dice1}
+                  rolling={rolling}
+                  onClick={!state.diceRolled ? handleRollDice : undefined}
+                  disabled={state.diceRolled}
+                  size={65}
+                />
+                <Dice3D
+                  value={state.dice2}
+                  rolling={rolling}
+                  onClick={!state.diceRolled ? handleRollDice : undefined}
+                  disabled={state.diceRolled}
+                  size={65}
+                />
+              </div>
+
+              {!state.diceRolled ? (
+                <button
+                  onClick={handleRollDice}
+                  disabled={rolling}
+                  className="mt-3.5 w-full rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-500 to-orange-500 py-3.5 text-sm font-black text-slate-950 shadow-xl hover:brightness-110 active:scale-95 transition-all shadow-amber-950/80"
+                >
+                  {rolling ? 'ĐANG LẮC 2 XÚC XẮC… 🎲' : '🎲 BẤM ĐỂ LẮC 2 XÚC XẮC!'}
+                </button>
+              ) : (
+                <div className="mt-2 text-center">
+                  <span className="text-xs font-black text-amber-400">
+                    🎲 KẾT QUẢ: ĐỔ ĐƯỢC {state.dice1! + state.dice2!} ĐIỂM ({state.dice1} + {state.dice2})!
+                  </span>
+                </div>
+              )}
+            </div>
           )}
 
           {/* Các nút Mua Đất / Nâng Cấp / Kết Thúc Lượt */}

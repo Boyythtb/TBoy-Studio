@@ -159,6 +159,8 @@ export async function ludoStart(code: string, players: Record<string, Player>): 
       tokens: [
         { id: 0, color, pos: -1, stepsMoved: 0 },
         { id: 1, color, pos: -1, stepsMoved: 0 },
+        { id: 2, color, pos: -1, stepsMoved: 0 },
+        { id: 3, color, pos: -1, stepsMoved: 0 },
       ],
       cards: [getRandomCard()],
       score: 0,
