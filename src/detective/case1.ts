@@ -36,6 +36,8 @@ export interface Photo {
   caption: string
   requires?: string[]
   clue?: string
+  /** ảnh riêng của vụ án; bỏ trống thì dùng ảnh mặc định của scene */
+  img?: string
 }
 
 export interface Order {
@@ -73,6 +75,10 @@ export const CASE = {
   brief:
     'Xe đạp điện của cô Lan biến mất khỏi sân lúc 21:40. Cả hẻm đang họp khẩn trên Zola. Còn anh Tùng thì nhắn riêng: sai ba lần là ảnh tự làm.',
   culprit: 'dung',
+  difficulty: 'Dễ',
+  question: 'Ai đã lấy chiếc xe đạp điện?',
+  solution:
+    'Dũng nhận đơn giao hàng vào đúng 21:47 ở Hẻm 42, khai gian là về từ 21:15. Bức ảnh 21:58 có bóng chiếc xe xanh mint, còn tin nhắn nháp “mai em trả” nằm trong thùng rác. Anh Tùng đã có đủ để lập biên bản.',
 }
 
 export const CLUES: Record<string, ClueDef> = {

@@ -2,8 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Stage } from '../ui/Stage'
 import { useTitle } from '../lib/useTitle'
-import { CASE, CLUES, CONVS, ORDERS, PHOTOS, SUSPECTS, TRASH, type Photo } from '../detective/case1'
-import { useCase } from '../detective/useCase'
+import type { Photo } from '../detective/case1'
+import { CASES, type CasePack } from '../detective/cases'
+import { PackCtx, usePack } from '../detective/pack'
+import { saveKey, useCase } from '../detective/useCase'
 
 type AppId = 'zola' | 'browser' | 'notes' | 'file'
 
@@ -33,6 +35,7 @@ interface Ctx {
 
 /* ------------------------------------------------------------------ Zola */
 function ZolaApp({ found, find }: Ctx) {
+  const { convs: CONVS } = usePack()
   const [active, setActive] = useState<string | null>(null)
   const convs = CONVS.filter((c) => !c.requires || c.requires.every((r) => found.has(r)))
   const conv = convs.find((c) => c.id === active) ?? null
@@ -135,11 +138,6 @@ function ZolaApp({ found, find }: Ctx) {
 }
 
 /* --------------------------------------------------------------- browser */
-const NEWS = {
-  title: 'Mất xe đạp điện giữa hẻm, camera an ninh lại “ngủ quên”',
-  lead: 'Tối qua, chị Ngọc (Hẻm 42, phố Hàng Chai) phát hiện chiếc xe đạp điện dựng trước cửa đã biến mất. Camera của khu trọ ghi hình nhưng ổ cứng đã hỏng từ tuần trước.',
-  body: 'Theo người dân, hẻm 42 thường đông xe shipper qua lại vào buổi tối. Một số hộ dân cho rằng chỉ cần vài phút sơ hở là xe có thể bị dắt đi mà không ai để ý.',
-}
 
 const SCENES: Record<Photo['scene'], { bg: string; icon: string; img: string }> = {
   street: {
@@ -160,6 +158,7 @@ const SCENES: Record<Photo['scene'], { bg: string; icon: string; img: string }> 
 }
 
 function BrowserApp({ found, find }: Ctx) {
+  const { orders: ORDERS, photos: PHOTOS, trash: TRASH, news: NEWS } = usePack()
   const [tab, setTab] = useState<'news' | 'orders' | 'photos' | 'trash'>('news')
   const [trash, setTrash] = useState<string | null>(null)
   const active = TRASH.find((t) => t.id === trash) ?? null
@@ -178,8 +177,8 @@ function BrowserApp({ found, find }: Ctx) {
       <div className="flex gap-1 border-b border-white/8 px-2 py-1.5">
         {(
           [
-            ['news', 'Tin tức'],
-            ['orders', 'Đơn ship'],
+            ['news', 'Bảng tin'],
+            ['orders', 'Dữ liệu'],
             ['photos', 'Ảnh'],
             ['trash', 'Thùng rác'],
           ] as const
@@ -218,7 +217,7 @@ function BrowserApp({ found, find }: Ctx) {
                     d.ship.42 <span className="text-mute">· 2 giờ trước</span>
                   </p>
                   <p className="mt-0.5 text-[0.7rem] leading-relaxed text-parchment/65">
-                    “Xe đó em thấy dựng cả tối, ai bảo không khoá. Mà thôi, khu này mất xe suốt.”
+                    “Khu này dạo này lắm chuyện thật, tối nào cũng có người mất đồ.”
                   </p>
                   <button
                     onClick={() => find('dang-bai-an-danh')}
@@ -277,7 +276,7 @@ function BrowserApp({ found, find }: Ctx) {
                   <div className="relative grid h-28 place-items-center" style={{ background: art.bg }}>
                     <span className="text-4xl drop-shadow-lg">{art.icon}</span>
                     <img
-                      src={`${import.meta.env.BASE_URL}${art.img}`}
+                      src={`${import.meta.env.BASE_URL}${p.img ?? art.img}`}
                       alt={p.title}
                       loading="lazy"
                       className="absolute inset-0 h-full w-full object-cover"
@@ -361,6 +360,7 @@ function BrowserApp({ found, find }: Ctx) {
 
 /* --------------------------------------------------------------- notes */
 function NotesApp({ found }: { found: Set<string> }) {
+  const { clues: CLUES } = usePack()
   const list = Array.from(found)
   return (
     <div className="flex h-full flex-col">
@@ -399,20 +399,62 @@ function FileApp({
   found,
   accuse,
   triesLeft,
+  maxTries,
   status,
+  stage,
+  unlocked,
+  code,
+  onUnlock,
 }: {
   found: Set<string>
   accuse: (id: string) => void
   triesLeft: number
+  maxTries: number
   status: string
+  stage: 'main' | 'accomplice'
+  unlocked: boolean
+  code?: { value: string; hint: string }
+  onUnlock: (code: string) => boolean
 }) {
+  const { suspects: SUSPECTS, clues: CLUES } = usePack()
   const [pick, setPick] = useState<string | null>(null)
+  const [pin, setPin] = useState('')
+  const [err, setErr] = useState(false)
+  const locked = !!code && !unlocked
+  const target = stage === 'accomplice' ? 'đồng phạm' : 'thủ phạm'
   return (
     <div className="flex h-full flex-col">
       <div className="border-b border-white/8 px-4 py-2.5">
         <p className="text-sm font-semibold text-parchment/90">Hồ sơ vụ án</p>
-        <p className="text-[0.6rem] text-mute">Chọn người bạn cho là thủ phạm. Sai 3 lần là hồ sơ đóng.</p>
+        <p className="text-[0.6rem] text-mute">
+          Chọn người bạn cho là {target}. Sai {maxTries} lần là hồ sơ đóng.
+        </p>
       </div>
+
+      {locked && (
+        <div className="border-b border-amber/20 bg-amber/5 px-3 py-2.5">
+          <p className="text-[0.65rem] text-amber">🔒 Hồ sơ bị khoá bằng mã 4 số</p>
+          <p className="mt-1 text-[0.6rem] leading-relaxed text-mute">{code?.hint}</p>
+          <div className="mt-2 flex gap-2">
+            <input
+              value={pin}
+              onChange={(e) => {
+                setPin(e.target.value.replace(/\D/g, '').slice(0, 4))
+                setErr(false)
+              }}
+              inputMode="numeric"
+              maxLength={4}
+              placeholder="••••"
+              aria-label="Mã mở hồ sơ"
+              className="min-w-0 flex-1 rounded-lg border border-white/12 bg-black/30 px-2.5 py-1.5 text-center text-sm tracking-[0.4em] text-parchment outline-none focus:border-amber/50"
+            />
+            <button className="btn btn-primary btn-sm" onClick={() => !onUnlock(pin) && setErr(true)}>
+              Mở khoá
+            </button>
+          </div>
+          {err && <p className="mt-1 text-[0.6rem] text-blood-soft">Mã sai. Đọc lại manh mối.</p>}
+        </div>
+      )}
 
       <div className="flex-1 space-y-2 overflow-y-auto p-3">
         {SUSPECTS.map((s) => {
@@ -421,7 +463,7 @@ function FileApp({
             <button
               key={s.id}
               onClick={() => setPick(s.id)}
-              disabled={status !== 'playing'}
+              disabled={status !== 'playing' || locked}
               className={`flex w-full items-start gap-3 rounded-xl border px-3 py-2.5 text-left transition ${
                 active ? 'border-blood/50 bg-blood/10' : 'border-white/8 bg-white/[0.03] hover:bg-white/[0.06]'
               }`}
@@ -443,14 +485,18 @@ function FileApp({
           <span className="text-mute">
             Manh mối: {found.size}/{Object.keys(CLUES).length}
           </span>
-          <span className={triesLeft > 0 ? 'text-amber' : 'text-blood-soft'}>còn {triesLeft}/3 lượt</span>
+          <span className={triesLeft > 0 ? 'text-amber' : 'text-blood-soft'}>còn {triesLeft}/{maxTries} lượt</span>
         </div>
         <button
           className="btn btn-primary btn-md w-full"
-          disabled={!pick || status !== 'playing' || triesLeft <= 0}
-          onClick={() => pick && accuse(pick)}
+          disabled={!pick || status !== 'playing' || triesLeft <= 0 || locked}
+          onClick={() => {
+            if (!pick) return
+            accuse(pick)
+            setPick(null)
+          }}
         >
-          Gửi cáo buộc
+          {stage === 'accomplice' ? 'Xác nhận đồng phạm' : 'Gửi cáo buộc'}
         </button>
       </div>
     </div>
@@ -458,9 +504,10 @@ function FileApp({
 }
 
 /* ---------------------------------------------------------------- shell */
-export default function Detective() {
-  useTitle('Thám Tử Bàn Phím · TBOY Studio')
-  const { clues, found, attempts, triesLeft, status, find, accuse, reset } = useCase()
+function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
+  const CASE = pack.case
+  useTitle(`${CASE.title} · Thám Tử Bàn Phím`)
+  const { clues, found, attempts, triesLeft, status, stage, unlocked, find, unlock, accuse, reset } = useCase(pack)
   const [booted, setBooted] = useState(() => clues.length > 0 || attempts > 0)
   const [open, setOpen] = useState<Record<AppId, boolean>>(() =>
     typeof window !== 'undefined' && window.innerWidth >= 900
@@ -506,6 +553,8 @@ export default function Detective() {
     if (r === 'win') setResult('win')
     if (r === 'dead') setResult('lost')
     if (r === 'wrong') setToast('Chưa đúng. Đọc lại sổ vụ án rồi thử lại.')
+    if (r === 'stage2') setToast('Đúng là thủ phạm. Còn ai đã giúp?')
+    if (r === 'locked') setToast('Hồ sơ đang khoá — nhập mã trước.')
   }
 
   if (!booted) {
@@ -513,14 +562,15 @@ export default function Detective() {
       <Stage>
         <div className="mx-auto flex min-h-dvh max-w-3xl flex-col justify-center px-6 py-12">
           <p className="eyebrow mb-4">macQuê · {CASE.no}</p>
-          <h1 className="display text-[clamp(2.4rem,7vw,4.2rem)] leading-[0.98] text-glow">
-            <span className="grad-moon">Chiếc xe</span> <span className="italic text-parchment">đạp điện</span>
+          <h1 className="display text-[clamp(2.2rem,6vw,3.6rem)] leading-[1.02] text-glow">
+            <span className="grad-moon">{CASE.title}</span>
           </h1>
           <p className="mt-4 max-w-lg text-[0.9rem] leading-relaxed text-parchment/60">{CASE.brief}</p>
           <div className="mt-7 flex flex-wrap gap-x-6 gap-y-2 text-[0.7rem] text-mute">
             <span>📍 {CASE.place}</span>
             <span>🕘 {CASE.time}</span>
             <span>🎯 tìm ra thủ phạm</span>
+            <span>🔥 {CASE.difficulty}</span>
           </div>
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <button className="btn btn-primary btn-lg" onClick={() => setBooted(true)}>
@@ -532,8 +582,8 @@ export default function Detective() {
             </Link>
           </div>
           <p className="mt-8 max-w-md text-[0.66rem] leading-relaxed text-mute/70">
-            Đây là máy của anh Tùng — công an khu vực. Anh ấy nhờ bạn xem giúp. Đọc tin nhắn, lướt web, soi ảnh và
-            ghi lại manh mối. Khi biết ai lấy xe, gửi tên trong Hồ sơ. Sai ba lần là anh tự làm.
+            Đây là máy của anh Tùng — công an khu vực. Đọc tin nhắn, lướt web, soi ảnh và ghi lại manh mối. Khi biết
+            ai đứng sau vụ án, gửi tên trong Hồ sơ. Sai {pack.maxTries} lần là hồ sơ đóng.
           </p>
         </div>
       </Stage>
@@ -555,16 +605,16 @@ export default function Detective() {
           <span className="hidden sm:inline text-mute">Sửa</span>
           <span className="hidden sm:inline text-mute">Xem</span>
           <span className="flex-1 truncate text-center text-[0.65rem] text-parchment/55">
-            {CASE.title} · Hẻm 42
+            {CASE.title}
           </span>
-          <span className="text-[0.62rem] text-mute">T6 12 thg 9 · 23:52</span>
+          <span className="text-[0.62rem] text-mute">{CASE.time}</span>
         </div>
 
         {/* desktop hint */}
         <div className="relative z-10 px-5 py-4 lg:px-8">
           <p className="text-[0.6rem] tracking-[0.24em] text-mute uppercase">Vụ án · {CASE.no}</p>
           <h2 className="display mt-1 text-lg text-parchment/80">
-            Ai đã lấy chiếc xe đạp điện?
+            {CASE.question}
           </h2>
         </div>
 
@@ -614,7 +664,19 @@ export default function Detective() {
                 {app.id === 'zola' && <ZolaApp found={found} find={find} />}
                 {app.id === 'browser' && <BrowserApp found={found} find={find} />}
                 {app.id === 'notes' && <NotesApp found={found} />}
-                {app.id === 'file' && <FileApp found={found} accuse={onAccuse} triesLeft={triesLeft} status={status} />}
+                {app.id === 'file' && (
+                  <FileApp
+                    found={found}
+                    accuse={onAccuse}
+                    triesLeft={triesLeft}
+                    maxTries={pack.maxTries}
+                    status={status}
+                    stage={stage}
+                    unlocked={unlocked}
+                    code={pack.code}
+                    onUnlock={unlock}
+                  />
+                )}
               </div>
             </div>
           )
@@ -656,12 +718,12 @@ export default function Detective() {
             <div className="w-full max-w-md rounded-3xl border border-white/12 bg-[#141024] p-7 text-center">
               <div className="text-4xl">{result === 'win' ? '🕵️' : '📁'}</div>
               <h2 className="display mt-3 text-3xl">
-                {result === 'win' ? <span className="grad-moon">Đúng là Dũng.</span> : <span className="text-blood-soft">Hồ sơ đóng lại.</span>}
+                {result === 'win' ? <span className="grad-moon">Hồ sơ đã khép lại.</span> : <span className="text-blood-soft">Hồ sơ đóng lại.</span>}
               </h2>
               <p className="mt-3 text-[0.78rem] leading-relaxed text-parchment/65">
                 {result === 'win'
-                  ? 'Dũng nhận đơn giao hàng vào đúng 21:47 ở Hẻm 42, khai gian là về từ 21:15. Bức ảnh 21:58 có bóng chiếc xe xanh mint, còn tin nhắn nháp “mai em trả” nằm trong thùng rác. Anh Tùng đã có đủ để lập biên bản.'
-                  : 'Ba lần cáo buộc sai. Anh Tùng tự xử lý, còn bạn thì bị ghi vào “thành tích” của phường. Manh mối vẫn còn đó — thử lại từ đầu?'}
+                  ? CASE.solution
+                  : `Ba lần cáo buộc sai. Anh Tùng tự xử lý, còn bạn thì bị ghi vào “thành tích” của phường. Manh mối vẫn còn đó — thử lại từ đầu?`}
               </p>
               <div className="mt-6 flex flex-col gap-2">
                 <button
@@ -674,6 +736,9 @@ export default function Detective() {
                 >
                   Điều tra lại
                 </button>
+                <button className="btn btn-ghost btn-md" onClick={onExit}>
+                  Danh sách vụ án
+                </button>
                 <Link to="/" className="btn btn-ghost btn-md">
                   Về trang chủ
                 </Link>
@@ -683,5 +748,78 @@ export default function Detective() {
         )}
       </div>
     </Stage>
+  )
+}
+
+/* -------------------------------------------------------------- case list */
+function readStatus(id: string): string {
+  try {
+    const raw = localStorage.getItem(saveKey(id))
+    if (!raw) return 'new'
+    const status = (JSON.parse(raw) as { status?: string }).status
+    return status === 'won' || status === 'lost' ? status : 'playing'
+  } catch {
+    return 'new'
+  }
+}
+
+function CasePicker({ onPick }: { onPick: (id: string) => void }) {
+  useTitle('Chọn vụ án · Thám Tử Bàn Phím')
+  return (
+    <Stage>
+      <div className="mx-auto min-h-dvh max-w-4xl px-6 py-14">
+        <p className="eyebrow">TBOY Studio · macQuê</p>
+        <h1 className="display mt-2 text-[clamp(2rem,5vw,3.2rem)]">
+          <span className="grad-moon">Chọn vụ án</span>
+        </h1>
+        <p className="mt-2 max-w-xl text-[0.82rem] leading-relaxed text-parchment/55">
+          Bốn vụ án, độ khó tăng dần. Vụ cuối cùng là một mê cung: nhiều manh mối, nhiều alibi giả và một hồ sơ bị
+          khoá bằng mã số.
+        </p>
+
+        <div className="mt-8 grid gap-3 sm:grid-cols-2">
+          {CASES.map((p) => {
+            const st = readStatus(p.id)
+            return (
+              <button
+                key={p.id}
+                onClick={() => onPick(p.id)}
+                className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-left transition hover:border-amber/40 hover:bg-white/[0.06]"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-[0.58rem] uppercase tracking-[0.22em] text-mute">{p.case.no}</span>
+                  <span className="rounded-full border border-white/10 px-2 py-0.5 text-[0.58rem] text-amber">
+                    {p.difficulty}
+                  </span>
+                </div>
+                <h2 className="mt-2 text-[1.05rem] font-semibold leading-snug text-parchment/90">{p.case.title}</h2>
+                <p className="mt-1 text-[0.64rem] text-mute">
+                  📍 {p.case.place} · 🕘 {p.case.time}
+                </p>
+                <p className="mt-2 line-clamp-2 text-[0.7rem] leading-relaxed text-parchment/55">{p.case.brief}</p>
+                <p className="mt-3 text-[0.65rem] font-medium text-amber">
+                  {st === 'won' ? '✅ Đã phá án' : st === 'lost' ? '⏳ Hồ sơ đang đóng' : '▶ Vào điều tra'}
+                </p>
+              </button>
+            )
+          })}
+        </div>
+
+        <Link to="/" className="btn btn-ghost btn-md mt-8">
+          Về trang chủ
+        </Link>
+      </div>
+    </Stage>
+  )
+}
+
+export default function Detective() {
+  const [active, setActive] = useState<string | null>(null)
+  const pack = active ? (CASES.find((c) => c.id === active) ?? null) : null
+  if (!pack) return <CasePicker onPick={setActive} />
+  return (
+    <PackCtx.Provider value={pack}>
+      <CaseGame key={pack.id} pack={pack} onExit={() => setActive(null)} />
+    </PackCtx.Provider>
   )
 }
