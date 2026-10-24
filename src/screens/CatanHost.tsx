@@ -15,9 +15,11 @@ import {
   catanRollDice,
   catanBuildSettlement,
   catanUpgradeCity,
+  catanBankTrade,
   catanEndTurn,
   catanTick,
   RESOURCE_CONFIG,
+  CATAN_HEXES,
   type CatanState,
   type ResourceType,
 } from '../game/catanEngine'
@@ -34,6 +36,9 @@ export default function CatanHost() {
   const [isStarting, setIsStarting] = useState(false)
   const [isRolling, setIsRolling] = useState(false)
   const [showLogsModal, setShowLogsModal] = useState(false)
+  const [showTradeModal, setShowTradeModal] = useState(false)
+  const [tradeFrom, setTradeFrom] = useState<ResourceType | null>(null)
+  const [tradeTo, setTradeTo] = useState<ResourceType | null>(null)
   const busy = useRef(false)
 
   const url = joinUrl(code)
@@ -130,6 +135,15 @@ export default function CatanHost() {
     if (!state) return
     sfx.win()
     await catanUpgradeCity(code, state)
+  }
+
+  const handleHostTrade = async () => {
+    if (!state || !tradeFrom || !tradeTo || tradeFrom === tradeTo) return
+    sfx.tap()
+    await catanBankTrade(code, state, tradeFrom, tradeTo)
+    setShowTradeModal(false)
+    setTradeFrom(null)
+    setTradeTo(null)
   }
 
   const handleHostEndTurn = async () => {
@@ -298,7 +312,17 @@ export default function CatanHost() {
     currentPState.resources.wheat >= 2 &&
     currentPState.settlements.some((s) => !s.isCity)
 
+  const hasAnyTradeResource =
+    currentPState &&
+    Object.values(currentPState.resources).some((count) => count >= 4)
+
   const latestLog = state.logs[0]
+
+  // Bảng xếp hạng người chơi theo điểm
+  const sortedPlayers = [...state.order]
+    .map((pUid) => state.players[pUid])
+    .filter(Boolean)
+    .sort((a, b) => b.victoryPoints - a.victoryPoints)
 
   return (
     <Stage>
@@ -321,12 +345,12 @@ export default function CatanHost() {
           )}
         </AnimatePresence>
 
-        {/* Header Compact */}
+        {/* Header Compact Đồng Bộ Với Monopoly */}
         <header className="flex items-center justify-between py-1.5 sm:py-3 border-b border-slate-800 shrink-0">
           <div className="flex items-center gap-2">
             <button
               onClick={handleExitRoom}
-              className="text-xs text-slate-400 hover:text-white px-2 py-1 rounded-lg bg-slate-900 border border-slate-800"
+              className="text-xs text-slate-400 hover:text-white px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800"
             >
               ← Rời bàn
             </button>
@@ -347,6 +371,17 @@ export default function CatanHost() {
                   {currentPState?.victoryPoints ?? 0}/5 VP 🏆
                 </span>
               </div>
+            )}
+
+            {isMyTurn && state.diceRolled && (
+              <button
+                type="button"
+                onClick={() => setShowTradeModal(true)}
+                className="flex items-center gap-1 rounded-xl bg-purple-950/60 hover:bg-purple-900/70 border border-purple-500/40 px-2.5 py-1 text-xs font-bold text-purple-300 transition-colors"
+                title="Đổi 4:1 với Ngân Hàng"
+              >
+                🔄 <span className="hidden sm:inline">Đổi 4:1</span>
+              </button>
             )}
 
             <button
@@ -375,14 +410,22 @@ export default function CatanHost() {
                 <Avatar index={currentTurnPlayer?.avatar ?? 0} size={42} name={currentTurnPlayer?.name} />
                 <div className="min-w-0 flex-1">
                   <h3 className="text-base font-black text-white truncate">{currentTurnPlayer?.name}</h3>
-                  <span className="text-xs font-extrabold text-emerald-400">
-                    Điểm số: {currentPState?.victoryPoints ?? 0}/5 VP 🏆
-                  </span>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <span className="text-xs font-extrabold text-amber-400">
+                      {currentPState?.victoryPoints ?? 0}/5 VP 🏆
+                    </span>
+                    <div className="flex-1 h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-amber-500 to-emerald-400 rounded-full"
+                        style={{ width: `${((currentPState?.victoryPoints ?? 0) / 5) * 100}%` }}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 
               {/* Trạng thái xúc xắc */}
-              <div className="mt-3 rounded-2xl bg-slate-950/70 p-3 border border-slate-800 text-center">
+              <div className="mt-3 rounded-2xl bg-slate-950/70 p-2.5 border border-slate-800 text-center">
                 {!state.diceRolled ? (
                   <p className="text-xs text-slate-300 font-medium animate-pulse">
                     {currentTurnUid?.startsWith('bot-') ? '🤖 Bot đang đổ xúc xắc thu hoạch…' : 'Chờ gieo xúc xắc…'}
@@ -395,56 +438,71 @@ export default function CatanHost() {
               </div>
             </div>
 
-            {/* Tài nguyên người chơi */}
+            {/* Túi Tài nguyên của người chơi hiện tại */}
             {currentPState && (
               <div className="rounded-3xl bg-slate-900/80 p-3.5 border border-slate-800 shrink-0">
                 <p className="text-[0.65rem] font-bold uppercase tracking-widest text-slate-400 mb-2">
                   TÀI NGUYÊN CỦA {currentTurnPlayer?.name}
                 </p>
                 <div className="grid grid-cols-5 gap-1.5 text-center">
-                  {(Object.keys(currentPState.resources) as ResourceType[]).map((res) => (
-                    <div key={res} className="rounded-xl bg-slate-950/60 p-1.5 border border-slate-800/80">
-                      <span className="text-base">{RESOURCE_CONFIG[res].icon}</span>
-                      <span className="block text-xs font-black text-white mt-0.5">
-                        {currentPState.resources[res]}
-                      </span>
-                    </div>
-                  ))}
+                  {(Object.keys(currentPState.resources) as ResourceType[]).map((res) => {
+                    const count = currentPState.resources[res]
+                    return (
+                      <div
+                        key={res}
+                        className={`rounded-xl p-1.5 border transition-all ${
+                          count > 0 ? 'bg-slate-950 border-emerald-500/40' : 'bg-slate-950/40 border-slate-800/80 opacity-60'
+                        }`}
+                      >
+                        <span className="text-base">{RESOURCE_CONFIG[res].icon}</span>
+                        <span className="block text-[0.62rem] font-bold text-slate-300">
+                          {RESOURCE_CONFIG[res].name}
+                        </span>
+                        <span className="block text-xs font-black text-amber-400 mt-0.5">
+                          {count}
+                        </span>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
             )}
 
-            {/* Bảng Xếp Hạng Điểm */}
-            <div className="rounded-3xl bg-slate-900/80 p-3.5 border border-slate-800 shrink-0">
-              <p className="text-[0.65rem] font-bold uppercase tracking-widest text-slate-400 mb-2">
-                BẢNG ĐIỂM (5 VP ĐỂ THẮNG)
-              </p>
-              <div className="space-y-1.5">
-                {state.order.map((pUid) => {
-                  const p = state.players[pUid]
-                  if (!p) return null
+            {/* Danh sách Công Trình / Khu Định Cư */}
+            {currentPState && (
+              <div className="rounded-3xl bg-slate-900/80 p-3.5 border border-slate-800 shrink-0">
+                <p className="text-[0.65rem] font-bold uppercase tracking-widest text-slate-400 mb-2">
+                  KHU ĐỊNH CƯ ({currentPState.settlements.length})
+                </p>
+                <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+                  {currentPState.settlements.map((st, i) => {
+                    const hexTarget = CATAN_HEXES[st.hexIds[0]] || CATAN_HEXES[1]
+                    const res = hexTarget.type !== 'desert' ? RESOURCE_CONFIG[hexTarget.type as ResourceType] : null
 
-                  return (
-                    <div
-                      key={pUid}
-                      className="flex items-center justify-between rounded-xl bg-slate-950/40 p-2 border border-slate-800/80"
-                    >
-                      <div className="flex items-center gap-2 min-w-0">
-                        <Avatar index={p.avatar} size={24} name={p.name} />
-                        <span className="text-xs font-bold text-slate-200 truncate">{p.name}</span>
+                    return (
+                      <div
+                        key={st.id}
+                        className="flex items-center justify-between rounded-xl bg-slate-950/50 p-2 border border-slate-800 text-[0.7rem]"
+                      >
+                        <span className="font-bold text-white flex items-center gap-1.5">
+                          <span>{st.isCity ? '🏰 Thành phố' : '🏡 Làng'} #{i + 1}</span>
+                          <span className="text-[0.6rem] text-amber-400 font-black">
+                            ({st.isCity ? '+2 VP' : '+1 VP'})
+                          </span>
+                        </span>
+                        <span className="text-emerald-400 font-extrabold flex items-center gap-1">
+                          {res?.icon} Ô số {hexTarget.diceNumber}
+                        </span>
                       </div>
-                      <span className="text-xs font-black text-amber-400 shrink-0">
-                        {p.victoryPoints} VP 🏆
-                      </span>
-                    </div>
-                  )
-                })}
+                    )
+                  })}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* CỘT GIỮA: BÀN CỜ CATAN TỰ CO GIÃN VỪA KHÍT KHUNG NHÌN */}
-          <div className="flex-1 min-h-0 flex items-center justify-center w-full max-h-[min(480px,56vh)] aspect-square my-auto">
+          <div className="flex-1 min-h-0 flex items-center justify-center w-full max-h-[min(500px,58vh)] aspect-square my-auto">
             <CatanBoard
               players={state.players}
               currentTurnUid={state.currentTurn}
@@ -455,11 +513,64 @@ export default function CatanHost() {
             />
           </div>
 
-          {/* CỘT PHẢI: DIỄN BIẾN KHAI PHÁ (CHỈ HIỂN THỊ TRÊN DESKTOP lg:) */}
+          {/* CỘT PHẢI: BẢNG XẾP HẠNG & CÔNG THỨC & DIỄN BIẾN (CHỈ HIỂN THỊ TRÊN DESKTOP lg:) */}
           <div className="hidden lg:flex flex-col gap-3 h-full max-h-[calc(100vh-80px)] overflow-hidden">
-            <div className="flex-1 flex flex-col rounded-3xl bg-slate-900/80 p-4 border border-slate-800 min-h-0 overflow-hidden shadow-xl">
-              <p className="text-[0.65rem] font-bold uppercase tracking-widest text-slate-400 mb-2 shrink-0">
-                DIỄN BIẾN KHAI PHÁ (LOGS)
+            {/* Bảng Xếp Hạng Đảo Chủ (5 VP Để Thắng) */}
+            <div className="rounded-3xl bg-slate-900/80 p-3.5 border border-slate-800 shrink-0 shadow-lg">
+              <p className="text-[0.65rem] font-bold uppercase tracking-widest text-slate-400 mb-2">
+                BẢNG ĐIỂM (5 VP ĐỂ THẮNG ĐẢO)
+              </p>
+              <div className="space-y-1.5">
+                {sortedPlayers.map((p, rank) => {
+                  const isCurrent = p.uid === currentTurnUid
+                  return (
+                    <div
+                      key={p.uid}
+                      className={`flex items-center justify-between rounded-xl p-2 border transition-all ${
+                        isCurrent
+                          ? 'bg-emerald-950/30 border-emerald-500/50 shadow'
+                          : 'bg-slate-950/40 border-slate-800/80'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="text-[0.65rem] font-black text-slate-400 w-4">
+                          #{rank + 1}
+                        </span>
+                        <Avatar index={p.avatar} size={24} name={p.name} />
+                        <span className="text-xs font-bold text-slate-200 truncate">{p.name}</span>
+                      </div>
+                      <span className="text-xs font-black text-amber-400 shrink-0">
+                        {p.victoryPoints}/5 VP 🏆
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Bảng Công Thức Kiến Thiết Rút Gọn */}
+            <div className="rounded-3xl bg-slate-900/80 p-3 border border-slate-800 shrink-0 text-[0.68rem] text-slate-300 space-y-1.5">
+              <p className="text-[0.62rem] font-bold uppercase tracking-widest text-slate-400">
+                CÔNG THỨC KIẾN THIẾT
+              </p>
+              <div className="flex items-center justify-between bg-slate-950/50 p-1.5 rounded-lg border border-slate-800/80">
+                <span className="font-bold text-emerald-400">🏡 Làng (+1 VP)</span>
+                <span>1🌲 1🧱 1🐑 1🌾</span>
+              </div>
+              <div className="flex items-center justify-between bg-slate-950/50 p-1.5 rounded-lg border border-slate-800/80">
+                <span className="font-bold text-amber-400">🏰 Thành phố (+1 VP, x2)</span>
+                <span>2🌾 3🪨</span>
+              </div>
+              <div className="flex items-center justify-between bg-slate-950/50 p-1.5 rounded-lg border border-slate-800/80">
+                <span className="font-bold text-purple-400">🔄 Đổi Ngân Hàng</span>
+                <span>4 cùng loại ➔ 1 bất kỳ</span>
+              </div>
+            </div>
+
+            {/* Logs khai phá */}
+            <div className="flex-1 flex flex-col rounded-3xl bg-slate-900/80 p-3 border border-slate-800 min-h-0 overflow-hidden shadow-xl">
+              <p className="text-[0.65rem] font-bold uppercase tracking-widest text-slate-400 mb-1.5 shrink-0">
+                NHẬT KÝ KHAI PHÁ
               </p>
               <div className="flex-1 space-y-1.5 overflow-y-auto pr-1 text-[0.7rem] text-slate-300">
                 {state.logs.map((log) => (
@@ -479,7 +590,7 @@ export default function CatanHost() {
               <button
                 onClick={handleHostRollDice}
                 disabled={isRolling}
-                className="w-full rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 py-3 text-xs sm:text-sm font-black text-slate-950 shadow-xl hover:brightness-110 active:scale-95 transition-all shadow-emerald-950/80 animate-pulse"
+                className="w-full rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 py-3.5 text-xs sm:text-sm font-black text-slate-950 shadow-xl hover:brightness-110 active:scale-95 transition-all shadow-emerald-950/80 animate-pulse"
               >
                 {isRolling ? 'ĐANG ĐỔ 2 XÚC XẮC… 🎲' : '🎲 BẤM ĐỔ 2 XÚC XẮC THU HOẠCH!'}
               </button>
@@ -499,8 +610,18 @@ export default function CatanHost() {
                     disabled={!canBuildCity}
                     className="flex-1 rounded-xl bg-amber-600 hover:bg-amber-500 disabled:opacity-40 py-2.5 text-xs font-black text-white shadow active:scale-95 transition-all"
                   >
-                    🏰 Lên Thành Phố (+1 VP)
+                    🏰 Lên TP (+1 VP)
                   </button>
+
+                  {hasAnyTradeResource && (
+                    <button
+                      onClick={() => setShowTradeModal(true)}
+                      className="rounded-xl bg-purple-700 hover:bg-purple-600 px-3 py-2.5 text-xs font-black text-white shadow active:scale-95 transition-all"
+                      title="Đổi 4:1 Ngân hàng"
+                    >
+                      🔄 4:1
+                    </button>
+                  )}
                 </div>
 
                 <button
@@ -517,6 +638,120 @@ export default function CatanHost() {
             </div>
           )}
         </div>
+
+        {/* Modal Đổi 4:1 Với Ngân Hàng */}
+        <AnimatePresence>
+          {showTradeModal && currentPState && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+              onClick={() => setShowTradeModal(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.9, y: 10 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.9, y: 10 }}
+                className="w-full max-w-sm rounded-3xl bg-slate-900 border border-purple-500/50 p-5 shadow-2xl flex flex-col"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                  <h3 className="text-sm font-black text-white flex items-center gap-2">
+                    <span>🔄</span> GIAO THƯƠNG NGÂN HÀNG (4:1)
+                  </h3>
+                  <button
+                    onClick={() => setShowTradeModal(false)}
+                    className="h-7 w-7 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-xs font-bold"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div className="py-3 space-y-3">
+                  <div>
+                    <label className="text-[0.65rem] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                      1. Chọn 4 tài nguyên muốn bỏ ra:
+                    </label>
+                    <div className="grid grid-cols-5 gap-1 text-center">
+                      {(Object.keys(RESOURCE_CONFIG) as ResourceType[]).map((rKey) => {
+                        const count = currentPState.resources[rKey]
+                        const isEligible = count >= 4
+                        const isSelected = tradeFrom === rKey
+
+                        return (
+                          <button
+                            key={rKey}
+                            type="button"
+                            disabled={!isEligible}
+                            onClick={() => setTradeFrom(rKey)}
+                            className={`p-2 rounded-xl border text-center transition-all ${
+                              isSelected
+                                ? 'bg-purple-600 border-white ring-2 ring-purple-400 text-white'
+                                : isEligible
+                                ? 'bg-slate-800 border-purple-400/40 text-slate-200'
+                                : 'bg-slate-950/40 border-slate-800 opacity-40 text-slate-500'
+                            }`}
+                          >
+                            <span className="text-base block">{RESOURCE_CONFIG[rKey].icon}</span>
+                            <span className="text-[0.6rem] font-black">{count}/4</span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-[0.65rem] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                      2. Chọn 1 tài nguyên bạn muốn nhận:
+                    </label>
+                    <div className="grid grid-cols-5 gap-1 text-center">
+                      {(Object.keys(RESOURCE_CONFIG) as ResourceType[]).map((rKey) => {
+                        const isSelected = tradeTo === rKey
+                        const isSame = tradeFrom === rKey
+
+                        return (
+                          <button
+                            key={rKey}
+                            type="button"
+                            disabled={isSame || !tradeFrom}
+                            onClick={() => setTradeTo(rKey)}
+                            className={`p-2 rounded-xl border text-center transition-all ${
+                              isSelected
+                                ? 'bg-emerald-600 border-white ring-2 ring-emerald-400 text-white'
+                                : isSame
+                                ? 'bg-slate-950/40 border-slate-800 opacity-30 text-slate-500'
+                                : 'bg-slate-800 border-emerald-400/40 text-slate-200'
+                            }`}
+                          >
+                            <span className="text-base block">{RESOURCE_CONFIG[rKey].icon}</span>
+                            <span className="text-[0.6rem] font-black">{RESOURCE_CONFIG[rKey].name}</span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-slate-800 flex gap-2">
+                  <button
+                    onClick={() => setShowTradeModal(false)}
+                    className="flex-1 rounded-xl bg-slate-800 py-2.5 text-xs font-bold text-slate-300 hover:bg-slate-700"
+                  >
+                    Hủy
+                  </button>
+                  <button
+                    onClick={handleHostTrade}
+                    disabled={!tradeFrom || !tradeTo || tradeFrom === tradeTo}
+                    className="flex-1 rounded-xl bg-gradient-to-r from-purple-600 to-emerald-600 py-2.5 text-xs font-black text-white hover:brightness-110 disabled:opacity-40"
+                  >
+                    Xác nhận đổi ➔
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Modal Xem Nhật Ký / Lịch Sử Khai Phá Khi Người Dùng Bấm Nút 📜 */}
         <AnimatePresence>
