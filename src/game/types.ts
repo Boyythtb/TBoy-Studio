@@ -16,7 +16,7 @@ export type RoleId =
   | 'whitewolf'
   | 'piper'
 export type Team = 'village' | 'wolf' | 'solo'
-export type GameId = 'ma-soi' | 'secret-code' | 'sea-battle'
+export type GameId = 'ma-soi' | 'secret-code' | 'sea-battle' | 'truth-or-dare'
 export type WinReason = 'lovers' | 'jester' | 'killer' | 'whitewolf' | 'piper'
 export type Phase =
   | 'lobby'

@@ -5,7 +5,7 @@ import { Stage } from '../ui/Stage'
 import { SfxToggle } from '../ui/SfxToggle'
 import { useTitle } from '../lib/useTitle'
 import { sfx } from '../lib/sfx'
-import { TRUTH_CARDS, DARE_CARDS, type CardItem, type Level } from '../data/truthOrDareData'
+import { TRUTH_CARDS, DARE_CARDS, type CardItem } from '../data/truthOrDareData'
 
 interface Player {
   id: string
@@ -25,13 +25,6 @@ export default function TruthOrDare() {
       if (saved) return JSON.parse(saved)
     } catch {}
     return DEFAULT_PLAYERS.map((name, i) => ({ id: `p-${i}`, name, drinks: 0 }))
-  })
-
-  // Filter levels
-  const [enabledLevels, setEnabledLevels] = useState<Record<Level, boolean>>({
-    spicy18: true,
-    savage: true,
-    drinking: true,
   })
 
   // Active game state
@@ -122,17 +115,15 @@ export default function TruthOrDare() {
     setCardType(type)
     playSfx('reveal')
 
-    // Filter cards matching enabled levels
-    const pool = (type === 'truth' ? TRUTH_CARDS : DARE_CARDS)
-      .concat(customCards.filter((c) => c.type === type))
-      .filter((c) => enabledLevels[c.level])
+    const pool = (type === 'truth' ? TRUTH_CARDS : DARE_CARDS).concat(
+      customCards.filter((c) => c.type === type),
+    )
 
     if (pool.length === 0) {
       setCurrentCard({
         id: 'empty',
         type,
-        level: 'spicy18',
-        text: 'Chưa có câu hỏi nào thuộc cấp độ này. Hãy bật thêm bộ lọc bên dưới!',
+        text: 'Chưa có câu hỏi nào!',
         penalty: 1,
       })
       return
@@ -193,7 +184,6 @@ export default function TruthOrDare() {
     const newCard: CardItem = {
       id: `custom-${Date.now()}`,
       type: customCardType,
-      level: 'spicy18',
       text: trimmed,
       penalty: customPenalty,
       note: 'Câu hỏi riêng từ người trong bàn!',
@@ -429,18 +419,10 @@ export default function TruthOrDare() {
                   {/* Category Pill */}
                   <div className="inline-flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1 text-[0.68rem] font-bold border border-white/10 uppercase tracking-wider">
                     {currentCard.type === 'truth' ? (
-                      <span className="text-cyan-400">🌶️ SỰ THẬT</span>
+                      <span className="text-cyan-400">🌶️ SỰ THẬT 18+ TÁO BẠO</span>
                     ) : (
-                      <span className="text-rose-400">🔥 THỬ THÁCH</span>
+                      <span className="text-rose-400">🔥 THỬ THÁCH TƯƠNG TÁC</span>
                     )}
-                    <span className="text-slate-600">·</span>
-                    <span className="text-amber-400">
-                      {currentCard.level === 'spicy18'
-                        ? '🔞 18+ Táo bạo'
-                        : currentCard.level === 'savage'
-                        ? '😈 Bóc mẽ'
-                        : '🍻 Bàn nhậu'}
-                    </span>
                   </div>
 
                   {/* Target player callout */}
@@ -505,54 +487,13 @@ export default function TruthOrDare() {
 
           {/* Level Filters & Custom Question Button */}
           <div className="mt-8 w-full max-w-md rounded-2xl bg-slate-900/60 p-4 border border-slate-800/80 text-left">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold text-slate-300">Cấp độ đang bật:</span>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-300">Gài bẫy người khác:</span>
               <button
                 onClick={() => setShowCustomModal(true)}
-                className="text-[0.68rem] font-bold text-cyan-400 hover:underline"
+                className="rounded-xl bg-cyan-950/80 border border-cyan-500/50 px-3 py-1.5 text-[0.68rem] font-bold text-cyan-300 hover:bg-cyan-900 transition-colors"
               >
                 + Gài thêm câu hỏi mới
-              </button>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() =>
-                  setEnabledLevels((prev) => ({ ...prev, spicy18: !prev.spicy18 }))
-                }
-                className={`rounded-xl px-2.5 py-1 text-[0.68rem] font-bold border transition-colors ${
-                  enabledLevels.spicy18
-                    ? 'bg-rose-950/60 border-rose-500/60 text-rose-300'
-                    : 'bg-slate-900 border-slate-800 text-slate-500'
-                }`}
-              >
-                🔞 18+ Táo bạo {enabledLevels.spicy18 ? '✓' : ''}
-              </button>
-
-              <button
-                onClick={() =>
-                  setEnabledLevels((prev) => ({ ...prev, savage: !prev.savage }))
-                }
-                className={`rounded-xl px-2.5 py-1 text-[0.68rem] font-bold border transition-colors ${
-                  enabledLevels.savage
-                    ? 'bg-purple-950/60 border-purple-500/60 text-purple-300'
-                    : 'bg-slate-900 border-slate-800 text-slate-500'
-                }`}
-              >
-                😈 Bóc mẽ tuổi 30 {enabledLevels.savage ? '✓' : ''}
-              </button>
-
-              <button
-                onClick={() =>
-                  setEnabledLevels((prev) => ({ ...prev, drinking: !prev.drinking }))
-                }
-                className={`rounded-xl px-2.5 py-1 text-[0.68rem] font-bold border transition-colors ${
-                  enabledLevels.drinking
-                    ? 'bg-amber-950/60 border-amber-500/60 text-amber-300'
-                    : 'bg-slate-900 border-slate-800 text-slate-500'
-                }`}
-              >
-                🍻 Sát phạt bàn nhậu {enabledLevels.drinking ? '✓' : ''}
               </button>
             </div>
           </div>

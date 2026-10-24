@@ -7,6 +7,7 @@ import { useTitle } from '../lib/useTitle'
 const PlayerScreen = lazy(() => import('./Player'))
 const SecretCodePlayer = lazy(() => import('./SecretCodePlayer'))
 const BattlePlayer = lazy(() => import('./BattlePlayer'))
+const TruthOrDarePlayer = lazy(() => import('./TruthOrDarePlayer'))
 
 export default function PlayGate() {
   const { code = '' } = useParams()
@@ -14,13 +15,15 @@ export default function PlayGate() {
   const [missing, setMissing] = useState(false)
 
   useTitle(
-    game === 'secret-code'
-      ? 'Mật mã · TBOY Studio'
-      : game === 'sea-battle'
-        ? 'Hải chiến · TBOY Studio'
-        : game === 'ma-soi'
-          ? 'Ma Sói · TBOY Studio'
-          : 'TBOY Studio',
+    game === 'truth-or-dare'
+      ? 'Sự thật & Thử thách 18+ · TBOY Studio'
+      : game === 'secret-code'
+        ? 'Mật mã · TBOY Studio'
+        : game === 'sea-battle'
+          ? 'Hải chiến · TBOY Studio'
+          : game === 'ma-soi'
+            ? 'Ma Sói · TBOY Studio'
+            : 'TBOY Studio',
   )
 
   useEffect(() => {
@@ -62,6 +65,7 @@ export default function PlayGate() {
     )
   }
 
+  if (game === 'truth-or-dare') return <TruthOrDarePlayer />
   if (game === 'secret-code') return <SecretCodePlayer />
   if (game === 'sea-battle') return <BattlePlayer />
   return <PlayerScreen />

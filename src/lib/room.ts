@@ -15,6 +15,7 @@ export const GAME_CAP: Record<GameId, number> = {
   'ma-soi': MAX_PLAYERS,
   'secret-code': 8,
   'sea-battle': 2,
+  'truth-or-dare': 20,
 }
 
 export async function createRoom(game: GameId = 'ma-soi'): Promise<string> {

@@ -263,4 +263,6 @@ export const paths = {
   sbKeys: (code: string) => `rooms/${code}/sbKeys`,
   sbKey: (code: string, uid: string) => `rooms/${code}/sbKeys/${uid}`,
   sbShots: (code: string, uid: string) => `rooms/${code}/sb/shots/${uid}`,
+  /* ------------------------------------------------------- truth or dare */
+  tod: (code: string) => `rooms/${code}/tod`,
 }
