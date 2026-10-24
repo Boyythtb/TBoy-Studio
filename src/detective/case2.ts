@@ -235,6 +235,16 @@ export const PHOTOS: Photo[] = [
     img: 'detective/case2-tu-do.jpg',
     caption: 'Story của Linh: “Ca tối, khách đông ghê.”',
     clue: 'anh-story',
+    hotspots: [
+      {
+        x: 52,
+        y: 35,
+        label: 'Khe hở nóc tủ đồ',
+        hint: 'Soi kỹ phần tiếp giáp trên nóc tủ số 04',
+        clue: 'lo-hong-tu',
+        detail: 'Nóc tủ tôn số 04 bị lỏng chốt đinh tán, tạo khe hở rộng 3.5cm. Bàn tay thon có thể dễ dàng luồn qua khe để rút điện thoại ra mà không cần mở khoá!',
+      },
+    ],
   },
   {
     id: 'p2',
@@ -244,6 +254,16 @@ export const PHOTOS: Photo[] = [
     img: 'detective/case2-san-cau-long.jpg',
     caption: 'Một người áo đỏ đứng gần khu tủ đồ.',
     clue: 'son-ao-do',
+    hotspots: [
+      {
+        x: 62,
+        y: 48,
+        label: 'Người mặc áo khoác đỏ',
+        hint: 'Quan sát nhân vật đứng nấp cạnh vách ngăn',
+        clue: 'son-ao-do',
+        detail: 'Ảnh chụp lúc 20:20: Đối tượng nam mặc áo khoác đỏ (trang phục đặc trưng của Sơn), hai tay thọc sâu vào túi áo, đứng quan sát khu vực tủ đồ!',
+      },
+    ],
   },
   {
     id: 'p3',
@@ -253,6 +273,16 @@ export const PHOTOS: Photo[] = [
     img: 'detective/case2-quay-nuoc.jpg',
     caption: 'Linh đang nghe điện thoại, tay kia rót nước.',
     clue: 'linh-goi-dien',
+    hotspots: [
+      {
+        x: 45,
+        y: 42,
+        label: 'Linh tại quầy nước',
+        hint: 'Thời gian gọi điện thoại của nhân viên quầy',
+        clue: 'linh-goi-dien',
+        detail: 'Linh đang dùng điện thoại nghe cuộc gọi kéo dài từ mẹ lúc 20:40. Lúc này chiếc iPhone của chị Hạnh đã bị lấy mất từ trước 20:30.',
+      },
+    ],
   },
 ]
 

@@ -117,4 +117,22 @@ export const PRESETS = {
       'the safe standing on a tiled floor in a small dim office at night, scratch marks on the floor in front of it, ' +
       'a few papers scattered nearby, a desk lamp glowing behind, no wardrobe, no shelves, no cabinet, no people, no text. ' + STYLE,
   },
+  'case5-phong-tra': {
+    out: 'public/detective/case5-phong-tra.jpg',
+    ratio: '4:3',
+    prompt:
+      'A gloomy crime scene in an antique tea room of a traditional Vietnamese villa at night, wooden table with an elegant dark ceramic teapot and two small porcelain teacups, one cup half-empty with white residue at the bottom, a vintage wristwatch with cracked glass lying on the table, warm dim table lamp, rainy window in the background, dark moody cinematic atmosphere, no people, no text, realistic phone snapshot. ' + STYLE,
+  },
+  'case5-ban-cong': {
+    out: 'public/detective/case5-ban-cong.jpg',
+    ratio: '4:3',
+    prompt:
+      'Close-up evidence photograph of an antique wooden window latch on a rainy night, a thin transparent fishing nylon thread snagged on the iron bolt mechanism, window slightly ajar overlooking a dark wet stone balcony, muddy shoe prints faintly visible on the stone sill, dim moody outdoor light, realistic investigation photo, no people, no text. ' + STYLE,
+  },
+  'case5-lo-doc': {
+    out: 'public/detective/case5-lo-doc.jpg',
+    ratio: '4:3',
+    prompt:
+      'A small amber glass medicinal dropper bottle submerged under clear water inside an outdoor stone aquarium filter basin of an artificial rockery garden at night, wet moss and dark stones, dim reflection of courtyard light, flashlight beam highlighting the submerged bottle, close-up candid evidence photo, no people, no text. ' + STYLE,
+  },
 }

@@ -31,6 +31,27 @@ export interface Conv {
   isGroup?: boolean
 }
 
+export interface Hotspot {
+  x: number // % from left 0..100
+  y: number // % from top 0..100
+  label: string
+  hint?: string
+  clue?: string
+  detail: string
+}
+
+export interface SearchRecord {
+  id: string
+  category: 'Cảnh sát' | 'Viễn thông' | 'Ngân hàng' | 'Pháp y' | 'Camera'
+  title: string
+  keywords: string[]
+  snippet: string
+  content: string
+  clue?: string
+  clueLabel?: string
+  time?: string
+}
+
 export interface Photo {
   id: string
   title: string
@@ -39,8 +60,9 @@ export interface Photo {
   caption: string
   requires?: string[]
   clue?: string
-  /** ảnh riêng của vụ án; bỏ trống thì dùng ảnh mặc định của scene */
+  /** ảnh riêng của vụ án */
   img?: string
+  hotspots?: Hotspot[]
 }
 
 export interface Order {
@@ -475,22 +497,53 @@ export const PHOTOS: Photo[] = [
     title: 'Cửa hàng điện thoại đóng cửa',
     time: '21:58',
     scene: 'street',
+    img: 'detective/hien-truong-2158.jpg',
     caption: '“Hết đơn, về thôi.”',
     clue: 'anh-phan-chieu',
+    hotspots: [
+      {
+        x: 65,
+        y: 45,
+        label: 'Mặt kính phản chiếu',
+        hint: 'Soi kỹ hình ảnh phản chiếu trên kính cửa cuốn',
+        clue: 'anh-phan-chieu',
+        detail: 'Phóng to mặt kính cửa hàng: Thấy rõ bóng phản chiếu của chiếc xe đạp điện màu xanh mint của cô Lan đang được một nam thanh niên mặc áo shipper dắt qua ngõ lúc 21:58!',
+      },
+    ],
   },
   {
     id: 'p2',
     title: 'Trà sữa Mơ',
     time: '20:12',
     scene: 'tea',
+    img: 'detective/tra-sua.jpg',
     caption: '“Khách quen gọi 2 ly.”',
+    hotspots: [
+      {
+        x: 48,
+        y: 52,
+        label: 'Quầy pha chế',
+        hint: 'Hóa đơn và camera quán trà sữa',
+        detail: 'Đơn hàng 2 ly trà sữa hoàn tất lúc 20:19. Thời điểm này xe của cô Lan vẫn còn dựng an toàn trong sân.',
+      },
+    ],
   },
   {
     id: 'p3',
     title: 'Quán net lúc tan ca',
     time: '21:30',
     scene: 'net',
+    img: 'detective/quan-net.jpg',
     caption: '“Ông chủ vẫn ngồi đó.”',
+    hotspots: [
+      {
+        x: 55,
+        y: 40,
+        label: 'Màn hình máy chủ',
+        hint: 'Camera quán net hướng ra hẻm',
+        detail: 'Quán net mở cửa đến khuya. Camera quán net ghi nhận đoạn hẻm trước lúc mất điện khá vắng vẻ.',
+      },
+    ],
   },
 ]
 

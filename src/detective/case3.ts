@@ -259,6 +259,16 @@ export const PHOTOS: Photo[] = [
     img: 'detective/case3-camera-2048.jpg',
     caption: 'Khoa cúi người, tay trái giấu trong túi áo. Trên mặt đất có vỏ hộp bánh.',
     clue: 'khoa-gan-hom',
+    hotspots: [
+      {
+        x: 48,
+        y: 60,
+        label: 'Vỏ hộp bánh dưới đất',
+        hint: 'Soi kỹ hành động của Khoa cạnh bệ hòm quỹ',
+        clue: 'khoa-gan-hom',
+        detail: 'Khoa đang cúi nhặt vỏ hộp bánh kẹo khách vứt bừa bãi. Bàn tay trái của Khoa đang quấn băng gạc y tế do bị đứt tay lúc khiêng rạp, không hề cầm dụng cụ cạy phá.',
+      },
+    ],
   },
   {
     id: 'p2',
@@ -268,6 +278,16 @@ export const PHOTOS: Photo[] = [
     img: 'detective/case3-giay-bun.jpg',
     caption: 'Đôi giày trắng dính bùn đỏ, bước ra từ hướng bãi cỏ sau hòm quỹ.',
     clue: 'trang-giay',
+    hotspots: [
+      {
+        x: 52,
+        y: 65,
+        label: 'Vết bùn đỏ trên giày trắng',
+        hint: 'Mũi giày trắng dính vệt đất sét tươi',
+        clue: 'trang-giay',
+        detail: 'Mũi giày vải trắng của Trang bám dày vệt bùn đỏ đất sét. Toàn bộ khu hội chợ đều lát bê tông khô ráo, duy nhất bãi cỏ trũng phía sau bệ đặt hòm quỹ từ thiện mới có loại bùn đỏ này!',
+      },
+    ],
   },
   {
     id: 'p3',
@@ -277,6 +297,16 @@ export const PHOTOS: Photo[] = [
     img: 'detective/case3-hom-quy.jpg',
     caption: 'Lưỡi khoá cong ra ngoài, vết xước ở mặt trong. Hòm quỹ bằng gỗ, nắp hé mở.',
     clue: 'ket-cay',
+    hotspots: [
+      {
+        x: 50,
+        y: 40,
+        label: 'Lưỡi khoá bị bẻ cong',
+        hint: 'Dấu vết cạy phá cơ học trên chốt khoá',
+        clue: 'ket-cay',
+        detail: 'Lưỡi khoá đồng bị uốn cong gập ra ngoài, mép gỗ hòm có vết xước sâu của đầu sắt dẹp. Hòm quỹ đã bị cạy bung trong bóng tối lúc hội chợ mất điện!',
+      },
+    ],
   },
 ]
 

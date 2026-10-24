@@ -322,6 +322,16 @@ export const PHOTOS: Photo[] = [
     img: 'detective/case4-tui-den.jpg',
     caption: 'Người đàn ông áo sơ mi nhàu, tay xách túi đen, bước ra từ hẻm sau chung cư.',
     clue: 'dat-giay',
+    hotspots: [
+      {
+        x: 46,
+        y: 45,
+        label: 'Túi nilông đen trên tay',
+        hint: 'Soi trang phục và vật trên tay người đàn ông',
+        clue: 'dat-giay',
+        detail: 'Người đàn ông mặc áo sơ mi công sở nhàu nát (khớp với trang phục quản lý Đạt), tay cầm một túi nilông đen nặng trịch hướng về bãi rác ngõ sau lúc 21:22!',
+      },
+    ],
   },
   {
     id: 'p2',
@@ -331,6 +341,16 @@ export const PHOTOS: Photo[] = [
     img: 'detective/case4-xe-bao-ve.jpg',
     caption: 'Chiếc xe máy biển 29-X1 đỗ trước cửa hầm. Đèn pha còn sáng.',
     clue: 'tu-loi-khai',
+    hotspots: [
+      {
+        x: 55,
+        y: 50,
+        label: 'Biển số xe máy 29-X1',
+        hint: 'Xe máy chắn trước lối vào phòng biến áp',
+        clue: 'tu-loi-khai',
+        detail: 'Chiếc Wave đỏ biển 29-X1 của bảo vệ Tư đỗ ngang cửa hầm, đèn pha rọi thẳng vào bảng tủ điện trung tâm. Tư chính là người tiếp tay ngắt điện đúng 21:00!',
+      },
+    ],
   },
   {
     id: 'p3',
@@ -340,6 +360,16 @@ export const PHOTOS: Photo[] = [
     img: 'detective/case4-ket-sat.jpg',
     caption: 'Két sắt mở hé, bên trong trống. Trên sàn có vết trầy và một mảnh giấy nhỏ.',
     clue: 'mat-ket',
+    hotspots: [
+      {
+        x: 50,
+        y: 42,
+        label: 'Bàn phím điện tử két sắt',
+        hint: 'Màn hình hiển thị mã két vừa mở',
+        clue: 'ma-ket',
+        detail: 'Bàn phím két sắt không có dấu cạy nạy. Đèn báo xanh sáng: mật mã "2147" vừa được nhập đúng lúc 21:47!',
+      },
+    ],
   },
 ]
 

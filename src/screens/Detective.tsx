@@ -245,34 +245,243 @@ function ZolaApp({ found, find }: Ctx) {
   )
 }
 
-/* --------------------------------------------------------------- browser */
+/* --------------------------------------------------------------- photo inspect modal */
+function PhotoInspectModal({
+  photo,
+  found,
+  find,
+  onClose,
+}: {
+  photo: Photo
+  found: Set<string>
+  find: (id: string) => void
+  onClose: () => void
+}) {
+  const [activeHotspot, setActiveHotspot] = useState<number | null>(
+    photo.hotspots && photo.hotspots.length > 0 ? 0 : null
+  )
 
-const SCENES: Record<Photo['scene'], { bg: string; icon: string; img: string }> = {
-  street: {
-    bg: 'linear-gradient(150deg,#101a2b 0%,#1d2b45 55%,#2a2033 100%)',
-    icon: '🚲',
-    img: 'detective/hien-truong-2158.jpg',
-  },
-  tea: {
-    bg: 'linear-gradient(150deg,#3a2417 0%,#5a3620 60%,#2a1a12 100%)',
-    icon: '🧋',
-    img: 'detective/tra-sua.jpg',
-  },
-  net: {
-    bg: 'linear-gradient(150deg,#0f2430 0%,#163a46 60%,#0c1a22 100%)',
-    icon: '🖥️',
-    img: 'detective/quan-net.jpg',
-  },
+  const hs = activeHotspot !== null && photo.hotspots ? photo.hotspots[activeHotspot] : null
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-3 sm:p-5 backdrop-blur-md">
+      <div className="relative flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-950 shadow-2xl">
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-slate-800 bg-slate-900/90 px-4 py-2.5">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-cyan-950 text-cyan-400 border border-cyan-500/40 text-sm">
+              🔬
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-[0.82rem] font-bold text-white tracking-tight">{photo.title}</p>
+              <p className="text-[0.6rem] text-cyan-400/90 font-medium">
+                {photo.time} · Giám định dấu vết vật chứng & điểm khả nghi
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="grid h-7 w-7 place-items-center rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors text-xs"
+            aria-label="Đóng kính lúp"
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Image Canvas with Interactive Hotspots */}
+        <div className="relative flex-1 overflow-hidden bg-black grid place-items-center min-h-[220px] max-h-[46vh]">
+          <img
+            src={`${import.meta.env.BASE_URL}${photo.img ?? 'detective/bia-vu-an.jpg'}`}
+            alt={photo.title}
+            className="max-h-[46vh] w-auto max-w-full object-contain select-none"
+          />
+
+          {/* Grid inspection overlay */}
+          <div
+            className="pointer-events-none absolute inset-0 opacity-15"
+            style={{
+              backgroundImage:
+                'linear-gradient(rgba(14, 165, 233, 0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(14, 165, 233, 0.4) 1px, transparent 1px)',
+              backgroundSize: '24px 24px',
+            }}
+          />
+
+          {/* Hotspot Markers */}
+          {photo.hotspots?.map((h, idx) => {
+            const isSelected = activeHotspot === idx
+            const isFound = h.clue ? found.has(h.clue) : false
+
+            return (
+              <button
+                key={idx}
+                onClick={() => setActiveHotspot(idx)}
+                style={{ left: `${h.x}%`, top: `${h.y}%` }}
+                className="group absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer z-20 focus:outline-none"
+                title={h.label}
+              >
+                <span className="relative flex h-8 w-8 items-center justify-center">
+                  <span
+                    className={`absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping ${
+                      isFound ? 'bg-emerald-400' : isSelected ? 'bg-amber-400' : 'bg-cyan-400'
+                    }`}
+                  />
+                  <span
+                    className={`relative grid h-6 w-6 place-items-center rounded-full border-2 text-[0.62rem] font-bold shadow-md transition-transform group-hover:scale-125 ${
+                      isFound
+                        ? 'border-emerald-300 bg-emerald-600 text-white'
+                        : isSelected
+                        ? 'border-amber-300 bg-amber-500 text-slate-950 scale-110 shadow-[0_0_12px_rgba(245,158,11,0.6)]'
+                        : 'border-cyan-300 bg-cyan-600 text-white shadow-[0_0_8px_rgba(6,182,212,0.5)]'
+                    }`}
+                  >
+                    {isFound ? '✓' : idx + 1}
+                  </span>
+                </span>
+                <span className="absolute left-1/2 top-7 -translate-x-1/2 whitespace-nowrap rounded-md bg-slate-900/95 px-2 py-0.5 text-[0.58rem] font-bold text-slate-200 border border-slate-700/80 pointer-events-none opacity-90 group-hover:opacity-100 shadow-md">
+                  {h.label}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+
+        {/* Hotspots selector tabs */}
+        {photo.hotspots && photo.hotspots.length > 1 && (
+          <div className="flex gap-1.5 border-t border-slate-800 bg-slate-900/90 px-3.5 py-2 overflow-x-auto">
+            {photo.hotspots.map((h, idx) => (
+              <button
+                key={idx}
+                onClick={() => setActiveHotspot(idx)}
+                className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[0.65rem] font-bold transition-all shrink-0 ${
+                  activeHotspot === idx
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-400/50'
+                    : 'bg-slate-800/80 text-slate-400 hover:bg-slate-700 hover:text-white'
+                }`}
+              >
+                <span>{h.clue && found.has(h.clue) ? '✓' : `Điểm ${idx + 1}`}</span>
+                <span>{h.label}</span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Forensic Analysis Card */}
+        <div className="border-t border-slate-800 bg-slate-900/95 p-3.5 space-y-2.5">
+          {hs ? (
+            <div>
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-[0.74rem] font-bold text-amber-300 flex items-center gap-1.5">
+                  <span>🎯</span> {hs.label}
+                </span>
+                {hs.hint && (
+                  <span className="text-[0.6rem] text-slate-400 italic">
+                    {hs.hint}
+                  </span>
+                )}
+              </div>
+              <p className="mt-1.5 text-[0.74rem] leading-relaxed text-slate-200 whitespace-pre-line bg-slate-950/80 p-2.5 rounded-xl border border-slate-800/80">
+                {hs.detail}
+              </p>
+              {hs.clue && (
+                <button
+                  onClick={() => find(hs.clue!)}
+                  disabled={found.has(hs.clue)}
+                  className={`mt-2.5 w-full inline-flex items-center justify-center gap-2 rounded-xl py-2 text-[0.7rem] font-bold transition-all shadow-md ${
+                    found.has(hs.clue)
+                      ? 'border border-emerald-500/40 bg-emerald-950/30 text-emerald-400 cursor-default'
+                      : 'border border-amber-400/60 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 hover:brightness-110 shadow-[0_0_15px_rgba(245,158,11,0.3)]'
+                  }`}
+                >
+                  <span>{found.has(hs.clue) ? '✓' : '📌'}</span>
+                  {found.has(hs.clue)
+                    ? 'Đã ghi nhận manh mối này vào sổ tay'
+                    : 'Ghi nhận manh mối mấu chốt vào sổ vụ án'}
+                </button>
+              )}
+            </div>
+          ) : (
+            <div>
+              <p className="text-[0.74rem] text-slate-300 leading-relaxed bg-slate-950/70 p-2.5 rounded-xl border border-slate-800/80">
+                {photo.caption}
+              </p>
+              {photo.clue && (
+                <button
+                  onClick={() => find(photo.clue!)}
+                  disabled={found.has(photo.clue)}
+                  className={`mt-2.5 w-full inline-flex items-center justify-center gap-2 rounded-xl py-2 text-[0.7rem] font-bold transition-all shadow-md ${
+                    found.has(photo.clue)
+                      ? 'border border-emerald-500/40 bg-emerald-950/30 text-emerald-400 cursor-default'
+                      : 'border border-amber-400/60 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 hover:brightness-110 shadow-[0_0_15px_rgba(245,158,11,0.3)]'
+                  }`}
+                >
+                  <span>{found.has(photo.clue) ? '✓' : '📌'}</span>
+                  {found.has(photo.clue)
+                    ? 'Đã ghi nhận manh mối này vào sổ tay'
+                    : 'Ghi nhận manh mối từ bức ảnh'}
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
 }
 
+/* --------------------------------------------------------------- browser */
+
 function BrowserApp({ found, find }: Ctx) {
-  const { orders: ORDERS, photos: PHOTOS, trash: TRASH, news: NEWS } = usePack()
-  const [tab, setTab] = useState<'news' | 'orders' | 'photos' | 'trash'>('news')
+  const pack = usePack()
+  const { orders: ORDERS, photos: PHOTOS, trash: TRASH, news: NEWS } = pack
+  const [tab, setTab] = useState<'search' | 'photos' | 'orders' | 'news' | 'trash'>('search')
   const [trash, setTrash] = useState<string | null>(null)
-  const active = TRASH.find((t) => t.id === trash) ?? null
+  const [inspectPhoto, setInspectPhoto] = useState<Photo | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState<string>('all')
+  const [expandedRecord, setExpandedRecord] = useState<string | null>(null)
+
+  const activeTrash = TRASH.find((t) => t.id === trash) ?? null
+
+  // Address bar URL simulation
+  const currentUrl =
+    tab === 'search'
+      ? `coccoc://csdt.congan/tra-cuu-ho-so${searchQuery ? `?q=${encodeURIComponent(searchQuery)}` : ''}`
+      : tab === 'photos'
+      ? 'coccoc://csdt.congan/kham-nghiem-hien-truong'
+      : tab === 'orders'
+      ? 'coccoc://he-thong.noi-bo/nhat-ky-thiet-bi'
+      : tab === 'news'
+      ? 'coccoc://hangchai-24h.vn/tin-nong'
+      : 'coccoc://thung-rac.noi-bo/tap-tin-da-xoa'
+
+  // Filter search records
+  const filteredRecords = (pack.searchRecords || []).filter((r) => {
+    const matchesCat = selectedCategory === 'all' || r.category === selectedCategory
+    if (!matchesCat) return false
+    if (!searchQuery.trim()) return true
+    const q = searchQuery.toLowerCase().trim()
+    return (
+      r.title.toLowerCase().includes(q) ||
+      r.snippet.toLowerCase().includes(q) ||
+      r.content.toLowerCase().includes(q) ||
+      r.keywords.some((k) => k.toLowerCase().includes(q))
+    )
+  })
+
+  const categories = ['all', 'Pháp y', 'Cảnh sát', 'Viễn thông', 'Ngân hàng', 'Camera']
 
   return (
     <div className="flex h-full flex-col bg-[#0b0f19]">
+      {/* Photo inspection modal */}
+      {inspectPhoto && (
+        <PhotoInspectModal
+          photo={inspectPhoto}
+          found={found}
+          find={find}
+          onClose={() => setInspectPhoto(null)}
+        />
+      )}
+
       {/* Browser address bar */}
       <div className="flex items-center gap-2 border-b border-slate-800 bg-slate-900/90 px-3 py-2">
         <div className="flex items-center gap-1">
@@ -282,17 +491,18 @@ function BrowserApp({ found, find }: Ctx) {
         </div>
         <div className="flex flex-1 items-center gap-1.5 truncate rounded-lg bg-slate-950/80 border border-slate-800 px-2.5 py-1 text-[0.66rem] text-slate-300">
           <span className="text-emerald-400 text-xs">🔒</span>
-          <span className="text-slate-400">coccoc://</span>hang-chai/hem-42
+          <span className="text-slate-400 truncate">{currentUrl}</span>
         </div>
       </div>
 
       {/* Navigation tabs */}
-      <div className="flex gap-1.5 border-b border-slate-800 bg-slate-900/50 px-3 py-2">
+      <div className="flex gap-1.5 border-b border-slate-800 bg-slate-900/50 px-3 py-2 overflow-x-auto">
         {(
           [
-            ['news', '📰 Bảng tin'],
-            ['orders', '📊 Dữ liệu'],
+            ['search', '🔍 Tra cứu'],
             ['photos', '📸 Hiện trường'],
+            ['orders', '📊 Dữ liệu'],
+            ['news', '📰 Bảng tin'],
             ['trash', '🗑️ Thùng rác'],
           ] as const
         ).map(([id, label]) => (
@@ -302,7 +512,7 @@ function BrowserApp({ found, find }: Ctx) {
               setTab(id)
               setTrash(null)
             }}
-            className={`rounded-xl px-3 py-1.5 text-[0.7rem] font-bold transition-all ${
+            className={`rounded-xl px-3 py-1.5 text-[0.7rem] font-bold transition-all shrink-0 ${
               tab === id 
                 ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm' 
                 : 'text-slate-400 hover:bg-slate-800/80 hover:text-slate-200'
@@ -314,49 +524,264 @@ function BrowserApp({ found, find }: Ctx) {
       </div>
 
       <div className="flex-1 overflow-y-auto p-3.5 space-y-3">
-        {tab === 'news' && (
+        {/* TAB 1: SEARCH / TRA CỨU DỮ LIỆU ĐIỀU TRA */}
+        {tab === 'search' && (
           <div className="space-y-3">
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 shadow-sm">
-              <span className="inline-block rounded-md bg-red-950/60 border border-red-500/30 px-2 py-0.5 text-[0.58rem] font-bold tracking-wider text-red-400 uppercase">
-                BẢN TIN KHẨN · HÀNG CHAI 24H
-              </span>
-              <h3 className="mt-2 text-[0.95rem] font-bold leading-snug text-white tracking-tight">{NEWS.title}</h3>
-              <p className="mt-2 text-[0.74rem] leading-relaxed text-slate-300 font-normal">{NEWS.lead}</p>
-              <p className="mt-2 text-[0.72rem] leading-relaxed text-slate-400">{NEWS.body}</p>
-            </div>
-
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 shadow-sm">
-              <p className="text-[0.62rem] font-bold tracking-wider text-slate-400 uppercase">BÌNH LUẬN NỔI BẬT</p>
-              <div className="mt-2.5 flex gap-2.5">
-                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-slate-800 border border-slate-700 text-base">🛵</span>
-                <div className="min-w-0">
-                  <p className="text-[0.72rem] font-bold text-slate-200">
-                    d.ship.42 <span className="text-slate-500 font-normal">· 2 giờ trước</span>
+            {/* Search Box Header */}
+            <div className="rounded-2xl border border-cyan-500/30 bg-gradient-to-br from-slate-900 via-slate-900 to-cyan-950/30 p-3.5 shadow-md">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-base">🔎</span>
+                <div>
+                  <h3 className="text-[0.78rem] font-bold text-white tracking-tight uppercase">
+                    HỆ THỐNG TRA CỨU HỒ SƠ ĐIỀU TRA & CHỨNG CỨ
+                  </h3>
+                  <p className="text-[0.6rem] text-cyan-400">
+                    Nhập tên nghi phạm, vật chứng, mốc giờ hoặc số tiền để bóc tách hồ sơ mật
                   </p>
-                  <p className="mt-1 text-[0.74rem] leading-relaxed text-slate-300">
-                    “Khu này dạo này lắm chuyện thật, tối nào cũng có người mất đồ.”
-                  </p>
-                  <button
-                    onClick={() => find('dang-bai-an-danh')}
-                    disabled={found.has('dang-bai-an-danh')}
-                    className={`mt-2 inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-[0.64rem] font-bold transition-all ${
-                      found.has('dang-bai-an-danh') 
-                        ? 'border-emerald-500/30 bg-emerald-950/20 text-emerald-400' 
-                        : 'border-amber-400/50 bg-amber-500/20 text-amber-300 hover:bg-amber-500/30'
-                    }`}
-                  >
-                    <span>{found.has('dang-bai-an-danh') ? '✓' : '📌'}</span>
-                    {found.has('dang-bai-an-danh') ? 'Đã lưu tài khoản đáng ngờ' : 'Ghi nhận tài khoản đáng ngờ'}
-                  </button>
                 </div>
               </div>
+
+              {/* Input Box */}
+              <div className="relative mt-2">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Nhập từ khóa: tên, độc chất, di chúc, tài khoản, 21:30, biển số..."
+                  className="w-full rounded-xl border border-slate-700 bg-slate-950/90 px-3.5 py-2 pl-9 pr-8 text-[0.74rem] text-slate-100 placeholder-slate-500 outline-none focus:border-cyan-400 focus:shadow-[0_0_12px_rgba(6,182,212,0.25)] transition-all"
+                />
+                <span className="absolute left-3 top-2.5 text-slate-400 text-xs">🔍</span>
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-2.5 top-2.5 text-slate-400 hover:text-white text-xs"
+                    title="Xóa tìm kiếm"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+
+              {/* Suggestions Chips */}
+              {pack.searchSuggestions && pack.searchSuggestions.length > 0 && (
+                <div className="mt-2.5 flex items-center gap-1.5 flex-wrap">
+                  <span className="text-[0.58rem] font-bold text-slate-400 uppercase tracking-wider">
+                    Gợi ý tra cứu:
+                  </span>
+                  {pack.searchSuggestions.map((s) => (
+                    <button
+                      key={s}
+                      onClick={() => setSearchQuery(s)}
+                      className="rounded-lg bg-slate-800/90 border border-slate-700/80 px-2 py-0.5 text-[0.62rem] font-medium text-cyan-300 hover:bg-cyan-950/60 hover:border-cyan-400 transition-colors"
+                    >
+                      #{s}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Category filter pills */}
+            <div className="flex gap-1.5 overflow-x-auto pb-1">
+              {categories.map((c) => (
+                <button
+                  key={c}
+                  onClick={() => setSelectedCategory(c)}
+                  className={`rounded-lg px-2.5 py-1 text-[0.62rem] font-bold transition-all shrink-0 ${
+                    selectedCategory === c
+                      ? 'bg-slate-700 text-white border border-slate-500'
+                      : 'bg-slate-900/80 text-slate-400 border border-slate-800 hover:text-slate-200'
+                  }`}
+                >
+                  {c === 'all' ? 'Tất cả lĩnh vực' : c}
+                </button>
+              ))}
+            </div>
+
+            {/* Results count */}
+            <div className="flex items-center justify-between text-[0.62rem] text-slate-400 px-1">
+              <span>Tìm thấy {filteredRecords.length} hồ sơ liên quan</span>
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="text-cyan-400 hover:underline"
+                >
+                  Xem toàn bộ hồ sơ
+                </button>
+              )}
+            </div>
+
+            {/* Search Record Cards */}
+            <div className="space-y-2.5">
+              {filteredRecords.length === 0 ? (
+                <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6 text-center">
+                  <span className="text-3xl">📭</span>
+                  <p className="mt-2 text-[0.74rem] font-bold text-slate-300">
+                    Không tìm thấy hồ sơ khớp với từ khóa "{searchQuery}"
+                  </p>
+                  <p className="mt-1 text-[0.64rem] text-slate-400">
+                    Gợi ý: Thử nhấn vào các từ khóa gợi ý phía trên hoặc tra cứu tên các đối tượng xuất hiện trong Zola.
+                  </p>
+                </div>
+              ) : (
+                filteredRecords.map((r) => {
+                  const isExpanded = expandedRecord === r.id
+                  const isFound = r.clue ? found.has(r.clue) : false
+
+                  const badgeColor =
+                    r.category === 'Pháp y'
+                      ? 'border-purple-500/40 bg-purple-950/40 text-purple-300'
+                      : r.category === 'Ngân hàng'
+                      ? 'border-emerald-500/40 bg-emerald-950/40 text-emerald-300'
+                      : r.category === 'Viễn thông'
+                      ? 'border-cyan-500/40 bg-cyan-950/40 text-cyan-300'
+                      : r.category === 'Camera'
+                      ? 'border-amber-500/40 bg-amber-950/40 text-amber-300'
+                      : 'border-blue-500/40 bg-blue-950/40 text-blue-300'
+
+                  return (
+                    <div
+                      key={r.id}
+                      className="rounded-2xl border border-slate-800 bg-slate-900/70 p-3.5 shadow-sm transition-all hover:border-slate-700"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <span className={`rounded-md border px-1.5 py-0.5 text-[0.55rem] font-bold uppercase ${badgeColor}`}>
+                            {r.category}
+                          </span>
+                          <span className="text-[0.62rem] text-slate-400">Mã: {r.id.toUpperCase()}</span>
+                        </div>
+                        {isFound && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 text-[0.55rem] font-bold text-emerald-400">
+                            ✓ Đã ghi vào sổ
+                          </span>
+                        )}
+                      </div>
+
+                      <h4 className="mt-1.5 text-[0.78rem] font-bold text-white tracking-tight">
+                        {r.title}
+                      </h4>
+                      <p className="mt-1 text-[0.7rem] leading-relaxed text-slate-300 font-normal">
+                        {r.snippet}
+                      </p>
+
+                      {/* Expanded Content */}
+                      {isExpanded && (
+                        <div className="mt-2.5 rounded-xl border border-slate-800 bg-slate-950/90 p-3 text-[0.7rem] leading-relaxed whitespace-pre-line text-slate-200">
+                          {r.content}
+                        </div>
+                      )}
+
+                      {/* Footer Actions */}
+                      <div className="mt-2.5 flex items-center justify-between gap-2 pt-2 border-t border-slate-800/80">
+                        <button
+                          onClick={() => setExpandedRecord(isExpanded ? null : r.id)}
+                          className="text-[0.64rem] font-bold text-cyan-400 hover:text-cyan-300 transition-colors"
+                        >
+                          {isExpanded ? '▲ Thu gọn hồ sơ' : '▼ Xem chi tiết trích lục'}
+                        </button>
+
+                        {r.clue && (
+                          <button
+                            onClick={() => find(r.clue!)}
+                            disabled={isFound}
+                            className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-[0.64rem] font-bold transition-all shadow-sm ${
+                              isFound
+                                ? 'border-emerald-500/30 bg-emerald-950/20 text-emerald-400 cursor-default'
+                                : 'border-amber-400/50 bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 shadow-[0_0_10px_rgba(245,158,11,0.2)]'
+                            }`}
+                          >
+                            <span>{isFound ? '✓' : '📌'}</span>
+                            {isFound ? 'Đã lưu manh mối' : (r.clueLabel ?? 'Lưu manh mối này')}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  )
+                })
+              )}
             </div>
           </div>
         )}
 
+        {/* TAB 2: PHOTOS / HIỆN TRƯỜNG & VẬT CHỨNG */}
+        {tab === 'photos' && (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between px-1">
+              <p className="text-[0.66rem] font-medium text-slate-400">
+                📸 Bấm vào từng ảnh để phóng to kính lúp và khám nghiệm chi tiết hiện trường
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {PHOTOS.filter((p) => !p.requires || p.requires.every((r) => found.has(r))).map((p) => {
+                const isFound = p.clue ? found.has(p.clue) : false
+                const hasHotspots = p.hotspots && p.hotspots.length > 0
+
+                return (
+                  <div
+                    key={p.id}
+                    onClick={() => setInspectPhoto(p)}
+                    className="group cursor-pointer overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-cyan-500/60 hover:shadow-[0_0_20px_rgba(6,182,212,0.15)] transition-all flex flex-col"
+                  >
+                    <div className="relative aspect-[16/10] overflow-hidden bg-black grid place-items-center">
+                      <img
+                        src={`${import.meta.env.BASE_URL}${p.img ?? 'detective/bia-vu-an.jpg'}`}
+                        alt={p.title}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <span className="absolute bottom-2 right-2 rounded-lg bg-black/75 px-2 py-0.5 text-[0.58rem] font-semibold text-white/90 backdrop-blur-sm border border-white/10">
+                        {p.time}
+                      </span>
+                      {hasHotspots && (
+                        <span className="absolute top-2 left-2 rounded-lg bg-cyan-950/80 px-2 py-0.5 text-[0.58rem] font-bold text-cyan-300 backdrop-blur-sm border border-cyan-500/40">
+                          🎯 {p.hotspots!.length} điểm nghi vấn
+                        </span>
+                      )}
+                      <div className="absolute inset-0 bg-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity grid place-items-center">
+                        <span className="rounded-full bg-slate-900/90 border border-cyan-400 px-3 py-1 text-[0.66rem] font-bold text-cyan-300 shadow-lg">
+                          🔍 Soi kính lúp
+                        </span>
+                      </div>
+                    </div>
+                    <div className="p-3 flex-1 flex flex-col justify-between">
+                      <div>
+                        <p className="text-[0.76rem] font-bold text-white group-hover:text-cyan-300 transition-colors">
+                          {p.title}
+                        </p>
+                        <p className="mt-1 text-[0.66rem] leading-relaxed text-slate-300 line-clamp-2">
+                          {p.caption}
+                        </p>
+                      </div>
+                      <div className="mt-3">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setInspectPhoto(p)
+                          }}
+                          className={`w-full rounded-xl border py-1.5 text-[0.64rem] font-bold transition-all ${
+                            isFound
+                              ? 'border-emerald-500/40 bg-emerald-950/20 text-emerald-400'
+                              : 'border-amber-400/50 bg-amber-500/20 text-amber-300 hover:bg-amber-500/30'
+                          }`}
+                        >
+                          {isFound ? '✓ Đã giám định kỹ bức ảnh' : '🔍 Bật kính lúp soi chi tiết'}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: ORDERS / DỮ LIỆU ĐIỆN TỬ & NHẬT KÝ */}
         {tab === 'orders' && (
           <div className="space-y-2.5">
-            <p className="text-[0.66rem] font-medium text-slate-400">📋 Lịch sử đơn hàng · Tài xế Dũng · Đêm xảy ra vụ án</p>
+            <p className="text-[0.66rem] font-medium text-slate-400">
+              {pack.ordersTitle}
+            </p>
             {ORDERS.map((o) => (
               <div key={o.id} className="rounded-xl border border-slate-800 bg-slate-900/70 p-3.5 shadow-sm">
                 <div className="flex items-center justify-between gap-2">
@@ -375,11 +800,13 @@ function BrowserApp({ found, find }: Ctx) {
                       onClick={() => find(o.clue!)}
                       disabled={found.has(o.clue)}
                       className={`inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-[0.62rem] font-bold transition-all ${
-                        found.has(o.clue) ? 'border-emerald-500/30 bg-emerald-950/20 text-emerald-400' : 'border-amber-400/50 bg-amber-500/20 text-amber-300 hover:bg-amber-500/30'
+                        found.has(o.clue)
+                          ? 'border-emerald-500/30 bg-emerald-950/20 text-emerald-400'
+                          : 'border-amber-400/50 bg-amber-500/20 text-amber-300 hover:bg-amber-500/30'
                       }`}
                     >
                       <span>{found.has(o.clue) ? '✓' : '📌'}</span>
-                      {found.has(o.clue) ? 'Đã lưu' : 'Lưu lộ trình này'}
+                      {found.has(o.clue) ? 'Đã lưu' : 'Lưu dữ liệu này'}
                     </button>
                   )}
                 </div>
@@ -388,86 +815,98 @@ function BrowserApp({ found, find }: Ctx) {
           </div>
         )}
 
-        {tab === 'photos' && (
-          <div className="grid gap-3 sm:grid-cols-2">
-            {PHOTOS.filter((p) => !p.requires || p.requires.every((r) => found.has(r))).map((p) => {
-              const art = SCENES[p.scene]
-              return (
-                <div key={p.id} className="overflow-hidden rounded-xl border border-white/8 bg-white/[0.03]">
-                  <div className="relative grid h-28 place-items-center" style={{ background: art.bg }}>
-                    <span className="text-4xl drop-shadow-lg">{art.icon}</span>
-                    <img
-                      src={`${import.meta.env.BASE_URL}${p.img ?? art.img}`}
-                      alt={p.title}
-                      loading="lazy"
-                      className="absolute inset-0 h-full w-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none'
-                      }}
-                    />
-                    <span className="absolute bottom-1.5 right-2 rounded bg-black/45 px-1.5 py-0.5 text-[0.55rem] text-white/80">
-                      {p.time}
-                    </span>
-                  </div>
-                  <div className="p-2.5">
-                    <p className="text-[0.72rem] font-medium text-parchment/85">{p.title}</p>
-                    <p className="mt-0.5 text-[0.62rem] leading-relaxed text-mute">{p.caption}</p>
-                    {p.clue && (
+        {/* TAB 4: NEWS / BẢNG TIN KHU VỰC */}
+        {tab === 'news' && (
+          <div className="space-y-3">
+            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 shadow-sm">
+              <span className="inline-block rounded-md bg-red-950/60 border border-red-500/30 px-2 py-0.5 text-[0.58rem] font-bold tracking-wider text-red-400 uppercase">
+                BẢN TIN KHẨN · HÀNG CHAI 24H
+              </span>
+              <h3 className="mt-2 text-[0.95rem] font-bold leading-snug text-white tracking-tight">{NEWS.title}</h3>
+              <p className="mt-2 text-[0.74rem] leading-relaxed text-slate-300 font-normal">{NEWS.lead}</p>
+              <p className="mt-2 text-[0.72rem] leading-relaxed text-slate-400">{NEWS.body}</p>
+            </div>
+
+            {/* Case Specific Dynamic Comment */}
+            {pack.comment && (
+              <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 shadow-sm">
+                <p className="text-[0.62rem] font-bold tracking-wider text-slate-400 uppercase">BÌNH LUẬN NỔI BẬT KHU VỰC</p>
+                <div className="mt-2.5 flex gap-2.5">
+                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-slate-800 border border-slate-700 text-base">
+                    {pack.comment.avatar}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[0.72rem] font-bold text-slate-200">
+                      {pack.comment.user} <span className="text-slate-500 font-normal">· {pack.comment.time}</span>
+                    </p>
+                    <p className="mt-1 text-[0.74rem] leading-relaxed text-slate-300">
+                      {pack.comment.content}
+                    </p>
+                    {pack.comment.clue && (
                       <button
-                        onClick={() => find(p.clue!)}
-                        disabled={found.has(p.clue)}
-                        className={`mt-2 w-full rounded-lg border py-1 text-[0.6rem] ${
-                          found.has(p.clue) ? 'border-white/8 text-mute' : 'border-amber/40 bg-amber/10 text-amber'
+                        onClick={() => find(pack.comment.clue!)}
+                        disabled={found.has(pack.comment.clue)}
+                        className={`mt-2 inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-[0.64rem] font-bold transition-all ${
+                          found.has(pack.comment.clue) 
+                            ? 'border-emerald-500/30 bg-emerald-950/20 text-emerald-400' 
+                            : 'border-amber-400/50 bg-amber-500/20 text-amber-300 hover:bg-amber-500/30'
                         }`}
                       >
-                        {found.has(p.clue) ? '✓ đã soi kỹ' : '🔍 soi kỹ bức ảnh'}
+                        <span>{found.has(pack.comment.clue) ? '✓' : '📌'}</span>
+                        {found.has(pack.comment.clue) ? 'Đã lưu vào sổ tay' : (pack.comment.clueLabel ?? 'Ghi nhận manh mối này')}
                       </button>
                     )}
                   </div>
                 </div>
-              )
-            })}
+              </div>
+            )}
           </div>
         )}
 
+        {/* TAB 5: TRASH / THÙNG RÁC */}
         {tab === 'trash' && (
           <div className="space-y-2">
-            {!active ? (
+            {!activeTrash ? (
               <>
-                <p className="text-[0.62rem] text-mute">Thùng rác · 3 mục</p>
+                <p className="text-[0.62rem] text-slate-400">Thùng rác hệ thống · {TRASH.length} mục đã xóa</p>
                 {TRASH.map((t) => (
                   <button
                     key={t.id}
                     onClick={() => setTrash(t.id)}
-                    className="flex w-full items-center gap-2.5 rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2.5 text-left hover:bg-white/[0.06]"
+                    className="flex w-full items-center gap-2.5 rounded-xl border border-slate-800 bg-slate-900/60 px-3.5 py-2.5 text-left hover:border-slate-700 hover:bg-slate-800/60 transition-colors"
                   >
                     <span className="text-lg">{t.kind === 'file' ? '📄' : '🖼️'}</span>
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[0.72rem] text-parchment/85">{t.name}</span>
-                      <span className="block truncate text-[0.6rem] text-mute">{t.preview}</span>
+                      <span className="block truncate text-[0.72rem] font-bold text-slate-200">{t.name}</span>
+                      <span className="block truncate text-[0.6rem] text-slate-400">{t.preview}</span>
                     </span>
-                    <span className="text-mute">›</span>
+                    <span className="text-slate-500">›</span>
                   </button>
                 ))}
               </>
             ) : (
               <div>
-                <button onClick={() => setTrash(null)} className="text-[0.62rem] text-mute hover:text-parchment">
-                  ‹ quay lại thùng rác
+                <button
+                  onClick={() => setTrash(null)}
+                  className="inline-flex items-center gap-1 text-[0.64rem] font-medium text-cyan-400 hover:text-cyan-300"
+                >
+                  ‹ Quay lại danh sách tệp
                 </button>
-                <p className="mt-2 text-[0.8rem] font-medium text-parchment/85">{active.name}</p>
-                <div className="mt-2 rounded-xl border border-white/8 bg-black/25 p-3 text-[0.7rem] leading-relaxed whitespace-pre-line text-parchment/70">
-                  {active.detail}
+                <p className="mt-2 text-[0.8rem] font-bold text-white">{activeTrash.name}</p>
+                <div className="mt-2 rounded-xl border border-slate-800 bg-slate-950/80 p-3 text-[0.7rem] leading-relaxed whitespace-pre-line text-slate-200">
+                  {activeTrash.detail}
                 </div>
-                {active.clue && (
+                {activeTrash.clue && (
                   <button
-                    onClick={() => find(active.clue!)}
-                    disabled={found.has(active.clue)}
-                    className={`mt-3 w-full rounded-lg border py-1.5 text-[0.64rem] ${
-                      found.has(active.clue) ? 'border-white/8 text-mute' : 'border-amber/40 bg-amber/10 text-amber'
+                    onClick={() => find(activeTrash.clue!)}
+                    disabled={found.has(activeTrash.clue)}
+                    className={`mt-3 w-full rounded-xl border py-2 text-[0.66rem] font-bold transition-all ${
+                      found.has(activeTrash.clue)
+                        ? 'border-emerald-500/40 bg-emerald-950/30 text-emerald-400'
+                        : 'border-amber-400/50 bg-amber-500/20 text-amber-300 hover:bg-amber-500/30'
                     }`}
                   >
-                    {found.has(active.clue) ? '✓ đã ghi vào sổ' : '📌 ghi vào sổ vụ án'}
+                    {found.has(activeTrash.clue) ? '✓ Đã ghi vào sổ vụ án' : '📌 Ghi nhận vào sổ vụ án'}
                   </button>
                 )}
               </div>
