@@ -208,7 +208,7 @@ export default function TruthOrDarePlayer() {
             onSpin={() => {
               buzz(40)
               sfx.vote()
-              void todSpin(code, state, players)
+              void todSpin(code, state, players, uid || undefined)
             }}
             compact={true}
           />
@@ -231,7 +231,7 @@ export default function TruthOrDarePlayer() {
                     onClick={() => {
                       buzz(50)
                       sfx.vote()
-                      void todSpin(code, state, players)
+                      void todSpin(code, state, players, uid || undefined)
                     }}
                     className="w-full rounded-2xl bg-gradient-to-r from-rose-600 via-pink-600 to-amber-500 py-3.5 text-sm font-black text-white shadow-xl hover:brightness-110 active:scale-95 transition-all shadow-rose-950/80 border border-white/20"
                   >
@@ -272,7 +272,7 @@ export default function TruthOrDarePlayer() {
                   <button
                     onClick={() => {
                       sfx.reveal()
-                      void todSelectType(code, state, 'truth')
+                      void todSelectType(code, state, 'truth', uid || undefined)
                     }}
                     className="rounded-2xl bg-gradient-to-b from-cyan-900/80 to-slate-950 p-3.5 border border-cyan-500/60 text-center shadow-lg active:scale-95 transition-all"
                   >
@@ -286,7 +286,7 @@ export default function TruthOrDarePlayer() {
                   <button
                     onClick={() => {
                       sfx.reveal()
-                      void todSelectType(code, state, 'dare')
+                      void todSelectType(code, state, 'dare', uid || undefined)
                     }}
                     className="rounded-2xl bg-gradient-to-b from-rose-900/80 to-slate-950 p-3.5 border border-rose-500/60 text-center shadow-lg active:scale-95 transition-all"
                   >
@@ -346,7 +346,7 @@ export default function TruthOrDarePlayer() {
                       onClick={() => {
                         sfx.win()
                         buzz(30)
-                        void todComplete(code, state)
+                        void todComplete(code, state, uid || undefined)
                       }}
                       className="rounded-xl bg-emerald-600 py-2.5 text-xs font-black text-white active:scale-95 transition-all shadow-md shadow-emerald-950/50"
                     >
@@ -357,7 +357,7 @@ export default function TruthOrDarePlayer() {
                       onClick={() => {
                         sfx.death()
                         buzz(50)
-                        void todDrink(code, state, state.card!.penalty)
+                        void todDrink(code, state, state.card!.penalty, uid || undefined)
                       }}
                       className="rounded-xl bg-gradient-to-r from-rose-700 to-amber-700 py-2.5 text-xs font-black text-white active:scale-95 transition-all shadow-md shadow-rose-950/50"
                     >

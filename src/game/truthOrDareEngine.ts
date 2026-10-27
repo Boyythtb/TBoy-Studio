@@ -58,7 +58,18 @@ export async function todStart(code: string, players: Record<string, Player>, ho
   }
 }
 
-export async function todSpin(code: string, state: TodState, players: Record<string, Player>): Promise<void> {
+export async function todSpin(
+  code: string,
+  state: TodState,
+  players: Record<string, Player>,
+  callerUid?: string,
+): Promise<void> {
+  // Chỉ người có lượt quay mới được quyền bấm quay
+  if (callerUid && state.spinnerUid && callerUid !== state.spinnerUid) {
+    console.warn('Chỉ người có lượt quay mới được quay chai!')
+    return
+  }
+
   const order = getPlayerOrder(players)
   if (order.length === 0) return
 
@@ -125,7 +136,18 @@ export async function todCheckWatchdog(code: string, state: TodState): Promise<v
   }
 }
 
-export async function todSelectType(code: string, state: TodState, type: 'truth' | 'dare'): Promise<void> {
+export async function todSelectType(
+  code: string,
+  state: TodState,
+  type: 'truth' | 'dare',
+  callerUid?: string,
+): Promise<void> {
+  // Chỉ nạn nhân bị mũi chai chỉ vào mới được quyền chọn Thật hay Thách
+  if (callerUid && state.activeUid && callerUid !== state.activeUid) {
+    console.warn('Chỉ nạn nhân mới được chọn Thật hay Thách!')
+    return
+  }
+
   const pool = type === 'truth' ? TRUTH_CARDS_18 : DARE_CARDS_INTERACTIVE
   const randomCard = pool[Math.floor(Math.random() * pool.length)]
 
@@ -140,7 +162,13 @@ export async function todSelectType(code: string, state: TodState, type: 'truth'
   await store.set(paths.tod(code), updated)
 }
 
-export async function todComplete(code: string, state: TodState): Promise<void> {
+export async function todComplete(code: string, state: TodState, callerUid?: string): Promise<void> {
+  // Chỉ nạn nhân bị mũi chai chỉ vào mới được quyền xác nhận hoàn thành
+  if (callerUid && state.activeUid && callerUid !== state.activeUid) {
+    console.warn('Chỉ nạn nhân mới được xác nhận hoàn thành!')
+    return
+  }
+
   // Hoàn thành: Người vừa thực hiện (state.activeUid) sẽ là người có quyền quay chai tiếp theo!
   const nextSpinner = state.activeUid || state.spinnerUid
   const updated: TodState = {
@@ -156,7 +184,13 @@ export async function todComplete(code: string, state: TodState): Promise<void> 
   await store.set(paths.tod(code), updated)
 }
 
-export async function todDrink(code: string, state: TodState, penalty: number): Promise<void> {
+export async function todDrink(code: string, state: TodState, penalty: number, callerUid?: string): Promise<void> {
+  // Chỉ nạn nhân bị mũi chai chỉ vào mới được quyền chịu phạt
+  if (callerUid && state.activeUid && callerUid !== state.activeUid) {
+    console.warn('Chỉ nạn nhân mới được chọn chịu phạt!')
+    return
+  }
+
   const activeUid = state.activeUid
   const currentDrinks = state.drinks || {}
   const nextDrinks = { ...currentDrinks }

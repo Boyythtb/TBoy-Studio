@@ -91,7 +91,7 @@ export default function TruthOrDareHost() {
   const handleSpin = async () => {
     if (!state || state.step === 'spinning') return
     sfx.vote()
-    await todSpin(code, state, players)
+    await todSpin(code, state, players, uid || undefined)
   }
 
   const spinnerPlayer = state?.spinnerUid ? players[state.spinnerUid] : null
@@ -385,27 +385,45 @@ export default function TruthOrDareHost() {
             )}
 
             {currentStep === 'picking' && (
-              <div className="rounded-3xl bg-slate-900/60 p-5 border border-slate-800/80 text-center backdrop-blur-md">
-                <p className="text-xs font-bold text-slate-300">
+              <div className="rounded-3xl bg-slate-900/60 p-5 border border-rose-500/30 text-center backdrop-blur-md shadow-xl shadow-rose-950/20">
+                <div className="inline-flex items-center gap-2 rounded-full bg-rose-950/60 px-3 py-1 text-xs font-bold text-rose-400 border border-rose-800/50 mb-2 animate-pulse">
+                  <span>⏳</span>
+                  <span>ĐANG ĐỢI QUYẾT ĐỊNH</span>
+                </div>
+                <p className="text-sm font-black text-white">
                   🎯 Mũi chai đã chỉ vào <span className="text-rose-400 font-black">{victimPlayer?.name}</span>!
                 </p>
-                <p className="mt-1 text-[0.7rem] text-slate-400">
-                  Đang đợi {victimPlayer?.name} chọn trên điện thoại (hoặc Host chọn hộ):
-                </p>
-                <div className="mt-3 flex justify-center gap-3">
-                  <button
-                    onClick={() => todSelectType(code, state, 'truth')}
-                    className="rounded-xl bg-cyan-950/80 px-4 py-2 text-xs font-black text-cyan-300 border border-cyan-500/40 hover:bg-cyan-900 transition-colors"
-                  >
-                    🌶️ Chọn Sự Thật
-                  </button>
-                  <button
-                    onClick={() => todSelectType(code, state, 'dare')}
-                    className="rounded-xl bg-rose-950/80 px-4 py-2 text-xs font-black text-rose-300 border border-rose-500/40 hover:bg-rose-900 transition-colors"
-                  >
-                    🔥 Chọn Thử Thách
-                  </button>
-                </div>
+                {Boolean(uid && state.activeUid === uid) ? (
+                  <div className="mt-3">
+                    <p className="text-xs text-amber-300 font-bold mb-2.5">
+                      Bạn chính là người bị chỉ trúng! Hãy chọn trên máy này:
+                    </p>
+                    <div className="flex justify-center gap-3">
+                      <button
+                        onClick={() => todSelectType(code, state, 'truth', uid || undefined)}
+                        className="rounded-xl bg-cyan-950/80 px-4 py-2 text-xs font-black text-cyan-300 border border-cyan-500/60 hover:bg-cyan-900 active:scale-95 transition-all shadow-md"
+                      >
+                        🌶️ Chọn Sự Thật
+                      </button>
+                      <button
+                        onClick={() => todSelectType(code, state, 'dare', uid || undefined)}
+                        className="rounded-xl bg-rose-950/80 px-4 py-2 text-xs font-black text-rose-300 border border-rose-500/60 hover:bg-rose-900 active:scale-95 transition-all shadow-md"
+                      >
+                        🔥 Chọn Thử Thách
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mt-2.5">
+                    <p className="text-xs text-slate-300">
+                      Đang đợi <span className="text-amber-400 font-black">{victimPlayer?.name}</span> chọn Thật hay Thách trên điện thoại của họ…
+                    </p>
+                    <div className="mt-3 flex items-center justify-center gap-2 text-[0.72rem] text-slate-500">
+                      <div className="h-2 w-2 rounded-full bg-rose-500 animate-ping" />
+                      <span>Chỉ nạn nhân mới có quyền chọn</span>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
@@ -448,22 +466,30 @@ export default function TruthOrDareHost() {
                   </span>
                 </div>
 
-                {/* Host Control Buttons */}
-                <div className="mt-5 grid grid-cols-2 gap-3">
-                  <button
-                    onClick={() => todComplete(code, state)}
-                    className="rounded-2xl bg-emerald-600 py-3 text-xs font-black text-white hover:bg-emerald-500 active:scale-95 transition-all shadow-lg shadow-emerald-950/50"
-                  >
-                    ✅ Đã Hoàn Thành
-                  </button>
+                {/* Host Control Buttons: Chỉ hiện nếu Host chính là nạn nhân */}
+                {Boolean(uid && state.activeUid === uid) ? (
+                  <div className="mt-5 grid grid-cols-2 gap-3">
+                    <button
+                      onClick={() => todComplete(code, state, uid || undefined)}
+                      className="rounded-2xl bg-emerald-600 py-3 text-xs font-black text-white hover:bg-emerald-500 active:scale-95 transition-all shadow-lg shadow-emerald-950/50"
+                    >
+                      ✅ Đã Hoàn Thành
+                    </button>
 
-                  <button
-                    onClick={() => todDrink(code, state, state.card!.penalty)}
-                    className="rounded-2xl bg-gradient-to-r from-rose-700 to-amber-700 py-3 text-xs font-black text-white hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-rose-950/50"
-                  >
-                    🍻 Không Dám! Uống Phạt
-                  </button>
-                </div>
+                    <button
+                      onClick={() => todDrink(code, state, state.card!.penalty, uid || undefined)}
+                      className="rounded-2xl bg-gradient-to-r from-rose-700 to-amber-700 py-3 text-xs font-black text-white hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-rose-950/50"
+                    >
+                      🍻 Không Dám! Uống Phạt
+                    </button>
+                  </div>
+                ) : (
+                  <div className="mt-4 rounded-2xl bg-slate-900/60 p-3 border border-slate-800 text-center">
+                    <p className="text-xs text-slate-300">
+                      Đang đợi <span className="text-white font-bold">{victimPlayer?.name}</span> xác nhận làm xong hoặc uống phạt trên điện thoại…
+                    </p>
+                  </div>
+                )}
               </motion.div>
             )}
           </div>
