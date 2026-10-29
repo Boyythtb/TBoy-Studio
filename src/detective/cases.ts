@@ -44,6 +44,15 @@ import {
   SUSPECTS as SUSPECTS5,
   TRASH as TRASH5,
 } from './case5'
+import {
+  CASE as CASE6,
+  CLUES as CLUES6,
+  CONVS as CONVS6,
+  ORDERS as ORDERS6,
+  PHOTOS as PHOTOS6,
+  SUSPECTS as SUSPECTS6,
+  TRASH as TRASH6,
+} from './case6'
 
 export interface CaseMeta {
   no: string
@@ -475,5 +484,102 @@ export const CASES: CasePack[] = [
     photos: PHOTOS5,
     suspects: SUSPECTS5,
     trash: TRASH5,
+  },
+  {
+    id: 'dau-gia',
+    difficulty: 'Siêu hóc búa',
+    maxTries: 2,
+    code: { value: '2118', hint: 'Mã số 4 chữ số ghi nhận trên cảnh báo báo cháy cưỡng chế BMS (định dạng HHMM)' },
+    accomplice: 'giang-phuc',
+    news: {
+      title: 'Bảo tàng Grand Palace chấn động: Bức tranh triệu đô bị tráo đổi trong 12 phút cúp điện',
+      lead: 'Đêm thứ Bảy 14/11, kiệt tác hội họa Ánh Trăng Biển Hồ trị giá 2.5 triệu USD bị tráo thành bản sao giả tinh vi. Giám đốc nghệ thuật bị sốc thuốc ngất xỉu, chuông báo cháy giả kích hoạt ngắt camera toà nhà.',
+      body: 'Chuyên gia phục chế, kỹ sư an ninh BMS và bảo vệ trưởng đang đổ vạ kịch liệt cho nhau. Các điều tra viên phải dùng đèn UV soi tranh, truy quét nhật ký BMS, hoá đơn y tế Ketamine và sao kê 800 triệu trên VietinBank để tìm ra sự thật.',
+    },
+    comment: {
+      user: 'le_tan_palace',
+      avatar: '🏛️',
+      time: '10 phút trước',
+      content: '“Lúc 21:35 thấy có người đeo kính xách ống bạt bản vẽ kiến trúc bước vội lên taxi ở cổng phụ!”',
+      clue: 'camera-cong-phu',
+      clueLabel: 'Ghi nhận kẻ mang ống bạt rời sảnh phụ',
+    },
+    ordersTitle: '🎨 Lịch sử đơn vận GiaoNhanh & Báo động BMS Grand Palace',
+    searchSuggestions: [
+      'Phan An',
+      'Giang Phúc',
+      'Triệu Vy',
+      'Bác Hùng',
+      '2118',
+      'Ketamine',
+      'Long Châu',
+      'Ánh Trăng',
+      'VietinBank',
+      'GiaoNhanh',
+    ],
+    searchRecords: [
+      {
+        id: 'sr1',
+        category: 'Viễn thông',
+        title: 'BMS Grand Palace: Lệnh báo cháy cưỡng chế mã 2118 lúc 21:18',
+        keywords: ['2118', 'bms', 'báo cháy', 'giang phúc', 'override', 'ngắt điện', 'camera'],
+        snippet: 'Admin kỹ thuật Giang Phúc phát lệnh báo cháy giả cưỡng chế [FORCE_ALARM_2118] làm mù camera 12 phút.',
+        content:
+          'Trích xuất máy chủ BMS toà nhà (bms-building.vn):\n- 21:18:05: Xung lệnh cưỡng chế mã 2118 phát đi từ máy trạm của Giang Phúc làm còi báo cháy reo giả.\n- Hệ thống tự ngắt điện lưới để chuyển nguồn điện dự phòng, vô hiệu hóa camera an ninh phòng tranh đúng 12 phút then chốt.',
+        clue: 'bms-bao-chay-gia',
+        clueLabel: 'Lưu mã báo cháy cưỡng chế 2118 trên BMS',
+      },
+      {
+        id: 'sr2',
+        category: 'Pháp y',
+        title: 'Nhà thuốc Long Châu: Phan An ký mua thuốc gây mê Ketamine',
+        keywords: ['long châu', 'longchau', 'ketamine', 'thuốc mê', 'phan an', 'phục chế', 'dung môi'],
+        snippet: 'Phan An dùng giấy giới thiệu mua ống tiêm Ketamine 10ml và dung môi tại Long Châu lúc 16:30.',
+        content:
+          'Hồ sơ xuất dược phẩm LC-601 tại Nhà Thuốc Long Châu (nhathuoc-longchau42.vn):\n- Khách hàng: Phan Thế An (Viện phục chế mỹ thuật).\n- Hàng xuất: 01 lọ Ketamine HCL 10ml dạng tiêm nồng độ cao.\n- Giám đốc Huy bị tiêm đúng hoạt chất này vào gáy lúc 21:22!',
+        clue: 'longchau-ketamine',
+        clueLabel: 'Lưu hồ sơ xuất thuốc Ketamine cho Phan An',
+      },
+      {
+        id: 'sr3',
+        category: 'Ngân hàng',
+        title: 'VietinBank: Phan An chuyển khoản cọc 800 triệu cho Giang Phúc',
+        keywords: ['vietinbank', 'sao kê', '800 triệu', 'phan an', 'giang phúc', 'tiền cọc'],
+        snippet: 'Phan An chuyển 800 triệu cho Giang Phúc lúc 18:45 với nội dung hợp đồng bảo trì quý 4.',
+        content:
+          'Sao kê ngân hàng điện tử VietinBank (vietinbank.vn) TX-60882:\n- Người gửi: Phan Thế An.\n- Người nhận: Giang Hoàng Phúc.\n- Số tiền: 800.000.000 VNĐ lúc 18:45:10.\n- Bằng chứng thông đồng ăn chia để Phúc tạo cúp điện dự phòng!',
+        clue: 'vietinbank-chuyen-coc',
+        clueLabel: 'Lưu sao kê VietinBank 800 triệu giữa Phan An và Phúc',
+      },
+      {
+        id: 'sr4',
+        category: 'Viễn thông',
+        title: 'Đơn GiaoNhanh GN-99120: Ống bạt bản vẽ gửi ra cảng Bạch Đằng',
+        keywords: ['giaonhanh', 'đơn hàng', 'gn-99120', 'ống bạt', 'bản vẽ', 'bạch đằng', '21:55'],
+        snippet: 'Đơn chuyển phát hoả tốc ống bạt bản vẽ từ cổng phụ Grand Palace ra container kho cảng.',
+        content:
+          'Dữ liệu viễn thông GiaoNhanh (giaonhanh.vn):\n- Mã đơn: GN-99120 tiếp nhận lúc 21:55.\n- Địa chỉ lấy hàng: Cổng phụ Grand Palace từ người đeo kính gọng vàng.\n- Hàng hóa: Ống bạt bản vẽ kiến trúc (chứa bức tranh thật cuộn tròn).\n- Nơi đến: Kho ngoại quan cảng Bạch Đằng.',
+        clue: 'giaonhanh-ong-bat',
+        clueLabel: 'Lưu vận đơn GiaoNhanh chuyển tranh ra cảng',
+      },
+      {
+        id: 'sr5',
+        category: 'Camera',
+        title: 'Camera CAM-602: Đối tượng xách ống bạt lên taxi lúc 21:35',
+        keywords: ['camera', 'cam-602', 'cửa nam', '21:35', 'taxi', 'măng tô', 'kính vàng'],
+        snippet: 'Camera giao thông ngã tư Cửa Nam ghi nhận Phan An xách ống bạt bước vội lên taxi lúc 21:35.',
+        content:
+          'Trích xuất camera giao thông đô thị (camera-phuong.gov.vn) CAM-602:\n- Lúc 21:35: Nam giới đeo kính gọng vàng, khoác măng-tô đen (nhân dạng Phan An) ôm ống bạt tròn bước lên taxi 29E-441.22 rời khỏi hiện trường vụ án.',
+        clue: 'camera-cong-phu',
+        clueLabel: 'Lưu hình ảnh camera giao thông lúc 21:35 của Phan An',
+      },
+    ],
+    case: CASE6,
+    clues: CLUES6,
+    convs: CONVS6,
+    orders: ORDERS6,
+    photos: PHOTOS6,
+    suspects: SUSPECTS6,
+    trash: TRASH6,
   },
 ]

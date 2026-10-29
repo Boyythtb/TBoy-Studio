@@ -598,8 +598,7 @@ function CasePicker({ onPick }: { onPick: (id: string) => void }) {
           <span className="grad-moon">Chọn vụ án</span>
         </h1>
         <p className="mt-2 max-w-xl text-[13px] leading-relaxed text-slate-300">
-          Năm vụ án trinh thám với độ khó tăng dần. Vụ 05 là kỳ án mạng phòng kín siêu hóc búa: kẻ thủ ác ngụy tạo
-          hiện trường tự tử tinh vi cùng kẻ đồng phạm tiếp tay xảo quyệt.
+          Sáu vụ án trinh thám với độ khó tăng dần. Vụ 06 là đại án tráo đổi kiệt tác triệu đô siêu hóc búa: kẻ chủ mưu phục chế tranh liên minh với kỹ sư an ninh ngụy tạo báo cháy giả và tung hoả mù xảo quyệt.
         </p>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2">

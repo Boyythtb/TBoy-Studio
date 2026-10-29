@@ -124,7 +124,7 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
     }
 
     // 3. Chợ Tốt (CHỈ VỤ 1 VÀ VỤ 2)
-    if (caseId === 'hem42' || caseId === 'tu-do' || caseId === 'cau-long') {
+    if (caseId === 'hem42' || caseId === 'tu-do' || caseId === 'cau-long' || caseId === 'dau-gia') {
       if (
         q.includes('chợ') ||
         q.includes('chotot') ||
@@ -139,7 +139,7 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
           url: 'https://chotot.vn',
           icon: '🛍️',
           category: 'Cổng rao vặt',
-          desc: caseId === 'hem42' ? 'Xem tin thanh lý xe đạp điện cũ' : 'Xem tin bán vội iPhone 14 Pro Max',
+          desc: caseId === 'hem42' ? 'Xem tin thanh lý xe đạp điện cũ' : caseId === 'dau-gia' ? 'Xem tin thanh lý tranh sơn dầu học trò' : 'Xem tin bán vội iPhone 14 Pro Max',
         })
       }
     }
@@ -165,7 +165,7 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
     }
 
     // 5. Nhà Thuốc Long Châu (CHỈ VỤ 3, 4, 5)
-    if (caseId === 'hoi-cho' || caseId === 'chua-phap-hoa' || caseId === 'chung-cu' || caseId === 'cong-ty-x' || caseId === 'an-mang' || caseId === 'biet-thu-x') {
+    if (caseId === 'hem42' || caseId === 'hoi-cho' || caseId === 'chua-phap-hoa' || caseId === 'chung-cu' || caseId === 'cong-ty-x' || caseId === 'dau-gia' || caseId === 'an-mang' || caseId === 'biet-thu-x' || caseId === 'dau-gia') {
       if (
         q.includes('thuốc') ||
         q.includes('long châu') ||
