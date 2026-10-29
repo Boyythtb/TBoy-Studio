@@ -11,6 +11,8 @@ import { BankingSite } from '../sites/BankingSite'
 import { SmartBuildingSite } from '../sites/SmartBuildingSite'
 import { KhamNghiemSite } from '../sites/KhamNghiemSite'
 import { TrashSite } from '../sites/TrashSite'
+import { NhaThuocSite } from '../sites/NhaThuocSite'
+import { TrafficCameraSite } from '../sites/TrafficCameraSite'
 
 export interface Ctx {
   found: Set<string>
@@ -57,14 +59,15 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
     MacSound.click()
   }
 
-  // Danh mục gợi ý tìm kiếm thông minh khi người dùng gõ từ khoá
+  // Gợi ý tìm kiếm thông minh RIÊNG BIỆT CHO TỪNG VỤ ÁN ĐỘC LẬP
   const getSuggestions = (query: string): SearchSuggestion[] => {
     const q = query.trim().toLowerCase()
     if (!q) return []
 
     const list: SearchSuggestion[] = []
+    const caseId = pack.id
 
-    // 1. Mạng xã hội Facebúc
+    // 1. Mạng xã hội Facebúc của vụ án hiện tại
     if (
       q.includes('face') ||
       q.includes('fb') ||
@@ -76,13 +79,13 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
       list.push({
         title: 'Mạng xã hội Facebúc',
         url: 'https://facebuc.vn',
-        icon: 'f',
-        category: 'Trang mạng xã hội',
-        desc: 'Theo dõi bài đăng, hình ảnh và bình luận của cư dân khu vực',
+        icon: '👥',
+        category: 'Mạng xã hội cư dân',
+        desc: 'Xem bài đăng, hình ảnh và bình luận liên quan vụ việc',
       })
     }
 
-    // Gợi ý trang cá nhân theo tên nghi phạm
+    // Gợi ý trang cá nhân của các nhân vật chỉ thuộc vụ án này
     profiles.forEach((p) => {
       if (
         p.name.toLowerCase().includes(q) ||
@@ -100,138 +103,150 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
       }
     })
 
-    // 2. Cổng Giao Hàng & Định Vị GPS (Vụ 1)
-    if (
-      q.includes('giao') ||
-      q.includes('ship') ||
-      q.includes('đơn') ||
-      q.includes('vận đơn') ||
-      q.includes('ghn') ||
-      q.includes('hành trình') ||
-      q.includes('lộ trình') ||
-      q.includes('định vị') ||
-      q.includes('gps')
-    ) {
-      list.push({
-        title: 'GiaoNhanh 24H · Tra cứu vận đơn & Lộ trình GPS',
-        url: 'https://giaonhanh.vn',
-        icon: '⚡',
-        category: 'Cổng giao vận nội bộ',
-        desc: 'Xem nhật ký định vị GPS từng phút của tài xế shipper trong đêm xảy ra vụ án',
-      })
-    }
-
-    // 3. Chợ Tốt Rao Vặt (Vụ 2)
-    if (
-      q.includes('chợ') ||
-      q.includes('chotot') ||
-      q.includes('rao') ||
-      q.includes('bán') ||
-      q.includes('iphone') ||
-      q.includes('mua') ||
-      q.includes('đồ cũ') ||
-      q.includes('pass') ||
-      q.includes('vợt') ||
-      q.includes('thanh lý')
-    ) {
-      list.push({
-        title: 'Chợ Tốt · Mua Bán Rao Vặt Đồ Cũ',
-        url: 'https://chotot.vn',
-        icon: '🛍️',
-        category: 'Cổng thương mại điện tử rao vặt',
-        desc: 'Tìm kiếm tin đăng thanh lý điện thoại, đồ thể thao quanh khu vực Ba Đình',
-      })
-    }
-
-    // 4. Ngân Hàng VietinBank iPay (Vụ 3 & Vụ 5)
-    if (
-      q.includes('ngân hàng') ||
-      q.includes('bank') ||
-      q.includes('vietin') ||
-      q.includes('tiền') ||
-      q.includes('chuyển khoản') ||
-      q.includes('sao kê') ||
-      q.includes('biến động') ||
-      q.includes('tài khoản') ||
-      q.includes('số dư')
-    ) {
-      list.push({
-        title: 'VietinBank iPay Mobile · Sao Kê Biến Động Số Dư',
-        url: 'https://vietinbank.vn',
-        icon: '🏦',
-        category: 'Dịch vụ ngân hàng số',
-        desc: 'Kiểm tra lịch sử chuyển tiền, giao dịch rút nạp tiền trong đêm vụ án',
-      })
-    }
-
-    // 5. Hệ thống BMS Quản lý Tòa nhà & Tuya Smart Home IoT (Vụ 4 & Vụ 5)
-    if (
-      q.includes('bms') ||
-      q.includes('tòa nhà') ||
-      q.includes('cầu dao') ||
-      q.includes('mất điện') ||
-      q.includes('điện') ||
-      q.includes('aptomat') ||
-      q.includes('thang máy') ||
-      q.includes('smart') ||
-      q.includes('iot') ||
-      q.includes('ấm trà') ||
-      q.includes('cảm biến') ||
-      q.includes('nhiệt độ')
-    ) {
-      if (pack.id === 'chung-cu' || pack.id === 'cong-ty-x') {
+    // 2. GiaoNhanh (CHỈ RIÊNG VỤ 1)
+    if (caseId === 'hem42') {
+      if (
+        q.includes('giao') ||
+        q.includes('ship') ||
+        q.includes('đơn') ||
+        q.includes('vận đơn') ||
+        q.includes('gps') ||
+        q.includes('gn')
+      ) {
         list.push({
-          title: 'BMS Horizon Tower · Hệ thống Quản trị Tòa nhà',
-          url: 'https://bms-building.vn',
-          icon: '🏢',
-          category: 'Hệ thống kỹ thuật tòa nhà',
-          desc: 'Nhật ký ngắt aptomat tổng tầng hầm, quẹt thẻ thang máy và cảm biến họng rác',
-        })
-      } else {
-        list.push({
-          title: 'Tuya Smart Home IoT · Cảm biến Thiết bị Thông minh',
-          url: 'https://smarthome.iot',
-          icon: '🏡',
-          category: 'Nhà thông minh',
-          desc: 'Kiểm tra cảm biến nhiệt độ ấm trà thông minh và nhật ký ngắt cầu dao Tầng 2',
+          title: 'GiaoNhanh 24H · Tra cứu vận đơn GPS',
+          url: 'https://giaonhanh.vn',
+          icon: '⚡',
+          category: 'Cổng giao vận',
+          desc: 'Tra cứu định vị GPS đơn hàng GN-88214 của shipper Dũng lúc 21:47',
         })
       }
     }
 
-    // 6. Camera Hiện trường & Khám nghiệm
+    // 3. Chợ Tốt (CHỈ VỤ 1 VÀ VỤ 2)
+    if (caseId === 'hem42' || caseId === 'tu-do' || caseId === 'cau-long') {
+      if (
+        q.includes('chợ') ||
+        q.includes('chotot') ||
+        q.includes('rao') ||
+        q.includes('bán') ||
+        q.includes('iphone') ||
+        q.includes('xe') ||
+        q.includes('thanh lý')
+      ) {
+        list.push({
+          title: 'Chợ Tốt · Mua Bán Rao Vặt Đồ Cũ',
+          url: 'https://chotot.vn',
+          icon: '🛍️',
+          category: 'Cổng rao vặt',
+          desc: caseId === 'hem42' ? 'Xem tin thanh lý xe đạp điện cũ' : 'Xem tin bán vội iPhone 14 Pro Max',
+        })
+      }
+    }
+
+    // 4. VietinBank (CHỈ VỤ 2, 3, 4, 5)
+    if (caseId !== 'hem42') {
+      if (
+        q.includes('ngân hàng') ||
+        q.includes('bank') ||
+        q.includes('vietin') ||
+        q.includes('tiền') ||
+        q.includes('chuyển khoản') ||
+        q.includes('sao kê')
+      ) {
+        list.push({
+          title: 'VietinBank iPay Mobile · Sao Kê Biến Động',
+          url: 'https://vietinbank.vn',
+          icon: '🏦',
+          category: 'Ngân hàng số',
+          desc: 'Kiểm tra lịch sử chuyển tiền, biến động số dư trong đêm vụ án',
+        })
+      }
+    }
+
+    // 5. Nhà Thuốc Long Châu (CHỈ VỤ 3, 4, 5)
+    if (caseId === 'hoi-cho' || caseId === 'chua-phap-hoa' || caseId === 'chung-cu' || caseId === 'cong-ty-x' || caseId === 'an-mang' || caseId === 'biet-thu-x') {
+      if (
+        q.includes('thuốc') ||
+        q.includes('long châu') ||
+        q.includes('y tế') ||
+        q.includes('độc') ||
+        q.includes('bỏng') ||
+        q.includes('băng gạc')
+      ) {
+        list.push({
+          title: 'Nhà Thuốc Long Châu · Chi Nhánh Hẻm 42',
+          url: 'https://nhathuoc-longchau42.vn',
+          icon: '💊',
+          category: 'Hệ thống y tế & Dược phẩm',
+          desc: 'Tra cứu hoá đơn bán lẻ, sổ xuất độc chất và hồ sơ sơ cứu',
+        })
+      }
+    }
+
+    // 6. Camera An Ninh Phường (ÁP DỤNG THEO VỊ TRÍ TỪNG VỤ)
     if (
       q.includes('camera') ||
-      q.includes('hiện trường') ||
-      q.includes('khám nghiệm') ||
-      q.includes('ảnh') ||
-      q.includes('bằng chứng') ||
-      q.includes('dấu vết') ||
-      q.includes('kính lúp') ||
-      q.includes('uv')
+      q.includes('an ninh') ||
+      q.includes('phường') ||
+      q.includes('giao thông') ||
+      q.includes('ngã tư') ||
+      q.includes('bãi xe') ||
+      q.includes('trích xuất')
     ) {
       list.push({
-        title: 'Băng hình Camera An Ninh & Giám Định Hiện Trường',
-        url: 'coccoc://khamnghiem',
-        icon: '📸',
-        category: 'Hồ sơ kỹ thuật hình sự',
-        desc: 'Xem lại các ảnh chụp hiện trường, trích xuất camera an ninh và dùng đèn UV soi dấu vết',
+        title: 'Camera An Ninh Đô Thị · Trích Xuất Băng Hình',
+        url: 'https://camera-phuong.gov.vn',
+        icon: '📹',
+        category: 'Camera an ninh',
+        desc: 'Xem băng hình camera giám sát khu vực xảy ra vụ việc',
       })
     }
 
-    // 7. Thùng rác khu vực
-    if (
-      q.includes('rác') ||
-      q.includes('thùng rác') ||
-      q.includes('bãi rác') ||
-      q.includes('vứt') ||
-      q.includes('phế thải')
-    ) {
+    // 7. BMS Tòa Nhà Chung Cư (CHỈ RIÊNG VỤ 4)
+    if (caseId === 'chung-cu' || caseId === 'cong-ty-x') {
+      if (q.includes('bms') || q.includes('tòa nhà') || q.includes('cầu dao') || q.includes('mất điện') || q.includes('họng rác')) {
+        list.push({
+          title: 'BMS Chung Cư 42 · Hệ thống Kỹ Thuật Tòa Nhà',
+          url: 'https://bms-building.vn',
+          icon: '🏢',
+          category: 'Vận hành toà nhà',
+          desc: 'Nhật ký ngắt aptomat tổng tầng hầm, quẹt thẻ thang máy và cảm biến họng rác',
+        })
+      }
+    }
+
+    // 8. Smart Home IoT (CHỈ RIÊNG VỤ 5)
+    if (caseId === 'an-mang' || caseId === 'biet-thu-x') {
+      if (q.includes('smart') || q.includes('iot') || q.includes('ấm trà') || q.includes('nhiệt độ') || q.includes('cầu dao')) {
+        list.push({
+          title: 'Tuya Smart Home IoT · Cảm Biến Phòng Trà',
+          url: 'https://smarthome.iot',
+          icon: '🏡',
+          category: 'Nhà thông minh',
+          desc: 'Kiểm tra cảm biến nhiệt độ ấm trà thông minh và nhật ký cầu dao tầng 2',
+        })
+      }
+    }
+
+    // 9. Khám Nghiệm & Thùng rác
+    if (q.includes('hiện trường') || q.includes('khám nghiệm') || q.includes('uv') || q.includes('kính lúp')) {
+      list.push({
+        title: 'Giám Định Kỹ Thuật Hình Sự & Đèn UV',
+        url: 'coccoc://khamnghiem',
+        icon: '📸',
+        category: 'Pháp y hiện trường',
+        desc: 'Xem lại các ảnh chụp hiện trường và dùng đèn soi UV tìm dấu vết',
+      })
+    }
+
+    if (q.includes('rác') || q.includes('thùng rác') || q.includes('vứt') || q.includes('phế thải')) {
       list.push({
         title: 'Thùng Rác Khu Vực & Khám Xét Phế Thải',
         url: 'coccoc://trash',
         icon: '🗑️',
         category: 'Vật chứng thực nghiệm',
-        desc: 'Lục soát các vật chứng bị hung thủ vứt bỏ hoặc phi tang',
+        desc: 'Lục soát các vật chứng bị hung thủ phi tang',
       })
     }
 
@@ -247,31 +262,35 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
     let u = query.trim().toLowerCase()
     if (!u) return
 
-    // Nếu gõ đúng định dạng URL
     if (u.includes('://')) {
       navigateTo(u)
       return
     }
 
-    // Phân tích từ khoá tự nhiên để chuyển trang thông minh
+    const caseId = pack.id
+
+    // Phân tích từ khoá tự nhiên theo đúng vụ án đang chơi
     if (u.includes('facebuc') || u.includes('fb') || u.includes('bảng tin') || u.includes('mạng xã hội')) {
       navigateTo('https://facebuc.vn')
-    } else if (u.includes('giaonhanh') || u.includes('ship') || u.includes('đơn hàng') || u.includes('vận đơn') || u.includes('gps')) {
+    } else if (caseId === 'hem42' && (u.includes('giaonhanh') || u.includes('ship') || u.includes('đơn hàng') || u.includes('gps'))) {
       navigateTo('https://giaonhanh.vn')
-    } else if (u.includes('chotot') || u.includes('rao vặt') || u.includes('bán') || u.includes('iphone') || u.includes('đồ cũ')) {
+    } else if ((caseId === 'hem42' || caseId === 'tu-do' || caseId === 'cau-long') && (u.includes('chotot') || u.includes('rao vặt') || u.includes('bán') || u.includes('iphone') || u.includes('xe'))) {
       navigateTo('https://chotot.vn')
-    } else if (u.includes('vietinbank') || u.includes('ngân hàng') || u.includes('sao kê') || u.includes('tiền') || u.includes('chuyển khoản')) {
+    } else if (caseId !== 'hem42' && (u.includes('vietinbank') || u.includes('ngân hàng') || u.includes('sao kê') || u.includes('chuyển khoản'))) {
       navigateTo('https://vietinbank.vn')
-    } else if (u.includes('bms') || u.includes('tòa nhà') || u.includes('cầu dao') || u.includes('mất điện')) {
+    } else if ((caseId === 'hoi-cho' || caseId === 'chung-cu' || caseId === 'an-mang') && (u.includes('nhathuoc') || u.includes('long châu') || u.includes('longchau') || u.includes('thuốc') || u.includes('độc'))) {
+      navigateTo('https://nhathuoc-longchau42.vn')
+    } else if (u.includes('camera-phuong') || u.includes('camera an ninh') || u.includes('camera')) {
+      navigateTo('https://camera-phuong.gov.vn')
+    } else if ((caseId === 'chung-cu' || caseId === 'cong-ty-x') && (u.includes('bms') || u.includes('tòa nhà') || u.includes('cầu dao') || u.includes('họng rác'))) {
       navigateTo('https://bms-building.vn')
-    } else if (u.includes('smart') || u.includes('iot') || u.includes('ấm trà') || u.includes('cảm biến')) {
+    } else if ((caseId === 'an-mang' || caseId === 'biet-thu-x') && (u.includes('smart') || u.includes('iot') || u.includes('ấm trà') || u.includes('nhiệt độ'))) {
       navigateTo('https://smarthome.iot')
-    } else if (u.includes('hiện trường') || u.includes('camera') || u.includes('khám nghiệm') || u.includes('ảnh')) {
+    } else if (u.includes('hiện trường') || u.includes('khám nghiệm') || u.includes('uv')) {
       navigateTo('coccoc://khamnghiem')
-    } else if (u.includes('thùng rác') || u.includes('bãi rác') || u.includes('rác') || u.includes('trash')) {
+    } else if (u.includes('thùng rác') || u.includes('rác') || u.includes('trash')) {
       navigateTo('coccoc://trash')
     } else {
-      // Tìm xem có tên nghi phạm không
       const matchedProfile = profiles.find(
         (p) => p.name.toLowerCase().includes(u) || p.slug.toLowerCase().includes(u)
       )
@@ -333,7 +352,7 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
 
       {/* Cộc Cộc Tabs Bar chuẩn Mac */}
       <div className="flex items-end h-9 bg-[#e5e5ea] px-2 pt-1 gap-1 border-b border-[#0000001a] select-none">
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-t-lg text-[12px] font-semibold text-slate-800 shadow-2xs max-w-[220px]">
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-t-lg text-[12px] font-semibold text-slate-800 shadow-2xs max-w-[240px]">
           <span className="text-emerald-600 text-sm">🥥</span>
           <span className="truncate flex-1">
             {currentUrl.includes('facebuc.vn')
@@ -344,6 +363,10 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
               ? 'Chợ Tốt Rao Vặt'
               : currentUrl.includes('vietinbank.vn')
               ? 'VietinBank iPay'
+              : currentUrl.includes('nhathuoc-longchau42.vn')
+              ? 'Nhà Thuốc Long Châu 42'
+              : currentUrl.includes('camera-phuong.gov.vn')
+              ? 'Camera An Ninh Đô Thị'
               : currentUrl.includes('bms') || currentUrl.includes('smarthome')
               ? 'Smart IoT Hub'
               : currentUrl.includes('khamnghiem')
@@ -369,7 +392,7 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
         </button>
       </div>
 
-      {/* Cộc Cộc Address Toolbar chuẩn Browser thật */}
+      {/* Cộc Cộc Address Toolbar */}
       <div className="flex items-center gap-2 border-b border-[#00000012] bg-[#f8f9fa] px-3 py-2 relative z-40">
         <div className="flex items-center gap-1">
           <button
@@ -428,7 +451,7 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
       {/* Main Web Page Content */}
       <div className="flex-1 overflow-y-auto bg-[#f0f2f5] relative">
         {/* =========================================================================
-            TRANG CHỦ CỘC CỘC (NEW TAB) - TÌM KIẾM TỰ NHIÊN, KHÔNG CÓ NÚT BẤM SẴN
+            TRANG CHỦ CỘC CỘC (NEW TAB) - TÌM KIẾM TỰ NHIÊN, KHÔNG CÓ NÚT LỐI TẮT BẤY SẴN
            ========================================================================= */}
         {(currentUrl === 'coccoc://home' || currentUrl.startsWith('coccoc://search')) && (
           <div className="min-h-full flex flex-col items-center justify-center p-6 bg-gradient-to-b from-white via-slate-50 to-[#eef2f6]">
@@ -452,19 +475,19 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
                     type="text"
                     value={homeSearchQuery}
                     onChange={(e) => setHomeSearchQuery(e.target.value)}
-                    placeholder="Nhập từ khóa tìm kiếm..."
-                    className="w-full rounded-2xl bg-white border border-slate-300 px-4 py-3 pl-11 pr-12 text-[13px] text-slate-800 shadow-md outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-500/15 transition-all"
+                    placeholder="Nhập tên trang web hoặc từ khóa cần tìm..."
+                    className="w-full rounded-2xl bg-white border border-slate-300 px-4 py-3.5 pl-11 pr-16 text-[13px] text-slate-800 shadow-md outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-500/15 transition-all"
                   />
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
                   <button
                     type="submit"
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl px-3 py-1.5 text-[11px] font-bold transition-colors"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl px-3.5 py-1.5 text-[11px] font-bold transition-colors shadow-2xs"
                   >
                     Tìm
                   </button>
                 </form>
 
-                {/* Gợi ý tìm kiếm động khi người chơi gõ đúng từ */}
+                {/* Gợi ý tìm kiếm động khi người chơi gõ từ */}
                 {activeSuggestions.length > 0 && (
                   <div className="absolute left-0 top-full mt-2 w-full bg-white rounded-2xl border border-slate-200 shadow-2xl p-2 z-50 text-left divide-y divide-slate-100 animate-in fade-in slide-in-from-top-1 duration-150">
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 py-1.5">
@@ -495,12 +518,14 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
                 )}
               </div>
 
-
+              <p className="text-[11px] text-slate-400">
+                Gợi ý: Tìm kiếm các manh mối được nhắc tới trong tin nhắn hội thoại hoặc hồ sơ vụ án
+              </p>
             </div>
           </div>
         )}
 
-        {/* CÁC TRANG WEB THẬT SỰ */}
+        {/* CÁC TRANG WEB THẬT SỰ - CHỈ HIỂN THỊ KHI ĐIỀU HƯỚNG TỚI */}
         {currentUrl.includes('facebuc.vn') && (
           <FacebucSite
             caseId={pack.id}
@@ -522,6 +547,14 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
 
         {currentUrl.includes('vietinbank.vn') && (
           <BankingSite caseId={pack.id} found={found} onPin={handlePinItem} />
+        )}
+
+        {currentUrl.includes('nhathuoc-longchau42.vn') && (
+          <NhaThuocSite caseId={pack.id} found={found} onPin={handlePinItem} onOpenUrl={navigateTo} />
+        )}
+
+        {currentUrl.includes('camera-phuong.gov.vn') && (
+          <TrafficCameraSite caseId={pack.id} found={found} onPin={handlePinItem} onOpenUrl={navigateTo} />
         )}
 
         {(currentUrl.includes('bms') || currentUrl.includes('smarthome')) && (
