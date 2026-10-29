@@ -58,6 +58,12 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
   const [z, setZ] = useState<Record<AppId, number>>({ zola: 1, browser: 2, notes: 3, file: 4 })
   const [focusedApp, setFocusedApp] = useState<AppId>('browser')
   const [booted, setBooted] = useState(false)
+  const [maximized, setMaximized] = useState<Record<AppId, boolean>>({
+    zola: false,
+    browser: false,
+    notes: false,
+    file: false,
+  })
   const [browserTargetUrl, setBrowserTargetUrl] = useState<string>('coccoc://home')
 
   const handleOpenUrl = (url: string) => {
@@ -222,16 +228,24 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
         {APPS.map((app) => {
           if (!open[app.id]) return null
           const isFocused = focusedApp === app.id
-          const isMobile = width < 768
-          const w = isMobile ? width - 12 : Math.min(app.w, width - 16)
-          const x = isMobile ? 6 : Math.max(8, Math.min(pos[app.id].x, width - w - 8))
-          const y = isMobile ? 38 : Math.max(40, Math.min(pos[app.id].y, 140))
-          const h = isMobile ? 'calc(100dvh - 38px - 82px - env(safe-area-inset-bottom, 0px))' : Math.min(app.h, window.innerHeight - y - 85)
+          const isMax = Boolean(maximized[app.id]) && !isMobile
+          const w = isMobile 
+            ? width - 12 
+            : isMax 
+            ? width - 16 
+            : Math.min(app.w, width - 16)
+          const h = isMobile
+            ? 'calc(100dvh - 38px - 82px - env(safe-area-inset-bottom, 0px))'
+            : isMax
+            ? window.innerHeight - 38 - 76
+            : Math.min(app.h, window.innerHeight - 120)
+          const x = isMobile ? 6 : isMax ? 8 : Math.max(8, Math.min(pos[app.id].x, width - w - 8))
+          const y = isMobile ? 38 : isMax ? 38 : Math.max(38, Math.min(pos[app.id].y, window.innerHeight - 120))
 
           return (
             <div
               key={app.id}
-              className={`absolute overflow-hidden rounded-[14px] border transition-shadow duration-150 touch-auto overscroll-contain ${
+              className={`absolute overflow-hidden rounded-[14px] border transition-shadow duration-150 touch-auto overscroll-contain select-text ${
                 isFocused
                   ? 'border-[#00000024] bg-white shadow-[0_26px_75px_rgba(0,0,0,0.55)] ring-1 ring-black/5'
                   : 'border-[#00000018] bg-white shadow-[0_12px_35px_rgba(0,0,0,0.35)] opacity-95'
@@ -242,18 +256,39 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
               {/* macOS Titlebar Trắng Sáng */}
               <div
                 className={`group flex h-10 items-center gap-3 border-b border-[#00000018] px-3.5 select-none transition-colors ${
-                  !isMobile ? 'cursor-grab active:cursor-grabbing' : ''
+                  !isMobile && !isMax ? 'cursor-grab active:cursor-grabbing' : 'cursor-default'
                 } ${isFocused ? 'bg-[#f4f4f6]' : 'bg-[#fafafb]'}`}
-                onPointerDown={(e) => {
+                onDoubleClick={(e) => {
                   if (isMobile) return
-                  const sx = e.clientX - pos[app.id].x
-                  const sy = e.clientY - pos[app.id].y
-                  const move = (ev: PointerEvent) =>
-                    setPos((p) => ({ ...p, [app.id]: { x: Math.max(8, ev.clientX - sx), y: Math.max(40, ev.clientY - sy) } }))
+                  if ((e.target as HTMLElement).closest('button')) return
+                  setMaximized((m) => ({ ...m, [app.id]: !m[app.id] }))
+                }}
+                onPointerDown={(e) => {
+                  if (isMobile || isMax) return
+                  if ((e.target as HTMLElement).closest('button')) return
+
+                  const startX = e.clientX
+                  const startY = e.clientY
+                  const origX = pos[app.id].x
+                  const origY = pos[app.id].y
+
+                  const move = (ev: PointerEvent) => {
+                    const dx = ev.clientX - startX
+                    const dy = ev.clientY - startY
+                    setPos((p) => ({
+                      ...p,
+                      [app.id]: {
+                        x: Math.max(8, Math.min(origX + dx, window.innerWidth - 120)),
+                        y: Math.max(38, Math.min(origY + dy, window.innerHeight - 80)),
+                      },
+                    }))
+                  }
+
                   const up = () => {
                     window.removeEventListener('pointermove', move)
                     window.removeEventListener('pointerup', up)
                   }
+
                   window.addEventListener('pointermove', move)
                   window.addEventListener('pointerup', up)
                 }}
@@ -261,25 +296,42 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
                 {/* Traffic light buttons */}
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => toggle(app.id)}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      MacSound.click()
+                      setOpen((o) => ({ ...o, [app.id]: false }))
+                    }}
                     className="grid h-3 w-3 place-items-center rounded-full bg-[#ff5f56] border border-[#e0443e] shadow-2xs hover:brightness-105"
-                    aria-label="Đóng"
+                    aria-label="Đóng cửa sổ"
+                    title="Đóng cửa sổ"
                   >
                     <span className="text-[9px] font-bold text-red-950 opacity-0 group-hover:opacity-100 transition-opacity">✕</span>
                   </button>
                   <button
-                    onClick={() => toggle(app.id)}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      MacSound.click()
+                      setOpen((o) => ({ ...o, [app.id]: false }))
+                    }}
                     className="grid h-3 w-3 place-items-center rounded-full bg-[#ffbd2e] border border-[#dea123] shadow-2xs hover:brightness-105"
-                    aria-label="Thu nhỏ"
+                    aria-label="Thu nhỏ xuống Dock"
+                    title="Thu nhỏ xuống Dock"
                   >
                     <span className="text-[9px] font-bold text-amber-950 opacity-0 group-hover:opacity-100 transition-opacity">–</span>
                   </button>
                   <button
-                    onClick={() => toggle(app.id)}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      MacSound.click()
+                      setMaximized((m) => ({ ...m, [app.id]: !m[app.id] }))
+                    }}
                     className="grid h-3 w-3 place-items-center rounded-full bg-[#27c93f] border border-[#1aab29] shadow-2xs hover:brightness-105"
-                    aria-label="Mở rộng"
+                    aria-label="Phóng to / Thu lại"
+                    title={maximized[app.id] ? 'Thu nhỏ cửa sổ' : 'Phóng to toàn màn hình'}
                   >
-                    <span className="text-[9px] font-bold text-emerald-950 opacity-0 group-hover:opacity-100 transition-opacity">+</span>
+                    <span className="text-[9px] font-bold text-emerald-950 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {maximized[app.id] ? '▫' : '+'}
+                    </span>
                   </button>
                 </div>
 
@@ -291,7 +343,7 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
               </div>
 
               {/* Window Content */}
-              <div className="h-[calc(100%-2.5rem)]">
+              <div className="h-[calc(100%-2.5rem)] select-text">
                 {app.id === 'zola' && <ZolaApp found={found} find={find} onOpenUrl={handleOpenUrl} />}
                 {app.id === 'browser' && <BrowserApp found={found} find={find} externalUrl={browserTargetUrl} />}
                 {app.id === 'notes' && <NotesApp found={found} />}
