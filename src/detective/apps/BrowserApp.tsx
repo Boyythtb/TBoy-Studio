@@ -452,7 +452,7 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
                     type="text"
                     value={homeSearchQuery}
                     onChange={(e) => setHomeSearchQuery(e.target.value)}
-                    placeholder="Nhập từ khóa tìm kiếm (tên nghi phạm, ngân hàng, vận đơn, camera, rác)..."
+                    placeholder="Nhập từ khóa tìm kiếm..."
                     className="w-full rounded-2xl bg-white border border-slate-300 px-4 py-3 pl-11 pr-12 text-[13px] text-slate-800 shadow-md outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-500/15 transition-all"
                   />
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
@@ -495,13 +495,7 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
                 )}
               </div>
 
-              {/* Thông báo hướng dẫn nhẹ nhàng thay vì các nút bấm sẵn */}
-              <div className="pt-2 text-[12px] text-slate-400 space-y-1">
-                <p>💡 <em>Mẹo: Đọc kỹ tin nhắn trong Zola để biết cần tra cứu tên ai hoặc nền tảng gì.</em></p>
-                <p className="text-[11px] text-slate-400">
-                  Hệ thống hỗ trợ tra cứu: Mạng xã hội, Đơn giao hàng, Mua bán rao vặt, Sao kê ngân hàng, Quản lý BMS/SmartHome, Camera...
-                </p>
-              </div>
+
             </div>
           </div>
         )}
