@@ -726,7 +726,95 @@ export function getDeliveryOrders(caseId: string): DeliveryOrder[] {
     ]
   }
 
-  // Các vụ án khác không liên quan đến GiaoNhanh
+  // Vụ 2: Sân Cầu Lông - Đơn giao trà sữa cho Linh lúc 20:30
+  if (caseId === 'tu-do' || caseId === 'cau-long') {
+    return [
+      {
+        id: 'GN-20301',
+        driver: 'Phạm Minh Quân',
+        driverPhone: '0968xxx119',
+        time: '20:30',
+        pickup: 'Trà Sữa Gongcha - 12 Hoàng Hoa Thám',
+        drop: 'Quầy Nước Sân Cầu Lông Tự Do (Người nhận: Linh Quầy Nước)',
+        fee: '32.000đ',
+        status: 'Đã hoàn tất',
+        clueId: 'linh-don-trasua',
+        clueLabel: 'Đơn giao trà sữa cho Linh lúc 20:30 xác nhận Linh ở quầy nước',
+        timeline: [
+          { time: '20:15', event: 'Tài xế nhận đơn trà sữa' },
+          { time: '20:25', event: 'Đến cổng sân cầu lông' },
+          { time: '20:30', event: 'Giao tận tay nhân viên Linh tại quầy nước' },
+        ],
+      },
+    ]
+  }
+
+  // Vụ 3: Hội Chợ Từ Thiện - Đơn giao bánh bao cho Tú Tài Chính lúc 21:05
+  if (caseId === 'hoi-cho' || caseId === 'chua-phap-hoa') {
+    return [
+      {
+        id: 'GN-30115',
+        driver: 'Hoàng Văn Bách',
+        driverPhone: '0934xxx882',
+        time: '21:05',
+        pickup: 'Tiệm Bánh Bao Kim Phụng',
+        drop: 'Bàn Trà Quán Phúc (Người nhận: Tú Tài Chính)',
+        fee: '24.000đ',
+        status: 'Đã hoàn tất',
+        clueId: 'tu-don-doan',
+        clueLabel: 'Đơn GiaoNhanh lúc 21:05 xác nhận Tú đang ngồi ăn tại quán trà Phúc',
+        timeline: [
+          { time: '20:48', event: 'Tài xế lấy 2 phần bánh bao nóng' },
+          { time: '21:05', event: 'Giao tận bàn cho Tú tại Quán Trà Phúc' },
+        ],
+      },
+    ]
+  }
+
+  // Vụ 4: Kho Hàng Đêm - Đơn giao cơm hộp cho Lan Kế Toán lúc 20:10
+  if (caseId === 'chung-cu' || caseId === 'cong-ty-x') {
+    return [
+      {
+        id: 'GN-40228',
+        driver: 'Lê Văn Thắng',
+        driverPhone: '0909xxx315',
+        time: '20:10',
+        pickup: 'Cơm Tấm Sài Gòn - 88 Nguyễn Trãi',
+        drop: 'Chung cư SkyView Căn 802 (Lan Kế Toán)',
+        fee: '28.000đ',
+        status: 'Đã hoàn tất',
+        clueId: 'lan-don-com',
+        clueLabel: 'Đơn giao cơm lúc 20:10 tại nhà riêng chứng minh Lan rời công ty từ sớm',
+        timeline: [
+          { time: '19:50', event: 'Tài xế nhận đơn cơm tấm' },
+          { time: '20:10', event: 'Giao thành công tại sảnh căn hộ của Lan' },
+        ],
+      },
+    ]
+  }
+
+  // Vụ 5: Biệt Thự Hoa Hồng - Đơn giao yến sào áo mưa tím cạnh nhà lúc 22:45
+  if (caseId === 'an-mang' || caseId === 'biet-thu-x') {
+    return [
+      {
+        id: 'GN-50341',
+        driver: 'Võ Minh Trí (Đồng phục GiaoNhanh + Áo mưa cánh dơi tím)',
+        driverPhone: '0977xxx902',
+        time: '22:45',
+        pickup: 'Yến Sào Cung Đình - 14 Phan Bội Châu',
+        drop: 'Số 46 Biệt Thự Liền Kề (Nhà hàng xóm ông Hùng)',
+        fee: '35.000đ',
+        status: 'Đã hoàn tất',
+        clueId: 'shipper-ao-tim',
+        clueLabel: 'Đơn giao yến sào lúc 22:45 minh oan cho người mặc áo mưa tím',
+        timeline: [
+          { time: '22:30', event: 'Nhận hộp quà yến sào' },
+          { time: '22:45', event: 'Giao cho chủ nhà số 46 cạnh biệt thự, quay xe về' },
+        ],
+      },
+    ]
+  }
+
   return []
 }
 
@@ -798,6 +886,36 @@ export function getChoTotListings(caseId: string): ChoTotListing[] {
 
 /** Danh sách biến động số dư VietinBank (VỤ 2, 3, 4, 5) */
 export function getBankTransactions(caseId: string): BankTransaction[] {
+  // Vụ 1: Hẻm 42 - Sao kê VietinBank khoản nợ 5 triệu của Dũng
+  if (caseId === 'hem42') {
+    return [
+      {
+        id: 'TX-1008',
+        time: '14:20:15 · Thứ Sáu',
+        type: 'in',
+        amount: '+5.000.000 VND',
+        accountName: 'NGUYEN VAN DUNG',
+        accountNo: '10884433xxxx',
+        bank: 'VietinBank',
+        balanceAfter: '5.240.000 VND',
+        content: 'HUNG NET CHO VAY TIEN SUA XE HAN CHOT 12/9',
+        clueId: 'hung-cho-vay',
+        clueLabel: 'Sao kê VietinBank: Hùng chuyển Dũng vay 5 triệu hạn hôm nay',
+      },
+      {
+        id: 'TX-1009',
+        time: '19:40:00 · Thứ Sáu',
+        type: 'out',
+        amount: '-150.000 VND',
+        accountName: 'NGUYEN VAN DUNG',
+        accountNo: '10884433xxxx',
+        bank: 'VietinBank',
+        balanceAfter: '5.090.000 VND',
+        content: 'TIEN XANG VA BUA TOI',
+      },
+    ]
+  }
+
   // Vụ 2: Linh chuyển tiền học phí lúc 20:41
   if (caseId === 'tu-do' || caseId === 'cau-long') {
     return [
@@ -1011,6 +1129,23 @@ export function getBmsLogs(caseId: string): BmsDeviceLog[] {
 
 /** Dữ liệu Nhà Thuốc Long Châu (CHỈ DÀNH CHO VỤ 3, VỤ 4, VỤ 5) */
 export function getPharmacyRecords(caseId: string): PharmacyRecord[] {
+  // Vụ 1: Hẻm 42 - Đơn thuốc cấp cứu hạ huyết áp của Bác Bảy lúc 21:20
+  if (caseId === 'hem42') {
+    return [
+      {
+        id: 'LC-102',
+        time: '21:20 · Thứ Sáu',
+        customer: 'Ông Bảy Dân Phòng (Chi nhánh Hẻm 42)',
+        category: 'emergency',
+        items: ['Thuốc ngậm hạ áp khẩn cấp Amlodipin 5mg', 'Bông băng gạc tiệt trùng'],
+        totalPrice: '145.000 đ',
+        notes: 'Mua khẩn cấp cho vợ bị tăng huyết áp đột ngột tại nhà. Bác Bảy có mặt quầy thuốc lúc 21:20, có chữ ký và camera nhà thuốc ghi hình.',
+        clueId: 'bill-vien',
+        clueLabel: 'Đơn thuốc cấp cứu 21:20 chứng minh Bác Bảy ở nhà thuốc lúc xảy ra vụ án',
+      },
+    ]
+  }
+
   // Vụ 3: Khoa bị bỏng nước sôi sơ cứu lúc 20:42
   if (caseId === 'hoi-cho' || caseId === 'chua-phap-hoa') {
     return [
