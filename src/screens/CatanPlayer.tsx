@@ -173,7 +173,7 @@ export default function CatanPlayer() {
 
   return (
     <PhoneShell code={code} accent="#10b981">
-      <div className="flex flex-1 flex-col justify-between h-full max-h-screen overflow-hidden select-none pb-1">
+      <div className="flex flex-1 flex-col justify-between h-full max-h-[100dvh] overflow-hidden overscroll-none touch-manipulation select-none pb-1">
         {/* Floating Notification Toast */}
         <AnimatePresence>
           {latestLog && (
@@ -204,7 +204,7 @@ export default function CatanPlayer() {
                 <span className="text-base sm:text-lg font-black text-amber-400 leading-tight">
                   {myState?.victoryPoints ?? 0}/5 VP 🏆
                 </span>
-                <div className="w-16 h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                <div className="w-16 h-1.5 rounded-full bg-slate-800 overflow-hidden overscroll-none touch-manipulation">
                   <div
                     className="h-full bg-gradient-to-r from-amber-500 to-emerald-400 rounded-full"
                     style={{ width: `${((myState?.victoryPoints ?? 0) / 5) * 100}%` }}

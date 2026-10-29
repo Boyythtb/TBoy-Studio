@@ -167,10 +167,10 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
   }
 
   return (
-    <Stage>
+    <Stage className="fixed inset-0 h-[100dvh] w-screen overflow-hidden touch-none overscroll-none select-none">
       {/* Desktop Wallpaper macOS nguyên bản tuyệt đẹp */}
       <div 
-        className="relative min-h-dvh overflow-hidden font-['Be_Vietnam_Pro'] select-none"
+        className="fixed inset-0 h-[100dvh] w-screen overflow-hidden font-['Be_Vietnam_Pro'] select-none touch-none overscroll-none"
         style={{
           background: 'radial-gradient(circle at 15% 20%, #1c233d 0%, #0c1020 45%, #05070e 100%)',
           backgroundImage: `
@@ -220,27 +220,30 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
         {APPS.map((app) => {
           if (!open[app.id]) return null
           const isFocused = focusedApp === app.id
-          const w = Math.min(app.w, width - 16)
-          const x = Math.max(8, Math.min(pos[app.id].x, width - w - 8))
-          const y = Math.max(40, Math.min(pos[app.id].y, 140))
+          const isMobile = width < 768
+          const w = isMobile ? width - 12 : Math.min(app.w, width - 16)
+          const x = isMobile ? 6 : Math.max(8, Math.min(pos[app.id].x, width - w - 8))
+          const y = isMobile ? 38 : Math.max(40, Math.min(pos[app.id].y, 140))
+          const h = isMobile ? 'calc(100dvh - 38px - 62px)' : Math.min(app.h, window.innerHeight - y - 85)
 
           return (
             <div
               key={app.id}
-              className={`absolute overflow-hidden rounded-[14px] border transition-shadow duration-150 ${
+              className={`absolute overflow-hidden rounded-[14px] border transition-shadow duration-150 touch-auto overscroll-contain ${
                 isFocused
                   ? 'border-[#00000024] bg-white shadow-[0_26px_75px_rgba(0,0,0,0.55)] ring-1 ring-black/5'
                   : 'border-[#00000018] bg-white shadow-[0_12px_35px_rgba(0,0,0,0.35)] opacity-95'
               }`}
-              style={{ left: x, top: y, width: w, height: Math.min(app.h, window.innerHeight - y - 85), zIndex: 20 + z[app.id] }}
+              style={{ left: x, top: y, width: w, height: h, zIndex: 20 + z[app.id] }}
               onPointerDown={() => raise(app.id)}
             >
               {/* macOS Titlebar Trắng Sáng */}
               <div
-                className={`group flex h-10 cursor-grab items-center gap-3 border-b border-[#00000018] px-3.5 active:cursor-grabbing select-none transition-colors ${
-                  isFocused ? 'bg-[#f4f4f6]' : 'bg-[#fafafb]'
-                }`}
+                className={`group flex h-10 items-center gap-3 border-b border-[#00000018] px-3.5 select-none transition-colors ${
+                  !isMobile ? 'cursor-grab active:cursor-grabbing' : ''
+                } ${isFocused ? 'bg-[#f4f4f6]' : 'bg-[#fafafb]'}`}
                 onPointerDown={(e) => {
+                  if (isMobile) return
                   const sx = e.clientX - pos[app.id].x
                   const sy = e.clientY - pos[app.id].y
                   const move = (ev: PointerEvent) =>

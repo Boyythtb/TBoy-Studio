@@ -140,7 +140,7 @@ export default function MonopolyPlayer() {
 
   return (
     <PhoneShell code={code} accent="#f59e0b">
-      <div className="flex flex-1 flex-col justify-between h-full max-h-screen overflow-hidden select-none pb-1">
+      <div className="flex flex-1 flex-col justify-between h-full max-h-[100dvh] overflow-hidden overscroll-none touch-manipulation select-none pb-1">
         {/* Floating Notification Toast */}
         <AnimatePresence>
           {latestLog && (
