@@ -103,8 +103,8 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
       }
     })
 
-    // 2. GiaoNhanh (CHỈ RIÊNG VỤ 1)
-    if (caseId === 'hem42') {
+    // 2. GiaoNhanh (VỤ 1 VÀ VỤ 6)
+    if (caseId === 'hem42' || caseId === 'du-thuyen' || caseId === 'con-tin' || caseId === 'dau-gia') {
       if (
         q.includes('giao') ||
         q.includes('ship') ||
@@ -118,13 +118,13 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
           url: 'https://giaonhanh.vn',
           icon: '⚡',
           category: 'Cổng giao vận',
-          desc: 'Tra cứu định vị GPS đơn hàng GN-88214 của shipper Dũng lúc 21:47',
+          desc: caseId === 'hem42' ? 'Tra cứu định vị GPS đơn hàng GN-88214 của shipper Dũng lúc 21:47' : 'Tra cứu vận đơn hoả tốc GN-99801 chuyển 2 vali ra phao số 4',
         })
       }
     }
 
     // 3. Chợ Tốt (CHỈ VỤ 1 VÀ VỤ 2)
-    if (caseId === 'hem42' || caseId === 'tu-do' || caseId === 'cau-long' || caseId === 'dau-gia') {
+    if (caseId === 'hem42' || caseId === 'tu-do' || caseId === 'cau-long' || caseId === 'du-thuyen' || caseId === 'con-tin' || caseId === 'dau-gia') {
       if (
         q.includes('chợ') ||
         q.includes('chotot') ||
@@ -139,7 +139,7 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
           url: 'https://chotot.vn',
           icon: '🛍️',
           category: 'Cổng rao vặt',
-          desc: caseId === 'hem42' ? 'Xem tin thanh lý xe đạp điện cũ' : caseId === 'dau-gia' ? 'Xem tin thanh lý tranh sơn dầu học trò' : 'Xem tin bán vội iPhone 14 Pro Max',
+          desc: caseId === 'hem42' ? 'Xem tin thanh lý xe đạp điện cũ' : (caseId === 'du-thuyen' || caseId === 'con-tin' || caseId === 'dau-gia') ? 'Xem tin rao bán xe máy cũ của Nam bồi bàn' : 'Xem tin bán vội iPhone 14 Pro Max',
         })
       }
     }
@@ -165,7 +165,7 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
     }
 
     // 5. Nhà Thuốc Long Châu (CHỈ VỤ 3, 4, 5)
-    if (caseId === 'hem42' || caseId === 'hoi-cho' || caseId === 'chua-phap-hoa' || caseId === 'chung-cu' || caseId === 'cong-ty-x' || caseId === 'dau-gia' || caseId === 'an-mang' || caseId === 'biet-thu-x' || caseId === 'dau-gia') {
+    if (caseId === 'hem42' || caseId === 'hoi-cho' || caseId === 'chua-phap-hoa' || caseId === 'chung-cu' || caseId === 'cong-ty-x' || caseId === 'an-mang' || caseId === 'biet-thu-x' || caseId === 'du-thuyen' || caseId === 'con-tin' || caseId === 'dau-gia') {
       if (
         q.includes('thuốc') ||
         q.includes('long châu') ||
@@ -272,13 +272,13 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
     // Phân tích từ khoá tự nhiên theo đúng vụ án đang chơi
     if (u.includes('facebuc') || u.includes('fb') || u.includes('bảng tin') || u.includes('mạng xã hội')) {
       navigateTo('https://facebuc.vn')
-    } else if (caseId === 'hem42' && (u.includes('giaonhanh') || u.includes('ship') || u.includes('đơn hàng') || u.includes('gps'))) {
+    } else if ((caseId === 'hem42' || caseId === 'du-thuyen' || caseId === 'con-tin' || caseId === 'dau-gia') && (u.includes('giaonhanh') || u.includes('ship') || u.includes('đơn hàng') || u.includes('gps') || u.includes('ca nô') || u.includes('vali'))) {
       navigateTo('https://giaonhanh.vn')
-    } else if ((caseId === 'hem42' || caseId === 'tu-do' || caseId === 'cau-long') && (u.includes('chotot') || u.includes('rao vặt') || u.includes('bán') || u.includes('iphone') || u.includes('xe'))) {
+    } else if ((caseId === 'hem42' || caseId === 'tu-do' || caseId === 'cau-long' || caseId === 'du-thuyen' || caseId === 'con-tin' || caseId === 'dau-gia') && (u.includes('chotot') || u.includes('rao vặt') || u.includes('bán') || u.includes('iphone') || u.includes('xe'))) {
       navigateTo('https://chotot.vn')
     } else if (caseId !== 'hem42' && (u.includes('vietinbank') || u.includes('ngân hàng') || u.includes('sao kê') || u.includes('chuyển khoản'))) {
       navigateTo('https://vietinbank.vn')
-    } else if ((caseId === 'hoi-cho' || caseId === 'chung-cu' || caseId === 'an-mang') && (u.includes('nhathuoc') || u.includes('long châu') || u.includes('longchau') || u.includes('thuốc') || u.includes('độc'))) {
+    } else if ((caseId === 'hoi-cho' || caseId === 'chung-cu' || caseId === 'an-mang' || caseId === 'du-thuyen' || caseId === 'con-tin' || caseId === 'dau-gia') && (u.includes('nhathuoc') || u.includes('long châu') || u.includes('longchau') || u.includes('thuốc') || u.includes('độc') || u.includes('nhuộm'))) {
       navigateTo('https://nhathuoc-longchau42.vn')
     } else if (u.includes('camera-phuong') || u.includes('camera an ninh') || u.includes('camera')) {
       navigateTo('https://camera-phuong.gov.vn')

@@ -668,80 +668,115 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
   }
 
 
-  // Case 6: Nhà Đấu Giá Grand Palace - Triệu Đô
-  if (caseId === 'dau-gia' || caseId === 'hoi-hoa' || caseId === 'trieu-do') {
+  // Case 6: Du Thuyền Sông Hồng - Bắt Cóc Con Tin
+  if (caseId === 'du-thuyen' || caseId === 'con-tin' || caseId === 'dau-gia') {
     return [
       {
-        id: 'phan-an',
-        name: 'Phan An Phục Chế',
-        slug: 'phanan.artrestoration',
-        avatar: '🎨',
-        role: 'Chuyên gia phục chế tranh viện mỹ thuật',
-        bio: 'Khôi phục vẻ đẹp thời gian cho các kiệt tác hội họa cổ điển 🖌️',
+        id: 'minh-khang',
+        name: 'Minh Khang',
+        slug: 'khang.invest',
+        avatar: '🤵',
+        role: 'CEO Khang Holdings · Hôn phu Thảo My',
+        bio: 'Đầu tư mạo hiểm, dẫn đầu xu thế tài chính. Đêm sinh nhật tuyệt vời cùng em @thaomy ✨',
         livesIn: 'Hà Nội',
-        relationship: 'Độc thân',
-        coverColor: 'from-amber-700 to-stone-900',
+        relationship: 'Đã đính hôn',
+        coverColor: 'from-amber-600 to-slate-900',
         posts: [
           {
-            id: 'p-pa-1',
-            time: '19:40 · Hôm nay',
-            content: 'Đã hoàn thành công tác thẩm định bề mặt kiệt tác Ánh Trăng Biển Hồ trước giờ đấu giá. Một bức tranh vô tiền khoáng hậu!',
-            likes: 68,
+            id: 'p-mk-1',
+            time: '20:30 · Hôm nay',
+            content: 'Chúc mừng sinh nhật tuổi 22 của công chúa Thảo My trên du thuyền Sông Hồng Princess! Trọn đời bên em ❤️',
+            likes: 184,
             comments: [
               {
-                id: 'c-pa-1',
-                user: 'Giám Đốc Huy',
-                avatar: '👓',
-                time: '19:55',
-                content: 'Cảm ơn anh Phan An đã giúp bảo quản lớp lụa đặc biệt.',
+                id: 'c-mk-1',
+                user: 'Bà Phương',
+                avatar: '👠',
+                time: '20:45',
+                content: 'Hai đứa đẹp đôi quá, chúc các con hạnh phúc.',
               },
             ],
           },
         ],
       },
       {
-        id: 'trieu-vy',
-        name: 'Họa Sĩ Triệu Vy',
-        slug: 'trieuvy.painter',
-        avatar: '👩‍🎨',
-        role: 'Họa sĩ trường phái ấn tượng',
-        bio: 'Nghệ thuật là tự do biểu đạt. Đang chuẩn bị xưởng tranh mới 🎨',
+        id: 'thao-my',
+        name: 'Thảo My',
+        slug: 'thaomy.dongduong',
+        avatar: '💃',
+        role: 'Ái nữ tập đoàn Đông Dương',
+        bio: 'Cuộc sống là những chuyến đi và sự tự do. Đừng ai kiểm soát tôi!',
         livesIn: 'Hà Nội',
-        coverColor: 'from-rose-500 to-pink-700',
+        coverColor: 'from-purple-600 to-pink-800',
         posts: [
           {
-            id: 'p-tv-1',
-            time: '20:15 · Hôm nay',
-            content: 'Dọn dẹp xưởng vẽ cũ để chuẩn bị chuyển studio, thanh lý một số tranh tĩnh vật học trò vẽ giá rẻ trên Chợ Tốt cho bạn nào cần decor phòng nhé!',
-            likes: 42,
-            clueId: 'chotot-vy-tranh',
-            clueLabel: 'Triệu Vy thanh lý tranh tĩnh vật học trò',
+            id: 'p-tm-1',
+            time: '19:15 · Hôm nay',
+            content: 'Nhiều lúc chỉ muốn biến mất đến một nơi thật xa không ai biết mình là ai...',
+            likes: 92,
             comments: [],
           },
         ],
       },
       {
-        id: 'giang-phuc',
-        name: 'Giang Phúc IT',
-        slug: 'phuc.security.bms',
-        avatar: '💻',
-        role: 'Kỹ sư an ninh mạng & BMS toà nhà',
-        bio: 'Chuyên gia giải pháp BMS thông minh, camera AI và phòng cháy tự động.',
-        livesIn: 'Cầu Giấy, Hà Nội',
-        coverColor: 'from-blue-700 to-slate-900',
+        id: 'nam-boi-ban',
+        name: 'Nam Bồi Bàn',
+        slug: 'nam.student.hust',
+        avatar: '🧑‍🍳',
+        role: 'Nhân viên phục vụ part-time du thuyền',
+        bio: 'Sinh viên làm thêm kiếm tiền đóng học phí. Cố gắng mỗi ngày!',
+        livesIn: 'Hai Bà Trưng, Hà Nội',
+        coverColor: 'from-blue-600 to-indigo-800',
         posts: [
           {
-            id: 'p-gp-1',
-            time: '21:10 · Hôm nay',
-            content: 'Trực ca an ninh đêm tại Grand Palace. Hệ thống cảm biến hoạt động trơn tru 100%.',
-            likes: 15,
+            id: 'p-nam-1',
+            time: '18:00 · Hôm nay',
+            content: 'Vào ca phục vụ tiệc sinh nhật VIP tầng 3 du thuyền đêm nay. Mong một đêm suôn sẻ!',
+            likes: 22,
+            comments: [],
+          },
+        ],
+      },
+      {
+        id: 'thuyen-truong-hai',
+        name: 'Thuyền Trưởng Hải',
+        slug: 'hai.captain.songhong',
+        avatar: '⚓',
+        role: 'Thuyền trưởng du thuyền Sông Hồng Princess',
+        bio: '30 năm gắn bó với luồng lạch sông Hồng. An toàn hành khách là số một.',
+        livesIn: 'Hà Nội',
+        coverColor: 'from-cyan-700 to-blue-900',
+        posts: [
+          {
+            id: 'p-hai-1',
+            time: '18:30 · Hôm nay',
+            content: 'Du thuyền nhổ neo lúc 19:00 phục vụ hải trình tiệc sinh nhật theo hợp đồng. Thời tiết mặt sông êm đẹp.',
+            likes: 35,
+            comments: [],
+          },
+        ],
+      },
+      {
+        id: 'ba-phuong',
+        name: 'Bà Phương',
+        slug: 'phuong.le.luxury',
+        avatar: '👠',
+        role: 'Phu nhân Chủ tịch · Mẹ kế Thảo My',
+        bio: 'Cuộc sống thượng lưu, thời trang & trang sức đá quý.',
+        livesIn: 'Hà Nội',
+        coverColor: 'from-rose-600 to-slate-900',
+        posts: [
+          {
+            id: 'p-bp-1',
+            time: '20:00 · Hôm nay',
+            content: 'Bữa tiệc ấm cúng trên du thuyền riêng của gia đình. Chúc mừng con gái bước sang tuổi mới.',
+            likes: 110,
             comments: [],
           },
         ],
       },
     ]
   }
-
   return []
 }
 
@@ -891,29 +926,28 @@ export function getDeliveryOrders(caseId: string): DeliveryOrder[] {
   }
 
 
-  // Vụ 6: Nhà Đấu Giá Grand Palace - Đơn gửi ống bạt bản vẽ lúc 21:55
-  if (caseId === 'dau-gia' || caseId === 'hoi-hoa' || caseId === 'trieu-do') {
+  // Vụ 6: Du Thuyền Sông Hồng - Đơn vận chuyển hành lý ra phao số 4 lúc 21:30
+  if (caseId === 'du-thuyen' || caseId === 'con-tin' || caseId === 'dau-gia') {
     return [
       {
-        id: 'GN-99120',
-        driver: 'Ngô Quốc Bảo (GiaoNhanh Express)',
-        driverPhone: '0938xxx771',
-        time: '21:55',
-        pickup: 'Cổng Phụ Grand Palace (Người gửi: KTS Hoàng / Phan An)',
-        drop: 'Kho Ngoại Quan Cảng Bạch Đằng (Ống bạt bản vẽ kiến trúc A0)',
-        fee: '85.000đ',
+        id: 'GN-99801',
+        driver: 'Nguyễn Văn Đạt (GiaoNhanh Đường Thủy)',
+        driverPhone: '0912xxx883',
+        time: '21:30',
+        pickup: 'Bến Du Thuyền Sông Hồng (Minh Khang đặt)',
+        drop: 'Phao Neo Đậu Số 4 (2 Vali hàng hiệu của Thảo My)',
+        fee: '120.000đ',
         status: 'Đã hoàn tất',
-        clueId: 'giaonhanh-ong-bat',
-        clueLabel: 'Đơn gửi ống bạt bản vẽ kiến trúc lúc 21:55 chuyển ra cảng',
+        clueId: 'giaonhanh-ca-no',
+        clueLabel: 'Đơn GiaoNhanh GN-99801 chuyển 2 vali ra phao số 4 lúc 21:30',
         timeline: [
-          { time: '21:40', event: 'Khách hàng tạo đơn hoả tốc' },
-          { time: '21:55', event: 'Lấy hàng tại cổng phụ Grand Palace từ người đeo kính gọng vàng' },
-          { time: '22:15', event: 'Giao hàng thành công vào container kho ngoại quan cảng' },
+          { time: '21:15', event: 'Tiếp nhận đơn vận chuyển đường sông' },
+          { time: '21:30', event: 'Bốc 2 vali hành lý tại cầu tàu số 2' },
+          { time: '21:42', event: 'Chuyển giao lên ca nô cao tốc neo sẵn tại phao số 4' },
         ],
       },
     ]
   }
-
   return []
 }
 
@@ -981,25 +1015,24 @@ export function getChoTotListings(caseId: string): ChoTotListing[] {
 
   // Các vụ khác không có rao vặt Chợ Tốt
 
-  // Vụ 6: Triệu Vy đăng bán tranh tĩnh vật học trò
-  if (caseId === 'dau-gia' || caseId === 'hoi-hoa' || caseId === 'trieu-do') {
+  // Vụ 6: Nam bồi bàn rao bán xe Wave trả tiền trọ
+  if (caseId === 'du-thuyen' || caseId === 'con-tin' || caseId === 'dau-gia') {
     return [
       {
-        id: 'CT-601',
-        title: 'Thanh lý tranh sơn dầu tĩnh vật khổ 40x60 dọn xưởng vẽ',
-        price: '3.500.000 đ',
-        seller: 'Họa sĩ Triệu Vy (trieuvy.painter)',
-        phone: '0945xxx228',
-        time: '18:00 · 2 ngày trước',
-        location: 'Quận Ba Đình, Hà Nội',
-        category: 'Đồ sưu tầm, Đồ cổ',
-        desc: 'Dọn xưởng để chuyển studio mới, cần nhượng lại 3 bức tranh tĩnh vật lọ hoa do các bạn học viên vẽ bằng chất liệu sơn dầu truyền thống. Tranh trang trí quán cafe hoặc phòng khách.',
-        clueId: 'chotot-vy-tranh',
-        clueLabel: 'Triệu Vy rao bán tranh tĩnh vật học viên từ 2 ngày trước',
+        id: 'CT-688',
+        title: 'Bán xe Wave Alpha đỏ chính chủ sinh viên đi giữ gìn',
+        price: '6.000.000 đ',
+        seller: 'Nam Bồi Bàn (nam.student)',
+        phone: '0978xxx415',
+        time: '14:00 · 4 ngày trước',
+        location: 'Quận Hai Bà Trưng, Hà Nội',
+        category: 'Xe cộ, Xe máy',
+        desc: 'Cần tiền đóng học phí kỳ 1 và tiền phòng trọ nên nhượng lại xe Wave Alpha màu đỏ đăng ký 2019 máy móc êm ru, có bớt xăng xe cho bạn nào thiện chí.',
+        clueId: 'chotot-ban-xe',
+        clueLabel: 'Nam rao bán xe máy cũ từ 4 ngày trước đóng tiền học',
       },
     ]
   }
-
   return []
 }
 
@@ -1146,36 +1179,24 @@ export function getBankTransactions(caseId: string): BankTransaction[] {
     ]
   }
 
-  // Vụ 6: Phan An chuyển cọc 800 triệu cho kỹ sư Giang Phúc lúc 18:45
-  if (caseId === 'dau-gia' || caseId === 'hoi-hoa' || caseId === 'trieu-do') {
+  // Vụ 6: Lệnh chuyển 3 tỷ tiền chuộc vào tài khoản Minh Khang lúc 22:45
+  if (caseId === 'du-thuyen' || caseId === 'con-tin' || caseId === 'dau-gia') {
     return [
       {
-        id: 'TX-60882',
-        time: '18:45:10 · Thứ Bảy',
-        type: 'out',
-        amount: '-800.000.000 VND',
-        accountName: 'PHAN THE AN',
-        accountNo: '10338877xxxx',
-        bank: 'VietinBank',
-        balanceAfter: '142.500.000 VND',
-        content: 'PHAN AN CHUYEN COC HOP DONG BAO TRI HE THONG QUY 4 CHO GIANG PHUC',
-        clueId: 'vietinbank-chuyen-coc',
-        clueLabel: 'Sao kê VietinBank: Phan An chuyển 800 triệu cho Giang Phúc lúc 18:45',
-      },
-      {
-        id: 'TX-60885',
-        time: '19:10:00 · Thứ Bảy',
+        id: 'TX-77102',
+        time: '22:45:00 · Thứ Bảy',
         type: 'in',
-        amount: '+800.000.000 VND',
-        accountName: 'GIANG HOANG PHUC',
-        accountNo: '10995544xxxx',
+        amount: '+3.000.000.000 VND',
+        accountName: 'LE MINH KHANG',
+        accountNo: '10889966xxxx',
         bank: 'VietinBank',
-        balanceAfter: '825.300.000 VND',
-        content: 'NHAN TIEN COC TU PHAN THE AN',
+        balanceAfter: '3.045.200.000 VND',
+        content: 'CHUYEN TIEN CHUOC GIAI CUU CON GAI THAO MY THEO YEU CAU',
+        clueId: 'vietinbank-chuyen-tien-chuoc',
+        clueLabel: 'Sao kê VietinBank: 3 tỷ tiền chuộc đổ vào tài khoản Minh Khang lúc 22:45',
       },
     ]
   }
-
   return []
 }
 
@@ -1274,38 +1295,21 @@ export function getBmsLogs(caseId: string): BmsDeviceLog[] {
   }
 
 
-  // Vụ 6: BMS Toà Nhà Grand Palace
-  if (caseId === 'dau-gia' || caseId === 'hoi-hoa' || caseId === 'trieu-do') {
+  // Vụ 6: Radar Hàng Hải & Định Vị Du Thuyền Sông Hồng
+  if (caseId === 'du-thuyen' || caseId === 'con-tin' || caseId === 'dau-gia') {
     return [
       {
-        id: 'BMS-601',
-        time: '21:18:05',
-        device: 'Cảm biến báo khói thông minh Zone B2 (Hành lang phía sau)',
-        location: 'Khu vực kỹ thuật B2',
-        status: 'alert',
-        event: 'BÁO ĐỘNG CHÁY CƯỠNG CHẾ: Lệnh kích hoạt giả lập mã [FORCE_ALARM_2118] phát đi từ máy trạm Admin (Kỹ sư Giang Phúc). Hệ thống tự động kích hoạt kịch bản ngắt điện lưới để chuyển nguồn điện dự phòng!',
-        clueId: 'bms-bao-chay-gia',
-        clueLabel: 'BMS ghi nhận lệnh báo cháy cưỡng chế mã 2118 lúc 21:18',
-      },
-      {
-        id: 'BMS-602',
-        time: '21:19:00',
-        device: 'Hệ thống Camera Giám Sát Phòng Tranh Bảo Mật',
-        location: 'Phòng Trưng Bày Kim Cương Tầng 3',
+        id: 'RADAR-601',
+        time: '21:50:12',
+        device: 'Hệ thống định vị AIS & Radar mạn phải du thuyền',
+        location: 'Khu vực phao neo đậu số 4',
         status: 'warning',
-        event: 'MẤT KẾT NỐI CAMERA: Hệ thống giám sát hình ảnh phòng trưng bày chính bị gián đoạn 12 phút trong quá trình ổn định máy phát điện dự phòng.',
-      },
-      {
-        id: 'BMS-603',
-        time: '21:22:15',
-        device: 'Khóa cửa điện tử phòng bảo mật VIP',
-        location: 'Cửa thép 3 lớp phòng bảo mật',
-        status: 'normal',
-        event: 'MỞ CỬA BẰNG THẺ TỪ SAO CHÉP: Mã thẻ VIP-001 (Giám đốc Huy) được quẹt mở từ bên ngoài.',
+        event: 'Phát hiện mục tiêu di động: Ca nô cao tốc CN-082 tách bến hướng về phía hạ lưu với tốc độ 35 hải lý/h.',
+        clueId: 'camera-ben-thuyen',
+        clueLabel: 'Radar du thuyền: Ca nô CN-082 rời mạn thuyền lúc 21:50',
       },
     ]
   }
-
   return []
 }
 
@@ -1391,23 +1395,22 @@ export function getPharmacyRecords(caseId: string): PharmacyRecord[] {
   }
 
 
-  // Vụ 6: Phan An ký nhận Ketamine tại Nhà thuốc Long Châu
-  if (caseId === 'dau-gia' || caseId === 'hoi-hoa' || caseId === 'trieu-do') {
+  // Vụ 6: Thảo My mua thuốc ngủ và thuốc nhuộm tóc tại Nhà thuốc Long Châu
+  if (caseId === 'du-thuyen' || caseId === 'con-tin' || caseId === 'dau-gia') {
     return [
       {
-        id: 'LC-601',
-        time: '16:30 · Thứ Bảy (Hôm nay)',
-        customer: 'Phan Thế An (Viện Phục Chế Mỹ Thuật Cổ)',
+        id: 'LC-608',
+        time: '17:15 · Thứ Bảy (Hôm nay)',
+        customer: 'Nguyễn Thảo My (Khách hàng VIP)',
         category: 'prescription',
-        items: ['Dung dịch gây mê y tế Ketamine 10ml dạng tiêm', 'Dung môi hữu cơ tẩy màu chuyên dụng'],
-        totalPrice: '1.250.000 đ',
-        notes: 'Khách hàng xuất trình giấy giới thiệu viện phục chế mua dung môi và thuốc gây mê phục vụ bảo tồn tiêu bản sinh học. Ký nhận biên bản bàn giao dược phẩm đặc biệt: Phan Thế An.',
-        clueId: 'longchau-ketamine',
-        clueLabel: 'Hồ sơ Long Châu: Phan An ký mua thuốc gây mê Ketamine lúc 16:30',
+        items: ['Thuốc an thần gây ngủ liều nhẹ Rotunda', 'Hộp nhuộm tóc màu vàng đồng', 'Nước nhỏ mắt chống khô'],
+        totalPrice: '380.000 đ',
+        notes: 'Khách hàng thanh toán thẻ Visa. Mua thuốc nhuộm tóc để chuẩn bị cải trang ngoại hình trước khi trốn khỏi du thuyền.',
+        clueId: 'longchau-thuoc-an-than',
+        clueLabel: 'Hoá đơn Long Châu: Thảo My mua thuốc ngủ và nhuộm tóc lúc 17:15',
       },
     ]
   }
-
   return []
 }
 
@@ -1564,29 +1567,30 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
   }
 
   
-  // Vụ 6: Camera An Ninh Khu Vực Grand Palace
-  if (caseId === 'dau-gia' || caseId === 'hoi-hoa' || caseId === 'trieu-do') {
+  // Vụ 6: Camera Bến Thuyền & Ngã Ba Sông Hồng
+  if (caseId === 'du-thuyen' || caseId === 'con-tin' || caseId === 'dau-gia') {
     return [
       {
         id: 'CAM-601',
-        camName: 'Camera Sảnh Chính Grand Palace',
-        camLocation: 'Cửa ra vào đại sảnh mặt tiền',
-        time: '21:18 · Thứ Bảy',
-        description: 'Bảo vệ trưởng Hùng hốt hoảng ôm bình cứu hỏa chạy nhanh về phía khu B khi chuông báo cháy reo.',
-        objectsObserved: ['Bác Hùng bảo vệ', 'Bình cứu hỏa mini', 'Khu vực cầu thang B'],
+        camName: 'Camera Giám Sát Cầu Tàu Số 2 Bến Sông Hồng',
+        camLocation: 'Lối bậc thang phụ mạn du thuyền',
+        time: '21:50 · Thứ Bảy',
+        description: 'Phát hiện một phụ nữ dáng người thon cao trùm áo mưa cánh dơi màu tím bước nhanh từ bậc thang mạn thuyền xuống ca nô cao tốc CN-082 đang nổ máy chờ sẵn.',
+        objectsObserved: ['Phụ nữ trùm áo mưa tím (Thảo My)', 'Ca nô cao tốc CN-082', 'Phao neo đậu số 4'],
+        clueId: 'camera-ben-thuyen',
+        clueLabel: 'Camera CAM-601: Thảo My trùm áo mưa tím bước xuống ca nô lúc 21:50',
       },
       {
         id: 'CAM-602',
-        camName: 'Camera Ngã Tư Cửa Nam - Phố Tràng Thi',
-        camLocation: 'Góc đối diện cổng phụ Grand Palace',
-        time: '21:35 · Thứ Bảy',
-        description: 'Một nam giới đeo kính gọng vàng, mặc áo khoác măng-tô đen xách theo ống bạt hình trụ tròn màu đen (loại đựng bản vẽ kiến trúc) bước vội ra taxi công nghệ màu trắng.',
-        objectsObserved: ['Nam giới đeo kính gọng vàng (Phan An)', 'Ống bạt bản vẽ kiến trúc', 'Taxi biển số 29E-441.22'],
-        clueId: 'camera-cong-phu',
-        clueLabel: 'Camera CAM-602: Đối tượng xách ống bạt bước vội lên taxi lúc 21:35',
+        camName: 'Camera Quầy Bar Khoang VIP Tầng 3',
+        camLocation: 'Lối hành lang phòng vệ sinh tầng 3',
+        time: '22:05 · Thứ Bảy',
+        description: 'Minh Khang đi vội từ mạn thuyền vào, cố tình va mạnh vào người bồi bàn Nam rồi nhanh tay luồn vật gì đó vào túi tạp dề của Nam.',
+        objectsObserved: ['Minh Khang', 'Nam bồi bàn', 'Hành động nhét điện thoại vào tạp dề'],
+        clueId: 'sim-rac-tap-de',
+        clueLabel: 'Camera hành lang: Minh Khang lén nhét điện thoại vào tạp dề của Nam lúc 22:05',
       },
     ]
   }
-
   return []
 }
