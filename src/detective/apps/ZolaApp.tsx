@@ -1,4 +1,3 @@
-const TAGS: Record<string, string> = { chat: '💬', web: '🌐', photo: '📸', file: '🗂️' }
 
 import { useEffect, useRef, useState } from 'react'
 import { MacSound } from '../MacAudio'
@@ -10,60 +9,10 @@ export interface Ctx {
   onOpenUrl?: (url: string) => void
 }
 
-const SUSPECT_CONTRADICTIONS: Record<
-  string,
-  {
-    culpritClues: string[]
-    suspectName: string
-    breakdownMsg: string
-    breakdownDetail: string
-  }
-> = {
-  dung: {
-    culpritClues: ['don-hang-2147', 'anh-phan-chieu'],
-    suspectName: 'Dũng Shipper',
-    breakdownMsg: '“Ơ... các anh có dữ liệu định vị đơn hàng lúc 21:47 thật sao?! Cả ảnh kính cửa hàng lúc 21:58 nữa... Em... em khai thật, em dắt xe cô Lan đi...”',
-    breakdownDetail: 'Bóc trần lời khai nói dối về từ 21:15. Bằng chứng định vị GPS và ảnh phản chiếu đã buộc Dũng phải cúi đầu nhận tội!',
-  },
-  son: {
-    culpritClues: ['son-ao-do', 'son-no-tien', 'lo-hong-tu'],
-    suspectName: 'Sơn Nhặt Cầu',
-    breakdownMsg: '“Ảnh người áo đỏ đứng sát vách tủ đồ... Ai chụp được vậy?! Thôi được rồi, em nợ chị Hạnh 6 triệu quá hạn nên thò tay qua khe nóc tủ lấy trộm máy!”',
-    breakdownDetail: 'Bóc trần thủ đoạn luồn tay qua khe nóc tủ đồ và trang phục áo khoác đỏ lúc 20:20!',
-  },
-  trang: {
-    culpritClues: ['trang-giay', 'chuyen-tien-trng', 'tin-nhan-do'],
-    suspectName: 'Trang Bán Bánh',
-    breakdownMsg: '“Vết bùn đỏ trên giày trắng... sao anh biết bãi rác không có bùn đỏ?! Lệnh chuyển khoản 8 triệu... Em xin lỗi, em vay nợ nặng lãi của anh Tú nên mới cạy hòm!”',
-    breakdownDetail: 'Chứng cứ địa chất bùn đỏ sau bệ hòm quỹ và lệnh chuyển khoản 8 triệu lúc 21:32 đã đập tan mọi lời ngụy biện!',
-  },
-  dat: {
-    culpritClues: ['khai-ghi-am', 'tui-den', 'ma-ket', 'chuyen-khoan'],
-    suspectName: 'Quản lý Đạt',
-    breakdownMsg: '“Khải... lúc đó cậu ấy vẫn kịp bật ghi âm sao?! Tôi không cố ý hại Khải... Tôi bị chủ nợ Bảy ép đến chân tường rồi nên mới dàn cảnh mất điện!”',
-    breakdownDetail: 'File ghi âm 21:12 và túi đen chứa sổ nợ đã vạch mặt kẻ chủ mưu cướp két sắt!',
-  },
-  vu: {
-    culpritClues: ['nhiet-do-am-tra', 'di-chuc-truat-quyen', 'lo-doc-non-bo', 'then-cai-chi-cuoc'],
-    suspectName: 'Bác sĩ Vũ Hoàng',
-    breakdownMsg: '“Không thể nào... Làm sao các người biết nhiệt độ ấm trà thông minh đun từ 21:30... Và bản di chúc xé vụn... Kế hoạch phòng kín hoàn hảo của tôi...”',
-    breakdownDetail: 'Nhiệt động học tách trà vạch trần giờ chết giả 22:15, bản di chúc truất quyền thừa kế 30 tỷ và lọ độc Aconitine chứa vân tay đã kết tội tên sát nhân!',
-  },
-  yen: {
-    culpritClues: ['chuyen-khoan-yen', 'tin-nhan-bi-mat'],
-    suspectName: 'Yến Giúp Việc',
-    breakdownMsg: '“Em lạy anh công an... Bác sĩ Vũ chuyển cọc 200 triệu bảo em đúng 21:20 ngắt cầu dao tầng 2... Em chỉ đứng canh dưới bếp thôi mà!”',
-    breakdownDetail: 'Lệnh chuyển khoản cọc và tin nhắn Zola khôi phục đã lật tẩy vai trò đồng phạm tiếp tay ngắt camera!',
-  },
-}
-
 export function ZolaApp({ found, find, onOpenUrl }: Ctx) {
-  const { convs: CONVS, case: caseMeta, clues: CLUES } = usePack()
+  const { convs: CONVS, case: caseMeta } = usePack()
   const [active, setActive] = useState<string | null>(null)
   const [inspectToast, setInspectToast] = useState<{ text: string; success: boolean } | null>(null)
-  const [confrontOpen, setConfrontOpen] = useState(false)
-  const [selectedClueForConfront, setSelectedClueForConfront] = useState<string | null>(null)
-  const [confessedSuspects, setConfessedSuspects] = useState<Record<string, boolean>>({})
 
   const convs = CONVS.filter((c) => !c.requires || c.requires.every((r) => found.has(r)))
   const conv = convs.find((c) => c.id === active) ?? null
@@ -72,7 +21,7 @@ export function ZolaApp({ found, find, onOpenUrl }: Ctx) {
 
   useEffect(() => {
     if (scroller.current) scroller.current.scrollTop = scroller.current.scrollHeight
-  }, [active, msgs.length, confessedSuspects])
+  }, [active, msgs.length])
 
   useEffect(() => {
     if (!inspectToast) return
@@ -100,28 +49,6 @@ export function ZolaApp({ found, find, onOpenUrl }: Ctx) {
       MacSound.click()
       setInspectToast({
         text: '🔍 Lời khai này bình thường, không có dấu hiệu mâu thuẫn.',
-        success: false,
-      })
-    }
-  }
-
-  const handleConfront = () => {
-    if (!conv || !selectedClueForConfront) return
-    const contradiction = SUSPECT_CONTRADICTIONS[conv.id]
-
-    if (contradiction && contradiction.culpritClues.includes(selectedClueForConfront)) {
-      setConfessedSuspects((prev) => ({ ...prev, [conv.id]: true }))
-      setConfrontOpen(false)
-      setSelectedClueForConfront(null)
-      MacSound.confrontSuccess()
-      setInspectToast({
-        text: '⚡ ĐỐI CHẤT THÀNH CÔNG! Nghi phạm đã sụp đổ và khai nhận sự thật!',
-        success: true,
-      })
-    } else {
-      MacSound.confrontFail()
-      setInspectToast({
-        text: '❌ Đối tượng phản bác: "Bằng chứng này không chứng minh được tôi liên quan! Đừng vu khống!"',
         success: false,
       })
     }
@@ -199,21 +126,7 @@ export function ZolaApp({ found, find, onOpenUrl }: Ctx) {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          {SUSPECT_CONTRADICTIONS[conv.id] && (
-            <button
-              onClick={() => {
-                MacSound.click()
-                setConfrontOpen(true)
-              }}
-              className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-3 py-1 text-[12px] font-bold text-slate-950 shadow-sm hover:brightness-105 transition-all active:scale-95"
-              title="Đưa ra chứng cứ để đối chất và bẻ gãy lời khai"
-            >
-              <span>⚖️</span>
-              <span>Đối chất</span>
-            </button>
-          )}
-        </div>
+
       </div>
 
       {/* Chat Messages Container */}
@@ -320,98 +233,7 @@ export function ZolaApp({ found, find, onOpenUrl }: Ctx) {
           )
         })}
 
-        {/* Confession Card if suspect broken down */}
-        {confessedSuspects[conv.id] && SUSPECT_CONTRADICTIONS[conv.id] && (
-          <div className="my-3 rounded-2xl border-2 border-amber-500 bg-amber-50 p-4 shadow-md animate-fadeIn">
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="text-base">⚡</span>
-              <span className="text-[12px] font-bold uppercase tracking-wider text-amber-800">
-                ĐỐI CHẤT THÀNH CÔNG · NGHI PHẠM ĐÃ THÚ NHẬN!
-              </span>
-            </div>
-            <p className="text-[13px] font-semibold text-slate-900 leading-relaxed italic">
-              {SUSPECT_CONTRADICTIONS[conv.id].breakdownMsg}
-            </p>
-            <p className="mt-2 text-[11px] text-slate-700 border-t border-amber-200 pt-1.5">
-              {SUSPECT_CONTRADICTIONS[conv.id].breakdownDetail}
-            </p>
-          </div>
-        )}
       </div>
-
-      {/* Confrontation Drawer Modal */}
-      {confrontOpen && (
-        <div className="absolute inset-0 z-40 flex flex-col justify-end bg-black/40 backdrop-blur-2xs animate-fadeIn">
-          <div className="max-h-[85%] rounded-t-3xl border-t border-slate-200 bg-white p-4 shadow-2xl flex flex-col">
-            <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
-              <div className="flex items-center gap-2">
-                <span className="text-base">⚖️</span>
-                <div>
-                  <h4 className="text-[13px] font-bold text-slate-900">ĐỐI CHẤT: {conv.name}</h4>
-                  <p className="text-[11px] text-amber-700">Chọn 1 manh mối trong sổ để vạch trần lời ngụy biện của đối tượng</p>
-                </div>
-              </div>
-              <button
-                onClick={() => {
-                  MacSound.click()
-                  setConfrontOpen(false)
-                  setSelectedClueForConfront(null)
-                }}
-                className="grid h-7 w-7 place-items-center rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 text-xs font-bold"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="flex-1 overflow-y-auto py-3 space-y-2 max-h-[45vh]">
-              {found.size === 0 ? (
-                <div className="p-6 text-center text-slate-500 text-[12px]">
-                  Sổ tay hiện chưa có manh mối nào. Hãy khám nghiệm hiện trường hoặc đọc tin nhắn trước!
-                </div>
-              ) : (
-                Array.from(found).map((cid) => {
-                  const c = CLUES[cid]
-                  if (!c) return null
-                  const isSelected = selectedClueForConfront === cid
-                  return (
-                    <button
-                      key={cid}
-                      onClick={() => {
-                        MacSound.click()
-                        setSelectedClueForConfront(cid)
-                      }}
-                      className={`w-full text-left p-3 rounded-xl border transition-all flex items-start gap-2.5 ${
-                        isSelected
-                          ? 'border-amber-500 bg-amber-50/80 shadow-2xs'
-                          : 'border-slate-200 bg-slate-50/60 hover:bg-slate-100'
-                      }`}
-                    >
-                      <span className="text-base mt-0.5">{TAGS[c.tag] ?? '📌'}</span>
-                      <div className="min-w-0 flex-1">
-                        <p className={`text-[12px] font-bold ${isSelected ? 'text-amber-900' : 'text-slate-800'}`}>
-                          {c.title}
-                        </p>
-                        <p className="text-[11px] text-slate-500 line-clamp-2 mt-0.5">{c.detail}</p>
-                      </div>
-                    </button>
-                  )
-                })
-              )}
-            </div>
-
-            <div className="pt-2.5 border-t border-slate-200">
-              <button
-                onClick={handleConfront}
-                disabled={!selectedClueForConfront}
-                className="w-full py-2.5 rounded-xl font-bold text-[13px] bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 hover:brightness-105 disabled:opacity-40 transition-all shadow-md flex items-center justify-center gap-1.5"
-              >
-                <span>⚡</span>
-                <span>Trình bằng chứng này để bẻ gãy lời khai</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Floating feedback toast */}
       {inspectToast && (

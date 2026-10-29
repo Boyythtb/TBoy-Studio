@@ -1,284 +1,254 @@
-import { useEffect, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { MacSound } from '../MacAudio'
 import { usePack } from '../pack'
 
-const TAGS: Record<string, string> = { chat: '💬', web: '🌐', photo: '📸', file: '🗂️' }
-
-const EVIDENCE_SUSPECT_LINKS: Record<string, { suspectId: string; reason: string }[]> = {
-  'don-hang-2147': [{ suspectId: 'dung', reason: 'Định vị GPS chứng minh Dũng nhận đơn tại Hẻm 42 đúng 21:47!' }],
-  'anh-phan-chieu': [{ suspectId: 'dung', reason: 'Mặt kính cửa hàng phản chiếu Dũng dắt xe xanh mint lúc 21:58!' }],
-  'tin-nhan-nhap': [{ suspectId: 'dung', reason: 'Bản nháp tin nhắn trong máy Dũng: "Cô Lan ơi mai em trả xe"!' }],
-  'dung-khai-21h15': [{ suspectId: 'dung', reason: 'Dũng khai về phòng từ 21:15 để ngụy tạo chứng cứ ngoại phạm!' }],
-  'hung-cho-vay': [{ suspectId: 'dung', reason: 'Dũng nợ tiền tiệm sửa xe Hùng nên túng quẫn làm liều!' }],
-
-  'son-ao-do': [{ suspectId: 'son', reason: 'Ảnh chụp lúc 20:20: Sơn mặc áo khoác đỏ đứng sát vách tủ đồ!' }],
-  'son-no-tien': [{ suspectId: 'son', reason: 'Sơn nợ chị Hạnh 6 triệu quá hạn, nháp rao bán máy 5 triệu!' }],
-  'lo-hong-tu': [{ suspectId: 'son', reason: 'Sơn lợi dụng khe hở nóc tủ để thò tay rút điện thoại!' }],
-
-  'trang-giay': [{ suspectId: 'trang', reason: 'Giày vải trắng của Trang dính bùn đỏ chỉ có ở sau bệ hòm quỹ!' }],
-  'chuyen-tien-trng': [{ suspectId: 'trang', reason: 'Trang chuyển khoản gấp 8 triệu cho chủ nợ Tú lúc 21:32!' }],
-  'tin-nhan-do': [{ suspectId: 'trang', reason: 'Tin nhắn hẹn chủ nợ: "Tối nay xong chuyển 8tr"!' }],
-  'hop-den': [{ suspectId: 'trang', reason: 'Hộp đèn pin mang chữ "T" của Trang in dấu tay bùn cạnh hòm quỹ!' }],
-
-  'khai-ghi-am': [{ suspectId: 'dat', reason: 'Bản ghi âm 21:12 ghi lại khoảnh khắc Đạt tấn công Khải ở tầng hầm!' }],
-  'tui-den': [{ suspectId: 'dat', reason: 'Đạt ném túi đen chứa găng tay và sổ nợ vào thùng rác lúc 21:30!' }],
-  'ma-ket': [{ suspectId: 'dat', reason: 'Đạt đổi mã két thành 2147 và trực tiếp nhập mã mở két!' }],
-  'chuyen-khoan': [{ suspectId: 'dat', reason: 'Đạt duyệt chuyển khoản 200 triệu công ty cho chủ nợ Bảy!' }],
-  'dat-giay': [{ suspectId: 'dat', reason: 'Camera hẻm sau quay cảnh Đạt xách túi đen rời chung cư!' }],
-
-  'nhiet-do-am-tra': [{ suspectId: 'vu', reason: 'Ấm trà đun lúc 21:30 chứng minh Vũ đập vỡ đồng hồ ngụy tạo alibi 22:15!' }],
-  'di-chuc-truat-quyen': [{ suspectId: 'vu', reason: 'Động cơ sát hại: Ông Khang truất quyền thừa kế 30 tỷ của Vũ!' }],
-  'lo-doc-non-bo': [{ suspectId: 'vu', reason: 'Dấu vân tay ngón trỏ của Bác sĩ Vũ in trên lọ độc Aconitine!' }],
-  'then-cai-chi-cuoc': [{ suspectId: 'vu', reason: 'Vũ dùng chỉ cước câu cá giật then cài cửa sổ tạo hiện trường phòng kín!' }],
-  'vet-bun-ban-cong': [{ suspectId: 'vu', reason: 'Vết bùn đế giày da Pierre Cardin size 42 của Vũ trên thành ban công!' }],
-  'chuyen-khoan-yen': [
-    { suspectId: 'yen', reason: 'Yến nhận cọc 200 triệu từ Vũ để tiếp tay ngắt điện!' },
-    { suspectId: 'vu', reason: 'Vũ chuyển cọc 200 triệu mua chuộc người giúp việc!' },
-  ],
-  'tin-nhan-bi-mat': [
-    { suspectId: 'yen', reason: 'Yến nhận lệnh ngắt cầu dao tầng 2 lúc 21:20 và canh cửa!' },
-    { suspectId: 'vu', reason: 'Vũ nhắn tin chỉ đạo Yến ngắt cầu dao camera!' },
-  ],
+const TAG_CONFIG: Record<string, { label: string; icon: string; badgeClass: string }> = {
+  chat: { label: 'Tin nhắn & Lời khai', icon: '💬', badgeClass: 'bg-blue-50 text-blue-700 border-blue-200' },
+  web: { label: 'Dữ liệu web & Mạng', icon: '🌐', badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+  photo: { label: 'Hình ảnh & Hiện trường', icon: '📸', badgeClass: 'bg-purple-50 text-purple-700 border-purple-200' },
+  file: { label: 'Tài liệu hồ sơ', icon: '🗂️', badgeClass: 'bg-amber-50 text-amber-700 border-amber-200' },
 }
 
 export function NotesApp({ found }: { found: Set<string> }) {
-  const { clues: CLUES, suspects: SUSPECTS } = usePack()
-  const [tab, setTab] = useState<'mindmap' | 'list'>('mindmap')
-  const [selectedSuspect, setSelectedSuspect] = useState<string | null>(null)
-  const [selectedClue, setSelectedClue] = useState<string | null>(null)
-  const [links, setLinks] = useState<{ suspectId: string; clueId: string; reason: string }[]>([])
-  const [feedback, setFeedback] = useState<{ text: string; success: boolean } | null>(null)
+  const { clues: CLUES, case: CASE_META } = usePack()
+  const [filterTag, setFilterTag] = useState<string>('all')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [starredClues, setStarredClues] = useState<Set<string>>(() => new Set())
+  const [personalNote, setPersonalNote] = useState('')
 
-  const list = Array.from(found)
+  const list = Array.from(found).filter((id) => CLUES[id])
+  const totalClues = Object.keys(CLUES).length
+  const progressPercent = Math.round((list.length / Math.max(1, totalClues)) * 100)
 
-  useEffect(() => {
-    if (!feedback) return
-    const t = setTimeout(() => setFeedback(null), 2500)
-    return () => clearTimeout(t)
-  }, [feedback])
+  // Filtered clues
+  const filteredList = useMemo(() => {
+    return list.filter((cid) => {
+      const c = CLUES[cid]
+      if (!c) return false
+      if (filterTag !== 'all' && c.tag !== filterTag) return false
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase()
+        return c.title.toLowerCase().includes(q) || c.detail.toLowerCase().includes(q)
+      }
+      return true
+    })
+  }, [list, CLUES, filterTag, searchQuery])
 
-  const handleCreateLink = () => {
-    if (!selectedSuspect || !selectedClue) return
-
-    if (links.some((l) => l.suspectId === selectedSuspect && l.clueId === selectedClue)) {
-      setFeedback({ text: '📌 Liên kết này đã được thiết lập từ trước.', success: true })
-      return
-    }
-
-    const matches = EVIDENCE_SUSPECT_LINKS[selectedClue]
-    const match = matches?.find((m) => m.suspectId === selectedSuspect)
-
-    if (match) {
-      MacSound.confrontSuccess()
-      setLinks((prev) => [...prev, { suspectId: selectedSuspect, clueId: selectedClue, reason: match.reason }])
-      setSelectedClue(null)
-      setFeedback({ text: '✨ XÂU CHUỖI THÀNH CÔNG! Đã liên kết chứng cứ buộc tội đanh thép!', success: true })
-    } else {
-      MacSound.confrontFail()
-      setFeedback({ text: '❌ Chưa đủ cơ sở trực tiếp để gắn manh mối này với đối tượng đã chọn.', success: false })
-    }
+  const toggleStar = (cid: string) => {
+    MacSound.click()
+    setStarredClues((prev) => {
+      const next = new Set(prev)
+      if (next.has(cid)) next.delete(cid)
+      else next.add(cid)
+      return next
+    })
   }
 
+  // Count by tag
+  const tagCounts = useMemo(() => {
+    const counts: Record<string, number> = { all: list.length, chat: 0, web: 0, photo: 0, file: 0 }
+    list.forEach((cid) => {
+      const tag = CLUES[cid]?.tag
+      if (tag && counts[tag] !== undefined) counts[tag]++
+    })
+    return counts
+  }, [list, CLUES])
+
   return (
-    <div className="flex h-full flex-col bg-[#ffffff] text-[#1d1d1f] font-['Be_Vietnam_Pro'] relative">
-      <div className="flex items-center justify-between border-b border-[#00000012] bg-[#f8f9fa] px-4 py-2.5">
-        <div className="flex items-center gap-2">
-          <p className="text-[13px] font-bold text-slate-900 tracking-tight">Sổ tay điều tra</p>
-          <span className="rounded-full bg-blue-100 border border-blue-200 px-2.5 py-0.5 text-[11px] font-bold text-blue-800">
-            {list.length}/{Object.keys(CLUES).length} manh mối
-          </span>
-        </div>
-
-        <div className="flex items-center gap-1 bg-slate-200/80 rounded-xl p-0.5">
-          <button
-            onClick={() => {
-              MacSound.click()
-              setTab('mindmap')
-            }}
-            className={`rounded-lg px-2.5 py-1 text-[11px] font-bold transition-all flex items-center gap-1 ${
-              tab === 'mindmap' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-600 hover:text-black'
-            }`}
-          >
-            <span>🕸️</span> Sơ đồ suy luận
-          </button>
-          <button
-            onClick={() => {
-              MacSound.click()
-              setTab('list')
-            }}
-            className={`rounded-lg px-2.5 py-1 text-[11px] font-bold transition-all flex items-center gap-1 ${
-              tab === 'list' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-600 hover:text-black'
-            }`}
-          >
-            <span>📋</span> Danh sách
-          </button>
-        </div>
-      </div>
-
-      {feedback && (
-        <div
-          className={`absolute bottom-3 left-1/2 -translate-x-1/2 z-40 max-w-[90%] rounded-2xl px-4 py-2 text-[12px] font-bold shadow-2xl backdrop-blur-md border pointer-events-none transition-all ${
-            feedback.success
-              ? 'bg-emerald-900 text-white border-emerald-700'
-              : 'bg-slate-900 text-white border-slate-700'
-          }`}
-        >
-          {feedback.text}
-        </div>
-      )}
-
-      {tab === 'mindmap' && (
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#f8f9fa]">
-          <div className="rounded-2xl border border-blue-200 bg-blue-50/70 p-3 shadow-2xs">
-            <p className="text-[11px] font-bold text-blue-900 uppercase tracking-wider flex items-center gap-1.5">
-              <span>🕸️</span> BẢNG NỐI DÂY CHỨNG CỨ BUỘC TỘI
-            </p>
-            <p className="mt-1 text-[12px] text-blue-950">
-              Chọn 1 <strong className="text-black">Nghi phạm</strong> + 1 <strong className="text-black">Manh mối</strong> rồi nhấn nút <strong className="text-blue-700">“Nối dây chứng cứ”</strong> để tạo lập luận.
-            </p>
-          </div>
-
+    <div className="flex h-full flex-col bg-[#fbfbfa] text-[#1d1d1f] font-['Be_Vietnam_Pro'] select-text">
+      {/* Sổ tay Header chuẩn macOS Notes */}
+      <div className="border-b border-slate-200 bg-white px-4 py-3 shadow-2xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
-              1. Chọn đối tượng tình nghi:
-            </p>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {SUSPECTS.map((s) => {
-                const isSelected = selectedSuspect === s.id
-                const suspectLinks = links.filter((l) => l.suspectId === s.id)
-                return (
-                  <button
-                    key={s.id}
-                    onClick={() => {
-                      MacSound.click()
-                      setSelectedSuspect(s.id)
-                    }}
-                    className={`p-2.5 rounded-xl border text-left transition-all ${
-                      isSelected
-                        ? 'border-blue-500 bg-blue-50 shadow-2xs ring-2 ring-blue-500/20'
-                        : 'border-slate-200 bg-white hover:bg-slate-100'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="text-xl">{s.avatar}</span>
-                      <div className="min-w-0 flex-1">
-                        <p className={`truncate text-[12px] font-bold ${isSelected ? 'text-blue-700' : 'text-slate-900'}`}>
-                          {s.name}
-                        </p>
-                        <p className="truncate text-[10px] text-slate-500">{s.role}</p>
-                      </div>
-                    </div>
-                    {suspectLinks.length > 0 && (
-                      <div className="mt-1.5 flex items-center gap-1 text-[10px] font-bold text-emerald-700">
-                        <span>🔴 {suspectLinks.length} liên kết</span>
-                      </div>
-                    )}
-                  </button>
-                )
-              })}
+            <div className="flex items-center gap-2">
+              <span className="text-xl">📓</span>
+              <h2 className="text-[14px] font-bold text-slate-900 tracking-tight">Sổ Tay Điều Tra</h2>
+              <span className="text-[11px] font-medium text-slate-400">· {CASE_META.no}</span>
             </div>
+            <p className="text-[11px] text-slate-500 mt-0.5 truncate max-w-sm">
+              {CASE_META.title}
+            </p>
           </div>
 
-          <div>
-            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
-              2. Chọn manh mối đối chiếu:
-            </p>
-            {list.length === 0 ? (
-              <p className="text-[12px] text-slate-400 italic p-3 text-center">
-                Chưa có manh mối nào trong sổ tay. Hãy khám nghiệm hiện trường hoặc đọc tin nhắn trước!
-              </p>
-            ) : (
-              <div className="flex gap-2 overflow-x-auto pb-1">
-                {list.map((cid) => {
-                  const c = CLUES[cid]
-                  if (!c) return null
-                  const isSelected = selectedClue === cid
-                  const isLinkedWithCurrent = selectedSuspect
-                    ? links.some((l) => l.suspectId === selectedSuspect && l.clueId === cid)
-                    : false
+          {/* Progress bar */}
+          <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 self-start sm:self-auto">
+            <div className="w-24 sm:w-28 h-2 bg-slate-200 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full transition-all duration-300" 
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+            <span className="text-[11px] font-bold text-slate-700 whitespace-nowrap">
+              {list.length}/{totalClues} manh mối ({progressPercent}%)
+            </span>
+          </div>
+        </div>
 
-                  return (
-                    <button
-                      key={cid}
-                      onClick={() => {
-                        MacSound.click()
-                        setSelectedClue(cid)
-                      }}
-                      className={`min-w-[190px] max-w-[210px] shrink-0 p-2.5 rounded-xl border text-left transition-all ${
-                        isSelected
-                          ? 'border-amber-500 bg-amber-50 shadow-2xs'
-                          : isLinkedWithCurrent
-                          ? 'border-emerald-400 bg-emerald-50'
-                          : 'border-slate-200 bg-white hover:bg-slate-100'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm">{TAGS[c.tag] ?? '📌'}</span>
-                        {isLinkedWithCurrent && (
-                          <span className="text-[10px] font-bold text-emerald-700">✓ Đã nối</span>
-                        )}
-                      </div>
-                      <p className={`mt-1 truncate text-[12px] font-bold ${isSelected ? 'text-amber-900' : 'text-slate-900'}`}>
-                        {c.title}
-                      </p>
-                      <p className="mt-0.5 line-clamp-2 text-[11px] text-slate-500 leading-snug">{c.detail}</p>
-                    </button>
-                  )
-                })}
-              </div>
+        {/* Search & Categories Bar */}
+        <div className="mt-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+          <div className="relative flex-1">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs">🔍</span>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Tìm kiếm nội dung bằng chứng trong sổ..."
+              className="w-full rounded-xl bg-slate-100 border border-transparent px-3 py-1.5 pl-8 text-[12px] text-slate-800 outline-none focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-500/15 transition-all placeholder:text-slate-400"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs"
+              >
+                ✕
+              </button>
             )}
           </div>
 
-          <button
-            onClick={handleCreateLink}
-            disabled={!selectedSuspect || !selectedClue}
-            className="w-full py-2.5 rounded-xl font-bold text-[13px] bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-40 transition-all shadow-sm flex items-center justify-center gap-1.5"
-          >
-            <span>🔗</span>
-            <span>Nối dây chứng cứ buộc tội</span>
-          </button>
-
-          {links.length > 0 && (
-            <div className="pt-2 border-t border-slate-200 space-y-2">
-              <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                Chuỗi lập luận đã chứng minh ({links.length}):
-              </p>
-              {links.map((l, idx) => (
-                <div key={idx} className="p-2.5 rounded-xl border border-emerald-300 bg-emerald-50 text-[12px]">
-                  <p className="font-bold text-emerald-900">
-                    {SUSPECTS.find((s) => s.id === l.suspectId)?.name} ➔ {CLUES[l.clueId]?.title}
-                  </p>
-                  <p className="text-slate-700 mt-0.5">{l.reason}</p>
-                </div>
-              ))}
-            </div>
-          )}
+          {/* Filter Pills */}
+          <div className="flex items-center gap-1 overflow-x-auto pb-0.5 sm:pb-0 scrollbar-none">
+            <button
+              type="button"
+              onClick={() => {
+                MacSound.click()
+                setFilterTag('all')
+              }}
+              className={`rounded-lg px-2.5 py-1 text-[11px] font-semibold transition-all whitespace-nowrap ${
+                filterTag === 'all'
+                  ? 'bg-slate-900 text-white shadow-2xs'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              Tất cả ({tagCounts.all})
+            </button>
+            {(['chat', 'web', 'photo', 'file'] as const).map((tagKey) => {
+              const cfg = TAG_CONFIG[tagKey]
+              const count = tagCounts[tagKey] ?? 0
+              return (
+                <button
+                  key={tagKey}
+                  type="button"
+                  onClick={() => {
+                    MacSound.click()
+                    setFilterTag(tagKey)
+                  }}
+                  className={`rounded-lg px-2.5 py-1 text-[11px] font-semibold transition-all flex items-center gap-1 whitespace-nowrap ${
+                    filterTag === tagKey
+                      ? 'bg-blue-600 text-white shadow-2xs'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  <span>{cfg.icon}</span>
+                  <span className="hidden md:inline">{cfg.label}</span>
+                  <span>({count})</span>
+                </button>
+              )
+            })}
+          </div>
         </div>
-      )}
+      </div>
 
-      {tab === 'list' && (
-        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#f8f9fa]">
-          {list.length === 0 ? (
-            <p className="text-[12px] text-slate-400 text-center p-6">Chưa có manh mối nào trong sổ tay.</p>
-          ) : (
-            list.map((cid) => {
+      {/* Sổ tay Content Area */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {list.length === 0 ? (
+          <div className="flex flex-col items-center justify-center p-12 text-center">
+            <span className="grid h-16 w-16 place-items-center rounded-3xl bg-slate-100 border border-slate-200 text-3xl shadow-2xs mb-3">
+              📝
+            </span>
+            <h3 className="text-[14px] font-bold text-slate-800">Sổ tay hiện đang trống</h3>
+            <p className="mt-1 max-w-sm text-[12px] text-slate-500 leading-relaxed">
+              Hãy mở ứng dụng <strong>Zola</strong> để đọc tin nhắn khai báo hoặc tra cứu thông tin trên <strong>Cộc Cộc</strong> để thu thập chứng cứ đầu tiên.
+            </p>
+          </div>
+        ) : filteredList.length === 0 ? (
+          <div className="p-8 text-center text-slate-400 text-[12px]">
+            Không tìm thấy manh mối nào phù hợp với bộ lọc hiện tại.
+          </div>
+        ) : (
+          <div className="grid gap-3 sm:grid-cols-2">
+            {filteredList.map((cid) => {
               const c = CLUES[cid]
               if (!c) return null
+              const isStarred = starredClues.has(cid)
+              const cfg = TAG_CONFIG[c.tag] || {
+                label: 'Khác',
+                icon: '📌',
+                badgeClass: 'bg-slate-100 text-slate-700 border-slate-200',
+              }
+
               return (
-                <div key={cid} className="p-3.5 rounded-xl border border-slate-200 bg-white shadow-2xs">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm">{TAGS[c.tag] ?? '📌'}</span>
-                    <p className="text-[13px] font-bold text-slate-900">{c.title}</p>
+                <div
+                  key={cid}
+                  className={`group relative rounded-2xl border p-3.5 transition-all bg-white shadow-2xs hover:shadow-md ${
+                    isStarred ? 'border-amber-400 ring-2 ring-amber-400/20' : 'border-slate-200 hover:border-slate-300'
+                  }`}
+                >
+                  {/* Card Header */}
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-bold border ${cfg.badgeClass}`}>
+                        <span>{cfg.icon}</span>
+                        <span>{cfg.label}</span>
+                      </span>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => toggleStar(cid)}
+                      className={`grid h-7 w-7 place-items-center rounded-lg transition-colors ${
+                        isStarred
+                          ? 'text-amber-500 hover:text-amber-600'
+                          : 'text-slate-300 hover:text-amber-400 hover:bg-slate-100'
+                      }`}
+                      title={isStarred ? 'Bỏ đánh dấu quan trọng' : 'Đánh dấu bằng chứng quan trọng'}
+                    >
+                      <span className="text-sm">{isStarred ? '★' : '☆'}</span>
+                    </button>
                   </div>
-                  <p className="mt-1 text-[12px] text-slate-600 leading-relaxed">{c.detail}</p>
+
+                  {/* Title & Detail */}
+                  <h4 className="mt-2 text-[13px] font-bold text-slate-900 tracking-tight leading-snug">
+                    {c.title}
+                  </h4>
+                  <p className="mt-1.5 text-[12px] text-slate-600 leading-relaxed">
+                    {c.detail}
+                  </p>
                 </div>
               )
-            })
-          )}
+            })}
+          </div>
+        )}
+
+        {/* Detective Personal Thought Note */}
+        {list.length > 0 && (
+          <div className="rounded-2xl border border-amber-200 bg-amber-50/60 p-3.5 space-y-2 mt-4">
+            <div className="flex items-center justify-between">
+              <p className="text-[11px] font-bold text-amber-900 uppercase tracking-wider flex items-center gap-1.5">
+                <span>✍️</span> Ghi chú nhận định cá nhân của bạn:
+              </p>
+              <span className="text-[10px] text-amber-700/80">Tự do ghi chép suy đoán</span>
+            </div>
+            <textarea
+              value={personalNote}
+              onChange={(e) => setPersonalNote(e.target.value)}
+              placeholder="Gõ suy luận của bạn tại đây... (VD: Dũng nói dối giờ về phòng, đối chiếu camera lúc 21:58 thấy bóng người...)"
+              rows={2}
+              className="w-full rounded-xl bg-white/90 border border-amber-200/80 p-2.5 text-[12px] text-slate-800 outline-none focus:border-amber-500 focus:bg-white resize-none leading-relaxed placeholder:text-slate-400"
+            />
+          </div>
+        )}
+
+        {/* Footer Warning / Rule */}
+        <div className="rounded-xl border border-slate-200/80 bg-slate-100/70 p-3 text-[11px] text-slate-500 leading-relaxed">
+          <p className="font-semibold text-slate-700 flex items-center gap-1">
+            <span>⚖️</span> Nguyên tắc phá án:
+          </p>
+          <p className="mt-0.5">
+            Hãy tự mình đối chiếu các mâu thuẫn thời gian, lời khai và hiện trường để tìm ra kẻ nói dối. Khi đã chắc chắn 100%, hãy mở ứng dụng <strong>Hồ sơ</strong> để tiến hành cáo buộc hung thủ. Bạn chỉ có số lượt cáo buộc có hạn!
+          </p>
         </div>
-      )}
+      </div>
     </div>
   )
 }
-
-/* --------------------------------------------------------------- file */
