@@ -257,13 +257,17 @@ export function ZolaApp({ found, find, onOpenUrl }: Ctx) {
                 )}
 
                 <div
+                  onClick={() => {
+                    if (m.from === 'them') handlePinMsg(m)
+                  }}
                   className={`group/msg relative rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed shadow-xs transition-all ${
                     m.from === 'me' 
                       ? 'bg-blue-600 text-white rounded-tr-xs' 
                       : isClueFound
-                      ? 'bg-emerald-50 text-slate-800 rounded-tl-xs border border-emerald-300'
-                      : 'bg-white text-slate-800 rounded-tl-xs border border-slate-200/80'
+                      ? 'bg-emerald-50 text-slate-800 rounded-tl-xs border border-emerald-300 ring-1 ring-emerald-200/50 cursor-pointer'
+                      : 'bg-white text-slate-800 rounded-tl-xs border border-slate-200/80 hover:border-blue-300 active:bg-slate-50 cursor-pointer'
                   }`}
+                  title={m.from === 'them' ? 'Chạm để kiểm tra & ghim lời khai' : undefined}
                 >
                   {m.text.split(/((?:https?:\/\/)?[a-zA-Z0-9-]+\.(?:vn|com)[^\s]*)/g).map((chunk, idx) => {
                     if (chunk.match(/^(?:https?:\/\/)?[a-zA-Z0-9-]+\.(?:vn|com)[^\s]*$/)) {
@@ -286,22 +290,6 @@ export function ZolaApp({ found, find, onOpenUrl }: Ctx) {
                     }
                     return chunk
                   })}
-
-                  {/* Nút Ghim Manh Mối Chủ Động khi hover */}
-                  {m.from === 'them' && (
-                    <button
-                      onClick={() => handlePinMsg(m)}
-                      className={`ml-2 inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-semibold transition-all ${
-                        isClueFound
-                          ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                          : 'opacity-40 hover:opacity-100 bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300'
-                      }`}
-                      title={isClueFound ? 'Đã ghim trong sổ tay' : 'Ghim lời khai khả nghi vào sổ'}
-                    >
-                      <span>📌</span>
-                      <span>{isClueFound ? 'Đã ghim' : 'Ghim'}</span>
-                    </button>
-                  )}
                 </div>
 
                 {m.card && (
@@ -317,9 +305,15 @@ export function ZolaApp({ found, find, onOpenUrl }: Ctx) {
                 )}
 
                 {m.time && (
-                  <p className={`mt-1 text-[10px] font-medium text-slate-400 ${m.from === 'me' ? 'text-right' : 'text-left'}`}>
-                    {m.time} {m.from === 'me' && <span className="text-blue-600">✓✓</span>}
-                  </p>
+                  <div className={`mt-1 flex items-center gap-1.5 text-[10px] font-medium text-slate-400 ${m.from === 'me' ? 'justify-end' : 'justify-start'}`}>
+                    <span>{m.time}</span>
+                    {m.from === 'me' && <span className="text-blue-600 font-bold">✓✓</span>}
+                    {isClueFound && (
+                      <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-100 text-emerald-800 px-1.5 py-0.2 text-[9px] font-semibold border border-emerald-200">
+                        <span>📌</span> Đã ghim
+                      </span>
+                    )}
+                  </div>
                 )}
               </div>
             </div>

@@ -72,6 +72,7 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
     status === 'won' ? 'win' : status === 'lost' ? 'lost' : null,
   )
   const width = useWidth()
+  const isMobile = width < 768
 
   useEffect(() => {
     if (!toast) return
@@ -183,32 +184,33 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
         }}
       >
         {/* macOS Top Menu Bar */}
-        <div className="relative z-40 flex h-8 items-center gap-3.5 border-b border-white/[0.08] bg-[#161822]/80 px-4 text-[13px] text-slate-300 backdrop-blur-2xl">
-          <div className="flex items-center gap-3">
+        <div className="relative z-40 flex h-8 items-center gap-2 sm:gap-3.5 border-b border-white/[0.08] bg-[#161822]/80 px-2.5 sm:px-4 text-[13px] text-slate-300 backdrop-blur-2xl">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <AppleLogo className="h-3.5 w-3.5 fill-white" />
-            <span className="font-bold text-white text-[13px]">macQuê</span>
+            <span className="font-bold text-white text-[12px] sm:text-[13px]">macQuê</span>
             <span className="hidden sm:inline text-slate-300 hover:text-white transition-colors cursor-default text-[12px]">Tệp</span>
             <span className="hidden sm:inline text-slate-300 hover:text-white transition-colors cursor-default text-[12px]">Sửa</span>
             <span className="hidden sm:inline text-slate-300 hover:text-white transition-colors cursor-default text-[12px]">Xem</span>
             <span className="hidden sm:inline text-slate-300 hover:text-white transition-colors cursor-default text-[12px]">Cửa sổ</span>
           </div>
 
-          <div className="flex-1 truncate text-center">
-            <span className="rounded-full bg-white/10 px-3 py-0.5 text-[11px] text-white font-medium border border-white/10">
-              {CASE.no}: {CASE.title}
+          <div className="flex-1 min-w-0 truncate text-center px-1">
+            <span className="inline-block truncate max-w-full rounded-full bg-white/10 px-2 sm:px-3 py-0.5 text-[10px] sm:text-[11px] text-white font-medium border border-white/10">
+              <span className="sm:hidden">{CASE.no}</span>
+              <span className="hidden sm:inline">{CASE.no}: {CASE.title}</span>
             </span>
           </div>
 
-          <div className="flex items-center gap-3 text-[12px] text-slate-300">
-            <span>📶</span>
-            <span>🔋 100%</span>
-            <span className="font-medium text-slate-200">{CASE.time}</span>
+          <div className="flex items-center gap-2 sm:gap-3 text-[12px] text-slate-300 shrink-0">
+            <span className="hidden sm:inline">📶</span>
+            <span className="hidden sm:inline">🔋 100%</span>
+            <span className="hidden md:inline font-medium text-slate-200 text-[11px]">{CASE.time}</span>
             <button
               onClick={() => {
                 MacSound.click()
                 setShowExitModal(true)
               }}
-              className="flex items-center gap-1 rounded-lg border border-red-500/30 bg-red-500/15 px-2 py-0.5 text-[11px] font-medium text-red-300 transition hover:bg-red-500/30 hover:border-red-500/50 hover:text-red-200"
+              className="flex items-center gap-1 rounded-lg border border-red-500/30 bg-red-500/15 px-2 py-0.5 text-[10px] sm:text-[11px] font-medium text-red-300 transition hover:bg-red-500/30 hover:border-red-500/50 hover:text-red-200 whitespace-nowrap"
               title="Thoát vụ án"
             >
               <span>Thoát máy</span>
@@ -224,7 +226,7 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
           const w = isMobile ? width - 12 : Math.min(app.w, width - 16)
           const x = isMobile ? 6 : Math.max(8, Math.min(pos[app.id].x, width - w - 8))
           const y = isMobile ? 38 : Math.max(40, Math.min(pos[app.id].y, 140))
-          const h = isMobile ? 'calc(100dvh - 38px - 62px)' : Math.min(app.h, window.innerHeight - y - 85)
+          const h = isMobile ? 'calc(100dvh - 38px - 82px - env(safe-area-inset-bottom, 0px))' : Math.min(app.h, window.innerHeight - y - 85)
 
           return (
             <div
@@ -312,35 +314,38 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
         })}
 
         {/* macOS Dock Bar */}
-        <div className="fixed bottom-3 left-1/2 z-50 -translate-x-1/2">
-          <div className="flex items-end gap-2.5 rounded-[24px] border border-white/[0.18] bg-[#1a1d2e]/65 px-4 py-2.5 shadow-[0_20px_60px_-10px_rgba(0,0,0,0.85)] backdrop-blur-3xl">
-            {APPS.map((a) => (
-              <button
-                key={a.id}
-                onClick={() => toggle(a.id)}
-                className="group relative flex flex-col items-center transition-all duration-200 hover:-translate-y-2 hover:scale-110 focus:outline-none"
-              >
-                {/* Tooltip */}
-                <span className="pointer-events-none absolute -top-8 rounded-lg bg-black/85 px-2.5 py-0.5 text-[11px] font-semibold text-white opacity-0 shadow-lg backdrop-blur-md transition-opacity group-hover:opacity-100 whitespace-nowrap border border-white/10">
-                  {a.label}
-                </span>
+        <div className="fixed bottom-2 sm:bottom-3 left-1/2 z-50 -translate-x-1/2 max-w-[96vw] pb-[env(safe-area-inset-bottom,0px)]">
+          <div className="flex items-end gap-1.5 sm:gap-2.5 rounded-[20px] sm:rounded-[24px] border border-white/[0.18] bg-[#1a1d2e]/75 px-2.5 py-1.5 sm:px-4 sm:py-2.5 shadow-[0_20px_60px_-10px_rgba(0,0,0,0.85)] backdrop-blur-3xl">
+            {APPS.map((a) => {
+              const dockIconSize = isMobile ? 38 : 50
+              return (
+                <button
+                  key={a.id}
+                  onClick={() => toggle(a.id)}
+                  className="group relative flex flex-col items-center transition-all duration-200 active:scale-95 hover:-translate-y-1 sm:hover:-translate-y-2 hover:scale-105 sm:hover:scale-110 focus:outline-none"
+                >
+                  {/* Tooltip */}
+                  <span className="pointer-events-none absolute -top-8 rounded-lg bg-black/85 px-2.5 py-0.5 text-[11px] font-semibold text-white opacity-0 shadow-lg backdrop-blur-md transition-opacity group-hover:opacity-100 whitespace-nowrap border border-white/10 hidden sm:block">
+                    {a.label}
+                  </span>
 
-                {/* Squircle SVG Icon */}
-                {a.id === 'zola' && <ZolaIcon size={50} />}
-                {a.id === 'browser' && <CoccocIcon size={50} />}
-                {a.id === 'notes' && <NotesIcon size={50} />}
-                {a.id === 'file' && <FileIcon size={50} />}
+                  {/* Squircle SVG Icon */}
+                  {a.id === 'zola' && <ZolaIcon size={dockIconSize} />}
+                  {a.id === 'browser' && <CoccocIcon size={dockIconSize} />}
+                  {a.id === 'notes' && <NotesIcon size={dockIconSize} />}
+                  {a.id === 'file' && <FileIcon size={dockIconSize} />}
 
-                {/* Open Indicator Dot */}
-                {open[a.id] ? (
-                  <i className="mt-1 h-1 w-1.5 rounded-full bg-white shadow-[0_0_6px_#ffffff]" />
-                ) : (
-                  <i className="mt-1 h-1 w-1 rounded-full bg-transparent" />
-                )}
-              </button>
-            ))}
+                  {/* Open Indicator Dot */}
+                  {open[a.id] ? (
+                    <i className="mt-1 h-1 w-1.5 rounded-full bg-white shadow-[0_0_6px_#ffffff]" />
+                  ) : (
+                    <i className="mt-1 h-1 w-1 rounded-full bg-transparent" />
+                  )}
+                </button>
+              )
+            })}
 
-            <span className="mx-1.5 h-10 w-px bg-white/15" />
+            <span className="mx-1 sm:mx-1.5 h-7 sm:h-10 w-px bg-white/15" />
 
             {/* Exit App Button */}
             <button
@@ -348,12 +353,19 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
                 MacSound.click()
                 setShowExitModal(true)
               }}
-              className="group relative flex flex-col items-center transition-all duration-200 hover:-translate-y-2 hover:scale-110 focus:outline-none"
+              className="group relative flex flex-col items-center transition-all duration-200 active:scale-95 hover:-translate-y-1 sm:hover:-translate-y-2 hover:scale-105 sm:hover:scale-110 focus:outline-none"
             >
-              <span className="pointer-events-none absolute -top-8 rounded-lg bg-black/85 px-2.5 py-0.5 text-[11px] font-semibold text-white opacity-0 shadow-lg backdrop-blur-md transition-opacity group-hover:opacity-100 whitespace-nowrap border border-white/10">
+              <span className="pointer-events-none absolute -top-8 rounded-lg bg-black/85 px-2.5 py-0.5 text-[11px] font-semibold text-white opacity-0 shadow-lg backdrop-blur-md transition-opacity group-hover:opacity-100 whitespace-nowrap border border-white/10 hidden sm:block">
                 Thoát máy
               </span>
-              <div className="grid h-[50px] w-[50px] place-items-center rounded-[18px] bg-red-950/40 border border-red-500/40 text-2xl shadow-md transition-colors group-hover:bg-red-900/60">
+              <div
+                className="grid place-items-center rounded-[12px] sm:rounded-[18px] bg-red-950/40 border border-red-500/40 shadow-md transition-colors group-hover:bg-red-900/60"
+                style={{
+                  width: isMobile ? 38 : 50,
+                  height: isMobile ? 38 : 50,
+                  fontSize: isMobile ? 18 : 24,
+                }}
+              >
                 🚪
               </div>
               <i className="mt-1 h-1 w-1 opacity-0" />
