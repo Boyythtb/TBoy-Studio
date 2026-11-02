@@ -103,8 +103,19 @@ export function ChoTotSite({ caseId, found, onPin }: Props) {
                 className="bg-white rounded-2xl border border-slate-200 p-4 shadow-2xs hover:shadow-sm transition-all flex flex-col sm:flex-row gap-4 justify-between"
               >
                 <div className="flex gap-3.5 flex-1 min-w-0">
-                  <div className="grid h-16 w-16 shrink-0 place-items-center rounded-xl bg-slate-100 border border-slate-200 text-2xl">
-                    {item.title.toLowerCase().includes('iphone') ? '📱' : '🏸'}
+                  <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-slate-100 border border-slate-200 relative shadow-2xs">
+                    {item.img ? (
+                      <img
+                        src={`${import.meta.env.BASE_URL}${item.img}`}
+                        alt={item.title}
+                        className="h-full w-full object-cover hover:scale-105 transition-transform duration-200"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="grid h-full w-full place-items-center text-3xl">
+                        {item.title.toLowerCase().includes('iphone') ? '📱' : item.title.toLowerCase().includes('xe') ? '🛵' : '🏸'}
+                      </div>
+                    )}
                   </div>
 
                   <div className="min-w-0 flex-1 space-y-1">

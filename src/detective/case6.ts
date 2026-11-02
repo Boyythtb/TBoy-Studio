@@ -150,7 +150,7 @@ export const CONVS: Conv[] = [
         senderName: 'Bà Phương (Mẹ kế)',
         senderAvatar: '👠',
         time: '21:48',
-        text: 'Trời ơi, chắc nó say rượu trượt chân ngã xuống sông rồi! Thuyền trưởng mau cho dừng tàu rà soát đáy sông đi!',
+        text: 'Trời ơi, con bé này chắc uống say rồi trượt chân ngã xuống sông rồi! Thuyền trưởng cho dừng tàu gọi thợ lặn rà soát đáy sông đi!',
       },
       {
         id: 'g3',
@@ -158,7 +158,7 @@ export const CONVS: Conv[] = [
         senderName: 'Minh Khang (Hôn phu)',
         senderAvatar: '🤵',
         time: '21:52',
-        text: 'Không phải ngã sông đâu! My bơi rất giỏi! Tôi nghi ngờ nhân viên bồi bàn lẻn vào bắt cóc tống tiền!',
+        text: 'Không thể ngã sông được! My bơi lội từ bé! Tôi nghi ngờ nhân viên bồi bàn lẻn vào bắt cóc tống tiền!',
       },
       {
         id: 'g4',
@@ -166,7 +166,7 @@ export const CONVS: Conv[] = [
         senderName: 'Bảo Vệ Tàu',
         senderAvatar: '🛡️',
         time: '22:06',
-        text: 'BẮT ĐƯỢC RỒI! Chúng tôi vừa khám người thằng Nam bồi bàn, trong túi tạp dề nó giấu chiếc Nokia sim rác vừa gọi tống tiền 10 tỷ lúc 22:00 kìa!',
+        text: 'BẮT ĐƯỢC RỒI! Chúng tôi vừa khám người thằng Nam bồi bàn, trong túi tạp dề nó giấu chiếc Nokia sim rác vừa gọi tống tiền 10 tỷ lúc 22h00 kìa!',
         clue: 'sim-rac-tap-de',
       },
       {
@@ -175,7 +175,7 @@ export const CONVS: Conv[] = [
         senderName: 'Nam Bồi Bàn',
         senderAvatar: '🧑‍🍳',
         time: '22:08',
-        text: 'Các người vu oan cho tôi! Lúc 22:05 có người va sầm vào tôi ở hành lang, chắc chắn đứa nào nhét điện thoại vào túi tạp dề tôi để gài bẫy! Tôi chỉ là sinh viên làm thêm!',
+        text: 'Các người vu oan cho tôi! Lúc 22h05 có người cố tình va sầm vào tôi ở hành lang, chắc chắn đứa nào nhét điện thoại vào túi tạp dề tôi để gài bẫy! Tôi chỉ là sinh viên làm thêm!',
       },
       {
         id: 'g6',
@@ -183,7 +183,7 @@ export const CONVS: Conv[] = [
         senderName: 'Thuyền Trưởng Hải',
         senderAvatar: '⚓',
         time: '22:12',
-        text: 'Công an và thám tử đã lên tàu! Đề nghị mọi người ở nguyên vị trí, trích xuất ngay [📹 Camera Bến Sông](https://camera-phuong.gov.vn), [💊 Nhà Thuốc Long Châu](https://nhathuoc-longchau42.vn) và [🏦 VietinBank](https://vietinbank.vn)!',
+        text: 'Mọi người bình tĩnh giữ nguyên vị trí! Lực lượng cảnh sát đường thủy và ban chuyên án đã cập mạn tàu để tiếp quản hiện trường!',
       },
     ],
   },
@@ -199,7 +199,7 @@ export const CONVS: Conv[] = [
         id: 't1',
         from: 'them',
         time: '22:15',
-        text: 'Vụ án bắt cóc này có nhiều điểm rất đáng ngờ: Nam bồi bàn bị bắt quả tang sim rác; bà mẹ kế đòi tìm xác dưới sông; còn Minh Khang thì thúc giục chủ tịch chuyển 3 tỷ tiền chuộc ngay!',
+        text: 'Vụ bắt cóc trên du thuyền này có nhiều uẩn khúc: Nam bồi bàn bị bắt quả tang sim rác; mẹ kế một mực bảo ngã sông; còn Minh Khang thì hối thúc gia đình chuyển 3 tỷ tiền chuộc ngay.',
       },
       {
         id: 't2',
@@ -211,27 +211,27 @@ export const CONVS: Conv[] = [
         id: 't3',
         from: 'them',
         time: '22:17',
-        text: 'Nhận định rất sắc bén! Em kiểm tra [📹 Camera Bến Sông](https://camera-phuong.gov.vn) xem có phương tiện thủy nào tiếp cận lúc 21:50, và vào [💊 Nhà Thuốc Long Châu](https://nhathuoc-longchau42.vn) kiểm tra lịch sử mua sắm của nạn nhân!',
+        text: 'Nhận định hiện trường giả rất sắc bén! Em kiểm tra [camera an ninh bến sông](https://camera-phuong.gov.vn) xem có phương tiện thủy nào tiếp cận lúc 21h50, và vào [Nhà Thuốc Long Châu](https://nhathuoc-longchau42.vn) kiểm tra lịch sử mua sắm của nạn nhân!',
       },
       {
         id: 't4',
         from: 'me',
         time: '22:46',
-        text: 'Anh Tùng ơi! Lệnh chuyển tiền chuộc 3 tỷ trên VietinBank vừa được chuyển vào tài khoản của Minh Khang với danh nghĩa trung gian cứu hộ!',
+        text: 'Anh Tùng ơi! Lệnh chuyển tiền chuộc 3 tỷ trên [VietinBank](https://vietinbank.vn) vừa được chuyển vào tài khoản của Minh Khang với danh nghĩa cứu hộ, và Khang đã đặt vé máy bay đi Bangkok lúc 01h00 đêm nay!',
         requires: ['vietinbank-chuyen-tien-chuoc'],
       },
       {
         id: 't5',
         from: 'them',
         time: '22:47',
-        text: 'Rõ như ban ngày! Đây là vụ TỰ DÀN DỰNG BẮT CÓC để tống tiền cha ruột! Hồ sơ vụ án khoá bằng 4 số: chính là GIỜ THẢO MY BƯỚC XUỐNG CA NÔ TẨU THOÁT trên camera bến sông (định dạng HHMM: 2150)!',
+        text: 'Rõ như ban ngày! Đây là vụ TỰ DÀN DỰNG BẮT CÓC để tống tiền cha ruột! Hồ sơ vụ án khoá bằng 4 số: chính là GIỜ THẢO MY BƯỚC XUỐNG CA NÔ TẨU THOÁT trên camera bến sông (định dạng HHMM)!',
         requires: ['vietinbank-chuyen-tien-chuoc'],
       },
       {
         id: 't6',
         from: 'me',
         time: '22:48',
-        text: 'Em đã có đủ chứng cứ vạch mặt Minh Khang chủ mưu và Thảo My đồng phạm, nhập mã 2150 mở hồ sơ bắt gọn ngay!',
+        text: 'Em đã có đủ chứng cứ vạch mặt Minh Khang chủ mưu và Thảo My đồng phạm, nhập mã thời gian mở hồ sơ bắt gọn ngay!',
         requires: ['vietinbank-chuyen-tien-chuoc'],
       },
       {
@@ -248,46 +248,18 @@ export const CONVS: Conv[] = [
     name: 'Nam Bồi Bàn',
     avatar: '🧑‍🍳',
     sub: 'Đang bị giữ tại phòng an ninh',
-    preview: 'Tôi bị người ta nhét điện thoại vào túi!',
-    requires: ['mat-tich-con-tin'],
+    preview: 'Tôi bị ai đó nhét máy vào túi tạp dề!',
+    requires: ['sim-rac-tap-de'],
     messages: [
-      {
-        id: 'n1',
-        from: 'them',
-        time: '22:18',
-        text: 'Thưa thám tử, tôi thề có trời đất chứng giám tôi không bắt cóc ai cả! Tôi làm bồi bàn ở đây 2 năm rồi!',
-      },
+      { id: 'n1', from: 'them', time: '22:18', text: 'Em thề em không hề gọi tống tiền ai cả! Em đang bưng rượu ở hành lang VIP thì có ai đó va mạnh vào người em rồi biến mất!' },
       {
         id: 'n2',
-        from: 'me',
+        from: 'them',
         time: '22:19',
-        text: 'Vậy chiếc điện thoại sim rác đòi 10 tỷ tiền chuộc tại sao lại nằm trong túi tạp dề của anh?',
-      },
-      {
-        id: 'n3',
-        from: 'them',
-        time: '22:20',
-        text: 'Lúc 22:05 tôi bưng khay rượu qua hành lang tối tầng 3, anh Minh Khang vị hôn phu đi ngược chiều va rất mạnh vào người tôi làm rơi ly rượu! Chắc chắn chính anh ta đã lén nhét chiếc điện thoại đó vào túi tôi!',
-      },
-      {
-        id: 'n4',
-        from: 'me',
-        time: '22:21',
-        text: 'Còn tin rao bán xe máy trên [🛍️ Chợ Tốt](https://chotot.vn) mã CT-688 của anh là sao?',
-      },
-      {
-        id: 'n5',
-        from: 'them',
-        time: '22:22',
-        text: 'Đó là xe Wave cũ tôi đăng bán 6 triệu từ 4 hôm trước để đóng tiền nhà trọ sinh viên thôi! Tôi đâu có cần đến 10 tỷ!',
+        text: 'Em nợ tiền trọ thật nên 4 ngày trước có đăng bán xe Wave cũ trên [Chợ Tốt](https://chotot.vn) kiếm tiền nộp học, chứ em không dính líu gì đến vụ bắt cóc tiền tỷ này!',
         clue: 'chotot-ban-xe',
       },
-      {
-        id: 'n6',
-        from: 'me',
-        time: '22:23',
-        text: 'Được rồi Nam, lời khai của anh về thời gian va chạm với Minh Khang hoàn toàn khớp với diễn biến cuộc gọi tống tiền.',
-      },
+      { id: 'n3', from: 'me', time: '22:20', text: 'Được rồi Nam, tin đăng Chợ Tốt và lời khai của em khớp với dấu vết va chạm ở hành lang. Em tạm thời được bảo lãnh.' },
     ],
   },
   {
@@ -302,13 +274,13 @@ export const CONVS: Conv[] = [
         id: 'mk1',
         from: 'them',
         time: '22:25',
-        text: 'Chào thám tử, tôi đang đau đớn đến nghẹt thở đây. Bọn bắt cóc ra hạn chót 23:00 phải chuyển 3 tỷ vào tài khoản trung gian của tôi để tôi chuộc My về!',
+        text: 'Chào thám tử, tôi đang đau đớn đến nghẹt thở đây. Bọn bắt cóc ra hạn chót 23h00 phải chuyển 3 tỷ vào tài khoản trung gian của tôi để tôi chuộc My về!',
       },
       {
         id: 'mk2',
         from: 'me',
         time: '22:26',
-        text: 'Lúc 21:40 khi Thảo My ra mạn thuyền, anh ở đâu và làm gì?',
+        text: 'Lúc 21h40 khi Thảo My ra mạn thuyền, anh ở đâu và làm gì?',
       },
       {
         id: 'mk3',
@@ -320,7 +292,7 @@ export const CONVS: Conv[] = [
         id: 'mk4',
         from: 'me',
         time: '22:35',
-        text: 'Thế nhưng lúc 21:30, ai là người dùng tài khoản của anh đặt cuốc [⚡ GiaoNhanh](https://giaonhanh.vn) GN-99801 chuyển 2 vali hàng hiệu của Thảo My ra phao neo đậu số 4 ngoài sông?',
+        text: 'Thế nhưng lúc 21h30, ai là người dùng tài khoản của anh đặt cuốc [GiaoNhanh](https://giaonhanh.vn) GN-99801 chuyển 2 vali hàng hiệu của Thảo My ra phao neo đậu số 4 ngoài sông?',
         requires: ['giaonhanh-ca-no'],
       },
       {
@@ -333,7 +305,7 @@ export const CONVS: Conv[] = [
         id: 'mk6',
         from: 'me',
         time: '22:46',
-        text: 'Hơn nữa, trên [🏦 VietinBank](https://vietinbank.vn) TX-77102, 3 tỷ tiền chuộc vừa đổ vào tài khoản anh, anh liền đặt vé máy bay đi Bangkok lúc 01:00 đêm nay! Khang, anh hết đường chối cãi rồi!',
+        text: 'Hơn nữa, trên [VietinBank](https://vietinbank.vn) TX-77102, 3 tỷ tiền chuộc vừa đổ vào tài khoản anh, anh liền đặt vé máy bay đi Bangkok lúc 01h00 đêm nay! Khang, anh hết đường chối cãi rồi!',
         requires: ['vietinbank-chuyen-tien-chuoc'],
         clue: 'vietinbank-chuyen-tien-chuoc',
       },
@@ -364,7 +336,7 @@ export const CONVS: Conv[] = [
         id: 'tm2',
         from: 'me',
         time: '22:39',
-        text: 'Tôi là thám tử điều tra. Thảo My, trên [📹 Camera Bến Sông](https://camera-phuong.gov.vn) ghi rõ cô trùm áo mưa tím bước xuống ca nô CN-082 lúc 21:50, hoàn toàn không có ai bắt cóc cô cả!',
+        text: 'Tôi là thám tử điều tra. Thảo My, trên [camera bến sông](https://camera-phuong.gov.vn) ghi rõ cô trùm áo mưa tím bước xuống ca nô CN-082 lúc 21h50, hoàn toàn không có ai bắt cóc cô cả!',
         clue: 'camera-ben-thuyen',
       },
       {
@@ -377,7 +349,7 @@ export const CONVS: Conv[] = [
         id: 'tm4',
         from: 'me',
         time: '22:41',
-        text: 'Chiều nay 17:15 cô còn ra [💊 Nhà Thuốc Long Châu](https://nhathuoc-longchau42.vn) mua thuốc ngủ và thuốc nhuộm tóc vàng để cải trang trốn chạy cùng Khang sang Thái Lan!',
+        text: 'Chiều nay 17h15 cô còn ra [Nhà Thuốc Long Châu](https://nhathuoc-longchau42.vn) mua thuốc ngủ và thuốc nhuộm tóc vàng để cải trang trốn chạy cùng Khang sang Thái Lan!',
         clue: 'longchau-thuoc-an-than',
       },
       {
@@ -390,7 +362,6 @@ export const CONVS: Conv[] = [
     ],
   },
 ]
-
 export const ORDERS: Order[] = [
   {
     id: 'GN-99801',

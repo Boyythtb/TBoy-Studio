@@ -157,7 +157,7 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
             time: '21:58 · Thứ Sáu',
             content: 'Đứng chờ khách lấy đồ trước cửa hàng điện thoại số 88. Hẹn khách 21:55 mà giờ chưa thấy đâu, lạnh cóng tay 😤',
             likes: 3,
-            img: 'detective/bia-vu-an.jpg',
+            img: 'detective/hien-truong-2158.jpg',
             clueId: 'anh-phan-chieu',
             clueLabel: 'Bóng xe xanh trong ảnh kính cửa hàng lúc 21:58',
             comments: [
@@ -195,6 +195,7 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
             time: '18:00 · Thứ Tư (3 ngày trước)',
             content: 'Ai mua xe đạp điện Asama đỏ cũ của em không ạ, em pass 2tr5 đóng tiền phòng trọ gấp 🥺',
             likes: 15,
+            img: 'detective/chotot-asama-do.jpg',
             clueId: 'vy-xe-do',
             clueLabel: 'Vy bán xe Asama đỏ cũ của mình từ 3 hôm trước (không phải xe cô Lan)',
             comments: [],
@@ -247,6 +248,7 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
             time: '21:50 · Thứ Sáu',
             content: 'BÀ CON HẺM 42 ƠI CỨU TÔI VỚI! Xe đạp điện Nijia màu xanh mint tôi vừa khóa cổ để trong sân lúc 21:10. Đến 21:40 ra cất giỏ hàng thì cổng mở toang, xe biến mất rồi! Ai nhìn thấy xe tôi ở đâu xin báo gấp với công an phường!',
             likes: 34,
+            img: 'detective/facebuc-nijia-xanh.jpg',
             comments: [
               {
                 id: 'c-lan-1',
@@ -966,6 +968,7 @@ export function getChoTotListings(caseId: string): ChoTotListing[] {
         location: 'Hẻm 42 phố Hàng Chai, Ba Đình, Hà Nội',
         category: 'Xe đạp, Xe điện',
         desc: 'Xe đạp điện Asama màu đỏ chính chủ em mua từ năm nhất. Do nợ tiền trọ 2 tháng chủ nhà đòi gấp nên em pass lại 2.5tr. Máy móc bình thường, có sạc zin.',
+        img: 'detective/chotot-asama-do.jpg',
         clueId: 'vy-xe-do',
         clueLabel: 'Vy bán xe Asama đỏ của mình từ 3 hôm trước (không phải xe xanh của cô Lan)',
       },
@@ -996,6 +999,7 @@ export function getChoTotListings(caseId: string): ChoTotListing[] {
         location: 'Sân Cầu Lông Hẻm 42, Ba Đình, Hà Nội',
         category: 'Điện thoại, Thiết bị di động',
         desc: 'Pass nhanh iPhone 14 Pro Max màu tím mộng mơ còn mới 98%. Máy vừa dùng, không mật khẩu icloud. Ai qua sân cầu lông lấy luôn có fix xăng xe.',
+        img: 'detective/chotot-iphone14.jpg',
         clueId: 'tin-nhan-ban',
         clueLabel: 'Tin bán máy lúc 20:44 gài bẫy số điện thoại của Hào trên Chợ Tốt',
       },
@@ -1009,6 +1013,7 @@ export function getChoTotListings(caseId: string): ChoTotListing[] {
         location: 'Sân Cầu Lông Ba Đình',
         category: 'Dụng cụ thể thao',
         desc: 'Vợt mới đan cước tuần trước, đánh hơi nặng đầu muốn đổi sang 88S Pro.',
+        img: 'detective/chotot-yonex.jpg',
       },
     ]
   }
@@ -1028,6 +1033,7 @@ export function getChoTotListings(caseId: string): ChoTotListing[] {
         location: 'Quận Hai Bà Trưng, Hà Nội',
         category: 'Xe cộ, Xe máy',
         desc: 'Cần tiền đóng học phí kỳ 1 và tiền phòng trọ nên nhượng lại xe Wave Alpha màu đỏ đăng ký 2019 máy móc êm ru, có bớt xăng xe cho bạn nào thiện chí.',
+        img: 'detective/chotot-wave-alpha.jpg',
         clueId: 'chotot-ban-xe',
         clueLabel: 'Nam rao bán xe máy cũ từ 4 ngày trước đóng tiền học',
       },

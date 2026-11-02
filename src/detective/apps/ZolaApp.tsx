@@ -53,16 +53,106 @@ export function ZolaApp({ found, find, onOpenUrl }: Ctx) {
     }
   }
 
-  // Hàm render link và link buttons tương tác trực tiếp dẫn dắt sang các trang web
-  const renderInteractiveText = (text: string) => {
-    // Tách regex hỗ trợ cả Markdown link: [Label](url) và bare URLs/domains
+interface LinkPreviewInfo {
+  url: string
+  title: string
+  desc: string
+  icon: string
+  badgeBg: string
+  border: string
+  textColor: string
+}
+
+function getLinkPreview(text: string): LinkPreviewInfo | null {
+  const t = text.toLowerCase()
+  if (t.includes('facebuc.vn') || t.includes('facebook')) {
+    return {
+      url: 'https://facebuc.vn',
+      title: 'Facebúc · Mạng Xã Hội Cư Dân',
+      desc: 'Bảng tin cộng đồng, bài đăng & thông tin nhân chứng',
+      icon: '👥',
+      badgeBg: 'bg-blue-50 hover:bg-blue-100',
+      border: 'border-blue-200',
+      textColor: 'text-blue-900',
+    }
+  }
+  if (t.includes('chotot.vn') || t.includes('chợ tốt')) {
+    return {
+      url: 'https://chotot.vn',
+      title: 'Chợ Tốt · Mua Bán Rao Vặt Đồ Cũ',
+      desc: 'Sàn rao vặt thanh lý xe đạp điện, điện thoại, phụ kiện',
+      icon: '🛍️',
+      badgeBg: 'bg-amber-50 hover:bg-amber-100',
+      border: 'border-amber-200',
+      textColor: 'text-amber-950',
+    }
+  }
+  if (t.includes('giaonhanh.vn') || t.includes('giaonhanh')) {
+    return {
+      url: 'https://giaonhanh.vn',
+      title: 'GiaoNhanh 24H · Tra cứu vận đơn GPS',
+      desc: 'Hành trình di chuyển & định vị thời gian thực của tài xế',
+      icon: '⚡',
+      badgeBg: 'bg-orange-50 hover:bg-orange-100',
+      border: 'border-orange-200',
+      textColor: 'text-orange-950',
+    }
+  }
+  if (t.includes('camera-phuong.gov.vn') || t.includes('camera')) {
+    return {
+      url: 'https://camera-phuong.gov.vn',
+      title: 'Camera An Ninh Phường · Trích xuất dữ liệu',
+      desc: 'Băng hình camera giám sát nút giao thông và các tuyến phố',
+      icon: '📹',
+      badgeBg: 'bg-indigo-50 hover:bg-indigo-100',
+      border: 'border-indigo-200',
+      textColor: 'text-indigo-950',
+    }
+  }
+  if (t.includes('vietinbank.vn') || t.includes('vietinbank')) {
+    return {
+      url: 'https://vietinbank.vn',
+      title: 'VietinBank iPay · Sao Kê Biến Động Số Dư',
+      desc: 'Lịch sử giao dịch, chuyển khoản và thời điểm thanh toán',
+      icon: '🏦',
+      badgeBg: 'bg-sky-50 hover:bg-sky-100',
+      border: 'border-sky-200',
+      textColor: 'text-sky-950',
+    }
+  }
+  if (t.includes('nhathuoc-longchau42.vn') || t.includes('long châu') || t.includes('longchau')) {
+    return {
+      url: 'https://nhathuoc-longchau42.vn',
+      title: 'Nhà Thuốc Long Châu · Chi Nhánh 42',
+      desc: 'Hoá đơn điện tử, đơn thuốc cấp cứu và thời gian mua hàng',
+      icon: '💊',
+      badgeBg: 'bg-teal-50 hover:bg-teal-100',
+      border: 'border-teal-200',
+      textColor: 'text-teal-950',
+    }
+  }
+  if (t.includes('bms-building.vn') || t.includes('smarthome.iot') || t.includes('bms') || t.includes('smart')) {
+    return {
+      url: t.includes('smarthome') ? 'https://smarthome.iot' : 'https://bms-building.vn',
+      title: 'Smart IoT Hub · Nhật ký toà nhà',
+      desc: 'Nhật ký thiết bị thông minh, thang máy và cảm biến',
+      icon: '🏢',
+      badgeBg: 'bg-slate-50 hover:bg-slate-100',
+      border: 'border-slate-200',
+      textColor: 'text-slate-900',
+    }
+  }
+  return null
+}
+  // Render văn bản tự nhiên với link nội dòng tinh tế, không làm cồng kềnh câu thoại
+  const renderInteractiveText = (text: string, isMe = false) => {
     const regex = /(\[[^\]]+\]\([^\)]+\)|(?:https?:\/\/|coccoc:\/\/)[a-zA-Z0-9./?=#_:-]+|[a-zA-Z0-9-]+\.(?:vn|com|iot)[a-zA-Z0-9./?=#_:-]*)/g
     const parts = text.split(regex)
 
     return parts.map((chunk, idx) => {
       if (!chunk) return null
 
-      // Trường hợp 1: Markdown Link [Label](url)
+      // Markdown Link [Label](url)
       const mdMatch = chunk.match(/^\[([^\]]+)\]\(([^\)]+)\)$/)
       if (mdMatch) {
         const label = mdMatch[1]
@@ -76,45 +166,26 @@ export function ZolaApp({ found, find, onOpenUrl }: Ctx) {
               MacSound.click()
               if (onOpenUrl) onOpenUrl(targetUrl)
             }}
-            className="inline-flex items-center gap-1 mx-1 px-2.5 py-0.5 rounded-lg text-[12px] font-bold shadow-2xs border transition-all cursor-pointer bg-amber-50 border-amber-300 text-amber-950 hover:bg-amber-100 hover:border-amber-400 active:scale-95"
-            title={`Chạm để mở trang ${targetUrl} trên Cộc Cộc`}
+            className={`inline-flex items-baseline gap-0.5 font-bold transition-all cursor-pointer underline underline-offset-2 ${
+              isMe
+                ? 'text-amber-200 hover:text-white decoration-amber-300/80 hover:decoration-white'
+                : 'text-[#1877f2] hover:text-blue-800 decoration-blue-300 hover:decoration-blue-700'
+            }`}
+            title={`Mở ${targetUrl} trên Cộc Cộc`}
           >
             <span>{label}</span>
-            <span className="text-[10px] text-amber-600 font-mono font-black">↗</span>
+            <span className="text-[10px] font-mono opacity-70">↗</span>
           </button>
         )
       }
 
-      // Trường hợp 2: Bare URL hoặc domain
+      // Bare URL hoặc domain
       if (
         chunk.match(/^(?:https?:\/\/|coccoc:\/\/)[a-zA-Z0-9./?=#_:-]+$/) ||
         chunk.match(/^[a-zA-Z0-9-]+\.(?:vn|com|iot)[a-zA-Z0-9./?=#_:-]*$/)
       ) {
         const fullUrl =
           chunk.startsWith('http') || chunk.startsWith('coccoc') ? chunk : `https://${chunk}`
-        
-        let badgeColor = 'bg-blue-50 border-blue-300 text-blue-900 hover:bg-blue-100'
-        let icon = '🌐'
-
-        if (fullUrl.includes('giaonhanh')) {
-          badgeColor = 'bg-orange-50 border-orange-300 text-orange-950 hover:bg-orange-100'
-          icon = '⚡'
-        } else if (fullUrl.includes('chotot')) {
-          badgeColor = 'bg-amber-50 border-amber-300 text-amber-950 hover:bg-amber-100'
-          icon = '🛍️'
-        } else if (fullUrl.includes('vietinbank')) {
-          badgeColor = 'bg-sky-50 border-sky-300 text-sky-950 hover:bg-sky-100'
-          icon = '🏦'
-        } else if (fullUrl.includes('nhathuoc')) {
-          badgeColor = 'bg-teal-50 border-teal-300 text-teal-950 hover:bg-teal-100'
-          icon = '💊'
-        } else if (fullUrl.includes('camera')) {
-          badgeColor = 'bg-indigo-50 border-indigo-300 text-indigo-950 hover:bg-indigo-100'
-          icon = '📹'
-        } else if (fullUrl.includes('bms') || fullUrl.includes('smarthome')) {
-          badgeColor = 'bg-slate-100 border-slate-300 text-slate-900 hover:bg-slate-200'
-          icon = '🏢'
-        }
 
         return (
           <button
@@ -125,12 +196,15 @@ export function ZolaApp({ found, find, onOpenUrl }: Ctx) {
               MacSound.click()
               if (onOpenUrl) onOpenUrl(fullUrl)
             }}
-            className={`inline-flex items-center gap-1 mx-1 px-2 py-0.5 rounded-lg text-[11px] font-bold shadow-2xs border transition-all cursor-pointer active:scale-95 ${badgeColor}`}
-            title={`Chạm để mở ${chunk} trên trình duyệt Cộc Cộc`}
+            className={`inline-flex items-baseline gap-0.5 font-mono text-[12px] font-semibold transition-all cursor-pointer underline underline-offset-2 ${
+              isMe
+                ? 'text-amber-200 hover:text-white decoration-amber-300'
+                : 'text-[#1877f2] hover:text-blue-800 decoration-blue-300'
+            }`}
+            title={`Mở ${chunk} trên Cộc Cộc`}
           >
-            <span>{icon}</span>
-            <span className="font-mono">{chunk}</span>
-            <span className="text-[10px] font-black">↗</span>
+            <span>{chunk}</span>
+            <span className="text-[10px] opacity-70">↗</span>
           </button>
         )
       }
@@ -256,21 +330,58 @@ export function ZolaApp({ found, find, onOpenUrl }: Ctx) {
                   </div>
                 )}
 
-                <div
-                  onClick={() => {
-                    if (m.from === 'them') handlePinMsg(m)
-                  }}
-                  className={`group/msg relative rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed shadow-xs transition-all ${
-                    m.from === 'me'
-                      ? 'bg-blue-600 text-white rounded-tr-xs'
-                      : isClueFound
-                      ? 'bg-emerald-50 text-slate-800 rounded-tl-xs border border-emerald-300 ring-1 ring-emerald-200/50 cursor-pointer'
-                      : 'bg-white text-slate-800 rounded-tl-xs border border-slate-200/80 hover:border-blue-300 active:bg-slate-50 cursor-pointer'
-                  }`}
-                  title={m.from === 'them' ? 'Chạm để kiểm tra & ghim lời khai' : undefined}
-                >
-                  {renderInteractiveText(m.text)}
-                </div>
+                {(() => {
+                  const linkPrev = getLinkPreview(m.text)
+                  return (
+                    <>
+                      <div
+                        onClick={() => {
+                          if (m.from === 'them') handlePinMsg(m)
+                        }}
+                        className={`group/msg relative rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed shadow-xs transition-all ${
+                          m.from === 'me'
+                            ? 'bg-blue-600 text-white rounded-tr-xs'
+                            : isClueFound
+                            ? 'bg-emerald-50 text-slate-800 rounded-tl-xs border border-emerald-300 ring-1 ring-emerald-200/50 cursor-pointer'
+                            : 'bg-white text-slate-800 rounded-tl-xs border border-slate-200/80 hover:border-blue-300 active:bg-slate-50 cursor-pointer'
+                        }`}
+                        title={m.from === 'them' ? 'Chạm để kiểm tra & ghim lời khai' : undefined}
+                      >
+                        {renderInteractiveText(m.text, m.from === 'me')}
+                      </div>
+
+                      {/* Zalo-style Link Preview Card */}
+                      {linkPrev && !m.card && (
+                        <div
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            MacSound.click()
+                            if (onOpenUrl) onOpenUrl(linkPrev.url)
+                          }}
+                          className={`mt-1.5 flex items-center gap-3 rounded-xl border p-2.5 transition-all cursor-pointer shadow-2xs active:scale-[0.99] ${linkPrev.badgeBg} ${linkPrev.border}`}
+                          title={`Chạm để mở trang web trên Cộc Cộc`}
+                        >
+                          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white shadow-2xs text-xl">
+                            {linkPrev.icon}
+                          </span>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center justify-between gap-2">
+                              <p className={`text-[12px] font-bold truncate ${linkPrev.textColor}`}>
+                                {linkPrev.title}
+                              </p>
+                              <span className="text-[10px] font-mono text-slate-400 font-bold shrink-0">
+                                Cộc Cộc ↗
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-slate-500 truncate mt-0.5">
+                              {linkPrev.desc}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  )
+                })()}
 
                 {m.card && (
                   <div className="mt-2 flex items-center gap-3 rounded-xl border border-blue-200 bg-blue-50/80 p-2.5 shadow-2xs">
