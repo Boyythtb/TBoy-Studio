@@ -39,6 +39,13 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
   const [inspectPhoto, setInspectPhoto] = useState<Photo | null>(null)
   const [browserToast, setBrowserToast] = useState<{ text: string; success: boolean } | null>(null)
 
+  const isDarkSite =
+    currentUrl.includes('camera-phuong.gov.vn') ||
+    currentUrl.includes('bms') ||
+    currentUrl.includes('smarthome') ||
+    currentUrl.includes('trash') ||
+    currentUrl.includes('khamnghiem')
+
   useEffect(() => {
     if (!browserToast) return
     const t = setTimeout(() => setBrowserToast(null), 2500)
@@ -328,7 +335,7 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
   }
 
   return (
-    <div className="flex h-full flex-col bg-[#ffffff] text-[#1d1d1f] font-['Be_Vietnam_Pro'] relative select-none">
+    <div className="flex h-full w-full max-w-full flex-col bg-[#ffffff] text-[#1d1d1f] font-['Be_Vietnam_Pro'] relative select-none overflow-hidden">
       {inspectPhoto && (
         <PhotoInspectModal
           photo={inspectPhoto}
@@ -449,7 +456,7 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
       </div>
 
       {/* Main Web Page Content */}
-      <div className="flex-1 overflow-y-auto min-h-0 bg-[#f0f2f5] relative touch-pan-y" style={{ WebkitOverflowScrolling: 'touch' }}>
+      <div className={`flex-1 overflow-y-auto overflow-x-hidden min-h-0 w-full max-w-full relative touch-pan-y ${isDarkSite ? 'bg-[#0a0f1d]' : 'bg-[#f0f2f5]'}`} style={{ WebkitOverflowScrolling: 'touch' }}>
         {/* =========================================================================
             TRANG CHỦ CỘC CỘC (NEW TAB) - TÌM KIẾM TỰ NHIÊN, KHÔNG CÓ NÚT LỐI TẮT BẤY SẴN
            ========================================================================= */}
