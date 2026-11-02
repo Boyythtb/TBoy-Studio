@@ -1553,6 +1553,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
     return [
       {
         id: 'CAM-101',
+        img: 'detective/facebuc-nijia-xanh.jpg',
         camName: 'Camera Ngã Tư Cổng Hẻm 42',
         camLocation: 'Đầu Hẻm 42 giao Phố Hàng Chai',
         time: '21:35 · Thứ Sáu',
@@ -1563,6 +1564,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
       },
       {
         id: 'CAM-102',
+        img: 'detective/hien-truong-2158.jpg',
         camName: 'Camera Giao Lộ Hàng Chai - Cửa Đông',
         camLocation: 'Ngã tư Phố Hàng Chai',
         time: '21:49 · Thứ Sáu',
@@ -1685,6 +1687,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
       },
       {
         id: 'CAM-502',
+        img: 'detective/case5-hien-truong.jpg',
         camName: 'Camera Quán The Moon Lounge Ba Đình',
         camLocation: 'Sảnh chính Lounge',
         time: '21:00 - 23:00 · Thứ Sáu',
