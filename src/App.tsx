@@ -1,6 +1,14 @@
-import { lazy, Suspense } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { lazy, Suspense, useEffect } from 'react'
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import Join from './screens/Join'
+
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+  return null
+}
 
 const Portal = lazy(() => import('./screens/Portal'))
 const Landing = lazy(() => import('./screens/Landing'))
@@ -31,6 +39,7 @@ function Splash() {
 export default function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Suspense fallback={<Splash />}>
         <Routes>
           <Route path="/" element={<Portal />} />

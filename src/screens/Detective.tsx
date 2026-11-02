@@ -37,11 +37,11 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
 
   const { clues, status, stage, triesLeft, found, find, accuse, unlock, unlocked, reset } = useCase(pack)
 
-  const [open, setOpen] = useState<Record<AppId, boolean>>({
-    zola: true,
-    browser: true,
-    notes: false,
-    file: false,
+  const [open, setOpen] = useState<Record<AppId, boolean>>(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 900) {
+      return { zola: false, browser: true, notes: false, file: false }
+    }
+    return { zola: true, browser: true, notes: false, file: false }
   })
   const [pos, setPos] = useState<Record<AppId, { x: number; y: number }>>(() => {
     const o: Record<AppId, { x: number; y: number }> = {
@@ -123,6 +123,30 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
     if (r === 'locked') setToast('Hồ sơ đang khoá — nhập mã trước.')
   }
 
+  useEffect(() => {
+    if (!booted) return
+    window.scrollTo(0, 0)
+    const prevHtmlOverflow = document.documentElement.style.overflow
+    const prevBodyOverflow = document.body.style.overflow
+    const prevBodyPosition = document.body.style.position
+    const prevBodyWidth = document.body.style.width
+    const prevBodyHeight = document.body.style.height
+
+    document.documentElement.style.overflow = 'hidden'
+    document.body.style.overflow = 'hidden'
+    document.body.style.position = 'fixed'
+    document.body.style.width = '100%'
+    document.body.style.height = '100%'
+
+    return () => {
+      document.documentElement.style.overflow = prevHtmlOverflow
+      document.body.style.overflow = prevBodyOverflow
+      document.body.style.position = prevBodyPosition
+      document.body.style.width = prevBodyWidth
+      document.body.style.height = prevBodyHeight
+    }
+  }, [booted])
+
   if (!booted) {
     return (
       <Stage>
@@ -174,21 +198,22 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
   }
 
   return (
-    <Stage className="fixed inset-0 h-[100dvh] w-screen overflow-hidden touch-none overscroll-none select-none">
-      {/* Desktop Wallpaper macOS nguyên bản tuyệt đẹp */}
-      <div 
-        className="fixed inset-0 h-[100dvh] w-screen overflow-hidden font-['Be_Vietnam_Pro'] select-none touch-none overscroll-none"
-        style={{
-          background: 'radial-gradient(circle at 15% 20%, #1c233d 0%, #0c1020 45%, #05070e 100%)',
-          backgroundImage: `
-            radial-gradient(circle at 20% 25%, rgba(37, 99, 235, 0.22) 0%, transparent 55%),
-            radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.15) 0%, transparent 60%),
-            linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px)
-          `,
-          backgroundSize: '100% 100%, 100% 100%, 36px 36px, 36px 36px',
-        }}
-      >
+    <div 
+      className="fixed inset-0 h-[100dvh] w-screen overflow-hidden font-['Be_Vietnam_Pro'] select-none touch-none overscroll-none z-50"
+      onTouchMove={(e) => {
+        if (e.target === e.currentTarget) e.preventDefault()
+      }}
+      style={{
+        background: 'radial-gradient(circle at 15% 20%, #1c233d 0%, #0c1020 45%, #05070e 100%)',
+        backgroundImage: `
+          radial-gradient(circle at 20% 25%, rgba(37, 99, 235, 0.22) 0%, transparent 55%),
+          radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.15) 0%, transparent 60%),
+          linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px)
+        `,
+        backgroundSize: '100% 100%, 100% 100%, 36px 36px, 36px 36px',
+      }}
+    >
         {/* macOS Top Menu Bar */}
         <div className="relative z-40 flex h-8 items-center gap-2 sm:gap-3.5 border-b border-white/[0.08] bg-[#161822]/80 px-2.5 sm:px-4 text-[13px] text-slate-300 backdrop-blur-2xl">
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
@@ -555,7 +580,6 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
           </div>
         )}
       </div>
-    </Stage>
   )
 }
 
@@ -581,6 +605,10 @@ function readStatus(id: string): { status: 'new' | 'playing' | 'won' | 'lost'; c
 function CasePicker({ onPick }: { onPick: (id: string) => void }) {
   useTitle('Chọn vụ án · Thám Tử Bàn Phím')
   const [refreshKey, setRefreshKey] = useState(0)
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   const handleResetCase = (e: React.MouseEvent, id: string) => {
     e.stopPropagation()
