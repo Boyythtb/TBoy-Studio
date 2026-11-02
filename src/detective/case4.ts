@@ -208,13 +208,13 @@ export const CONVS: Conv[] = [
         id: 't2',
         from: 'them',
         time: '21:52',
-        text: 'Em kiểm tra nhật ký vận hành [BMS toà nhà](https://bms-building.vn) xem aptomat hầm bị ngắt lúc mấy giờ, và cảm biến họng rác lúc 21h30 ghi nhận biến động gì bất thường.',
+        text: 'Cư dân đang xôn xao bàn tán về sự cố mất điện hầm và tiếng động lạ ở họng rác. Em hãy theo dõi mạng xã hội toà nhà để lần theo nhật ký kỹ thuật và vị trí kẻ gian tẩu tán tang vật.',
       },
       {
         id: 't3',
         from: 'them',
         time: '21:54',
-        text: 'Lan kế toán khai Đạt yêu cầu đổi mã két thành 2147. Hãy kiểm tra biến động giao dịch trên [VietinBank](https://vietinbank.vn) và các hoá đơn mua sắm để lật tẩy kẻ đứng sau!',
+        text: 'Lan kế toán khai Đạt yêu cầu đổi mã két thành 2147. Em hãy đối soát các bằng chứng chi tiêu và giao dịch đáng ngờ trong đêm để bóc trần chân tướng kẻ đứng sau!',
       },
       {
         id: 't4',

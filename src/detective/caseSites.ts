@@ -108,6 +108,7 @@ export interface TrafficCameraRecord {
   objectsObserved: string[]
   clueId?: string
   clueLabel?: string
+  img?: string
 }
 
 /** Dữ liệu Facebúc Profiles riêng biệt cho từng vụ án */
@@ -259,6 +260,38 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
                 clueId: 'camera-hong',
                 clueLabel: 'Camera hẻm mất nguồn từ 20:00',
               },
+              {
+                id: 'c-lan-2',
+                user: 'Bác Tổ Trưởng Dân Phố',
+                avatar: '👴',
+                time: '21:58',
+                content: 'Chị Lan yên tâm, camera hẻm hỏng chứ ở cột điện ngã tư đầu phố có trạm [Camera An Ninh Đô Thị](https://camera-phuong.gov.vn) ghi hình 24/7 góc quay cực rộng. Kẻ gian tẩu thoát kiểu gì cũng phải dắt xe qua ngã tư lúc 21h30-22h, bảo công an trích xuất trạm đó là thấy ngay!',
+              },
+              {
+                id: 'c-lan-3',
+                user: 'Vy Hàng Xóm',
+                avatar: '👧',
+                time: '22:02',
+                content: 'Huhu cô Lan ơi, lúc 21h35 cháu xuống sân vứt rác thấy anh Dũng dắt chiếc xe xanh mint ra cổng hẻm, cháu tưởng cô nhờ anh ấy dắt đi sạc điện hộ! Chiều nay cháu túng tiền nên đăng bán chiếc xe Asama đỏ cũ của cháu trên [Chợ Tốt](https://chotot.vn) mà bị anh Hùng nghi oan là trộm xe cô, oan ức quá!',
+                clueId: 'vy-chung-kien',
+                clueLabel: 'Vy thấy Dũng dắt xe lúc 21:35',
+              },
+              {
+                id: 'c-lan-4',
+                user: 'Hoàng Game Net',
+                avatar: '🎮',
+                time: '22:08',
+                content: 'Ủa lúc 21h47 em ngồi net Hùng thấy anh Dũng shipper bấm điện thoại nhận đơn hỏa tốc của [GiaoNhanh 24H](https://giaonhanh.vn) ngay trước cửa quán mà? App shipper nó lưu định vị GPS từng phút, bảo công an tra mã đơn GPS là biết anh Dũng đi đâu lúc 21h40 ngay chứ gì!',
+              },
+              {
+                id: 'c-lan-5',
+                user: 'Dũng Shipper',
+                avatar: '🛵',
+                time: '22:12',
+                content: 'Thằng Hoàng kia mày đừng có vu oan cho tao nhé, tao mệt về phòng trùm chăn ngủ từ 21h15 đến giờ có đi đâu đâu!',
+                clueId: 'dung-khai-21h15',
+                clueLabel: 'Dũng khai về phòng trọ ngủ từ 21h15',
+              },
             ],
           },
         ],
@@ -408,7 +441,36 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
             likes: 31,
             clueId: 'mat-dt',
             clueLabel: 'Mất điện thoại trong tủ đồ số 4 lúc 20:35',
-            comments: [],
+            comments: [
+              {
+                id: 'c-hanh-1',
+                user: 'Tuấn HLV Cầu Lông',
+                avatar: '🏸',
+                time: '20:44',
+                content: 'Chị Hạnh báo ban quản lý kiểm tra [Camera An Ninh Sân Cầu Lông](https://camera-phuong.gov.vn) ngay đi, camera khu vực bãi xe và lối vào quầy nước quay 24/7 rõ lắm!',
+              },
+              {
+                id: 'c-hanh-2',
+                user: 'Minh Lông Thủ',
+                avatar: '👟',
+                time: '20:47',
+                content: 'Ủa vừa thấy trên [Chợ Tốt](https://chotot.vn) có tin đăng bán vội iPhone 14 Pro Max tím mã CT-201 để số điện thoại Hào Smash giá rẻ giật mình kìa chị! Nhưng lúc đó Hào đang đánh đôi với anh Tuấn HLV trên sân 2 mà?!',
+              },
+              {
+                id: 'c-hanh-3',
+                user: 'Linh Quầy Nước',
+                avatar: '🥤',
+                time: '20:50',
+                content: 'Lúc 20h29 em chụp story quầy nước, gương phản chiếu thấy bóng người mặc áo khoác đỏ lúi húi sau lưng dãy tủ số 4 đấy chị ơi!',
+              },
+              {
+                id: 'c-hanh-4',
+                user: 'Khách Đánh Cầu',
+                avatar: '🏸',
+                time: '20:53',
+                content: 'Tầm 20h35 anh thấy Sơn nhặt cầu khoe vừa nhận thông báo ting ting tiền cọc trên [VietinBank](https://vietinbank.vn), nghi lắm!',
+              },
+            ],
           },
         ],
       },
@@ -496,7 +558,22 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
             likes: 22,
             clueId: 'khoa-bi-thuong',
             clueLabel: 'Khoa bị bỏng tay từ 20:40 quấn băng y tế không thể cạy khoá',
-            comments: [],
+            comments: [
+              {
+                id: 'c-khoa-1',
+                user: 'Dược Sĩ Long Châu',
+                avatar: '💊',
+                time: '21:28',
+                content: 'Khoa ơi đơn thuốc và băng gạc bỏng của em lúc 20h42 lưu trên [Nhà Thuốc Long Châu](https://nhathuoc-longchau42.vn) chi nhánh 42 nhé, nhớ thay băng hàng ngày kẻo nhiễm trùng!',
+              },
+              {
+                id: 'c-khoa-2',
+                user: 'Bạn Tình Nguyện',
+                avatar: '🏮',
+                time: '21:32',
+                content: 'Thương Khoa ghê, tay quấn băng trắng toát thế này cạy khóa thế nào được. Mà lúc mất điện 20h55 [Camera An Ninh Phố Chùa](https://camera-phuong.gov.vn) ghi nhận có bóng người giày bata trắng dính bùn chạy vội ra ngõ sau đấy!',
+              },
+            ],
           },
         ],
       },
@@ -528,9 +605,23 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
                 user: 'Bác Bảy Dân Phòng',
                 avatar: '🏢',
                 time: '21:55',
-                content: 'Lúc 21:50 tài khoản anh vừa duyệt chuyển 200 triệu đi đâu thế Đạt?',
+                content: 'Lúc 21:50 tài khoản anh vừa duyệt chuyển 200 triệu đi đâu thế Đạt? Trên [VietinBank](https://vietinbank.vn) lưu lệnh chuyển tiền rõ rành rành kìa!',
                 clueId: 'chuyen-khoan',
                 clueLabel: 'Lệnh chuyển khoản 200 triệu lúc 21:50 do Đạt ký duyệt',
+              },
+              {
+                id: 'c-dat-2',
+                user: 'Cư Dân Tầng 14',
+                avatar: '🏢',
+                time: '21:58',
+                content: 'Cả tòa nhà tối nay đang tá hỏa vì cúp điện hầm B2, trên hệ thống [BMS Tòa Nhà](https://bms-building.vn) ghi rõ có người tự ý gạt cầu dao tổng và quẹt thẻ thang máy lúc 21h12 kìa!',
+              },
+              {
+                id: 'c-dat-3',
+                user: 'Bảo Vệ Ca Ngày',
+                avatar: '👮',
+                time: '22:02',
+                content: 'Kiểm tra [Camera Bãi Xe Tầng Hầm](https://camera-phuong.gov.vn) xem ai giấu túi đồ đen sau đuôi xe máy!',
               },
             ],
           },
@@ -614,9 +705,23 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
                 user: 'Kỹ Sư Smart Home',
                 avatar: '☕',
                 time: '22:35',
-                content: 'Bác sĩ Vũ ơi, ấm trà thông minh ghi nhận đun sôi 100°C lúc 21:30 và đã nguội ngắt 32°C từ trước 22:00 rồi! Đồng hồ 22:15 là do anh cố tình đập vỡ!',
+                content: 'Bác sĩ Vũ ơi, hệ thống [Smart Home IoT](https://smarthome-vip.vn) ghi nhận ấm trà thông minh đun sôi 100°C lúc 21:30 và đã nguội ngắt 32°C từ trước 22:00 rồi! Đồng hồ 22:15 là do anh cố tình đập vỡ!',
                 clueId: 'nhiet-do-am-tra',
                 clueLabel: 'Cảm biến ấm trà thông minh vạch trần giờ chết giả 22:15',
+              },
+              {
+                id: 'c-vu-2',
+                user: 'Hàng Xóm Biệt Thự',
+                avatar: '🏘️',
+                time: '22:38',
+                content: 'Lúc 21h15 [Camera Giao Thông Ngã Tư Phố](https://camera-phuong.gov.vn) ghi rõ xe ô tô của bác sĩ Vũ rẽ vào cổng biệt thự trong trời mưa lớn!',
+              },
+              {
+                id: 'c-vu-3',
+                user: 'Quản Gia Biệt Thự',
+                avatar: '🍵',
+                time: '22:42',
+                content: 'Sổ xuất độc chất Aconitine lưu rành rành trên hệ thống [Nhà Thuốc Long Châu](https://nhathuoc-longchau42.vn) dưới tên phòng khám của anh Vũ!',
               },
             ],
           },
@@ -696,6 +801,27 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
                 avatar: '👠',
                 time: '20:45',
                 content: 'Hai đứa đẹp đôi quá, chúc các con hạnh phúc.',
+              },
+              {
+                id: 'c-mk-2',
+                user: 'Khách Du Lịch Bến Bạch Đằng',
+                avatar: '🛳️',
+                time: '22:38',
+                content: 'Lúc 22h35 có người thấy ca nô cao tốc xé nước chạy ra phao số 4 giữa sông Hồng, [Camera Bến Cảng Sông Hồng](https://camera-phuong.gov.vn) ghi rõ bóng người mặc áo mưa tím!',
+              },
+              {
+                id: 'c-mk-3',
+                user: 'Nhân Viên Điều Phối Cảng',
+                avatar: '⚓',
+                time: '22:42',
+                content: 'Có đơn giao hàng hoả tốc bí mật GN-99801 trên [GiaoNhanh Đường Thủy](https://giaonhanh.vn) chuyển 2 vali ra ngoài phao số 4 lúc 22h20!',
+              },
+              {
+                id: 'c-mk-4',
+                user: 'Cổ Đông Khang Holdings',
+                avatar: '💼',
+                time: '22:45',
+                content: 'Minh Khang vừa hối thúc gia đình chuyển 3 tỷ chuộc người vào tài khoản [VietinBank](https://vietinbank.vn) khả nghi lắm!',
               },
             ],
           },
@@ -1447,6 +1573,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
       },
       {
         id: 'CAM-103',
+        img: 'detective/tra-sua.jpg',
         camName: 'Camera Cổng Hẻm 46',
         camLocation: 'Đầu Hẻm 46 phố Hàng Chai',
         time: '21:42 · Thứ Sáu',
@@ -1463,6 +1590,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
     return [
       {
         id: 'CAM-201',
+        img: 'detective/case2-tu-do.jpg',
         camName: 'Camera Bãi Đỗ Xe & Vách Sau Sân Cầu Lông',
         camLocation: 'Lối đi nội bộ sau sân cầu lông',
         time: '20:25 · Thứ Bảy',
@@ -1473,6 +1601,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
       },
       {
         id: 'CAM-202',
+        img: 'detective/case2-san-cau-long.jpg',
         camName: 'Camera Lối Vào Sân Số 2',
         camLocation: 'Sân thi đấu số 2',
         time: '20:29 · Thứ Bảy',
@@ -1489,6 +1618,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
     return [
       {
         id: 'CAM-301',
+        img: 'detective/quan-net.jpg',
         camName: 'Camera Ngã Ba Quán Nước Phúc',
         camLocation: 'Cổng chùa đối diện quán trà đá',
         time: '20:57 - 21:25 · Thứ Bảy',
@@ -1499,6 +1629,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
       },
       {
         id: 'CAM-302',
+        img: 'detective/case3-camera-2048.jpg',
         camName: 'Camera An Ninh Cổng Tam Quan',
         camLocation: 'Bãi cỏ phía sau bệ đặt hòm công đức',
         time: '21:02 · Thứ Bảy (Lúc mất điện)',
@@ -1515,6 +1646,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
     return [
       {
         id: 'CAM-401',
+        img: 'detective/case4-xe-bao-ve.jpg',
         camName: 'Camera Cửa Dốc Tầng Hầm Chung Cư',
         camLocation: 'Dốc hầm xe toà nhà',
         time: '21:15 · Thứ Bảy',
@@ -1525,6 +1657,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
       },
       {
         id: 'CAM-402',
+        img: 'detective/case4-tui-den.jpg',
         camName: 'Camera Hẻm Gom Rác Sau Chung Cư',
         camLocation: 'Khu vực bãi tập kết rác sau toà nhà',
         time: '21:30 · Thứ Bảy',
@@ -1541,6 +1674,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
     return [
       {
         id: 'CAM-501',
+        img: 'detective/case5-phong-tra.jpg',
         camName: 'Camera Đầu Ngõ Biệt Thự Hoàng Khang',
         camLocation: 'Cổng ngoài ngõ rẽ vào biệt thự',
         time: '21:10 · Thứ Sáu',
@@ -1561,6 +1695,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
       },
       {
         id: 'CAM-503',
+        img: 'detective/case5-ban-cong.jpg',
         camName: 'Camera Ban Công Phía Sau Biệt Thự',
         camLocation: 'Tường rào giáp vườn cây',
         time: '21:42 · Thứ Sáu',
@@ -1578,6 +1713,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
     return [
       {
         id: 'CAM-601',
+        img: 'detective/case6-ca-no.jpg',
         camName: 'Camera Giám Sát Cầu Tàu Số 2 Bến Sông Hồng',
         camLocation: 'Lối bậc thang phụ mạn du thuyền',
         time: '21:50 · Thứ Bảy',
@@ -1588,6 +1724,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
       },
       {
         id: 'CAM-602',
+        img: 'detective/case6-vong-tay.jpg',
         camName: 'Camera Quầy Bar Khoang VIP Tầng 3',
         camLocation: 'Lối hành lang phòng vệ sinh tầng 3',
         time: '22:05 · Thứ Bảy',

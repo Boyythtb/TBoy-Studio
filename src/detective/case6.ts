@@ -211,7 +211,7 @@ export const CONVS: Conv[] = [
         id: 't3',
         from: 'them',
         time: '22:17',
-        text: 'Nhận định hiện trường giả rất sắc bén! Em kiểm tra [camera an ninh bến sông](https://camera-phuong.gov.vn) xem có phương tiện thủy nào tiếp cận lúc 21h50, và vào [Nhà Thuốc Long Châu](https://nhathuoc-longchau42.vn) kiểm tra lịch sử mua sắm của nạn nhân!',
+        text: 'Nhận định hiện trường giả rất sắc bén! Em lướt xem khách dự tiệc và cư dân quanh bến cảng bàn tán thế nào, chú ý các dấu hiệu phương tiện thủy rời đi bất thường trong đêm và đối soát tài chính của các nghi phạm.',
       },
       {
         id: 't4',

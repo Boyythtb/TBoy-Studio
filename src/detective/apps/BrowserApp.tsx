@@ -449,7 +449,7 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
       </div>
 
       {/* Main Web Page Content */}
-      <div className="flex-1 overflow-y-auto bg-[#f0f2f5] relative">
+      <div className="flex-1 overflow-y-auto min-h-0 bg-[#f0f2f5] relative touch-pan-y" style={{ WebkitOverflowScrolling: 'touch' }}>
         {/* =========================================================================
             TRANG CHỦ CỘC CỘC (NEW TAB) - TÌM KIẾM TỰ NHIÊN, KHÔNG CÓ NÚT LỐI TẮT BẤY SẴN
            ========================================================================= */}

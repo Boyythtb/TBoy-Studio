@@ -150,7 +150,7 @@ export function NotesApp({ found }: { found: Set<string> }) {
       </div>
 
       {/* Sổ tay Content Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto min-h-0 p-4 space-y-4 touch-pan-y" style={{ WebkitOverflowScrolling: 'touch' }}>
         {list.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-12 text-center">
             <span className="grid h-16 w-16 place-items-center rounded-3xl bg-slate-100 border border-slate-200 text-3xl shadow-2xs mb-3">

@@ -343,7 +343,7 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
               </div>
 
               {/* Window Content */}
-              <div className="h-[calc(100%-2.5rem)] select-text">
+              <div className="h-[calc(100%-2.5rem)] overflow-hidden flex flex-col min-h-0 select-text">
                 {app.id === 'zola' && <ZolaApp found={found} find={find} onOpenUrl={handleOpenUrl} />}
                 {app.id === 'browser' && <BrowserApp found={found} find={find} externalUrl={browserTargetUrl} />}
                 {app.id === 'notes' && <NotesApp found={found} />}
@@ -592,7 +592,7 @@ function CasePicker({ onPick }: { onPick: (id: string) => void }) {
 
   return (
     <Stage>
-      <div className="mx-auto min-h-dvh max-w-4xl px-6 py-14 font-['Be_Vietnam_Pro'] select-none">
+      <div className="mx-auto min-h-dvh max-w-4xl px-6 py-14 font-['Be_Vietnam_Pro']">
         <p className="eyebrow text-sky-400 font-bold uppercase tracking-widest text-[12px]">TBOY Studio · macQuê</p>
         <h1 className="display mt-2 text-[clamp(2rem,5vw,3.2rem)] font-bold">
           <span className="grad-moon">Chọn vụ án</span>

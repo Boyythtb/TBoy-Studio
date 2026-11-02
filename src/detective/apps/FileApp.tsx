@@ -40,7 +40,7 @@ export function FileApp({
   }
 
   return (
-    <div className="flex h-full flex-col bg-[#ffffff] text-[#1d1d1f] font-['Be_Vietnam_Pro'] relative overflow-y-auto p-4 space-y-4">
+    <div className="flex h-full flex-col min-h-0 bg-[#ffffff] text-[#1d1d1f] font-['Be_Vietnam_Pro'] relative overflow-y-auto p-4 space-y-4 touch-pan-y" style={{ WebkitOverflowScrolling: 'touch' }}>
       <div className="rounded-2xl border border-slate-200 bg-[#f8f9fa] p-4 shadow-2xs">
         <div className="flex items-center justify-between">
           <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">{CASE_META.no}</p>

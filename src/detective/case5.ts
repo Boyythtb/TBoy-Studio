@@ -227,14 +227,14 @@ export const CONVS: Conv[] = [
         id: 't2',
         from: 'them',
         time: '22:41',
-        text: 'Chiếc đồng hồ vỡ lúc 22h15 rất có thể là chiếc bẫy thời gian ngụy tạo alibi! Em hãy mở cổng kiểm soát [Smart Home IoT](https://smarthome.iot) kiểm tra nhiệt độ nước và thời điểm đun ấm trà thực tế.',
+        text: 'Chiếc đồng hồ vỡ lúc 22h15 rất có thể là chiếc bẫy thời gian ngụy tạo alibi! Em hãy theo dõi các bài đăng và bình luận của những người dự tiệc trà, lần theo dữ liệu thiết bị thông minh tự động.',
         requires: ['dong-ho-vo'],
       },
       {
         id: 't3',
         from: 'them',
         time: '22:42',
-        text: 'Mở [Nhà Thuốc Long Châu](https://nhathuoc-longchau42.vn) kiểm tra sổ quản lý độc chất Aconitine, và vào [VietinBank](https://vietinbank.vn) lần theo dòng tiền cọc 200 triệu để tìm ra kẻ tiếp tay!',
+        text: 'Đồng thời hãy kiểm tra nguồn gốc độc chất Aconitine và các dòng tiền giao dịch mờ ám trong đêm để vạch trần kẻ thủ ác!',
         requires: ['then-cai-chi-cuoc'],
       },
       {
