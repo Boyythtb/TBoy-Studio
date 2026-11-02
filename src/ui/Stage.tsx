@@ -28,50 +28,53 @@ export function Stage({ mode = 'night', children, className = '', moon = true, f
   )
 
   return (
-    <div className={`stage ${className}`} data-mode={mode}>
-      <div className="stage-stars" aria-hidden>
-        {stars.map((s, i) => (
-          <span
-            key={i}
-            className="star"
-            style={{
-              left: s.left,
-              top: s.top,
-              width: s.size,
-              height: s.size,
-              animationDelay: s.delay,
-              opacity: s.opacity,
-            }}
-          />
-        ))}
+    <div className={`stage relative min-h-dvh w-full overflow-x-hidden isolation-auto ${className}`} data-mode={mode}>
+      {/* Khung hiệu ứng nền được cắt gọn gàng (clipping tuyệt đối), không bao giờ tràn chiều dọc gây kéo quá footer */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden z-0" aria-hidden>
+        <div className="stage-stars">
+          {stars.map((s, i) => (
+            <span
+              key={i}
+              className="star"
+              style={{
+                left: s.left,
+                top: s.top,
+                width: s.size,
+                height: s.size,
+                animationDelay: s.delay,
+                opacity: s.opacity,
+              }}
+            />
+          ))}
+        </div>
+        {moon && <div className="stage-moon floaty" />}
+        {/* Mystic Midnight Moonlit Fog & Aura */}
+        <div
+          className="absolute -top-48 -left-48 h-[650px] w-[650px] rounded-full opacity-20 blur-[140px]"
+          style={{
+            background:
+              mode === 'blood'
+                ? 'radial-gradient(circle, #ef4444 0%, #b91c1c 40%, transparent 70%)'
+                : 'radial-gradient(circle, #38bdf8 0%, #0284c7 45%, transparent 70%)',
+          }}
+        />
+        <div
+          className="absolute -bottom-48 -right-48 h-[650px] w-[650px] rounded-full opacity-15 blur-[140px]"
+          style={{
+            background:
+              mode === 'blood'
+                ? 'radial-gradient(circle, #991b1b 0%, transparent 70%)'
+                : 'radial-gradient(circle, #06b6d4 0%, #0f172a 50%, transparent 70%)',
+          }}
+        />
+        {fog && <div className="stage-fog" />}
+        {fog && <div className="stage-fog b" />}
+        <div className="grain" />
+        <div className="vignette" />
       </div>
-      {moon && <div className="stage-moon floaty" aria-hidden />}
-      {/* Mystic Midnight Moonlit Fog & Aura */}
-      <div
-        className="pointer-events-none absolute -top-48 -left-48 h-[650px] w-[650px] rounded-full opacity-20 blur-[140px]"
-        style={{
-          background:
-            mode === 'blood'
-              ? 'radial-gradient(circle, #ef4444 0%, #b91c1c 40%, transparent 70%)'
-              : 'radial-gradient(circle, #38bdf8 0%, #0284c7 45%, transparent 70%)',
-        }}
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute -bottom-48 -right-48 h-[650px] w-[650px] rounded-full opacity-15 blur-[140px]"
-        style={{
-          background:
-            mode === 'blood'
-              ? 'radial-gradient(circle, #991b1b 0%, transparent 70%)'
-              : 'radial-gradient(circle, #06b6d4 0%, #0f172a 50%, transparent 70%)',
-        }}
-        aria-hidden
-      />
-      {fog && <div className="stage-fog" aria-hidden />}
-      {fog && <div className="stage-fog b" aria-hidden />}
-      <div className="grain" aria-hidden />
-      <div className="vignette" aria-hidden />
-      <div className="stage-content">{children}</div>
+
+      {/* Nội dung trang web - xác định chiều cao cuộn thực tế, dừng đúng chân trang */}
+      <div className="stage-content relative z-[2] min-h-dvh w-full">{children}</div>
     </div>
   )
 }

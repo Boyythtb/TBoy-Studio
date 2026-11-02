@@ -144,14 +144,12 @@ export default function Portal() {
           </motion.p>
         </section>
 
+        {/* Danh sách 7 game hiển thị tức thì từ frame đầu tiên, tính toán chiều cao cuộn chính xác 100% */}
         <section className="grid gap-5 sm:grid-cols-2">
-          {GAMES.map((g, i) => (
-            <motion.div
+          {GAMES.map((g) => (
+            <div
               key={g.to}
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 + i * 0.06 }}
-              className="midnight-card group flex flex-col p-7 transition-all duration-300"
+              className="midnight-card group flex flex-col p-7 hover:-translate-y-1 transition-transform duration-200"
             >
               <div className="flex items-start justify-between gap-4">
                 <div 
@@ -195,7 +193,7 @@ export default function Portal() {
                   Bắt đầu <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
                 </Link>
               </div>
-            </motion.div>
+            </div>
           ))}
         </section>
 

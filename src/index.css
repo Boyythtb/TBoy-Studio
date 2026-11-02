@@ -34,6 +34,7 @@ html {
   min-height: 100%;
   -webkit-text-size-adjust: 100%;
   touch-action: manipulation;
+  overscroll-behavior-y: contain;
 }
 
 body {
@@ -47,6 +48,7 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
 }
 
 #root {
@@ -298,7 +300,7 @@ button, a, input, select, textarea, [role="button"] {
   background: linear-gradient(160deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.85) 100%);
   border: 1px solid rgba(226, 232, 240, 0.1);
   box-shadow: 0 14px 35px -15px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   overflow: hidden;
 }
 
