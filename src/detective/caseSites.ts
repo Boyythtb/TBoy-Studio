@@ -113,6 +113,10 @@ export interface PharmacyRecord {
   notes?: string
   clueId?: string
   clueLabel?: string
+  locked?: boolean
+  lockPrompt?: string
+  lockHint?: string
+  lockCodes?: string[]
 }
 
 export interface TrafficCameraRecord {
@@ -1543,6 +1547,10 @@ export function getPharmacyRecords(caseId: string): PharmacyRecord[] {
         notes: 'Bản ký nhận hóa chất độc dược thuộc danh mục kiểm soát đặc biệt số hiệu ĐC-098. Dấu vân tay người nhận bàn giao: Bác sĩ Vũ Hoàng.',
         clueId: 'lo-doc-non-bo',
         clueLabel: 'Hồ sơ kiểm soát độc chất: Vũ nhận bàn giao dung dịch Aconitine',
+        locked: true,
+        lockPrompt: 'Hồ sơ bàn giao độc chất y tế kiểm soát đặc biệt ĐC-098. Hãy nhập tên hoạt chất kịch độc chiết xuất từ rễ củ Ô Đầu gây suy tim cấp trong 15 phút để tra cứu biên bản bàn giao.',
+        lockHint: 'Tra cứu kết luận xét nghiệm pháp y hoặc hội thoại về chất độc gây tử vong...',
+        lockCodes: ['Aconitine', 'aconitine', 'ô đầu', 'o dau', 'ấu tàu', 'au tau', 'củ ô đầu'],
       },
       {
         id: 'LC-502',
