@@ -255,7 +255,7 @@ export const CONVS: Conv[] = [
         id: 't3',
         from: 'them',
         time: '21:40',
-        text: 'Số tiền 8 triệu đồng tiền mặt bị cuỗm đi gồm nhiều tờ tiền lẻ và có tờ bị rách góc niêm phong. Hãy kiểm tra máy chủ sao kê ATM [VietinBank](https://vietinbank.vn) giao dịch TX-99812: nhập số tiền thiếu hụt để đối soát.',
+        text: 'Số tiền 8 triệu đồng tiền mặt bị cuỗm đi gồm nhiều tờ mệnh giá nhỏ. Kẻ gian thường có tâm lý nạp ngay vào tài khoản hoặc chuyển khoản thanh toán nợ nần để phi tang tiền mặt.',
         requires: ['trang-giay'],
       },
     ],
@@ -285,7 +285,7 @@ export const CONVS: Conv[] = [
         id: 'tr2',
         from: 'me',
         time: '21:36',
-        text: 'Camera cổng đình ghi nhận lúc 21h02 viền giày của chị dính đầy bùn đỏ đất sét đặc trưng ở bãi trũng sau bệ hòm quỹ. Chị giải thích sao?',
+        text: 'Khu vực bãi đất trũng sau hòm quỹ có nhiều dấu vết di chuyển lúc mất điện. Chị có đi qua khu vực đó sau 21h không?',
         requires: ['trang-giay'],
       },
       {
@@ -299,7 +299,7 @@ export const CONVS: Conv[] = [
         id: 'tr4',
         from: 'me',
         time: '21:38',
-        text: 'Nhưng ngay sau đó lúc 21h32, tài khoản của chị vừa thực hiện giao dịch nạp đúng 8.000.000đ tiền mặt tại quầy đại lý VietinBank để chuyển trả nợ tín dụng! Chị nói dối!',
+        text: 'Chị có phát sinh giao dịch tài chính hoặc nạp nộp tiền mặt nào sau thời điểm xảy ra sự cố mất điện không?',
         requires: ['chuyen-tien-trang'],
       },
       {
@@ -370,6 +370,34 @@ export const PHOTOS: Photo[] = [
 export const TRASH: TrashItem[] = [
   {
     id: 't1',
+    name: 'so_theo_doi_tien_cong_duc_thang_10.xlsx',
+    kind: 'Sổ sách kế toán nhà chùa',
+    preview: 'Bảng theo dõi thu chi tiền công đức hội chợ Trung thu…',
+    detail: 'Tổng số tiền hòm công đức thu nhận đầu giờ tối: 8.000.000đ tiền mặt, được niêm phong ổ khóa lúc 19:00 có chữ ký chứng kiến của Ban tổ chức.',
+  },
+  {
+    id: 't2',
+    name: 'don_thuoc_so_cuu_bong_khoa.pdf',
+    kind: 'Bệnh án sơ cứu Long Châu',
+    preview: 'Biên bản sơ cứu bỏng nhiệt độ 1 cho bệnh nhân Khoa…',
+    detail: 'Đơn thuốc điện tử LC-301: Khoa được xử lý bỏng nước sôi mu bàn tay phải tại nhà thuốc Long Châu lúc 20:42, được cố định gạc tiệt trùng suốt 40 phút.',
+  },
+  {
+    id: 't3',
+    name: 'bang_cham_cong_tinh_nguyen_vien.xlsx',
+    kind: 'Danh sách nhân sự trực hội chợ',
+    preview: 'Phân công vị trí chốt trực thanh niên tình nguyện…',
+    detail: 'Bảng điều phối tình nguyện viên: Khoa trực chốt hỗ trợ sân khấu, Thành phụ trách bảng điện trung tâm, Oanh phụ trách hòm quyên góp.',
+  },
+  {
+    id: 't4',
+    name: 'hoa_don_thue_gian_hang_hoi_cho.pdf',
+    kind: 'Hóa đơn dịch vụ mặt bằng',
+    preview: 'Biên lai thu phí vệ sinh và thuê vị trí bán bánh mì…',
+    detail: 'Hóa đơn số 8891: Gian hàng bánh mì nướng nóng nộp lệ phí mặt bằng 500.000đ cho ban quản trị sân đình lúc 17:30.',
+  },
+  {
+    id: 't5',
     name: 'bien_lai_rut_tien_atm.png',
     kind: 'Biên lai ATM',
     preview: 'Biên lai rút 8.000.000đ cây ATM phố Hàng Chai…',

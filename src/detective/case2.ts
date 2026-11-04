@@ -248,7 +248,7 @@ export const CONVS: Conv[] = [
         id: 't2',
         from: 'them',
         time: '20:46',
-        text: 'Tin đăng trên [Chợ Tốt](https://chotot.vn) CT-201 bán iPhone có mã kiểm tra bảo mật. Hãy đối chiếu số hiệu ngăn tủ đồ bị đột nhập để mở khóa kiểm tra số Serial máy.',
+        text: 'Các kênh rao vặt trực tuyến và diễn đàn mua bán thiết bị quanh khu vực là nơi kẻ gian thường tìm cách tẩu tán tang vật nhanh chóng. Hãy chú ý rà soát các bài đăng mới nhất.',
         requires: ['lo-hong-tu'],
       },
       {
@@ -286,7 +286,7 @@ export const CONVS: Conv[] = [
         id: 's2',
         from: 'me',
         time: '20:49',
-        text: 'Vết thương trên cổ tay phải của anh do vật kim loại cứa sâu, mép tôn tủ số 04 cũng có vệt máu khô. Anh giải thích sao?',
+        text: 'Vết thương xước rách trên cổ tay phải của anh xảy ra vào thời điểm nào tối nay?',
         requires: ['son-vet-xuoc'],
       },
       {
@@ -300,7 +300,7 @@ export const CONVS: Conv[] = [
         id: 's4',
         from: 'me',
         time: '20:51',
-        text: 'Tin rao bán iPhone 14 Pro Max CT-201 trên [Chợ Tốt](https://chotot.vn) phát từ địa chỉ IP Wi-Fi sân cầu đúng vị trí của anh, và tài khoản [VietinBank](https://vietinbank.vn) của anh vừa nhận cọc 5 triệu lúc 20h44!',
+        text: 'Có người nhìn thấy anh ở khu vực sau tủ đồ và trên diễn đàn rao bán xuất hiện tin đăng máy. Anh có lời giải thích nào không?',
         requires: ['tin-nhan-ban'],
       },
       {
@@ -381,10 +381,38 @@ export const PHOTOS: Photo[] = [
 export const TRASH: TrashItem[] = [
   {
     id: 't1',
+    name: 'bang_phan_san_thi_dau_ca_toi.xlsx',
+    kind: 'Lịch thi đấu sân cầu lông',
+    preview: 'Bảng xếp sân từ 19:00 đến 22:00 ngày thứ Bảy…',
+    detail: 'Sân 1: HLV Quân dạy kèm học viên từ 19:30 đến 21:00. Sân 2: Hào và nhóm bạn thi đấu giao hữu set 3 từ 20:30 đến 21:00.',
+  },
+  {
+    id: 't2',
+    name: 'hoa_don_thay_cuoc_vot_hao.pdf',
+    kind: 'Hóa đơn dịch vụ thể thao',
+    preview: 'Căng cước vợt Yonex Astrox 88D Pro cước BG65Ti…',
+    detail: 'Hóa đơn số 1102: Khách hàng Trần Đức Hào thanh toán phí căng cước vợt 180.000đ chiều nay lúc 17:00.',
+  },
+  {
+    id: 't3',
+    name: 'so_theo_doi_ban_nuoc_giai_khat_linh.xlsx',
+    kind: 'Nhật ký doanh thu quầy nước',
+    preview: 'Báo cáo bán nước giải khát đóng chai và trà chanh…',
+    detail: 'Linh trực quầy nước từ 18:00. Doanh thu tiền mặt đến 20:30 đạt 320.000đ. Không có khoản tiền mặt đột biến nào khác.',
+  },
+  {
+    id: 't4',
+    name: 'bien_ban_kiem_tra_an_ninh_san_cau.pdf',
+    kind: 'Biên bản kiểm tra cơ sở vật chất',
+    preview: 'Kiểm tra định kỳ ổ khóa tủ đồ và hệ thống lưới sân…',
+    detail: 'Biên bản ghi nhận: Mép tôn sau lưng dãy tủ cá nhân số 04 bị lỏng đinh tán chưa kịp gia cố, tạo khe hở khoảng 4cm ở mặt sau vách ngăn.',
+  },
+  {
+    id: 't5',
     name: 'bang_dinh_y_te_mau.png',
     kind: 'Mẩu rác bãi xe',
     preview: 'Miếng băng gạc y tế dính máu bị vứt ở góc bãi xe…',
-    detail: 'Miếng băng gạc dính vết máu tươi vứt ở góc hành lang bãi xe lúc hơn 20h30.',
+    detail: 'Miếng băng gạc dính vết máu tươi vứt ở góc hành lang bãi xe lúc hơn 20h30. Kết quả xét nghiệm sơ bộ cho thấy nhóm máu trùng khớp với người bị cứa rách tay.',
     clue: 'son-vet-xuoc',
   },
 ]
