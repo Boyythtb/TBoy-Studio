@@ -109,6 +109,10 @@ export interface TrafficCameraRecord {
   clueId?: string
   clueLabel?: string
   img?: string
+  locked?: boolean
+  lockPrompt?: string
+  lockHint?: string
+  lockCodes?: string[]
 }
 
 /** Dữ liệu Facebúc Profiles riêng biệt cho từng vụ án */
@@ -1572,6 +1576,10 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
         objectsObserved: ['Xe đạp điện xanh mint', 'Tài xế mặc áo GiaoNhanh', 'Hướng di chuyển Hẻm 44'],
         clueId: 'don-hang-2147',
         clueLabel: 'Camera giao thông ghi nhận xe xanh mint chạy qua lúc 21:49',
+        locked: true,
+        lockPrompt: 'Băng ghi hình ngã tư CAM-102 được phân cấp an ninh giao thông. Để trích xuất, hãy tra cứu nhật ký máy chủ GiaoNhanh trên Cộc Cộc và nhập 4 chữ số trong Mã số định danh (Driver ID) của tài xế shipper GiaoNhanh sống tại hẻm 42.',
+        lockHint: 'Tra cứu nhật ký máy chủ GiaoNhanh trên trình duyệt Cộc Cộc để tìm Driver ID của tài xế Dũng...',
+        lockCodes: ['4209', 'SH-4209', 'sh-4209', 'sh4209', 'SH4209'],
       },
       {
         id: 'CAM-103',
@@ -1600,6 +1608,10 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
         objectsObserved: ['Sơn mặc áo khoác đỏ', 'Khe hở nóc tủ đồ số 4', 'Đứng rình rập 4 phút'],
         clueId: 'son-ao-do',
         clueLabel: 'Camera bãi xe ghi nhận Sơn mặc áo đỏ thò tay qua khe tủ lúc 20:25',
+        locked: true,
+        lockPrompt: 'Camera kỹ thuật lối sau dãy tủ đồ bị khoá an ninh nội bộ CLB. Hãy nhập mã PIN gồm: [Số hiệu ngăn tủ cá nhân của nạn nhân bị cạy cong nóc] kết hợp [Số sân thi đấu nơi Hào đang giao hữu trận cầu lúc xảy ra án mạng].',
+        lockHint: 'Đối chiếu biên bản khám nghiệm hiện trường tủ đồ và lịch thi đấu các sân cầu lông...',
+        lockCodes: ['042', '0402', '42'],
       },
       {
         id: 'CAM-202',
@@ -1639,6 +1651,10 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
         objectsObserved: ['Nguyễn Thu Trang', 'Giày bata trắng dính bùn đỏ', 'Túi xách phồng 8 triệu'],
         clueId: 'trang-giay',
         clueLabel: 'Camera ghi nhận Trang đi ra từ bãi cỏ sau hòm quỹ lúc 21:02',
+        locked: true,
+        lockPrompt: 'Luồng camera an ninh cổng Tam Quan do Ban Trị Sự đình làng quản lý. Để trích xuất, hãy nhập tổng số tiền mặt (triệu đồng) trong hòm công đức quyên góp bị kẻ gian cuỗm sạch.',
+        lockHint: 'Kiểm tra thông báo của Trưởng ban Oanh trong nhóm Zola Hội Chợ Làng về số tiền quỹ...',
+        lockCodes: ['8', '8 triệu', '8000000', '8tr', '8000.000'],
       },
     ]
   }
@@ -1656,6 +1672,10 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
         objectsObserved: ['Tư bảo vệ', 'Xe máy 29-X1', 'Cảnh giới cửa hầm'],
         clueId: 'camera-tu-canh-gioi',
         clueLabel: 'Camera cửa hầm ghi nhận Tư đỗ xe canh cửa lúc 21:15',
+        locked: true,
+        lockPrompt: 'Camera dốc hầm xe toà nhà yêu cầu mã kiểm soát an ninh Ban Quản Lý: Ghép [Số phòng làm việc của Ban Quản Lý chung cư 42] và [Số tầng toà nhà nơi đặt phòng làm việc này].',
+        lockHint: 'Tra cứu sơ đồ mặt bằng toà nhà hoặc biên bản kiểm tra trong mục Thùng rác trên Cộc Cộc...',
+        lockCodes: ['2042'],
       },
       {
         id: 'CAM-402',
@@ -1706,6 +1726,10 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
         objectsObserved: ['Người mang giày da size 42', 'Sợi chỉ cước câu cá', 'Giật then cài cửa sổ'],
         clueId: 'then-cai-chi-cuoc',
         clueLabel: 'Camera ban công ghi nhận thủ đoạn giật chỉ cước cài then phòng kín',
+        locked: true,
+        lockPrompt: 'Băng ghi hình góc khuất ban công phòng trà được bảo vệ bằng mã an ninh Smart Home. Nhập mốc thời gian (giờ & phút) khi ấm siêu tốc thông minh đun nước lần đầu theo nhật ký cảm biến IoT.',
+        lockHint: 'Tra cứu nhật ký thiết bị IoT ấm đun nước trên trang web smarthome.iot ở trình duyệt Cộc Cộc...',
+        lockCodes: ['2128', '21:28', '2130', '21:30'],
       },
     ]
   }
@@ -1724,6 +1748,10 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
         objectsObserved: ['Phụ nữ trùm áo mưa tím (Thảo My)', 'Ca nô cao tốc CN-082', 'Phao neo đậu số 4'],
         clueId: 'camera-ben-thuyen',
         clueLabel: 'Camera CAM-601: Thảo My trùm áo mưa tím bước xuống ca nô lúc 21:50',
+        locked: true,
+        lockPrompt: 'Radar & Camera cảng sông Hồng yêu cầu mã trích xuất hoa tiêu: Ghép [Số hiệu phao tiêu đường thủy nơi ca-nô cao tốc đón khách đào tẩu] và [Số phút trong mốc thời gian ca-nô nổ máy rời mạn thuyền].',
+        lockHint: 'Đối chiếu nhật ký hải trình bến thuyền và mốc thời gian ca-nô nổ máy trong các tài liệu điều tra...',
+        lockCodes: ['0450', '450'],
       },
       {
         id: 'CAM-602',
