@@ -19,7 +19,7 @@ export const CLUES: Record<string, ClueDef> = {
   'mat-tich-con-tin': {
     id: 'mat-tich-con-tin',
     tag: 'chat',
-    title: 'Tiểu thư Thảo My rời khoang VIP lúc 21:40 ra mạn thuyền',
+    title: 'Tiểu thư Thảo My rời khoang VIP lúc 21:40 ra mạn thuyền hóng gió',
     detail:
       'Lúc 21:40, giữa lúc tiệc sinh nhật đang sôi nổi, Thảo My rời bàn nói ra mạn thuyền hóng gió rồi không quay trở lại. Cửa khoang VIP mở toang, ly rượu cocktail còn uống dở.',
   },
@@ -35,56 +35,56 @@ export const CLUES: Record<string, ClueDef> = {
     tag: 'chat',
     title: 'Tin nhắn nặc danh đòi 3 tỷ tiền chuộc lúc 22:00',
     detail:
-      'Đúng 22:00:15, máy ông Chủ tịch nhận tin nhắn từ sim rác yêu cầu chuyển khẩn cấp 3.000.000.000 VNĐ tiền mặt/chuyển khoản vào tài khoản chỉ định trước 23:00, đe dọa con tin sẽ bị nguy hiểm nếu báo công an.',
+      'Đúng 22:00:15, máy ông Chủ tịch nhận tin nhắn từ sim rác yêu cầu chuyển khẩn cấp 3.000.000.000 VNĐ tiền chuộc vào tài khoản chỉ định trước 23:00, đe dọa con tin sẽ bị nguy hiểm nếu báo công an.',
   },
   'sim-rac-tap-de': {
     id: 'sim-rac-tap-de',
     tag: 'file',
-    title: 'Chiếc điện thoại sim rác bị lén nhét vào túi tạp dề bồi bàn Nam',
+    title: 'Định vị trạm phát sóng: Sim rác phát tin tống tiền từ khoang VIP tầng 3',
     detail:
-      'Trong túi tạp dề của nhân viên bồi bàn Nam phát hiện chiếc điện thoại cục gạch vừa phát đi tin nhắn tống tiền lúc 22:00. Nam khẳng định bị ai đó cố tình va mạnh vào người rồi lén nhét vào lúc đi qua quầy bar đông người.',
+      'Chiếc điện thoại cục gạch sim rác phát đi tin nhắn tống tiền lúc 22:00 được tìm thấy trong túi tạp dề bồi bàn Nam. Tuy nhiên, nhật ký trạm BTS viễn thông xác nhận mốc 22:00 chiếc điện thoại phát sóng từ khoang VIP tầng 3 (nơi Minh Khang đang đứng). Lúc 22:05 Khang xuống quầy bar tầng 1 chen lấn và cố tình va mạnh vào Nam để lén nhét điện thoại vào túi nhằm vu oan!',
   },
   'camera-ben-thuyen': {
     id: 'camera-ben-thuyen',
     tag: 'web',
-    title: 'Camera CAM-601: Người mặc áo mưa trùm đầu bước xuống ca-nô lúc 21:50',
+    title: 'Camera CAM-601: Người mặc áo mưa tự nguyện bước xuống ca-nô lúc 21:50',
     detail:
-      'Camera an ninh hàng hải CAM-601 (camera-phuong.gov.vn): Lúc 21:50, camera ghi nhận một người vóc dáng thon gọn mặc áo mưa trùm kín đầu, chân đi giày thể thao trắng bước từ mạn du thuyền xuống ca-nô cao tốc đang nổ máy chờ sẵn.',
+      'Camera an ninh hàng hải CAM-601 (camera-phuong.gov.vn): Lúc 21:50, camera ghi nhận một người vóc dáng thon gọn mặc áo mưa trùm kín đầu, chân đi giày thể thao trắng bước từ mạn du thuyền xuống ca-nô cao tốc neo tại phao số 4. Động tác bước xuống hoàn toàn tự nhiên, không hề có sự kháng cự hay khống chế vũ lực.',
   },
   'vietinbank-chuyen-tien-chuoc': {
     id: 'vietinbank-chuyen-tien-chuoc',
     tag: 'web',
-    title: 'Lệnh chuyển 3 tỷ đồng vào tài khoản công ty của Minh Khang lúc 22:45',
+    title: 'Sao kê VietinBank: 3 tỷ tiền chuộc đổ vào Cty Sự kiện Horizon của Khang',
     detail:
-      'Sao kê VietinBank (vietinbank.vn) mã TX-77102: 22:45 tài khoản gia đình chuyển 3.000.000.000 VNĐ vào tài khoản Công ty Sự kiện Khang Event do Lê Minh Khang làm đại diện pháp luật duy nhất.',
+      'Sao kê VietinBank (vietinbank.vn) mã TX-77102 lúc 22:45: Gia đình chuyển khẩn cấp 3.000.000.000 VNĐ vào tài khoản pháp nhân Cty Cổ phần Sự kiện Horizon theo số tài khoản kẻ nặc danh chỉ định. Trích xuất Cổng thông tin đăng ký doanh nghiệp quốc gia xác nhận: Lê Minh Khang là Chủ tịch kiêm đại diện pháp luật sở hữu 100% vốn công ty này!',
   },
   'mua-thuoc-nhuom-toc': {
     id: 'mua-thuoc-nhuom-toc',
     tag: 'web',
-    title: 'Thảo My mua thuốc nhuộm tóc đen & an thần tại Long Châu lúc 17:15',
+    title: 'Hoá đơn Long Châu LC-608: Thẻ VIP Diamond #9988 mua thuốc nhuộm tóc',
     detail:
-      'Hoá đơn LC-608 tại Nhà Thuốc Long Châu chi nhánh Bến Bạc (nhathuoc-longchau42.vn): Lúc 17:15 ngày 28/10, Thảo My tự thanh toán Apple Pay mua thuốc nhuộm tóc màu đen tự nhiên và thuốc an thần lưu trữ trên hệ thống nhà thuốc chi nhánh Bến Bạc.',
+      'Hoá đơn LC-608 tại Nhà Thuốc Long Châu chi nhánh Bến Bạc (nhathuoc-longchau42.vn) lúc 17:15 ngày 28/10: Khách hàng mua 02 hộp thuốc nhuộm tóc màu đen tự nhiên và kính râm to bản. Thẻ tích điểm sử dụng là thẻ VIP Diamond #9988 mang tên NGUYEN T. M. — trùng khớp hoàn toàn với chiếc thẻ hội viên Thảo My vừa khoe trên Facebúc!',
   },
   'vali-minh-khang': {
     id: 'vali-minh-khang',
     tag: 'web',
-    title: 'GiaoNhanh chuyển 2 vali cá nhân ra ca-nô lúc 21:30',
+    title: 'GiaoNhanh GN-99801: 2 vali lớn giao ra phao số 4 do mã "KM-88" ký nhận',
     detail:
-      'Hệ thống GiaoNhanh (giaonhanh.vn) mã GN-99801: Lúc 21:30 (trước khi My mất tích 10 phút), 02 vali du lịch cỡ đại Rimowa được giao từ khách sạn ra bến ca-nô phao số 4, người ký nhận trực tiếp là Lê Minh Khang.',
+      'Hệ thống GiaoNhanh (giaonhanh.vn) mã GN-99801: Lúc 21:30 (trước khi My rời bàn 10 phút), 02 vali du lịch cỡ đại Rimowa được giao từ khách sạn ra bến ca-nô phao số 4. Người ký nhận ký bằng mật danh "KM-88" kèm số điện thoại 0938.xxx.888 — số hotline in trên danh thiếp của Minh Khang.',
   },
   'nam-sim-rac-oan': {
     id: 'nam-sim-rac-oan',
     tag: 'web',
-    title: 'Xác minh bồi bàn Nam rao bán xe máy cũ trên Chợ Tốt đóng học phí',
+    title: 'Xác minh bồi bàn Nam: Đang phục vụ tại bếp tầng 1 suốt từ 21:45 đến 22:04',
     detail:
-      'Tin đăng Chợ Tốt (chotot.vn) mã CT-688: Nam chỉ là sinh viên phục vụ bán thời gian, vừa đăng bán chiếc Wave cũ lấy tiền nộp học phí lúc 16h chiều, hoàn toàn không có liên hệ hay động cơ tống tiền.',
+      'Camera bếp tầng 1 và quản lý ca xác nhận Nam liên tục bưng bê đồ ăn tại bếp từ 21:45 đến 22:04 không hề lên khoang VIP. Tin đăng Chợ Tốt mã CT-688 cho thấy Nam chỉ là sinh viên khó khăn đang bán chiếc Wave cũ đóng học phí, hoàn toàn bị gài bẫy.',
   },
   've-may-bay-bangkok': {
     id: 've-may-bay-bangkok',
     tag: 'file',
-    title: 'Cặp vé máy bay một chiều đi Bangkok chuyến 06:00 sáng mai',
+    title: 'Hồ sơ vé máy bay TG-561 Bangkok chuyến 05:45 sáng mai trong thùng rác',
     detail:
-      'Hồ sơ đặt vé điện tử hãng hàng không: Khang đã đặt 02 vé máy bay một chiều đi Bangkok chuyến VN-611 khởi hành lúc 06:00 sáng mai cho Lê Minh Khang và Nguyễn Thảo My.',
+      'Tệp PDF phục hồi từ thùng rác máy tính du thuyền: Hồ sơ đặt vé Thai Airways chuyến TG-561 khởi hành 05:45 sáng 29/10 đi Bangkok cho 02 hành khách mang tên "MR. KHANG / LE" và "MS. MY / NGUYEN", email xác nhận gửi về contact@horizon-event.asia.',
   },
   'ma-phao-hai-dang': {
     id: 'ma-phao-hai-dang',

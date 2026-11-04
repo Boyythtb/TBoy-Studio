@@ -19,16 +19,16 @@ export const CLUES: Record<string, ClueDef> = {
   'mat-ket': {
     id: 'mat-ket',
     tag: 'photo',
-    title: 'Két sắt văn phòng mở bằng mã số bí mật không dấu vết cạy phá',
+    title: 'Két sắt văn phòng mở bằng mã số an ninh, không dấu vết cạy phá',
     detail:
-      'Két sắt phòng ban quản lý tầng 2 mở toang không có bất kỳ vết cạy phá hay khoan cắt cơ học nào. Két được mở đúng mã an ninh chu kỳ mới ngay lần bấm đầu tiên. Toàn bộ 200.000.000 VNĐ tiền quỹ bảo trì biến mất.',
+      'Két sắt phòng Ban Quản lý tầng 2 mở toang không có bất kỳ vết cạy phá hay khoan cắt cơ học nào. Két được mở đúng mã an ninh chu kỳ mới ngay lần bấm đầu tiên lúc mất điện. Toàn bộ 200.000.000 VNĐ tiền quỹ bảo trì biến mất.',
   },
   'khai-bat-tinh': {
     id: 'khai-bat-tinh',
     tag: 'chat',
-    title: 'Khải bị đánh lén bất tỉnh tại tủ điện hầm B1',
+    title: 'Khải bị đánh lén bất tỉnh tại tủ điện hầm B1 lúc 21:05',
     detail:
-      'Kỹ thuật viên Khải được tìm thấy bất tỉnh lúc 21:38 cạnh tủ điện hầm B1 với vết thương bầm tím do vật tày đánh lén từ phía sau gáy. Trong balo của Khải có một thiết bị bẻ mã két sắt.',
+      'Kỹ thuật viên Khải được tìm thấy bất tỉnh lúc 21:38 cạnh tủ điện hầm B1 với vết thương bầm tím do vật tày đánh lén từ phía sau gáy. Kết quả khám nghiệm y tế xác nhận Khải bị đánh gục từ khoảng 21:05 (trước cả thời điểm toà nhà mất điện 21:10).',
   },
   'khai-vo-toi': {
     id: 'khai-vo-toi',
@@ -40,51 +40,51 @@ export const CLUES: Record<string, ClueDef> = {
   'mat-dien': {
     id: 'mat-dien',
     tag: 'web',
-    title: 'Aptomat hầm B1 bị ngắt thủ công bằng tay lúc 21:10',
+    title: 'Nhật ký BMS: Aptomat chiếu sáng hầm B1 bị ngắt thủ công lúc 21:10',
     detail:
-      'Nhật ký máy chủ BMS tòa nhà (bms-building.vn): Aptomat tổng chiếu sáng và camera hầm B1 bị kéo ngắt cưỡng bức bằng tay lúc 21:10:05, không hề có hiện tượng quá tải nhiệt hay đoản mạch tự nhiên.',
+      'Nhật ký máy chủ BMS tòa nhà (bms-building.vn): Aptomat tổng chiếu sáng và camera hầm B1 bị kéo ngắt cưỡng bức bằng tay lúc 21:10:05. Không hề có hiện tượng quá tải nhiệt hay đoản mạch tự nhiên.',
   },
   'hong-rac-bms': {
     id: 'hong-rac-bms',
     tag: 'web',
-    title: 'Cảm biến họng rác thông tầng ghi nhận vật rơi 12kg lúc 21:18',
+    title: 'Cảm biến BMS: Họng rác ghi nhận vật nặng 12.4kg rơi lúc 21:18',
     detail:
-      'Nhật ký cảm biến BMS toà nhà: Lúc 21:18:22, cảm biến trọng lực họng rác thông tầng ghi nhận một vật nặng khoảng 12kg rơi từ cửa nạp rác tầng 2 xuống buồng chứa rác hẻm sau tầng hầm.',
+      'Nhật ký cảm biến BMS toà nhà: Lúc 21:18:22, cảm biến trọng lực họng rác thông tầng ghi nhận một vật nặng khoảng 12.4kg rơi từ cửa nạp rác tầng 2 (sát phòng BQL) xuống buồng xả rác hẻm sau tầng hầm B2.',
   },
   'lenh-chuyen-200tr': {
     id: 'lenh-chuyen-200tr',
     tag: 'web',
-    title: 'Sao kê VietinBank: Đạt chuyển khoản 200 triệu trả nợ lúc 21:50',
+    title: 'Sao kê VietinBank: Lệnh TX-4011 chuyển 200 triệu ký bởi User ADMIN_DAT',
     detail:
-      'Hệ thống VietinBank (vietinbank.vn) mã giao dịch TX-4011 lúc 21:50:44: Tài khoản Trần Tuấn Đạt (Quản lý) thực hiện chuyển khoản khẩn cấp 200.000.000 VNĐ cho chủ nợ Lê Văn Bảy với nội dung “Dat tra tien no goc theo thoa thuan”.',
+      'Sao kê VietinBank TX-4011 lúc 21:50:44: Lệnh chuyển 200.000.000 VNĐ từ tài khoản công ty quản lý sang tài khoản Lê Văn Bảy (Bảy Ốc). Chữ ký số uỷ nhiệm chi được xác thực trực tiếp qua mã OTP thiết bị di động của User: ADMIN_DAT, đối lập hoàn toàn với lời khai "đã về nhà ngủ không dùng điện thoại".',
   },
   'gang-tay-dat': {
     id: 'gang-tay-dat',
     tag: 'web',
-    title: 'Hoá đơn Đạt mua găng tay cao su đen tại Long Châu lúc 17:32',
+    title: 'Mẩu găng tay cao su đen dính mực dấu đỏ trong họng rác hầm B2',
     detail:
-      'Biên lai LC-401 tại Nhà Thuốc Long Châu (nhathuoc-longchau42.vn): Lúc 17:32 ngày 20/10, Quản lý Đạt dùng thẻ quẹt mua 01 hộp găng tay cao su đen y tế không bột và 01 cuộn băng dính xốp cách điện.',
+      'Vật chứng thu giữ tại cửa xả họng rác: Mẩu găng tay cao su y tế màu đen bị rách ở đầu ngón trỏ, trên đầu ngón dính loại mực dấu đỏ chuyên dụng đóng mộc Trưởng ban quản lý toà nhà. Hoá đơn LC-401 tại Long Châu xác nhận số điện thoại của Đạt (0912.xxx.888) đã thanh toán hộp găng tay này lúc 17:32 chiều.',
   },
   'tu-tat-dien': {
     id: 'tu-tat-dien',
     tag: 'chat',
-    title: 'Chìa khóa tủ điện cơ học do Bảo vệ Tư độc quyền nắm giữ',
+    title: 'Chìa khóa tủ điện cơ học hầm B1 do Bảo vệ Tư độc quyền nắm giữ',
     detail:
-      'Sổ giao ca an ninh: Ổ khóa tủ điện sắt hầm B1 chỉ có 01 chìa khóa cơ duy nhất số 02, do Bảo vệ trực ca đêm (Nguyễn Văn Tư) đeo ở thắt lưng suốt ca trực từ 18:00 đến 06:00 sáng.',
+      'Sổ giao ca an ninh: Ổ khóa tủ điện sắt hầm B1 chỉ có 01 chìa khóa cơ duy nhất số 02, do Bảo vệ trực ca đêm (Nguyễn Văn Tư) đeo ở thắt lưng suốt ca trực từ 18:00 đến 06:00 sáng. Khải không thể tự mở tủ điện nếu không có sự tiếp tay của Tư.',
   },
   'camera-tu-canh-gioi': {
     id: 'camera-tu-canh-gioi',
     tag: 'web',
-    title: 'Camera CAM-401: Tư đỗ xe máy cảnh giới cửa dốc hầm lúc 21:15',
+    title: 'Camera CAM-401: Tư đón bọc hàng họng rác và cảnh giới dốc hầm lúc 21:19',
     detail:
-      'Trích xuất camera an ninh cổng hầm (camera-phuong.gov.vn) CAM-401: Lúc 21:15, Tư điều khiển xe máy số 29-X1 đỗ chắn ngang dốc cửa hầm, liên tục nhìn dáo dác cảnh giới trong lúc bên trong hầm mất điện.',
+      'Trích xuất camera an ninh cổng hầm (camera-phuong.gov.vn) CAM-401: Lúc 21:19 (ngay sau khi họng rác rung chấn 21:18), Tư điều khiển xe máy số 29-X1 chạy lại cửa xả rác hẻm sau, cúi xuống nhặt một bọc hàng dày nhét vào cốp xe rồi nổ máy phóng ra chắn ngang dốc cửa hầm cảnh giới.',
   },
   'ma-khoa-ket-2042': {
     id: 'ma-khoa-ket-2042',
     tag: 'file',
     title: 'Mật mã an ninh két sắt mới: 2042 (Phòng BQL 204 ghép Tầng 2)',
     detail:
-      'Biên bản ghi nhớ bảo mật số 2042/BB: Đạt phê duyệt quy tắc tạo mã an ninh két sắt quỹ toà nhà bằng cách ghép số phòng Ban quản lý với số tầng đặt két.',
+      'Biên bản ghi nhớ bảo mật số 2042/BB: Chiều 20/10 Đạt viện cớ an toàn định kỳ phê duyệt đổi mã két sắt thành 2042 bằng cách ghép số phòng Ban quản lý với số tầng đặt két, rồi giao nhiệm vụ cho Lan niêm phong.',
   },
 }
 

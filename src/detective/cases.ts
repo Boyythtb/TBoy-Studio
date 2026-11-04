@@ -373,13 +373,13 @@ export const CASES: CasePack[] = [
       {
         id: 'sr2',
         category: 'Ngân hàng',
-        title: 'Hệ thống VietinBank: Lệnh chuyển tiền nhanh lúc 21:50:44',
-        keywords: ['vietinbank', '200 triệu', 'chuyển khoản', 'bảy', 'đạt', 'nợ'],
+        title: 'Hệ thống VietinBank: Lệnh chuyển tiền nhanh TX-4011 lúc 21:50:44',
+        keywords: ['vietinbank', '200 triệu', 'chuyển khoản', 'bảy', 'đạt', 'nợ', 'tx-4011'],
         snippet: 'Chi tiết giao dịch chuyển khoản 200.000.000 VNĐ trong đêm 20/10.',
         content:
-          'Trích xuất ngân hàng điện tử VietinBank (vietinbank.vn) mã TX-4011:\n- Thời gian: 21:50:44 ngày 20/10\n- Tài khoản người gửi: Trần Tuấn Đạt (Quản lý toà nhà)\n- Tài khoản người nhận: Lê Văn Bảy (Chủ nợ Bảy Ốc)\n- Số tiền giao dịch: 200.000.000 VNĐ\n- Nội dung chuyển khoản: “Dat tra tien no goc theo thoa thuan”.',
+          'Trích xuất ngân hàng điện tử VietinBank (vietinbank.vn) mã TX-4011:\n- Thời gian: 21:50:44 ngày 20/10\n- Tài khoản người gửi: CÔNG TY CP QUẢN LÝ TOÀ NHÀ HORIZON\n- Tài khoản người nhận: Lê Văn Bảy (Bảy Ốc)\n- Số tiền giao dịch: 200.000.000 VNĐ\n- Chữ ký điện tử phê duyệt: User ADMIN_DAT (Xác thực qua OTP thiết bị di động cá nhân).',
         clue: 'lenh-chuyen-200tr',
-        clueLabel: 'Lưu giao dịch chuyển 200 triệu cho chủ nợ của Đạt lúc 21:50',
+        clueLabel: 'Lưu giao dịch TX-4011 chuyển 200 triệu ký bởi User ADMIN_DAT',
       },
       {
         id: 'sr3',
@@ -455,9 +455,9 @@ export const CASES: CasePack[] = [
         keywords: ['smart home', 'ấm trà', 'iot', 'hẹn giờ', 'smarthome', '22:10'],
         snippet: 'Nhật ký kích hoạt ấm trà thông minh qua ứng dụng đám mây.',
         content:
-          'Trích xuất máy chủ dịch vụ đám mây smarthome.iot:\n- Thiết bị: Ấm đun nước siêu tốc thông minh WiFi (Model: SmartKettle-Pro)\n- 21:28: Hoàn thành đun nước 100°C lần 1 (do nạn nhân pha trà).\n- 22:10:02: Nhận lệnh kích hoạt đun sôi lại từ xa qua kết nối Wi-Fi nội bộ bằng smartphone mang địa chỉ MAC khớp với máy của người giúp việc Nguyễn Thị Yến.\n- Mục đích: Làm nóng ấm trà giả mạo thời điểm nạn nhân còn sống đến 22:15.',
+          'Trích xuất máy chủ dịch vụ đám mây smarthome.iot:\n- Thiết bị: Ấm đun nước siêu tốc thông minh WiFi (Model: SmartKettle-Pro)\n- 21:28: Hoàn thành đun nước 100°C lần 1. Nhiệt độ ấm nguội xuống dưới 34°C trước 22:00.\n- 22:10:02: Nhận lệnh kích hoạt đun sôi lại (Re-boil) từ xa qua kết nối Wi-Fi nội bộ từ smartphone mang địa chỉ MAC 4A:12:F8:33:B2:91 (Hostname: Galaxy-A52).\n- Đối chiếu Facebúc: Nguyễn Thị Yến vừa đăng bài khoe điện thoại Samsung Galaxy A52!',
         clue: 'smart-kettle-wifi',
-        clueLabel: 'Lưu nhật ký Yến bật đun lại ấm trà từ xa lúc 22:10',
+        clueLabel: 'Lưu nhật ký điện thoại Galaxy A52 của Yến đun lại ấm trà lúc 22:10',
       },
       {
         id: 'sr3',
@@ -466,9 +466,9 @@ export const CASES: CasePack[] = [
         keywords: ['aconitine', 'độc dược', 'vũ', 'dược liệu', 'sổ ký nhận', '2128'],
         snippet: 'Danh sách cá nhân tiếp cận mẫu độc chất Aconitine tinh chế.',
         content:
-          'Hồ sơ lưu trữ lưu mẫu độc chất số 0502 tại Viện Dược Liệu:\n- Hoá chất: Aconitine 20mg dạng dung dịch không màu không mùi\n- Người ký nhận đề tài nghiên cứu: Bác sĩ Lê Quốc Vũ (Viện Nghiên cứu Độc học ứng dụng)\n- Ngày bàn giao: Sáng ngày 25/10/2026\n- Mục đích ghi trong sổ: “Nghiên cứu cơ chế ức chế kênh ion natri trên mô tim”.',
+          'Hồ sơ lưu trữ lưu mẫu độc chất số 0502 tại Viện Dược Liệu:\n- Hoá chất: Aconitine 20mg dạng dung dịch không màu không mùi (chất gây ngừng tim tìm thấy trong tách trà)\n- Người ký nhận đề tài nghiên cứu: Bác sĩ L.Q.V (Khoa Hồi sức Tim mạch)\n- Ngày bàn giao: Sáng ngày 25/10/2026\n- Trong gia đình nạn nhân, chỉ duy nhất Bác sĩ Lê Quốc Vũ công tác tại khoa tim mạch này.',
         clue: 'so-doc-duoc-vu',
-        clueLabel: 'Lưu hồ sơ Vũ ký nhận mẫu Aconitine số 0502 sáng 25/10',
+        clueLabel: 'Lưu biên bản mẫu Aconitine 0502 cấp cho Bác sĩ L.Q.V',
       },
       {
         id: 'sr4',
@@ -540,13 +540,13 @@ export const CASES: CasePack[] = [
       {
         id: 'sr2',
         category: 'Cảnh sát',
-        title: 'Nhà thuốc Long Châu: Hoá đơn LC-608 mua thuốc ngủ & thuốc nhuộm tóc',
-        keywords: ['long châu', 'hoá đơn', 'thảo my', 'thuốc ngủ', 'nhuộm tóc', '17:15'],
-        snippet: 'Lịch sử mua hàng của khách hàng Nguyễn Thảo My chiều 28/10.',
+        title: 'Nhà thuốc Long Châu: Hoá đơn LC-608 tích điểm thẻ Diamond #9988',
+        keywords: ['long châu', 'hoá đơn', 'thảo my', 'thuốc ngủ', 'nhuộm tóc', '17:15', 'lc-608'],
+        snippet: 'Lịch sử mua hàng thuốc nhuộm tóc và an thần chiều 28/10.',
         content:
-          'Biên lai mã LC-608 tại Nhà Thuốc Long Châu chi nhánh Bến Bạc (nhathuoc-longchau42.vn):\n- Thời gian: 17:15:30 ngày 28/10\n- Khách hàng: Nguyễn Thảo My (thanh toán ví Apple Pay)\n- Mặt hàng: 01 vỉ thuốc an thần hỗ trợ giấc ngủ Rotunda, 02 hộp thuốc nhuộm tóc màu đen tự nhiên, 01 kính râm thời trang gọng to.',
+          'Biên lai mã LC-608 tại Nhà Thuốc Long Châu chi nhánh Bến Bạc (nhathuoc-longchau42.vn):\n- Thời gian: 17:15:30 ngày 28/10\n- Thẻ tích điểm khách hàng: VIP Diamond #9988 (NGUYEN T. M.)\n- Mặt hàng: 01 vỉ thuốc an thần hỗ trợ giấc ngủ Rotunda, 02 hộp thuốc nhuộm tóc màu đen tự nhiên, 01 kính râm to bản.\n- Trùng khớp thẻ hội viên Diamond Thảo My đăng trên Facebúc!',
         clue: 'mua-thuoc-nhuom-toc',
-        clueLabel: 'Lưu hoá đơn Thảo My tự mua thuốc nhuộm tóc và thuốc an thần',
+        clueLabel: 'Lưu hoá đơn thẻ Diamond #9988 mua thuốc nhuộm tóc',
       },
       {
         id: 'sr3',

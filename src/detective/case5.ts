@@ -21,63 +21,63 @@ export const CLUES: Record<string, ClueDef> = {
     tag: 'photo',
     title: 'Tách trà gốm chứa nồng độ kịch độc chất Aconitine',
     detail:
-      'Nạn nhân gục chết trên bàn trà gỗ lim. Kết quả xét nghiệm pháp y phát hiện nồng độ cực cao độc tố Aconitine (chiết xuất rễ củ Ô Đầu, gây suy tim cấp trong 15-20 phút).',
+      'Nạn nhân gục chết trên bàn cờ tướng phòng trà tầng 1. Kết quả giải phẫu tử thi của Viện Pháp y xác nhận nguyên nhân tử vong do ngừng tuần hoàn cấp tính bởi độc tố Aconitine (chiết xuất rễ củ Ô Đầu, tan không màu không mùi trong nước sôi).',
   },
   'dong-ho-vo': {
     id: 'dong-ho-vo',
     tag: 'photo',
-    title: 'Mặt kính đồng hồ bị đập vỡ dừng ở mốc 22:15 là hiện trường giả',
+    title: 'Mặt kính đồng hồ rạn nứt dừng ở mốc 22:15 là hiện trường giả',
     detail:
-      'Đồng hồ trên cổ tay nạn nhân rạn vỡ, kim dừng ở 22:15. Tuy nhiên vết nứt bị đập vuông góc từ trên xuống bằng quả cầu chặn giấy pha lê trên bàn, không phải do rơi đập tự nhiên. Nạn nhân thuận tay trái nhưng đồng hồ lại đeo ở tay trái!',
+      'Đồng hồ trên cổ tay nạn nhân rạn vỡ, kim dừng ở 22:15. Tuy nhiên vết nứt bị đập vuông góc từ trên xuống bằng quả cầu chặn giấy pha lê trên bàn, không phải do va đập tự nhiên khi ngã. Nạn nhân thuận tay trái nhưng đồng hồ lại đeo ở tay trái!',
   },
   'nhiet-do-am-tra': {
     id: 'nhiet-do-am-tra',
     tag: 'web',
-    title: 'Dữ liệu Smart Home IoT: Ấm trà đun lúc 21:28 đã nguội ngắt từ 21:55',
+    title: 'Dữ liệu Smart Home: Nước trà đun 21:28 đã nguội ngắt trước 22:00',
     detail:
-      'Nhật ký ấm trà thông minh trên smarthome.iot: Nước đun sôi 100°C lúc 21:28 và nhiệt độ đã hạ xuống 32°C từ trước 22:00. Nạn nhân thực tế đã ngừng tim trong khoảng 21:40 - 21:45.',
+      'Nhật ký cảm biến nhiệt Smart Home (smarthome.iot): Nước đun sôi 100°C lúc 21:28 và nhiệt độ ấm đã hạ xuống dưới 34°C từ trước 22:00. Báo cáo pháp y thân nhiệt khẳng định nạn nhân đã tử vong từ khoảng 21:40 - 21:45.',
   },
   'smart-kettle-wifi': {
     id: 'smart-kettle-wifi',
     tag: 'web',
-    title: 'Lệnh đun lại ấm trà từ xa lúc 22:10 qua smartphone của Yến',
+    title: 'Lệnh kích hoạt đun lại lúc 22:10 từ địa chỉ MAC điện thoại Yến',
     detail:
-      'Máy chủ đám mây smarthome.iot: Lúc 22:10:02, ấm SmartKettle nhận lệnh Re-boil đun sôi lại từ xa qua kết nối Wi-Fi nội bộ bằng smartphone mang địa chỉ MAC khớp với máy của người giúp việc Nguyễn Thị Yến để tạo hơi nước giả mạo lúc người nhà vào phòng.',
+      'Máy chủ smarthome.iot: Lúc 22:10:02, ấm SmartKettle nhận lệnh Re-boil từ xa qua Wi-Fi nội bộ từ thiết bị mang địa chỉ MAC 4A:12:F8:33:B2:91 (Hostname: Galaxy-A52). Đối chiếu bài đăng Facebúc của người giúp việc Yến ngày hôm qua: Yến vừa khoe chiếc điện thoại Samsung Galaxy A52 được tặng!',
   },
   'then-cai-chi-cuoc': {
     id: 'then-cai-chi-cuoc',
     tag: 'photo',
-    title: 'Vết ma sát sợi chỉ cước ở chốt then cài cửa sổ ban công sau',
+    title: 'Vết ma sát sợi cước ở chốt then cài và cuộn cước trong giỏ kim chỉ',
     detail:
-      'Chốt then cài cửa sổ hướng ra ban công sau có vệt ma sát màu trắng đục của sợi cước nylon 0.2mm câu cá. Dấu vết cho thấy thủ phạm đã luồn cước qua khe cửa để giật then cài sập chốt từ ngoài ban công nhằm tạo căn phòng kín.',
+      'Khám nghiệm hiện trường then cài cửa gỗ: Chốt cài bên trong có vết cọ xát trượt của sợi cước nylon 0.2mm. Khám xét phòng ngủ của người giúp việc Yến tại tầng 3, phát hiện cuộn cước câu cá 0.2mm giấu dưới đáy giỏ kim chỉ — công cụ dùng để luồn qua khe dưới cánh cửa giật chốt then cài từ ngoài ban công tạo phòng kín!',
   },
   'camera-ngat': {
     id: 'camera-ngat',
     tag: 'web',
-    title: 'Cầu dao camera tầng 2 bị ngắt từ dưới bếp lúc 21:20',
+    title: 'Cầu dao camera tầng 2 bị ngắt từ dưới gầm bếp lúc 21:20',
     detail:
-      'Nhật ký Smart Home: Cầu dao cấp điện camera hành lang tầng 2 bị ngắt thủ công từ công tắc phụ đặt dưới gầm bếp tầng 1 — khu vực chỉ có người giúp việc tiếp cận trong giờ nấu nướng dọn dẹp.',
+      'Nhật ký Smart Home: Cầu dao cấp điện camera hành lang tầng 2 bị ngắt thủ công từ công tắc phụ đặt dưới gầm tủ bếp tầng 1 — khu vực chỉ có người giúp việc tiếp cận trong giờ nấu nướng dọn dẹp.',
   },
   'lo-thuy-tinh-ho-ca': {
     id: 'lo-thuy-tinh-ho-ca',
     tag: 'photo',
-    title: 'Lọ thủy tinh chứa độc chất phi tang dưới đáy hồ non bộ',
+    title: 'Lọ thủy tinh chứa độc chất phi tang dưới đáy hồ non bộ ngoài vườn',
     detail:
       'Dưới đáy hồ cá non bộ ngoài vườn tìm thấy 01 lọ thủy tinh nút cao su dung tích 20ml, bên trong còn đọng cặn dung dịch Aconitine khớp 100% với độc chất trong tách trà của nạn nhân.',
   },
   'so-doc-duoc-vu': {
     id: 'so-doc-duoc-vu',
     tag: 'web',
-    title: 'Sổ kiểm soát Viện Dược Liệu: Bác sĩ Vũ ký nhận mẫu Aconitine',
+    title: 'Biên bản Viện Dược Liệu: Mẫu Aconitine 0502 xuất kho cho Bác sĩ L.Q.V',
     detail:
-      'Hồ sơ lưu trữ lưu mẫu độc chất tại Viện Dược Liệu: Sáng ngày 25/10, Bác sĩ Lê Quốc Vũ đã trực tiếp ký nhận 20ml dung dịch Aconitine tinh chế với lý do nghiên cứu đề tài độc học trên mô tim.',
+      'Hồ sơ kiểm soát dược lý Viện Dược Liệu: Mẫu chuẩn độc chất Aconitine 20ml số 0502 xuất kho sáng 25/10 theo đề tài nghiên cứu của Bác sĩ L.Q.V - Khoa Hồi sức Tim mạch. Trong số các nghi phạm, chỉ duy nhất Bác sĩ Vũ có thẻ hành nghề và nghiên cứu chuyên sâu về hoạt chất ức chế cơ tim này.',
   },
   'vu-chuyen-yen-200tr': {
     id: 'vu-chuyen-yen-200tr',
     tag: 'web',
-    title: 'Sao kê VietinBank: Vũ chuyển 200 triệu cho Yến lúc 17:30',
+    title: 'Sao kê VietinBank: Lệnh uỷ nhiệm chi 200 triệu từ Vũ cho Yến lúc 17:30',
     detail:
-      'Trích xuất ngân hàng VietinBank (vietinbank.vn) mã TX-88120 lúc 17:30:22 ngày 25/10: Lê Quốc Vũ chuyển khoản 200.000.000 VNĐ vào tài khoản VietinBank của người giúp việc Nguyễn Thị Yến với nội dung “Vu gui tien ho tro gia dinh chi Yen”.',
+      'Sao kê VietinBank TX-88120 lúc 17:30 ngày 25/10: Tài khoản Lê Quốc Vũ chuyển 200.000.000 VNĐ cho Nguyễn Thị Yến với ghi chú "Thanh toan hop dong". Lời khai của Yến rằng "chỉ là tiền ứng lương 5 triệu" bị số liệu sao kê vạch trần mối quan hệ ăn chia tài chính mờ ám.',
   },
   'trong-alibi-bar': {
     id: 'trong-alibi-bar',
