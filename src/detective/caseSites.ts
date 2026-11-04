@@ -638,6 +638,69 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
         ],
       },
       {
+        id: 'hung',
+        name: 'Hùng Sửa Xe Motor',
+        slug: 'hung.motor42',
+        avatar: '🔧',
+        role: 'Chủ tiệm sửa xe & Dịch vụ net Hẻm 42',
+        bio: 'Sửa chữa xe máy, xe điện, phục hồi bình ắc quy. Mua bán xác xe cũ giá cao.',
+        livesIn: 'Số 8 Hẻm 42 phố Hàng Chai',
+        relationship: 'Đã kết hôn',
+        coverColor: 'from-amber-600 to-slate-800',
+        posts: [
+          {
+            id: 'p-hung-1',
+            time: '22:15 · Thứ Sáu',
+            content: 'Hẻm 42 dạo này lắm thành phần bất hảo! Chiều nay thấy thằng Sơn shipper NowFood lượn lờ trước cổng nhà cô Lan ngó nghiêng mấy bận. Vừa thấy nó khoe chuyển trả 6 triệu tiền nợ phụ tùng mờ ám lắm! Đề nghị bà con báo công an phường tóm nó điều tra ngay!',
+            likes: 19,
+            comments: [
+              {
+                id: 'c-hung-1',
+                user: 'Bác Tổ Trưởng Dân Phố',
+                avatar: '👴',
+                time: '22:18',
+                content: 'Đúng đấy chú Hùng! Hôm trước cũng thấy thằng Sơn đứng soi mói giỏ xe người khác!',
+              },
+              {
+                id: 'c-hung-2',
+                user: 'Sơn Shipper Đối Thủ',
+                avatar: '🚴',
+                time: '22:20',
+                content: 'Anh Hùng ngậm máu phun người vừa thôi nhé! 6 triệu là tôi vay mượn mẹ tôi gửi lên nộp phạt giao thông có biên lai đàng hoàng! Lúc 21:44 tôi giao trà sữa ở Hẻm 46 có chị Hoa nhận hàng chụp ảnh đối chứng đây!',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'hangxom',
+        name: 'Tổ Dân Phố Hẻm 42',
+        slug: 'to.danpho42',
+        avatar: '📢',
+        role: 'Bảng tin cư dân hẻm',
+        bio: 'Cập nhật tình hình an ninh trật tự và thông báo khu phố.',
+        livesIn: 'Hẻm 42 Hàng Chai',
+        relationship: 'Cộng đồng',
+        coverColor: 'from-blue-700 to-cyan-800',
+        posts: [
+          {
+            id: 'p-tdp-1',
+            time: '22:05 · Thứ Sáu',
+            content: 'NGHI VẤN NỘI BỘ: Chiều nay cháu Vy sinh viên phòng 402 nợ tiền trọ 3 tháng vừa lên Chợ Tốt đăng bán vội xe đạp điện giá 2tr5! Không biết có uẩn khúc gì với chiếc xe bị mất của cô Lan không?',
+            likes: 14,
+            comments: [
+              {
+                id: 'c-tdp-1',
+                user: 'Vy Hàng Xóm',
+                avatar: '👧',
+                time: '22:08',
+                content: 'Bác ơi oan cho cháu quá! Xe cháu bán là chiếc Asama màu ĐỎ nguyên bản của cháu từ năm ngoái, ảnh chụp hoá đơn mua hàng còn nguyên! Xe cô Lan là xe Nijia XANH MINT mà bác!',
+              },
+            ],
+          },
+        ],
+      },
+      {
         id: 'bay',
         name: 'Bác Bảy Dân Phòng',
         slug: 'bay.nguyen.dp',
@@ -673,6 +736,56 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
   // Case 2: Sân cầu lông - Mất điện thoại trong tủ đồ
   if (caseId === 'tu-do' || caseId === 'cau-long') {
     return [
+      {
+        id: 'badminton_club',
+        name: 'CLB Cầu Lông Hàng Chai',
+        slug: 'clb.caulong42',
+        avatar: '🏸',
+        role: 'Ban Quản Trị Sân Cầu Lông',
+        bio: 'Giao lưu thể thao lành mạnh, văn minh, nói không với trộm cắp tư trang!',
+        livesIn: 'Sân Cầu Lông Hẻm 42',
+        relationship: 'Cộng đồng',
+        coverColor: 'from-emerald-600 to-green-800',
+        posts: [
+          {
+            id: 'p-clb-1',
+            time: '20:50 · Thứ Sáu',
+            content: 'CẢNH BÁO NÓNG TRONG SÂN: Chị Hạnh vừa mất iPhone 14 Pro Max trong tủ số 4 lúc 20:35. Ngay sau đó lúc 20:44, số điện thoại của Hào Smash (0912***888) đăng bán đúng chiếc iPhone 14 Pro Max 5tr5 trên Chợ Tốt! Đề nghị Hào nộp lại máy cho chị Hạnh trước khi công an đến!',
+            likes: 45,
+            comments: [
+              {
+                id: 'c-clb-1',
+                user: 'Khách Chơi Sân 1',
+                avatar: '🏃',
+                time: '20:52',
+                content: 'Trời ơi hôm qua thấy Hào cá độ thua 10 triệu cay cú lắm, chắc túng quẫn làm liều rồi!',
+              },
+              {
+                id: 'c-clb-2',
+                user: 'Hào Smash',
+                avatar: '🏸',
+                time: '20:55',
+                content: 'Mọi người bình tĩnh đừng quy chụp! Em bị ai đó ác ý lấy số điện thoại em đăng tin ảo trên Chợ Tốt! Suốt từ 20:30 đến 21:00 em đang thi đấu set 3 trên sân số 2 có cả chục người xem mà! Em nghi thằng Sơn nhặt cầu nó lén lút sau tủ đồ gài bẫy em!',
+              },
+              {
+                id: 'c-clb-3',
+                user: 'Sơn Nhặt Cầu',
+                avatar: '🏸',
+                time: '20:58',
+                content: 'Anh Hào đừng có vu vạ cho nhân viên nhặt cầu nghèo như em! Tủ đồ khóa nguyên vẹn chỉ có người giữ chìa khóa dự phòng như chị Linh quầy nước mới mở được thôi! Sao không ai hỏi chị Linh lúc 20:30 bỏ quầy nước đi đâu 15 phút?!',
+              },
+              {
+                id: 'c-clb-4',
+                user: 'Linh Quầy Nước',
+                avatar: '🥤',
+                time: '21:02',
+                content: 'Mày điên à Sơn! Tao ra nhận đơn trà sữa và giúp bà Mai phụ dọn thùng rác đem ra bãi xe! Khám xe rác của bà Mai kìa!',
+              },
+            ],
+          },
+        ],
+      },
+
       {
         id: 'son',
         name: 'Sơn Nhặt Cầu',
@@ -822,6 +935,49 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
   if (caseId === 'hoi-cho' || caseId === 'chua-phap-hoa') {
     return [
       {
+        id: 'lang_phaphoa',
+        name: 'Hội Đồng Hương Làng Pháp Hoa',
+        slug: 'lang.phaphoa',
+        avatar: '🏮',
+        role: 'Bảng tin hội đồng làng',
+        bio: 'Chia sẻ Phật pháp, tin tức hội chợ từ thiện và đời sống làng quê.',
+        livesIn: 'Đình làng Pháp Hoa',
+        relationship: 'Cộng đồng',
+        coverColor: 'from-amber-600 to-yellow-800',
+        posts: [
+          {
+            id: 'p-lang-1',
+            time: '21:35 · Thứ Bảy',
+            content: 'TRUY TÌM KẺ GIAN HỘI CHỢ: Lúc 21:20 mất điện, hòm công đức 8 triệu quyên góp mổ tim cho trẻ em bị cạy phá bê sạch tiền! Chiều nay thấy anh Tú tài chính cãi nhau kịch liệt với ban tổ chức, mắt nhìn hòm tiền chằm chằm! Anh Tú vừa phá sản tiền ảo nợ nần chồng chất, đề nghị bà con giữ anh Tú lại đối chất!',
+            likes: 67,
+            comments: [
+              {
+                id: 'c-lang-1',
+                user: 'Bà Bán Xôi Cổng Đình',
+                avatar: '👵',
+                time: '21:38',
+                content: 'Đúng rồi, lúc đèn vừa phụt tắt thấy một bóng người mặc áo sơ mi chạy xộc ra!',
+              },
+              {
+                id: 'c-lang-2',
+                user: 'Vũ Đình Tú',
+                avatar: '👔',
+                time: '21:40',
+                content: 'Bà con đừng có hồ đồ vu khống! Tôi ngồi uống nước tại quán trà đá anh Phúc đối diện cổng đình suốt từ 20:57 đến 21:25 có anh Phúc và khách uống nước làm chứng đây! Thằng Khoa tay bị bỏng quấn băng trắng là do cạy mép hòm sắt bị cứa chảy máu đấy, lục balo thằng Khoa có kìm cộng lực kìa!',
+              },
+              {
+                id: 'c-lang-3',
+                user: 'Khoa Tình Nguyện',
+                avatar: '🧢',
+                time: '21:44',
+                content: 'Anh Tú đừng có gắp lửa bỏ tay người! Tôi bị bỏng nước sôi lúc bưng nồi ngô luộc từ 20:40, có giấy sơ cứu của trạm y tế lưu động! Chiếc kìm trong balo là tôi mang đi căng dây bạt rạp hội chợ!',
+              },
+            ],
+          },
+        ],
+      },
+
+      {
         id: 'trang',
         name: 'Trang Bán Bánh Mì',
         slug: 'trang.banhmi.que',
@@ -925,6 +1081,49 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
   if (caseId === 'chung-cu' || caseId === 'cong-ty-x') {
     return [
       {
+        id: 'cu_dan_chung_cu',
+        name: 'Cộng Đồng Cư Dân Chung Cư 42',
+        slug: 'cudan.chungcu42',
+        avatar: '🏢',
+        role: 'Nhóm cư dân toà nhà',
+        bio: 'Nơi phản ánh dịch vụ, trật tự an ninh và đời sống cư dân toà nhà.',
+        livesIn: 'Toà nhà Chung Cư 42',
+        relationship: 'Cộng đồng',
+        coverColor: 'from-blue-700 to-indigo-900',
+        posts: [
+          {
+            id: 'p-cc-1',
+            time: '21:45 · Thứ Năm',
+            content: 'CẢNH BÁO TỘI PHẠM TRONG TOÀ NHÀ: Lúc 21:10 mất điện hầm, két sắt văn phòng tầng 2 bị mở sạch 200 triệu tiền quỹ bảo trì! Anh Khải kỹ thuật điện bị bắt quả tang nằm cạnh tủ điện hầm B1, trong balo có MÁY BẺ KHÓA KÉT SẮT BruteSafe và găng tay cao su! Khải nợ cá độ bóng đá hơn trăm triệu bị xã hội đen đến sảnh đòi hôm qua! Đề nghị công an tống giam Khải ngay!',
+            likes: 82,
+            comments: [
+              {
+                id: 'c-cc-1',
+                user: 'Bác Trưởng Tầng 8',
+                avatar: '👴',
+                time: '21:48',
+                content: 'Nuôi ong tay áo! Đề nghị Ban quản lý sa thải và kiện ra toà!',
+              },
+              {
+                id: 'c-cc-2',
+                user: 'Khải Kỹ Thuật',
+                avatar: '🔧',
+                time: '21:52',
+                content: 'Tôi bị oan! Lúc 21:05 tôi xuống hầm kiểm tra cầu dao thì bị ai đó đánh lén bằng cờ-lê từ phía sau bất tỉnh! Máy bẻ khóa trong balo là do ai đó cố tình nhét vào, tem niêm phong hãng còn nguyên tôi chưa từng bóc! Chị Lan kế toán mới là người biết mật mã két sắt và chiều nay vừa chuyển 200 triệu ra nước ngoài kìa!',
+              },
+              {
+                id: 'c-cc-3',
+                user: 'Lan Kế Toán',
+                avatar: '💼',
+                time: '21:56',
+                content: 'Anh Khải đừng có nói xằng bậy! 200 triệu đó là tôi chuyển học phí cho con gái đi du học Úc từ tài khoản tiết kiệm riêng của tôi, có thư báo nhập học trường Monash đối chiếu đàng hoàng!',
+              },
+            ],
+          },
+        ],
+      },
+
+      {
         id: 'dat',
         name: 'Quản Lý Đạt',
         slug: 'dat.manager.horizon',
@@ -1025,6 +1224,49 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
   if (caseId === 'an-mang' || caseId === 'biet-thu-x') {
     return [
       {
+        id: 'biet_thu_tin_tuc',
+        name: 'Gia Tộc Họ Hoàng & Bạn Hữu',
+        slug: 'giatoc.hoang',
+        avatar: '🏛️',
+        role: 'Trang thông tin gia đình',
+        bio: 'Tưởng nhớ cụ Hoàng Văn Khang. Yêu cầu làm rõ sự thật về cái chết oan khuất.',
+        livesIn: 'Biệt Thự Hàng Chai',
+        relationship: 'Gia đình',
+        coverColor: 'from-slate-700 to-zinc-900',
+        posts: [
+          {
+            id: 'p-bt-1',
+            time: '22:40 · Thứ Sáu',
+            content: 'ÔNG KHANG BỊ HẠ ĐỘC TRONG PHÒNG TRÀ TẦNG 2! Người đáng ngờ nhất chính là lão Trọng Cổ Vật! Chiều nay lão Trọng đến đập bàn đe dọa đòi cướp bức tượng cổ thời Trần 2 tỷ, hét lớn: "Ông không nhượng lại thì đừng hòng sống qua đêm nay!" Trên xe lão Trọng có một lọ độc thảo mộc, công an bắt lão Trọng đền mạng cho ông tôi ngay!',
+            likes: 95,
+            comments: [
+              {
+                id: 'c-bt-1',
+                user: 'Yến Giúp Việc',
+                avatar: '🧹',
+                time: '22:43',
+                content: 'Chính mắt tôi thấy lão Trọng hằm hằm đe dọa ông chủ lúc chiều! Lão Trọng ác độc lắm!',
+              },
+              {
+                id: 'c-bt-2',
+                user: 'Trọng Cổ Vật',
+                avatar: '🏺',
+                time: '22:46',
+                content: 'Con giúp việc kia mày câm mồm! Lọ hóa chất trên xe tao là dung dịch tẩy men gốm sứ cổ tao vừa mua bên Hàng Bạc có hóa đơn! Suốt từ 21h đến 23h tao ngồi uống rượu với hai đối tác tại The Moon Lounge camera quay nét căng! Tao nghi con Hà em gái ông Khang, chiều nay bị ông Khang gạch tên khỏi di chúc thừa kế căn biệt thự 30 tỷ nên hậm hực ra về!',
+              },
+              {
+                id: 'c-bt-3',
+                user: 'Bà Hà Em Gái',
+                avatar: '💄',
+                time: '22:50',
+                content: 'Anh Trọng ăn nói cho cẩn thận! Tôi về nhà livestream bán hàng từ 20h30 đến 22h30 hàng nghìn người theo dõi trực tiếp, tôi cần gì tranh giành tài sản với anh trai tôi?!',
+              },
+            ],
+          },
+        ],
+      },
+
+      {
         id: 'vu',
         name: 'Bác Sĩ Vũ Hoàng',
         slug: 'dr.vuhoang',
@@ -1119,6 +1361,49 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
   // Case 6: Du Thuyền Sông Hồng - Bắt Cóc Con Tin
   if (caseId === 'du-thuyen' || caseId === 'con-tin' || caseId === 'dau-gia') {
     return [
+      {
+        id: 'hoi_du_thuyen',
+        name: 'Hội Du Thuyền Thượng Lưu Sông Hồng',
+        slug: 'hoiduthuyen.songhong',
+        avatar: '🚢',
+        role: 'Cộng đồng khách VIP Horizon',
+        bio: 'Sự kiện sinh nhật tiểu thư Thảo My trên du thuyền Horizon 5 sao.',
+        livesIn: 'Du thuyền Horizon',
+        relationship: 'Cộng đồng',
+        coverColor: 'from-sky-700 to-indigo-900',
+        posts: [
+          {
+            id: 'p-dt-1',
+            time: '22:20 · Thứ Bảy',
+            content: 'KHẨN CẤP: TIỂU THƯ THẢO MY BỊ BẮT CÓC TỐNG TIỀN 3 TỶ TRÊN DU THUYỀN! Trong túi tạp dề của nhân viên bồi bàn Nam vừa phát hiện chiếc điện thoại sim rác gửi tin nhắn tống tiền lúc 22:00! Thằng Nam nợ học phí sắp bị đuổi học nên túng làm liều! Bảo vệ đang bắt giữ nó chờ công an đường thủy tiếp nhận!',
+            likes: 120,
+            comments: [
+              {
+                id: 'c-dt-1',
+                user: 'Bà Phương Mẹ Kế',
+                avatar: '👵',
+                time: '22:23',
+                content: 'Tôi đã bảo ban tổ chức rồi, tuyển nhân viên thời vụ không rõ lai lịch là rước họa vào thân! Đề nghị tra khảo nó để tìm ra My ngay!',
+              },
+              {
+                id: 'c-dt-2',
+                user: 'Nam Bồi Bàn',
+                avatar: '🤵',
+                time: '22:26',
+                content: 'Mọi người ơi em bị oan thật mà! Điện thoại đó là do ai đó lén nhét vào túi tạp dề của em lúc em bưng khay rượu qua chỗ đông người! Sao không ai hỏi thuyền trưởng Hải tại sao lúc 21h45 tự nhiên giảm tốc độ tàu ở phao số 04 để ca-nô tiếp cận? Tài khoản ông Hải chiều nay vừa nhận 300 triệu nặc danh kìa!',
+              },
+              {
+                id: 'c-dt-3',
+                user: 'Thuyền Trưởng Hải',
+                avatar: '⚓',
+                time: '22:30',
+                content: 'Mày đừng có vu oan giáng họa thằng nhóc! Tàu giảm tốc là tuân thủ luồng hàng hải của Cảng vụ! Còn 300 triệu là tiền khách đặt cọc mua động cơ ca-nô cũ của tôi, có hợp đồng kinh tế ký tại văn phòng đường thủy!',
+              },
+            ],
+          },
+        ],
+      },
+
       {
         id: 'minh-khang',
         name: 'Minh Khang',
@@ -1515,7 +1800,7 @@ export function getChoTotListings(caseId: string): ChoTotListing[] {
 
 /** Danh sách biến động số dư VietinBank (VỤ 2, 3, 4, 5) */
 export function getBankTransactions(caseId: string): BankTransaction[] {
-  // Vụ 1: Hẻm 42 - Sao kê VietinBank khoản nợ 5 triệu của Dũng
+  // Vụ 1: Hẻm 42 - Sao kê VietinBank
   if (caseId === 'hem42') {
     return [
       {
@@ -1542,10 +1827,32 @@ export function getBankTransactions(caseId: string): BankTransaction[] {
         balanceAfter: '5.090.000 VND',
         content: 'TIEN XANG VA BUA TOI',
       },
+      {
+        id: 'TX-1010',
+        time: '21:50:30 · Thứ Sáu',
+        type: 'out',
+        amount: '-6.000.000 VND',
+        accountName: 'TRAN VAN SON',
+        accountNo: '10772211xxxx',
+        bank: 'VietinBank iPay',
+        balanceAfter: '450.000 VND',
+        content: 'SON SHIPPER NOP PHAT VI PHAM GIAO THONG KHO BAC',
+      },
+      {
+        id: 'TX-1011',
+        time: '20:30:00 · Thứ Sáu',
+        type: 'in',
+        amount: '+10.000.000 VND',
+        accountName: 'LE MANH HUNG',
+        accountNo: '10663399xxxx',
+        bank: 'VietinBank',
+        balanceAfter: '18.500.000 VND',
+        content: 'KHACH DAT COC MUA XAC 2 XE DIEN CU THAO PHU TUNG',
+      },
     ]
   }
 
-  // Vụ 2: Linh chuyển tiền học phí lúc 20:41
+  // Vụ 2: Sân cầu lông
   if (caseId === 'tu-do' || caseId === 'cau-long') {
     return [
       {
@@ -1571,6 +1878,28 @@ export function getBankTransactions(caseId: string): BankTransaction[] {
         bank: 'VietinBank iPay Mobile',
         content: 'Khach san so 2 thanh toan nuoc uong',
         balanceAfter: '3.240.000 VND',
+      },
+      {
+        id: 'TX-2013',
+        time: '21:05:40 · Thứ Bảy',
+        type: 'in',
+        amount: '+5.500.000 VND',
+        accountName: 'LE THANH HAO',
+        accountNo: '10558833xxxx',
+        bank: 'VietinBank iPay Mobile',
+        content: 'Chuyen tien tra no keo ca do set 2 hom qua cho Hao',
+        balanceAfter: '5.850.000 VND',
+      },
+      {
+        id: 'TX-2014',
+        time: '20:55:10 · Thứ Bảy',
+        type: 'out',
+        amount: '-1.500.000 VND',
+        accountName: 'TRAN SON',
+        accountNo: '10447722xxxx',
+        bank: 'VietinBank',
+        content: 'Tra tien thue phong tro thang 9',
+        balanceAfter: '220.000 VND',
       },
     ]
   }
@@ -1602,6 +1931,28 @@ export function getBankTransactions(caseId: string): BankTransaction[] {
         content: 'Nhan 8.000.000 VND tu Nguyen Thu Trang',
         balanceAfter: '12.450.000 VND',
       },
+      {
+        id: 'TX-99825',
+        time: '21:40:15 · Thứ Bảy',
+        type: 'out',
+        amount: '-15.000.000 VND',
+        accountName: 'VU DINH TU',
+        accountNo: '10776655xxxx',
+        bank: 'VietinBank iPay Mobile',
+        content: 'TU THANH TOAN NO GOC TIEN SO CRYPTO HAN CHOT',
+        balanceAfter: '450.000 VND',
+      },
+      {
+        id: 'TX-99828',
+        time: '20:15:00 · Thứ Bảy',
+        type: 'out',
+        amount: '-5.000.000 VND',
+        accountName: 'HOANG VAN KHOA',
+        accountNo: '10662288xxxx',
+        bank: 'ATM VietinBank Dinh Lang',
+        content: 'RUT TIEN MAT TAI CAY ATM SAN DINH',
+        balanceAfter: '820.000 VND',
+      },
     ]
   }
 
@@ -1620,6 +1971,28 @@ export function getBankTransactions(caseId: string): BankTransaction[] {
         balanceAfter: '15.200.000 VND',
         clueId: 'chuyen-khoan',
         clueLabel: 'Lệnh chuyển khoản 200 triệu lúc 21:50 do Đạt ký duyệt',
+      },
+      {
+        id: 'TX-4015',
+        time: '20:00:10 · Thứ Bảy',
+        type: 'in',
+        amount: '+150.000.000 VND',
+        accountName: 'NGUYEN VAN KHAI',
+        accountNo: '10332211xxxx',
+        bank: 'VietinBank',
+        content: 'VAY TIEN MAT AP LAI THOA THUAN NHA CAI',
+        balanceAfter: '150.320.000 VND',
+      },
+      {
+        id: 'TX-4018',
+        time: '20:15:30 · Thứ Bảy',
+        type: 'out',
+        amount: '-200.000.000 VND',
+        accountName: 'NGUYEN THI LAN',
+        accountNo: '10229988xxxx',
+        bank: 'VietinBank iPay Mobile',
+        content: 'LAN NOP HOC PHI DU HOC UC CON GAI MONASH UNIVERSITY',
+        balanceAfter: '42.150.000 VND',
       },
     ]
   }
@@ -1653,6 +2026,28 @@ export function getBankTransactions(caseId: string): BankTransaction[] {
         clueId: 'trong-alibi-bar',
         clueLabel: 'Hóa đơn thanh toán thẻ ngân hàng tại The Moon Lounge lúc 22:45',
       },
+      {
+        id: 'TX-88140',
+        time: '19:30:15 · Thứ Sáu',
+        type: 'in',
+        amount: '+500.000.000 VND',
+        accountName: 'LE DUC TRONG',
+        accountNo: '10554433xxxx',
+        bank: 'VietinBank',
+        content: 'KHACH SG DAT COC MUA BUC TRANH CO THOI NGUYEN',
+        balanceAfter: '585.200.000 VND',
+      },
+      {
+        id: 'TX-88145',
+        time: '22:30:00 · Thứ Sáu',
+        type: 'in',
+        amount: '+50.000.000 VND',
+        accountName: 'HOANG THI HA',
+        accountNo: '10443388xxxx',
+        bank: 'VietinBank iPay Mobile',
+        content: 'DOANH THU TIKTOK SHOP LIVESTREAM MY PHAM TOI NAY',
+        balanceAfter: '112.500.000 VND',
+      },
     ]
   }
 
@@ -1671,6 +2066,28 @@ export function getBankTransactions(caseId: string): BankTransaction[] {
         content: 'CHUYEN TIEN CHUOC GIAI CUU CON GAI THAO MY THEO YEU CAU',
         clueId: 'vietinbank-chuyen-tien-chuoc',
         clueLabel: 'Sao kê VietinBank: 3 tỷ tiền chuộc đổ vào tài khoản Minh Khang lúc 22:45',
+      },
+      {
+        id: 'TX-77108',
+        time: '17:45:20 · Thứ Bảy',
+        type: 'in',
+        amount: '+300.000.000 VND',
+        accountName: 'TRAN VAN HAI',
+        accountNo: '10775533xxxx',
+        bank: 'VietinBank',
+        content: 'CONG TY SONG HONG DAT COC DONG CO CA NO CU XUONG HAI',
+        balanceAfter: '315.800.000 VND',
+      },
+      {
+        id: 'TX-77112',
+        time: '19:20:00 · Thứ Bảy',
+        type: 'out',
+        amount: '-500.000.000 VND',
+        accountName: 'LE THI PHUONG',
+        accountNo: '10998811xxxx',
+        bank: 'VietinBank VIP Priority',
+        content: 'DAT COC TRANG SUC KIM CUONG CARTIER DIAMOND LUXURY',
+        balanceAfter: '1.240.000.000 VND',
       },
     ]
   }
