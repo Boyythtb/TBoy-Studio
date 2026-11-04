@@ -249,38 +249,62 @@ export default function BattlePlayer() {
     }
 
     return (
-      <PhoneShell code={code}>
-        <div className="flex flex-1 flex-col pb-5">
-          <div className="flex items-start justify-between gap-3 pt-3">
+      <PhoneShell code={code} accent="#7be0c0" wide>
+        <div className="flex flex-1 flex-col pb-4">
+          <div className="flex items-start justify-between gap-3 pt-2">
             <div>
-              <p className="eyebrow mb-2">{isMyTurn ? 'Lượt của bạn' : 'Chờ đối thủ'}</p>
-              <h1 className="display text-2xl" style={{ color: isMyTurn ? '#7be0c0' : '#cbc4e0' }}>
-                {isMyTurn ? 'Bắn!' : `${players[state.turn ?? '']?.name ?? 'Đối thủ'} đang bắn`}
+              <p className="eyebrow mb-1">{isMyTurn ? 'Lượt của bạn' : 'Chờ đối thủ'}</p>
+              <h1 className="display text-xl sm:text-2xl" style={{ color: isMyTurn ? '#7be0c0' : '#cbc4e0' }}>
+                {isMyTurn ? '🎯 Bắn phá tàu địch!' : `⏳ ${players[state.turn ?? '']?.name ?? 'Đối thủ'} đang ngắm bắn…`}
               </h1>
             </div>
-            {state.turnEndsAt > 0 && (
-              <Timer endsAt={state.turnEndsAt} total={SB_TURN_SECONDS * 1000} size={48} tone="moon" />
-            )}
+            <div className="flex items-center gap-2">
+              <span className="hidden sm:inline-block landscape:hidden text-[0.65rem] text-slate-400 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
+                🔄 Xoay ngang để mở Radar song song
+              </span>
+              {state.turnEndsAt > 0 && (
+                <Timer endsAt={state.turnEndsAt} total={SB_TURN_SECONDS * 1000} size={44} tone="moon" />
+              )}
+            </div>
           </div>
 
-          <p className="mt-4 text-[0.62rem] tracking-[0.2em] text-mute uppercase">Vùng biển địch</p>
-          <div
-            className="mt-2 rounded-2xl border p-2"
-            style={{ borderColor: isMyTurn ? 'rgba(123,224,192,0.35)' : 'rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.03)' }}
-          >
-            <BattleGrid shots={myShots} onCell={isMyTurn ? fire : undefined} accent="#7be0c0" />
-          </div>
+          {/* Hai lưới tàu: Xếp dọc trên điện thoại cầm đứng, tự động dàn ngang song song khi xoay ngang điện thoại */}
+          <div className="mt-3 grid grid-cols-1 landscape:grid-cols-2 gap-3 sm:gap-4 flex-1 items-start">
+            {/* Vùng biển địch (Mục tiêu ngắm bắn) */}
+            <div className="flex flex-col">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-[0.62rem] font-bold tracking-[0.2em] text-[#7be0c0] uppercase flex items-center gap-1">
+                  <span>🎯</span> VÙNG BIỂN ĐỊCH (NGẮM BẮN)
+                </p>
+                <span className="text-[0.6rem] text-mute">{countHits(myShots)} phát trúng</span>
+              </div>
+              <div
+                className="rounded-2xl border p-2 shadow-lg"
+                style={{ borderColor: isMyTurn ? 'rgba(123,224,192,0.35)' : 'rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.03)' }}
+              >
+                <BattleGrid shots={myShots} onCell={isMyTurn ? fire : undefined} accent="#7be0c0" />
+              </div>
+            </div>
 
-          <p className="mt-4 text-[0.62rem] tracking-[0.2em] text-mute uppercase">Hạm đội của bạn</p>
-          <div className="mt-2 rounded-2xl border border-white/8 bg-white/[0.03] p-2">
-            <BattleGrid fleet={myFleet} shots={incoming} dimShips accent="#ffc861" />
+            {/* Hạm đội của bạn (Vùng biển của mình) */}
+            <div className="flex flex-col">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-[0.62rem] font-bold tracking-[0.2em] text-amber uppercase flex items-center gap-1">
+                  <span>🛡️</span> HẠM ĐỘI CỦA BẠN (PHÒNG THỦ)
+                </p>
+                <span className="text-[0.6rem] text-mute">{myFleet?.ships?.length ?? 0} chiến hạm</span>
+              </div>
+              <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-2 shadow-lg">
+                <BattleGrid fleet={myFleet} shots={incoming} dimShips accent="#ffc861" />
+              </div>
+            </div>
           </div>
 
           {state.last && (
-            <p className="mt-4 text-center text-[0.68rem] text-mute">
+            <p className="mt-3 text-center text-[0.68rem] text-mute">
               {players[state.last.by]?.name} bắn {state.last.x + 1}·{state.last.y + 1} —{' '}
-              <span className={state.last.hit ? 'text-blood-soft' : 'text-mute'}>{state.last.hit ? 'trúng' : 'trượt'}</span>
-              {state.last.sunk && <span className="text-amber"> · chìm tàu!</span>}
+              <span className={state.last.hit ? 'text-blood-soft font-bold' : 'text-mute'}>{state.last.hit ? '💥 TRÚNG TÀU' : 'TRƯỢT'}</span>
+              {state.last.sunk && <span className="text-amber font-black"> · 🌊 CHÌM TÀU!</span>}
             </p>
           )}
         </div>

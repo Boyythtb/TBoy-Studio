@@ -162,6 +162,10 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
             <span>🎯 Tìm ra thủ phạm</span>
             <span>🔥 Độ khó: {CASE.difficulty}</span>
           </div>
+          <div className="landscape:hidden mt-4 inline-flex items-center gap-2 rounded-xl bg-sky-950/40 border border-sky-500/30 px-3 py-1.5 text-[11px] text-sky-200">
+            <span>🔄</span>
+            <span>Khuyên dùng: Xoay ngang điện thoại để trải nghiệm máy tính macQuê rộng rãi nhất!</span>
+          </div>
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <button
               className="btn btn-primary btn-lg"

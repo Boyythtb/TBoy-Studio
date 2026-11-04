@@ -15,7 +15,9 @@ import {
   monopolyRollDice,
   monopolyBuyProperty,
   monopolyUpgradeProperty,
+  monopolyFlyToTile,
   monopolyEndTurn,
+  MASCOTS,
   monopolyTick,
   MONOPOLY_TILES,
   type MonopolyState,
@@ -400,7 +402,8 @@ export default function MonopolyHost() {
                       className="flex items-center justify-between rounded-xl bg-slate-950/40 p-2 border border-slate-800/80"
                     >
                       <div className="flex items-center gap-2 min-w-0">
-                        <Avatar index={p.avatar} size={24} name={p.name} />
+                        <span className="text-sm shrink-0">{MASCOTS[p.mascotIndex % MASCOTS.length]?.symbol || "🐲"}</span>
+                        <Avatar index={p.avatar} size={22} name={p.name} />
                         <span className={`text-xs font-bold truncate ${p.bankrupt ? 'line-through text-slate-500' : 'text-slate-200'}`}>
                           {p.name}
                         </span>
@@ -459,6 +462,14 @@ export default function MonopolyHost() {
               </button>
             ) : (
               <div className="space-y-1.5">
+                {state.canFlyAirport && (
+                  <button
+                    onClick={() => monopolyFlyToTile(code, state, 31)}
+                    className="w-full rounded-xl bg-sky-600 hover:bg-sky-500 py-2.5 text-xs font-black text-white shadow-lg active:scale-95 transition-all animate-bounce"
+                  >
+                    🛫 BAY ĐẾN LANDMARK 81 (SÂN BAY)
+                  </button>
+                )}
                 {state.canBuyProperty && currentProp && (
                   <button
                     onClick={handleHostBuy}

@@ -8,7 +8,17 @@ import { joinRoom, leaveRoom, readPref, NAME_KEY, AVATAR_KEY } from '../lib/room
 import { buzz } from '../lib/buzz'
 import type { Player } from '../game/types'
 
-export function PhoneShell({ code, children, accent }: { code: string; children: React.ReactNode; accent?: string }) {
+export function PhoneShell({
+  code,
+  children,
+  accent,
+  wide = false,
+}: {
+  code: string
+  children: React.ReactNode
+  accent?: string
+  wide?: boolean
+}) {
   const navigate = useNavigate()
   const handleExit = async () => {
     try {
@@ -19,7 +29,11 @@ export function PhoneShell({ code, children, accent }: { code: string; children:
 
   return (
     <Stage>
-      <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-4 pt-3 pb-safe">
+      <div
+        className={`mx-auto flex min-h-dvh w-full flex-col px-3 sm:px-4 pt-2.5 pb-safe transition-all duration-300 ${
+          wide ? 'max-w-md landscape:max-w-6xl' : 'max-w-md'
+        }`}
+      >
         {/* Header thanh điều hướng phone */}
         <div
           className="flex items-center justify-between pb-2.5 mb-1 border-b"
