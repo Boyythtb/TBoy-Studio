@@ -650,7 +650,7 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
                 avatar: '📹',
                 time: '21:22',
                 content: 'Xe máy biển 29-X1 của Tư đỗ chắn trước cửa hầm từ 21:15!',
-                clueId: 'tu-loi-khai',
+                clueId: 'camera-tu-canh-gioi',
                 clueLabel: 'Xe của Tư đỗ trước cửa hầm lúc 21:15 mâu thuẫn lời khai',
               },
             ],
@@ -765,7 +765,7 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
             time: '21:30 · Thứ Sáu',
             content: 'Đang họp mặt câu lạc bộ cổ vật tại nhà hàng The Moon Lounge từ 21:00 đến 23:00 cùng 2 đối tác kinh doanh.',
             likes: 27,
-            clueId: 'trong-alibi',
+            clueId: 'trong-alibi-bar',
             clueLabel: 'Alibi của Trọng tại The Moon Lounge từ 21h đến 23h',
             comments: [],
           },
@@ -1305,7 +1305,7 @@ export function getBankTransactions(caseId: string): BankTransaction[] {
         bank: 'VietinBank iPay Mobile',
         content: 'POS The Moon Lounge Ba Dinh - Thanh toan hoa don ruou vang',
         balanceAfter: '85.200.000 VND',
-        clueId: 'trong-alibi',
+        clueId: 'trong-alibi-bar',
         clueLabel: 'Hoá đơn quẹt thẻ tại The Moon Lounge lúc 22:45 xác nhận alibi của Trọng',
       },
     ]
@@ -1370,7 +1370,7 @@ export function getBmsLogs(caseId: string): BmsDeviceLog[] {
         location: 'Họng xả rác số 1',
         status: 'warning',
         event: 'Phát hiện thả vật thể nặng 8.2kg xuống họng rác (Túi rác đen chứa găng tay dính máu và sổ nợ).',
-        clueId: 'tui-den',
+        clueId: 'hong-rac-bms',
         clueLabel: 'Nhật ký BMS họng rác lúc 21:30 ghi nhận vật nặng 8.2kg',
       },
     ]
@@ -1654,7 +1654,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
         time: '21:15 · Thứ Bảy',
         description: 'Bảo vệ Tư đi xe máy biển 29-X1 dừng đỗ chắn ngang dốc cửa hầm, mắt nhìn quanh cảnh giới trong lúc bên trong hầm mất điện.',
         objectsObserved: ['Tư bảo vệ', 'Xe máy 29-X1', 'Cảnh giới cửa hầm'],
-        clueId: 'tu-loi-khai',
+        clueId: 'camera-tu-canh-gioi',
         clueLabel: 'Camera cửa hầm ghi nhận Tư đỗ xe canh cửa lúc 21:15',
       },
       {
@@ -1665,7 +1665,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
         time: '21:30 · Thứ Bảy',
         description: 'Quản lý Đạt mặc áo sơ mi nhàu, vội vã ném túi nilông đen lớn vào họng xả rác số 1 rồi quay ngoắt bước nhanh ra phố.',
         objectsObserved: ['Trần Tuấn Đạt', 'Túi rác đen 8.2kg', 'Vứt tang vật vào thùng rác'],
-        clueId: 'tui-den',
+        clueId: 'hong-rac-bms',
         clueLabel: 'Camera hẻm sau ghi nhận Đạt vứt túi đen vào thùng rác lúc 21:30',
       },
     ]
@@ -1682,7 +1682,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
         time: '21:10 · Thứ Sáu',
         description: 'Chiếc xe SH màu xám do Bác sĩ Vũ Hoàng điều khiển đi vào ngõ biệt thự lúc 21:10 (trực tiếp vạch trần lời khai giả của Vũ rằng 22:00 mới có mặt).',
         objectsObserved: ['Bác Sĩ Vũ Hoàng', 'Xe SH xám 29-B1', 'Đi vào ngõ lúc 21:10'],
-        clueId: 'vu-den-luc-21h10',
+        clueId: 'so-doc-duoc-vu',
         clueLabel: 'Camera ngõ ghi nhận Vũ đi vào biệt thự lúc 21:10 mâu thuẫn lời khai',
       },
       {
@@ -1693,7 +1693,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
         time: '21:00 - 23:00 · Thứ Sáu',
         description: 'Thương nhân cổ vật Lê Đức Trọng ngồi uống rượu và trò chuyện liên tục cùng 2 đối tác kinh doanh cổ vật tại bàn VIP 03, có camera lưu trữ liên tục.',
         objectsObserved: ['Lê Đức Trọng', 'Hai đối tác kinh doanh', 'Bàn VIP 03 từ 21h đến 23h'],
-        clueId: 'trong-alibi',
+        clueId: 'trong-alibi-bar',
         clueLabel: 'Camera The Moon Lounge xác nhận Trọng có mặt từ 21h đến 23h',
       },
       {

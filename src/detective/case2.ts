@@ -186,6 +186,22 @@ export const CONVS: Conv[] = [
         text: 'Mọi người lại đây xem này... Tấm tôn nóc tủ số 04 phía sau bị bung đinh gỉ bật hẳn lên một khoảng tướng kìa!',
         clue: 'lo-hong-tu',
       },
+      {
+        id: 'g7',
+        from: 'them',
+        senderName: 'Linh Quầy Nước',
+        senderAvatar: '🥤',
+        time: '20:44',
+        text: 'Chị Hạnh thử lên sàn [chotot.vn](https://chotot.vn) tìm xem có ai vừa đăng bán iPhone 14 quanh khu vực sân không, trước em thấy có vụ trộm đồ xong là đăng bán thanh lý liền!',
+      },
+      {
+        id: 'g8',
+        from: 'them',
+        senderName: 'Hào Smash',
+        senderAvatar: '🏸',
+        time: '20:45',
+        text: 'Camera bãi xe với sân 2 nối thẳng lên cổng [camera-phuong.gov.vn](https://camera-phuong.gov.vn) CAM-201 với CAM-202 đấy, trích xuất camera là biết tao đánh trên sân hay đi trộm liền!',
+      },
     ],
   },
   {

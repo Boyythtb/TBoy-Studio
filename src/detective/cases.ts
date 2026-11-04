@@ -343,7 +343,7 @@ export const CASES: CasePack[] = [
     id: 'chung-cu',
     difficulty: 'Siêu khó',
     maxTries: 3,
-    code: { value: '2147', hint: 'Mã số 4 chữ số ghi trên biên bản bàn giao phòng BQL chiều 20/10' },
+    code: { value: '2042', hint: 'Mã số an ninh gồm 4 chữ số: Ghép Số phòng BQL (3 chữ số: 204) và Số tầng toà nhà (1 chữ số: 2)' },
     accomplice: 'tu',
     news: {
       title: 'Chung cư 42: Két sắt văn phòng mở toang, kỹ thuật viên bất tỉnh tại tầng hầm',
@@ -359,7 +359,7 @@ export const CASES: CasePack[] = [
       clueLabel: 'Ghi nhận chấn động họng rác thông tầng lúc 21h18',
     },
     ordersTitle: '🏢 Nhật ký BMS toà nhà & Lịch sử truy cập thẻ từ · Đêm 20/10',
-    searchSuggestions: ['Đạt', 'Tư', 'Khải', 'Lan', 'Bảy', 'két sắt', 'Aptomat', 'họng rác', 'VietinBank', '2147'],
+    searchSuggestions: ['Đạt', 'Tư', 'Khải', 'Lan', 'Bảy', 'két sắt', 'Aptomat', 'họng rác', 'VietinBank', '2042'],
     searchRecords: [
       {
         id: 'sr1',
@@ -402,7 +402,7 @@ export const CASES: CasePack[] = [
         snippet: 'Kết quả phân tích dấu vết cơ học trên cần gạt cầu dao tổng.',
         content:
           'Biên bản giám định dấu vết hình sự hầm B1:\n- Cần gạt Aptomat: Không có dấu vân tay (đối tượng dùng găng tay len để thao tác).\n- Ổ khoá tủ điện sắt: Mở nguyên vẹn bằng chìa khoá dự phòng số 02.\n- Theo sổ phân công ca trực: Chìa khóa tủ điện số 02 được giao độc quyền cho nhân viên bảo vệ cổng hầm (Nguyễn Văn Tư) đeo ở thắt lưng suốt ca trực đêm.',
-        clue: 'chia-tu-dien',
+        clue: 'tu-tat-dien',
         clueLabel: 'Lưu xác minh chỉ có Tư giữ chìa khoá tủ điện tầng hầm',
       },
     ],
@@ -422,7 +422,7 @@ export const CASES: CasePack[] = [
     id: 'an-mang',
     difficulty: 'Siêu khó',
     maxTries: 3,
-    code: { value: '0502', hint: 'Mã hồ sơ lưu trữ độc dược tại Viện Dược Liệu' },
+    code: { value: '2128', hint: 'Mã số an ninh 4 chữ số: Mốc thời gian (giờ & phút) nạn nhân đun ấm trà lần 1 trên Smart Home IoT (21:28)' },
     accomplice: 'yen',
     news: {
       title: 'Kỳ án phòng trà Hẻm 42: Nhà sưu tầm cổ vật tử vong trong căn phòng khoá then cài bên trong',
@@ -438,7 +438,7 @@ export const CASES: CasePack[] = [
       clueLabel: 'Ghi nhận người giúp việc ném đồ xuống hồ cá lúc 21h30',
     },
     ordersTitle: '🍵 Báo cáo pháp y & Dữ liệu Smart Home IoT · Đêm 25/10',
-    searchSuggestions: ['Vũ', 'Yến', 'Trọng', 'Bà Hà', 'Nam', 'Aconitine', 'Smart Home', 'ấm trà', 'VietinBank', '0502'],
+    searchSuggestions: ['Vũ', 'Yến', 'Trọng', 'Bà Hà', 'Nam', 'Aconitine', 'Smart Home', 'ấm trà', 'VietinBank', '2128'],
     searchRecords: [
       {
         id: 'sr1',
@@ -448,7 +448,7 @@ export const CASES: CasePack[] = [
         snippet: 'Kết quả giải phẫu và xác định thời điểm tử vong thực tế của nạn nhân.',
         content:
           'Báo cáo Viện Khoa học Hình sự (phapy-kths.gov.vn):\n- Nạn nhân: Hoàng Văn Khang (62 tuổi)\n- Nguyên nhân tử vong: Suy tim cấp và ngừng hô hấp do trúng độc Aconitine liều cao.\n- Thời điểm tử vong thực tế: Khoảng 21:40 - 21:50 (xác định qua nồng độ dịch vị và thân nhiệt giảm).\n- Đáng chú ý: Ấm trà bốc khói lúc 22:15 là hiện trường giả nhằm tạo alibi ngoại phạm cho thủ phạm.',
-        clue: 'phap-y-gio-chet',
+        clue: 'hien-truong',
         clueLabel: 'Lưu báo cáo pháp y xác nhận thời gian tử vong thực tế lúc 21:45',
       },
       {
@@ -466,7 +466,7 @@ export const CASES: CasePack[] = [
         id: 'sr3',
         category: 'Cảnh sát',
         title: 'Sổ kiểm soát độc dược: Viện Nghiên Cứu Dược Liệu Hà Nội (Mã 0502)',
-        keywords: ['aconitine', 'độc dược', 'vũ', 'dược liệu', 'sổ ký nhận', '0502'],
+        keywords: ['aconitine', 'độc dược', 'vũ', 'dược liệu', 'sổ ký nhận', '2128'],
         snippet: 'Danh sách cá nhân tiếp cận mẫu độc chất Aconitine tinh chế.',
         content:
           'Hồ sơ lưu trữ lưu mẫu độc chất số 0502 tại Viện Dược Liệu:\n- Hoá chất: Aconitine 20mg dạng dung dịch không màu không mùi\n- Người ký nhận đề tài nghiên cứu: Bác sĩ Lê Quốc Vũ (Viện Nghiên cứu Độc học ứng dụng)\n- Ngày bàn giao: Sáng ngày 25/10/2026\n- Mục đích ghi trong sổ: “Nghiên cứu cơ chế ức chế kênh ion natri trên mô tim”.',
@@ -492,7 +492,7 @@ export const CASES: CasePack[] = [
         snippet: 'Bản vẽ kỹ thuật cơ chế khoá then cài từ phía bên ngoài.',
         content:
           'Kết quả giám định hiện trường phòng kín của Viện Kỹ thuật Hình sự:\n- Then cài cửa chính: Gài then bằng gỗ chéo từ bên trong.\n- Then cài cửa sổ hướng ra ban công sau: Có một vệt ma sát màu trắng đục của sợi cước nylon loại dùng câu cá chép.\n- Cơ chế phòng kín: Thủ phạm đã luồn sợi cước qua khe cửa sổ, kéo then cài sập chốt từ ngoài ban công rồi rút cước ra ngoài.',
-        clue: 'day-cuoc-phong-kin',
+        clue: 'then-cai-chi-cuoc',
         clueLabel: 'Lưu cơ chế dùng sợi cước kéo chốt then cài từ ngoài',
       },
     ],
@@ -512,6 +512,7 @@ export const CASES: CasePack[] = [
     id: 'du-thuyen',
     difficulty: 'Siêu hóc búa',
     maxTries: 3,
+    code: { value: '0450', hint: 'Mã vô tuyến hàng hải: Ghép [Số hiệu phao đón người (04)] và [Số phút ca-nô rời bến lúc 21:50 (50)]' },
     accomplice: 'thao-my',
     news: {
       title: 'Bến du thuyền Sông Hồng chấn động: Ái nữ tập đoàn bất động sản mất tích giữa tiệc sinh nhật',
@@ -537,7 +538,7 @@ export const CASES: CasePack[] = [
         snippet: 'Hình ảnh nhân dạng đối tượng rời mạn du thuyền lúc 21:50:40.',
         content:
           'Trích xuất camera an ninh cảng sông (camera-phuong.gov.vn) CAM-601:\n- Mốc thời gian: 21:50:40\n- Hình ảnh: Một người mặc áo mưa cánh dơi trùm kín đầu, vóc dáng thon gọn bước từ sàn mạn phải du thuyền xuống ca-nô cao tốc đang nổ máy chờ sẵn.\n- Đáng chú ý: Động tác bước xuống hoàn toàn tự nhiên, không có dấu hiệu bị ép buộc, giằng co hay khống chế vũ lực.',
-        clue: 'buoc-xuong-ca-no',
+        clue: 'camera-ben-thuyen',
         clueLabel: 'Lưu hình ảnh đối tượng bước xuống ca-nô tự nguyện lúc 21:50',
       },
       {
@@ -559,7 +560,7 @@ export const CASES: CasePack[] = [
         snippet: 'Chi tiết tài khoản trung gian tiếp nhận khoản tiền chuộc từ gia đình.',
         content:
           'Lệnh phong toả khẩn cấp tài khoản ngân hàng điện tử VietinBank TX-77102:\n- Số tiền giao dịch: 3.000.000.000 VNĐ lúc 22:45:10\n- Tài khoản thụ hưởng: Công ty TNHH Truyền thông & Sự kiện Khang Event\n- Người đại diện pháp luật và nắm quyền chủ tài khoản: LÊ MINH KHANG (bạn trai của nạn nhân).\n- Lệnh rút tiền mặt tại cây ATM ven sông vừa bị chặn lại do nhập sai mã OTP 3 lần.',
-        clue: 'tai-khoan-minh-khang',
+        clue: 'vietinbank-chuyen-tien-chuoc',
         clueLabel: 'Lưu lệnh phong toả tài khoản nhận 3 tỷ của Minh Khang',
       },
       {
