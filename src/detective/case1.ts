@@ -280,7 +280,7 @@ export const CONVS: Conv[] = [
         senderName: 'Hùng Net',
         senderAvatar: '🖥️',
         time: '21:46',
-        text: 'Vy mày nói ai thế? Bà chủ nhà trọ vừa bảo mày nợ 2 tháng tiền trọ, tao còn thấy mày đăng bán xe gì trên Chợ Tốt kia kìa!',
+        text: 'Vy mày nói ai thế? Bà chủ nhà trọ vừa bảo mày nợ 2 tháng tiền trọ, tao còn thấy mày đăng bán xe gì trên sàn [Chợ Tốt](https://chotot.vn) kia kìa!',
       },
       {
         id: 'g7',
@@ -367,7 +367,7 @@ export const CONVS: Conv[] = [
     avatar: '🛵',
     sub: 'Hoạt động 5 phút trước',
     preview: 'Em ở trong phòng ngủ từ 21h15 mà anh chị...',
-    requires: ['mat-xe'],
+    requires: ['don-hang-2147'],
     messages: [
       { id: 'd1', from: 'them', time: '21:52', text: 'Anh chị hỏi em làm gì? Em mệt quá về phòng trọ trùm chăn ngủ say từ 21h15 rồi, có biết gì đâu!' },
       { id: 'd2', from: 'them', time: '21:53', text: 'Con bé Vy nó nợ tiền phòng trọ mấy tháng nay kìa, trên mạng nó đang rao bán xe điện ầm ầm sao anh chị không kiểm tra?' },
@@ -382,7 +382,7 @@ export const CONVS: Conv[] = [
         id: 'd4',
         from: 'them',
         time: '22:02',
-        text: 'Ủa... chắc là máy em để trong túi quần bị cấn màn hình tự nhảy nhận đơn ảo chứ em đang nằm ngủ mà!',
+        text: 'Ủa... máy em bị cấn túi quần tự nhận đơn ảo chứ em đang nằm ngủ mà! Nếu em dắt xe kéo qua phố thì camera ngoài ngã tư [Camera Phường](https://camera-phuong.gov.vn) ghi lại ngay rồi, sao các người không tra xem!',
         requires: ['don-hang-2147'],
       },
       {
@@ -407,7 +407,7 @@ export const CONVS: Conv[] = [
     avatar: '🎧',
     sub: 'Hoạt động 2 phút trước',
     preview: 'Em đăng bán xe đỏ cũ từ 3 hôm trước mà…',
-    requires: ['mat-xe'],
+    requires: ['vy-xe-do'],
     messages: [
       { id: 'v1', from: 'them', time: '22:05', text: 'Anh chị ơi, chiếc xe em đăng bán trên Chợ Tốt là chiếc Asama màu đỏ của em từ năm nhất, em đăng từ 3 hôm trước rồi!' },
       { id: 'v2', from: 'them', time: '22:06', text: 'Em đúng là đang túng tiền trọ thật, nhưng chiếc xe em bán có giấy tờ hoá đơn đàng hoàng, không phải xe cô Lan đâu ạ!', clue: 'vy-xe-do' },
@@ -415,7 +415,7 @@ export const CONVS: Conv[] = [
         id: 'v3',
         from: 'them',
         time: '22:07',
-        text: 'Hồi 21h35 em xuống vứt rác, chỉ thấy một người trùm mũ áo khoác kéo chiếc xe màu xanh mint ra cổng, giỏ có treo túi hoa. Do ngõ tối mất điện nên em không dám nhìn lâu.',
+        text: 'Hồi 21h35 em xuống vứt rác, chỉ thấy một người trùm mũ áo khoác kéo chiếc xe màu xanh mint ra cổng, giỏ có treo túi hoa. Hình như người đó mặc đồng phục shipper GiaoNhanh! Anh thử kiểm tra máy chủ [GiaoNhanh](https://giaonhanh.vn) xem đêm nay ai nhận đơn quanh ngõ!',
         clue: 'vy-chung-kien',
       },
     ],
@@ -426,7 +426,7 @@ export const CONVS: Conv[] = [
     avatar: '🖥️',
     sub: 'Đang online',
     preview: 'Tối nay tôi ngồi quán trông máy suốt…',
-    requires: ['mat-xe'],
+    requires: ['don-hang-2147'],
     messages: [
       { id: 'h1', from: 'them', time: '21:55', text: 'Tôi ngồi quán net từ chập tối tới giờ, khách ra vào chơi game liên tục. Ai nợ tiền ai tôi ghi sổ hết.' },
       {

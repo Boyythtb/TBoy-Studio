@@ -108,19 +108,60 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
     })
   }
 
-  const onAccuse = (id: string) => {
+  const [clueBanner, setClueBanner] = useState<{
+    id: string
+    title: string
+    unlockedConvNames: string[]
+  } | null>(null)
+
+  const handleFindClue = (clueId: string) => {
+    if (found.has(clueId)) return
+    find(clueId)
+    MacSound.pinClue()
+
+    const clueDef = pack.clues[clueId]
+    const title = clueDef?.title ?? clueId
+
+    const newFound = new Set(found)
+    newFound.add(clueId)
+
+    const newlyUnlocked = pack.convs
+      .filter((c) => {
+        const wasLocked = c.requires && !c.requires.every((r) => found.has(r))
+        const nowUnlocked = !c.requires || c.requires.every((r) => newFound.has(r))
+        return wasLocked && nowUnlocked
+      })
+      .map((c) => c.name)
+
+    setClueBanner({
+      id: clueId,
+      title,
+      unlockedConvNames: newlyUnlocked,
+    })
+  }
+
+  useEffect(() => {
+    if (!clueBanner) return
+    const timer = setTimeout(() => setClueBanner(null), 5000)
+    return () => clearTimeout(timer)
+  }, [clueBanner])
+
+  const onAccuse = (id: string): 'win' | 'wrong' | 'dead' | 'stage2' | 'locked' => {
     const r = accuse(id)
     if (r === 'win') {
       MacSound.confrontSuccess()
       setResult('win')
-    }
-    if (r === 'dead') {
+    } else if (r === 'dead') {
       MacSound.confrontFail()
       setResult('lost')
+    } else if (r === 'wrong') {
+      setToast('❌ Chưa đúng thủ phạm! Hãy đối chiếu thêm các manh mối trong Sổ vụ án.')
+    } else if (r === 'stage2') {
+      setToast('🎯 Đã bắt đúng thủ phạm chính! Còn kẻ đồng phạm hỗ trợ là ai?')
+    } else if (r === 'locked') {
+      setToast('🔒 Hồ sơ đang bị khoá mã an ninh — hãy giải mã trước khi cáo buộc.')
     }
-    if (r === 'wrong') setToast('Chưa đúng. Đọc lại sổ vụ án rồi thử lại.')
-    if (r === 'stage2') setToast('Đúng là thủ phạm. Còn ai đã giúp?')
-    if (r === 'locked') setToast('Hồ sơ đang khoá — nhập mã trước.')
+    return r
   }
 
   useEffect(() => {
@@ -373,8 +414,8 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
 
               {/* Window Content */}
               <div className="h-[calc(100%-2.5rem)] overflow-hidden flex flex-col min-h-0 select-text">
-                {app.id === 'zola' && <ZolaApp found={found} find={find} onOpenUrl={handleOpenUrl} />}
-                {app.id === 'browser' && <BrowserApp found={found} find={find} externalUrl={browserTargetUrl} />}
+                {app.id === 'zola' && <ZolaApp found={found} find={handleFindClue} onOpenUrl={handleOpenUrl} />}
+                {app.id === 'browser' && <BrowserApp found={found} find={handleFindClue} externalUrl={browserTargetUrl} />}
                 {app.id === 'notes' && <NotesApp found={found} />}
                 {app.id === 'file' && (
                   <FileApp
@@ -411,7 +452,16 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
                   </span>
 
                   {/* Squircle SVG Icon */}
-                  {a.id === 'zola' && <ZolaIcon size={dockIconSize} />}
+                  {a.id === 'zola' && (
+                    <div className="relative">
+                      <ZolaIcon size={dockIconSize} />
+                      {pack.convs.some((c) => c.requires && c.requires.length > 0 && c.requires.every((r) => found.has(r))) && (
+                        <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-black text-white shadow-[0_0_8px_#ef4444] animate-bounce">
+                          !
+                        </span>
+                      )}
+                    </div>
+                  )}
                   {a.id === 'browser' && <CoccocIcon size={dockIconSize} />}
                   {a.id === 'notes' && <NotesIcon size={dockIconSize} />}
                   {a.id === 'file' && <FileIcon size={dockIconSize} />}
@@ -454,16 +504,53 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
           </div>
         </div>
 
+        {/* Floating Clue Notification Banner */}
+        {clueBanner && (
+          <div className="fixed top-11 left-1/2 z-[1002] -translate-x-1/2 w-[92vw] max-w-md animate-in fade-in slide-in-from-top-4 duration-300 pointer-events-auto">
+            <div className="rounded-2xl border-2 border-amber-400/80 bg-slate-900/95 p-3.5 shadow-[0_15px_50px_rgba(0,0,0,0.85)] backdrop-blur-xl text-white">
+              <div className="flex items-start justify-between gap-2.5">
+                <div className="flex items-start gap-2.5">
+                  <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-amber-500/20 border border-amber-400/40 text-xl shadow-inner animate-pulse">
+                    🔍
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-amber-400">
+                      ĐÃ THU THẬP ĐƯỢC MANH MỐI MỚI!
+                    </p>
+                    <h4 className="text-[13px] font-bold text-white leading-snug line-clamp-2 mt-0.5">
+                      {clueBanner.title}
+                    </h4>
+                    {clueBanner.unlockedConvNames.length > 0 && (
+                      <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                        <span className="rounded-md bg-emerald-500/25 border border-emerald-400/50 px-2 py-0.5 text-[11px] font-bold text-emerald-300 flex items-center gap-1">
+                          <span>💬</span> Đã mở khoá hội thoại: {clueBanner.unlockedConvNames.join(', ')}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <button
+                  onClick={() => setClueBanner(null)}
+                  className="rounded-lg p-1 text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                  aria-label="Đóng thông báo"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Toast */}
         {toast && (
-          <div className="fixed bottom-24 left-1/2 z-[60] -translate-x-1/2 rounded-full border border-slate-200 bg-white/95 px-4 py-2 text-[12px] font-bold text-slate-800 shadow-xl">
+          <div className="fixed bottom-24 left-1/2 z-[998] -translate-x-1/2 rounded-full border border-slate-200 bg-white/95 px-5 py-2.5 text-[12px] font-bold text-slate-800 shadow-2xl backdrop-blur-md">
             {toast}
           </div>
         )}
 
         {/* Exit Modal */}
         {showExitModal && (
-          <div className="fixed inset-0 z-[80] grid place-items-center bg-black/60 px-4 backdrop-blur-xs">
+          <div className="fixed inset-0 z-[1001] grid place-items-center bg-black/60 px-4 backdrop-blur-xs">
             <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl">
               <div className="flex items-center gap-3">
                 <div className="grid h-12 w-12 place-items-center rounded-2xl bg-red-100 border border-red-200 text-2xl">
@@ -539,7 +626,7 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
 
         {/* Result Modal */}
         {result && (
-          <div className="fixed inset-0 z-[70] grid place-items-center bg-black/60 px-6 backdrop-blur-xs">
+          <div className="fixed inset-0 z-[1000] grid place-items-center bg-black/75 px-6 backdrop-blur-sm">
             <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-7 text-center shadow-2xl">
               <div className="text-4xl">{result === 'win' ? '🕵️' : '📁'}</div>
               <h2 className="display mt-3 text-3xl font-bold font-serif text-slate-900">

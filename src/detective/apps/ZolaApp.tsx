@@ -11,6 +11,8 @@ export interface Ctx {
 export function ZolaApp({ found, find, onOpenUrl }: Ctx) {
   const { convs: CONVS, case: caseMeta } = usePack()
   const [active, setActive] = useState<string | null>(null)
+  const [viewed, setViewed] = useState<Set<string>>(() => new Set(['group']))
+  const prevActiveRef = useRef<string | null>(null)
   const [inspectToast, setInspectToast] = useState<{ text: string; success: boolean } | null>(null)
 
   const convs = CONVS.filter((c) => !c.requires || c.requires.every((r) => found.has(r)))
@@ -19,7 +21,16 @@ export function ZolaApp({ found, find, onOpenUrl }: Ctx) {
   const scroller = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (scroller.current) scroller.current.scrollTop = scroller.current.scrollHeight
+    if (scroller.current) {
+      if (prevActiveRef.current !== active) {
+        prevActiveRef.current = active
+        // Bắt đầu từ đầu cuộc hội thoại để đọc từ trên xuống!
+        scroller.current.scrollTop = 0
+      } else {
+        // Chỉ cuộn xuống đáy khi có tin nhắn mới phát sinh trong lúc đang mở hội thoại
+        scroller.current.scrollTop = scroller.current.scrollHeight
+      }
+    }
   }, [active, msgs.length])
 
   useEffect(() => {
@@ -236,6 +247,7 @@ function getLinkPreview(text: string): LinkPreviewInfo | null {
               key={c.id}
               onClick={() => {
                 MacSound.click()
+                setViewed((v) => new Set(v).add(c.id))
                 setActive(c.id)
               }}
               className="group flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-slate-100/80"
@@ -248,8 +260,13 @@ function getLinkPreview(text: string): LinkPreviewInfo | null {
               </div>
               <span className="min-w-0 flex-1">
                 <span className="flex items-center justify-between gap-2">
-                  <span className="truncate text-[13px] font-bold text-[#1d1d1f] group-hover:text-blue-600 transition-colors">
-                    {c.name}
+                  <span className="truncate text-[13px] font-bold text-[#1d1d1f] group-hover:text-blue-600 transition-colors flex items-center gap-1.5">
+                    <span>{c.name}</span>
+                    {!viewed.has(c.id) && (
+                      <span className="shrink-0 px-1.5 py-0.5 rounded-full bg-red-500 text-[9px] font-black text-white animate-pulse">
+                        MỚI
+                      </span>
+                    )}
                   </span>
                   <span className="shrink-0 text-[11px] text-slate-400">{c.sub}</span>
                 </span>
