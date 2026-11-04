@@ -64,19 +64,12 @@ export function useCase(pack: CasePack) {
     setSave((s) => (s.clues.includes(id) ? s : { ...s, clues: [...s.clues, id] }))
   }, [])
 
-  const unlock = useCallback(
-    (code: string) => {
-      const ok = !!pack.code && code.trim() === pack.code.value
-      if (ok) setSave((s) => ({ ...s, unlocked: true }))
-      return ok
-    },
-    [pack.code],
-  )
+  const unlock = useCallback((_code: string) => true, [])
 
   const accuse = useCallback(
     (id: string): AccuseResult => {
       if (save.status !== 'playing') return save.status === 'won' ? 'win' : 'dead'
-      if (pack.code && !save.unlocked) return 'locked'
+      // code check removed
 
       if (save.stage === 'accomplice') {
         if (id === pack.accomplice) {

@@ -35,7 +35,7 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
   const CASE = pack.case
   useTitle(`${CASE.title} · Thám Tử Bàn Phím`)
 
-  const { clues, status, stage, triesLeft, found, find, accuse, unlock, unlocked, reset } = useCase(pack)
+  const { clues, status, stage, triesLeft, found, find, accuse, reset } = useCase(pack)
 
   const [open, setOpen] = useState<Record<AppId, boolean>>(() => {
     if (typeof window !== 'undefined' && window.innerWidth < 900) {
@@ -444,9 +444,6 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
                     maxTries={pack.maxTries}
                     status={status}
                     stage={stage}
-                    unlocked={unlocked}
-                    code={pack.code}
-                    onUnlock={unlock}
                   />
                 )}
               </div>

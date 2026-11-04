@@ -47,9 +47,9 @@ export const CLUES: Record<string, ClueDef> = {
   'camera-ben-thuyen': {
     id: 'camera-ben-thuyen',
     tag: 'web',
-    title: 'Camera CAM-601: Thảo My đi giày thể thao bước xuống ca-nô lúc 21:50',
+    title: 'Camera CAM-601: Người mặc áo mưa trùm đầu bước xuống ca-nô lúc 21:50',
     detail:
-      'Camera an ninh hàng hải CAM-601 (camera-phuong.gov.vn): Lúc 21:50, một phụ nữ vóc dáng thon gọn mặc áo mưa trùm kín đầu, chân đi giày thể thao trắng bước từ mạn du thuyền xuống ca-nô cao tốc rất nhanh nhẹn và tự nguyện, hoàn toàn không có dấu vết bị bắt ép khống chế.',
+      'Camera an ninh hàng hải CAM-601 (camera-phuong.gov.vn): Lúc 21:50, camera ghi nhận một người vóc dáng thon gọn mặc áo mưa trùm kín đầu, chân đi giày thể thao trắng bước từ mạn du thuyền xuống ca-nô cao tốc đang nổ máy chờ sẵn.',
   },
   'vietinbank-chuyen-tien-chuoc': {
     id: 'vietinbank-chuyen-tien-chuoc',
@@ -63,7 +63,7 @@ export const CLUES: Record<string, ClueDef> = {
     tag: 'web',
     title: 'Thảo My mua thuốc nhuộm tóc đen & an thần tại Long Châu lúc 17:15',
     detail:
-      'Hoá đơn LC-608 tại Nhà Thuốc Long Châu chi nhánh Bến Bạc (nhathuoc-longchau42.vn): Lúc 17:15 ngày 28/10, Thảo My tự thanh toán Apple Pay mua thuốc nhuộm tóc màu đen tự nhiên và thuốc an thần để chuẩn bị thay đổi nhân dạng tẩu thoát.',
+      'Hoá đơn LC-608 tại Nhà Thuốc Long Châu chi nhánh Bến Bạc (nhathuoc-longchau42.vn): Lúc 17:15 ngày 28/10, Thảo My tự thanh toán Apple Pay mua thuốc nhuộm tóc màu đen tự nhiên và thuốc an thần lưu trữ trên hệ thống nhà thuốc chi nhánh Bến Bạc.',
   },
   'vali-minh-khang': {
     id: 'vali-minh-khang',
@@ -199,7 +199,7 @@ export const CONVS: Conv[] = [
         id: 't1',
         from: 'them',
         time: '22:18',
-        text: 'Chiếc vòng tay kim cương rơi ở mạn thuyền nhưng không hề có vết trượt chân hay dấu hiệu giằng co vật lộn. Mọi người đang đổ dồn nghi ngờ vào bồi bàn Nam, nhưng hãy cẩn trọng trước khả năng đây là màn kịch tự dàn dựng. Đội kỹ thuật hãy lục soát ngay máy tính du thuyền tại [Thùng rác du thuyền](coccoc://trash) để kiểm tra các tài liệu và hồ sơ hàng hải bị xoá phi tang!',
+        text: 'Chiếc vòng tay kim cương rơi ở mạn thuyền nhưng không hề có vết trượt chân hay dấu hiệu giằng co vật lộn. Mọi người đang đổ dồn nghi ngờ vào bồi bàn Nam, nhưng các dấu vết hiện trường cho thấy không hề có xô xát. Đội kỹ thuật hãy kiểm tra ngay dữ liệu máy tính tại [Thùng rác du thuyền](coccoc://trash) để đối soát các hồ sơ hàng hải và vé điện tử.',
         clue: 'vong-tay-man-thuyen',
       },
       {
@@ -264,7 +264,7 @@ export const CONVS: Conv[] = [
         id: 'mk5',
         from: 'them',
         time: '22:29',
-        text: '...Thôi xong rồi... Cả hai chúng tôi đều nợ nần đầu tư thua lỗ nên mới cùng nhau lên kế hoạch tống tiền chính gia đình My để cao chạy xa bay sang Thái Lan... Xin đừng bắt giam chúng tôi...',
+        text: 'Tôi... tôi không biết cái vé máy bay nào hết! Các anh chỉ dựa vào một tệp PDF trôi nổi trong thùng rác máy tính mà đã vội quy chụp tôi à?! Tôi là vị hôn phu của My, tôi muốn tìm cô ấy hơn ai hết!',
         requires: ['ve-may-bay-bangkok'],
       },
     ],
@@ -330,10 +330,6 @@ export const TRASH: TrashItem[] = [
     preview: '02 vé máy bay một chiều đi Bangkok chuyến VN-611… (Tệp bị khóa mật mã)',
     detail: 'Hồ sơ đặt chỗ điện tử: 02 vé máy bay một chiều đi Bangkok chuyến VN-611 khởi hành lúc 06:00 sáng 29/10 cho hành khách: Lê Minh Khang và Nguyễn Thảo My.',
     clue: 've-may-bay-bangkok',
-    locked: true,
-    lockPrompt: 'Tệp vé máy bay điện tử đi Bangkok bị mã hóa bảo mật hãng hàng không: Hãy nhập giờ cất cánh chuyến bay sáng mai (định dạng HH:MM) để giải mã hồ sơ hành khách.',
-    lockHint: 'Xem tài liệu và lời khai về thời điểm chuyến bay quốc tế khởi hành lúc rạng sáng...',
-    lockCodes: ['06:00', '6:00', '06h00', '6h00', '6h', '06:00:00'],
   },
   {
     id: 't2',

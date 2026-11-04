@@ -10,9 +10,6 @@ export function FileApp({
   maxTries,
   status,
   stage,
-  unlocked,
-  code,
-  onUnlock,
 }: {
   found: Set<string>
   accuse: (id: string) => string | void
@@ -20,15 +17,13 @@ export function FileApp({
   maxTries: number
   status: string
   stage: string
-  unlocked: boolean
+  unlocked?: boolean
   code?: { value: string; hint: string }
-  onUnlock: (val: string) => boolean
+  onUnlock?: (val: string) => boolean
 }) {
   const { suspects: SUSPECTS, case: CASE_META } = usePack()
-  const [codeInput, setCodeInput] = useState('')
-  const [codeError, setCodeError] = useState(false)
   const [confrontModal, setConfrontModal] = useState<{
-    type: 'wrong' | 'stage2' | 'locked'
+    type: 'wrong' | 'stage2'
     title: string
     desc: string
     triesLeft?: number
@@ -36,30 +31,8 @@ export function FileApp({
 
   const isPlaying = status === 'playing'
 
-  const handleUnlock = () => {
-    const ok = onUnlock(codeInput)
-    if (!ok) {
-      MacSound.confrontFail()
-      setCodeError(true)
-    } else {
-      MacSound.confrontSuccess()
-      setCodeError(false)
-    }
-  }
-
   const handleAccuseClick = (s: Suspect) => {
     if (!isPlaying) return
-
-    if (code && !unlocked) {
-      MacSound.confrontFail()
-      setConfrontModal({
-        type: 'locked',
-        title: 'Hồ sơ đang bị khoá mã an ninh!',
-        desc: code.hint || 'Bạn cần tìm mã an ninh 4 số và nhập vào ô bên trên để mở khóa trước khi tiến hành cáo buộc.',
-      })
-      return
-    }
-
     MacSound.click()
     const result = accuse(s.id)
 
@@ -68,7 +41,7 @@ export function FileApp({
       setConfrontModal({
         type: 'wrong',
         title: 'Cáo buộc không chính xác!',
-        desc: `Cơ quan điều tra xác minh ${s.name} có chứng cứ ngoại phạm hoặc bằng chứng chưa đủ để kết tội! Bạn đã bị trừ 1 lượt cáo buộc.`,
+        desc: `Cơ quan điều tra xác minh ${s.name} có chứng cứ ngoại phạm hoặc chứng cứ chưa đủ căn cứ kết tội! Bạn đã bị trừ 1 lượt cáo buộc.`,
         triesLeft: Math.max(0, triesLeft - 1),
       })
     } else if (result === 'stage2') {
@@ -77,13 +50,6 @@ export function FileApp({
         type: 'stage2',
         title: `Đã bắt đúng thủ phạm: ${s.name}!`,
         desc: `Tuyệt vời! Bạn đã vạch trần kẻ chủ mưu ${s.name}. Tuy nhiên, hắn còn một ĐỒNG PHẠM tiếp tay tại hiện trường. Hãy chỉ điểm tiếp kẻ đồng phạm để hoàn tất phá án!`,
-      })
-    } else if (result === 'locked') {
-      MacSound.confrontFail()
-      setConfrontModal({
-        type: 'locked',
-        title: 'Hồ sơ đang bị khoá an ninh!',
-        desc: code?.hint || 'Vui lòng mở khoá mã 4 số trước khi thực hiện cáo buộc.',
       })
     }
   }
@@ -102,38 +68,6 @@ export function FileApp({
         <h3 className="mt-1.5 text-[16px] font-bold text-slate-900 tracking-tight">{CASE_META.title}</h3>
         <p className="mt-1 text-[12px] text-slate-600 leading-relaxed">{CASE_META.brief}</p>
       </div>
-
-      {code && !unlocked && (
-        <div className="rounded-2xl border border-amber-300 bg-amber-50 p-4 shadow-2xs space-y-2.5">
-          <p className="text-[12px] font-bold text-amber-900 flex items-center gap-1.5">
-            <span>🔒</span> HỒ SƠ BỊ KHOÁ MÃ AN NINH
-          </p>
-          <p className="text-[12px] text-slate-700">{code.hint}</p>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={codeInput}
-              onChange={(e) => setCodeInput(e.target.value)}
-              placeholder="Nhập mã 4 số..."
-              maxLength={4}
-              className="flex-1 rounded-xl bg-white border border-slate-300 px-3 py-1.5 text-[13px] text-slate-900 font-mono outline-none focus:border-amber-500"
-            />
-            <button
-              onClick={handleUnlock}
-              className="rounded-xl bg-amber-500 hover:bg-amber-600 px-3.5 py-1.5 text-[12px] font-bold text-slate-950 transition-all shadow-2xs cursor-pointer"
-            >
-              Mở khoá
-            </button>
-          </div>
-          {codeError && <p className="text-[11px] text-red-600 font-medium">Mã không chính xác. Hãy kiểm tra lại manh mối!</p>}
-        </div>
-      )}
-
-      {code && unlocked && (
-        <div className="rounded-2xl border border-emerald-300 bg-emerald-50 p-3 shadow-2xs flex items-center gap-2 text-emerald-800 text-[12px] font-bold">
-          <span>🔓</span> Hồ sơ an ninh đã được mở khóa! Bạn đã có thể tiến hành cáo buộc.
-        </div>
-      )}
 
       <div>
         <div className="flex items-center justify-between mb-2.5">
@@ -160,13 +94,9 @@ export function FileApp({
               <button
                 disabled={!isPlaying}
                 onClick={() => handleAccuseClick(s)}
-                className={`mt-3 w-full py-1.5 rounded-xl border text-[12px] font-bold transition-all shadow-2xs cursor-pointer ${
-                  code && !unlocked
-                    ? 'border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100'
-                    : 'border-slate-300 bg-white hover:bg-slate-100 text-slate-800'
-                }`}
+                className="mt-3 w-full py-1.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-800 text-[12px] font-bold transition-all shadow-2xs cursor-pointer active:scale-98"
               >
-                {code && !unlocked ? '🔒 Cần mở khoá để cáo buộc' : 'Cáo buộc đối tượng này'}
+                Cáo buộc đối tượng này
               </button>
             </div>
           ))}
@@ -178,24 +108,18 @@ export function FileApp({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
           <div className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-5 shadow-2xl text-center">
             <div className="text-3xl mb-2">
-              {confrontModal.type === 'wrong' ? '❌' : confrontModal.type === 'stage2' ? '🎯' : '🔒'}
+              {confrontModal.type === 'wrong' ? '❌' : '🎯'}
             </div>
-            <h3 className={`text-[15px] font-black ${
-              confrontModal.type === 'wrong' ? 'text-red-600' : confrontModal.type === 'stage2' ? 'text-emerald-600' : 'text-amber-700'
-            }`}>
-              {confrontModal.title}
-            </h3>
-            <p className="mt-2 text-[12px] text-slate-600 leading-relaxed">
-              {confrontModal.desc}
-            </p>
+            <h4 className="text-[15px] font-bold text-slate-900">{confrontModal.title}</h4>
+            <p className="mt-2 text-[12px] text-slate-600 leading-relaxed">{confrontModal.desc}</p>
             {confrontModal.triesLeft !== undefined && (
-              <p className="mt-2 text-[11px] font-bold text-slate-500 bg-slate-100 py-1 px-2 rounded-lg inline-block">
-                Số lượt cáo buộc còn lại: <b>{confrontModal.triesLeft} / {maxTries}</b>
+              <p className="mt-2 text-[11px] font-bold text-amber-600">
+                Lượt cáo buộc còn lại: {confrontModal.triesLeft}
               </p>
             )}
             <button
               onClick={() => setConfrontModal(null)}
-              className="mt-4 w-full py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-[12px] font-bold transition-all"
+              className="mt-4 w-full rounded-xl bg-slate-900 py-2 text-[12px] font-bold text-white hover:bg-slate-800 transition-colors shadow-2xs"
             >
               Tiếp tục điều tra
             </button>
