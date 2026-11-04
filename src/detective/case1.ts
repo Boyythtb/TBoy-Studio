@@ -80,6 +80,10 @@ export interface TrashItem {
   preview: string
   detail: string
   clue?: string
+  locked?: boolean
+  lockPrompt?: string
+  lockHint?: string
+  lockCodes?: string[]
 }
 
 export interface Suspect {

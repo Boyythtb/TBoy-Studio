@@ -19,20 +19,6 @@ export function TrafficCameraSite({ caseId, found, onPin }: Props) {
   const [visionMode, setVisionMode] = useState<VisionMode>('normal')
   const [zoomLevel, setZoomLevel] = useState<number>(1)
 
-  // Hệ thống mở khóa camera an ninh
-  const [unlockedCams, setUnlockedCams] = useState<Set<string>>(() => {
-    try {
-      const raw = localStorage.getItem(`tboy.detective.unlockedCams.${caseId}`)
-      return raw ? new Set(JSON.parse(raw)) : new Set<string>()
-    } catch {
-      return new Set<string>()
-    }
-  })
-  const [passcode, setPasscode] = useState('')
-  const [unlockError, setUnlockError] = useState('')
-  const [showHint, setShowHint] = useState(false)
-  const [unlockSuccessFlash, setUnlockSuccessFlash] = useState(false)
-
   const cams = Array.from(new Set(records.map((r) => r.camLocation)))
 
   const filtered = records.filter((r) => {
@@ -53,48 +39,11 @@ export function TrafficCameraSite({ caseId, found, onPin }: Props) {
     setInspectRecord(item)
     setVisionMode('normal')
     setZoomLevel(1)
-    setPasscode('')
-    setUnlockError('')
-    setShowHint(false)
-    setUnlockSuccessFlash(false)
   }
 
   const closeInspector = () => {
     MacSound.click()
     setInspectRecord(null)
-  }
-
-  const handleUnlock = (record: TrafficCameraRecord) => {
-    if (!record.lockCodes || record.lockCodes.length === 0) return
-    const cleanEntered = passcode.trim().toLowerCase().replace(/\s+/g, '')
-    if (!cleanEntered) {
-      setUnlockError('Vui lòng nhập mã trích xuất trước khi xác thực.')
-      return
-    }
-
-    const isMatch = record.lockCodes.some((code) => {
-      const cleanCode = code.trim().toLowerCase().replace(/\s+/g, '')
-      return cleanCode === cleanEntered || cleanEntered.includes(cleanCode) || cleanCode.includes(cleanEntered)
-    })
-
-    if (isMatch) {
-      MacSound.confrontSuccess()
-      const nextSet = new Set(unlockedCams)
-      nextSet.add(record.id)
-      setUnlockedCams(nextSet)
-      try {
-        localStorage.setItem(`tboy.detective.unlockedCams.${caseId}`, JSON.stringify(Array.from(nextSet)))
-      } catch {
-        // ignore
-      }
-      setUnlockError('')
-      setPasscode('')
-      setUnlockSuccessFlash(true)
-      setTimeout(() => setUnlockSuccessFlash(false), 3000)
-    } else {
-      MacSound.confrontFail()
-      setUnlockError('❌ Mã trích xuất không chính xác! Hãy đối soát kỹ lời khai, biên bản hoặc nhật ký điều tra.')
-    }
   }
 
   const getVisionFilterClass = (mode: VisionMode) => {
@@ -115,7 +64,6 @@ export function TrafficCameraSite({ caseId, found, onPin }: Props) {
   // =========================================================================
   if (inspectRecord) {
     const isFound = inspectRecord.clueId ? found.has(inspectRecord.clueId) : false
-    const isLocked = Boolean(inspectRecord.locked && !unlockedCams.has(inspectRecord.id))
     const imgSrc = inspectRecord.img ? `${import.meta.env.BASE_URL}${inspectRecord.img.replace(/^\/+/, '')}` : null
 
     return (
@@ -135,10 +83,7 @@ export function TrafficCameraSite({ caseId, found, onPin }: Props) {
           </button>
 
           <div className="flex-1 min-w-0 text-center px-1">
-            <h2 className="text-[12px] font-bold text-white truncate flex items-center justify-center gap-1">
-              {isLocked && <span className="text-amber-400">🔒</span>}
-              <span>{inspectRecord.camName}</span>
-            </h2>
+            <h2 className="text-[12px] font-bold text-white truncate">{inspectRecord.camName}</h2>
             <p className="text-[9px] text-slate-400 font-mono truncate">
               {inspectRecord.time} · {inspectRecord.camLocation}
             </p>
@@ -156,123 +101,100 @@ export function TrafficCameraSite({ caseId, found, onPin }: Props) {
 
         {/* Nội dung giám định chi tiết */}
         <div className="max-w-2xl w-full mx-auto px-2.5 sm:px-4 py-3 space-y-3 overflow-hidden">
-          {/* Thông báo mở khóa thành công rực rỡ */}
-          {unlockSuccessFlash && (
-            <div className="bg-emerald-950/90 border border-emerald-500/80 p-3 rounded-2xl shadow-xl flex items-center gap-2.5 animate-bounce">
-              <span className="text-xl">✅</span>
-              <div>
-                <p className="text-[12px] font-bold text-emerald-300">
-                  GIẢI MÃ THÀNH CÔNG! DỮ LIỆU ĐÃ ĐƯỢC KHÔI PHỤC
-                </p>
-                <p className="text-[10px] text-emerald-400">
-                  Toàn bộ hình ảnh trích xuất và đối tượng nhận diện đã sẵn sàng để đối chiếu.
-                </p>
+          {/* Thanh công cụ: Bộ lọc & Thu phóng */}
+          <div className="bg-slate-900/95 rounded-2xl border border-slate-800 p-2 shadow-lg space-y-1.5 w-full overflow-hidden">
+            <div className="flex flex-wrap items-center justify-between gap-1.5">
+              <div className="flex flex-wrap items-center gap-1 text-[10px] font-semibold">
+                <span className="text-[9px] text-slate-400 uppercase font-mono mr-0.5">Bộ lọc:</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    MacSound.click()
+                    setVisionMode('normal')
+                  }}
+                  className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-colors ${
+                    visionMode === 'normal'
+                      ? 'bg-indigo-600 text-white shadow-sm'
+                      : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                  }`}
+                >
+                  ⚪ Thường
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    MacSound.click()
+                    setVisionMode('night')
+                  }}
+                  className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-colors ${
+                    visionMode === 'night'
+                      ? 'bg-emerald-600 text-white shadow-sm'
+                      : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                  }`}
+                >
+                  🟢 Đêm
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    MacSound.click()
+                    setVisionMode('uv')
+                  }}
+                  className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-colors ${
+                    visionMode === 'uv'
+                      ? 'bg-purple-600 text-white shadow-sm'
+                      : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                  }`}
+                >
+                  🟣 UV
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    MacSound.click()
+                    setVisionMode('bw')
+                  }}
+                  className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-colors ${
+                    visionMode === 'bw'
+                      ? 'bg-amber-600 text-white shadow-sm'
+                      : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                  }`}
+                >
+                  ⬛ B&W
+                </button>
               </div>
-            </div>
-          )}
 
-          {/* Thanh công cụ: Bộ lọc & Thu phóng (chỉ hiển thị khi đã mở khóa) */}
-          {!isLocked && (
-            <div className="bg-slate-900/95 rounded-2xl border border-slate-800 p-2 shadow-lg space-y-1.5 w-full overflow-hidden">
-              <div className="flex flex-wrap items-center justify-between gap-1.5">
-                <div className="flex flex-wrap items-center gap-1 text-[10px] font-semibold">
-                  <span className="text-[9px] text-slate-400 uppercase font-mono mr-0.5">Bộ lọc:</span>
+              <div className="flex items-center gap-1 text-[10px]">
+                <span className="text-[9px] text-slate-400 uppercase font-mono mr-0.5">Phóng to:</span>
+                {[1, 1.25, 1.5].map((lvl) => (
                   <button
+                    key={lvl}
                     type="button"
                     onClick={() => {
                       MacSound.click()
-                      setVisionMode('normal')
+                      setZoomLevel(lvl)
                     }}
-                    className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-colors ${
-                      visionMode === 'normal'
+                    className={`px-1.5 py-0.5 rounded font-mono text-[10px] font-bold transition-colors ${
+                      zoomLevel === lvl
                         ? 'bg-indigo-600 text-white shadow-sm'
                         : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
                     }`}
                   >
-                    ⚪ Thường
+                    {lvl}x
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      MacSound.click()
-                      setVisionMode('night')
-                    }}
-                    className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-colors ${
-                      visionMode === 'night'
-                        ? 'bg-emerald-600 text-white shadow-sm'
-                        : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-                    }`}
-                  >
-                    🟢 Đêm
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      MacSound.click()
-                      setVisionMode('uv')
-                    }}
-                    className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-colors ${
-                      visionMode === 'uv'
-                        ? 'bg-purple-600 text-white shadow-sm'
-                        : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-                    }`}
-                  >
-                    🟣 UV
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      MacSound.click()
-                      setVisionMode('bw')
-                    }}
-                    className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-colors ${
-                      visionMode === 'bw'
-                        ? 'bg-amber-600 text-white shadow-sm'
-                        : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-                    }`}
-                  >
-                    ⬛ B&W
-                  </button>
-                </div>
-
-                <div className="flex items-center gap-1 text-[10px]">
-                  <span className="text-[9px] text-slate-400 uppercase font-mono mr-0.5">Phóng to:</span>
-                  {[1, 1.25, 1.5].map((lvl) => (
-                    <button
-                      key={lvl}
-                      type="button"
-                      onClick={() => {
-                        MacSound.click()
-                        setZoomLevel(lvl)
-                      }}
-                      className={`px-1.5 py-0.5 rounded font-mono text-[10px] font-bold transition-colors ${
-                        zoomLevel === lvl
-                          ? 'bg-indigo-600 text-white shadow-sm'
-                          : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-                      }`}
-                    >
-                      {lvl}x
-                    </button>
-                  ))}
-                </div>
+                ))}
               </div>
             </div>
-          )}
+          </div>
 
           {/* Màn hình CCTV - Giữ kích thước vừa vặn trong khung hình di động */}
-          <div
-            className={`relative aspect-video max-h-[35vh] w-full max-w-full rounded-2xl bg-black overflow-hidden border grid place-items-center shadow-xl ${
-              isLocked ? 'border-amber-500/50' : 'border-slate-800'
-            }`}
-          >
+          <div className="relative aspect-video max-h-[35vh] w-full max-w-full rounded-2xl bg-black overflow-hidden border border-slate-800 grid place-items-center shadow-xl">
             {imgSrc ? (
               <img
                 src={imgSrc}
                 alt={inspectRecord.camName}
                 style={{ transform: `scale(${zoomLevel})` }}
-                className={`max-h-full max-w-full object-contain transition-transform duration-200 ${
-                  isLocked ? 'filter blur-md opacity-25 select-none pointer-events-none' : getVisionFilterClass(visionMode)
-                }`}
+                className={`max-h-full max-w-full object-contain transition-transform duration-200 ${getVisionFilterClass(visionMode)}`}
                 loading="eager"
               />
             ) : (
@@ -282,108 +204,15 @@ export function TrafficCameraSite({ caseId, found, onPin }: Props) {
               </div>
             )}
 
-            {/* Locked Cyber Police Overlay */}
-            {isLocked && (
-              <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-black/85 to-slate-950/90 flex flex-col items-center justify-center p-4 text-center select-none">
-                <div className="h-12 w-12 rounded-2xl bg-amber-500/20 border border-amber-500/50 flex items-center justify-center text-2xl mb-2 text-amber-400 animate-pulse shadow-lg">
-                  🔒
-                </div>
-                <p className="text-[11px] font-bold text-amber-300 font-mono tracking-wider uppercase">
-                  BĂNG GHI HÌNH BỊ KHÓA AN NINH
-                </p>
-                <p className="text-[9px] text-slate-400 font-mono mt-0.5">
-                  DỮ LIỆU ĐƯỢC BẢO VỆ BỞI CÔNG AN PHƯỜNG
-                </p>
-              </div>
-            )}
-
             {/* Live CCTV HUD Overlay */}
             <div className="absolute top-2 left-2 flex items-center gap-1.5 bg-black/75 backdrop-blur-xs px-2 py-0.5 rounded-md border border-white/10 text-[9px] font-mono text-emerald-400">
-              <span className={`h-1.5 w-1.5 rounded-full ${isLocked ? 'bg-amber-400' : 'bg-red-500 animate-pulse'}`} />
-              <span>{isLocked ? 'LOCKED' : 'REC'} {inspectRecord.id}</span>
+              <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
+              <span>REC {inspectRecord.id}</span>
             </div>
             <div className="absolute top-2 right-2 bg-black/75 backdrop-blur-xs px-2 py-0.5 rounded-md border border-white/10 text-[9px] font-mono text-slate-300">
               🕒 {inspectRecord.time}
             </div>
           </div>
-
-          {/* KHUNG GIẢI MÃ MẬT MÃ TRÍCH XUẤT AN NINH (KHI BỊ KHÓA) */}
-          {isLocked && (
-            <div className="bg-slate-900/95 p-3.5 rounded-2xl border border-amber-500/60 space-y-3 w-full shadow-2xl">
-              <div className="flex items-center gap-2.5">
-                <div className="h-8 w-8 rounded-xl bg-amber-500/20 border border-amber-500/40 grid place-items-center text-base shrink-0">
-                  🔐
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h4 className="text-[12px] font-bold text-amber-300 uppercase tracking-wide truncate">
-                    Xác thực mã PIN trích xuất hình ảnh
-                  </h4>
-                  <p className="text-[10px] text-slate-400 truncate">
-                    Camera được phân quyền an ninh. Nhập mã suy luận từ tài liệu vụ án.
-                  </p>
-                </div>
-              </div>
-
-              <div className="bg-slate-950/90 p-3 rounded-xl border border-amber-500/30 text-[11px] text-slate-200 leading-relaxed font-sans">
-                <p className="font-bold text-amber-200 mb-1 flex items-center gap-1 font-mono text-[10px] uppercase">
-                  <span>📋</span>
-                  <span>Nhiệm vụ trinh thám:</span>
-                </p>
-                <p className="break-words">{inspectRecord.lockPrompt}</p>
-              </div>
-
-              {/* Ô nhập mã PIN & Nút bấm */}
-              <div className="space-y-2">
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={passcode}
-                    onChange={(e) => {
-                      setPasscode(e.target.value)
-                      setUnlockError('')
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') handleUnlock(inspectRecord)
-                    }}
-                    placeholder="Nhập mã PIN / mã trích xuất..."
-                    className="flex-1 rounded-xl bg-slate-950 border border-slate-700 px-3 py-2 text-[12px] text-white font-mono placeholder:text-slate-500 outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-all"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleUnlock(inspectRecord)}
-                    className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 active:scale-95 text-slate-950 font-bold text-[11px] transition-all shadow-md shrink-0 flex items-center gap-1"
-                  >
-                    <span>🔓</span>
-                    <span>Mở khóa</span>
-                  </button>
-                </div>
-
-                {unlockError && (
-                  <p className="text-[10px] font-semibold text-rose-400 bg-rose-950/40 border border-rose-800/60 p-2 rounded-xl">
-                    {unlockError}
-                  </p>
-                )}
-
-                {inspectRecord.lockHint && (
-                  <div className="pt-0.5">
-                    <button
-                      type="button"
-                      onClick={() => setShowHint(!showHint)}
-                      className="text-[10px] text-indigo-400 hover:text-indigo-300 font-medium flex items-center gap-1 transition-colors"
-                    >
-                      <span>💡</span>
-                      <span>{showHint ? 'Ẩn gợi ý trinh thám' : 'Cần gợi ý nơi tra cứu mã này?'}</span>
-                    </button>
-                    {showHint && (
-                      <p className="mt-1.5 text-[10px] text-slate-300 bg-indigo-950/60 border border-indigo-800/60 p-2.5 rounded-xl font-sans italic leading-relaxed">
-                        {inspectRecord.lockHint}
-                      </p>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
 
           {/* Bản ghi phân tích nhận diện */}
           <div className="bg-slate-900/95 p-3 rounded-2xl border border-slate-800 space-y-2 w-full max-w-full overflow-hidden shadow-xl">
@@ -395,62 +224,37 @@ export function TrafficCameraSite({ caseId, found, onPin }: Props) {
                 {inspectRecord.id}
               </span>
             </div>
-
-            {isLocked ? (
-              <p className="text-[11px] text-amber-300/80 italic bg-slate-950/70 p-2.5 rounded-xl border border-slate-800/80 leading-relaxed break-words">
-                🔒 [DỮ LIỆU ĐANG BỊ PHONG TOẢ BẢO MẬT] Hãy giải mã và nhập đúng mã PIN ở khung phía trên để hiển thị dữ liệu nhận diện chi tiết của camera này.
-              </p>
-            ) : (
-              <p className="text-[12px] text-slate-200 leading-relaxed font-sans bg-slate-950/70 p-2.5 rounded-xl border border-slate-800/80 break-words">
-                {inspectRecord.description}
-              </p>
-            )}
-
+            <p className="text-[12px] text-slate-200 leading-relaxed font-sans bg-slate-950/70 p-2.5 rounded-xl border border-slate-800/80 break-words">
+              {inspectRecord.description}
+            </p>
             <div className="flex flex-wrap gap-1 pt-0.5 max-w-full overflow-hidden">
-              {isLocked ? (
-                <span className="px-2 py-0.5 rounded-lg bg-amber-950/60 text-amber-300 text-[10px] font-mono border border-amber-800/50">
-                  🔒 Nhận diện đối tượng bị mã hóa
+              {inspectRecord.objectsObserved.map((obj, i) => (
+                <span
+                  key={i}
+                  className="px-2 py-0.5 rounded-lg bg-indigo-950/80 text-indigo-300 text-[10px] font-mono border border-indigo-800/60"
+                >
+                  🎯 {obj}
                 </span>
-              ) : (
-                inspectRecord.objectsObserved.map((obj, i) => (
-                  <span
-                    key={i}
-                    className="px-2 py-0.5 rounded-lg bg-indigo-950/80 text-indigo-300 text-[10px] font-mono border border-indigo-800/60"
-                  >
-                    🎯 {obj}
-                  </span>
-                ))
-              )}
+              ))}
             </div>
           </div>
 
           {/* Khối nút hành động phía dưới */}
           <div className="space-y-2 pt-0.5 w-full max-w-full overflow-hidden">
-            {isLocked ? (
-              <button
-                type="button"
-                disabled
-                className="w-full py-2.5 rounded-2xl text-[12px] font-bold bg-slate-800/80 text-slate-500 cursor-not-allowed flex items-center justify-center gap-2 border border-slate-700/50"
-              >
-                <span>🔒</span>
-                <span>Cần giải mã an ninh để ghim chứng cứ này</span>
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => {
-                  onPin(inspectRecord.clueId, inspectRecord.clueLabel)
-                }}
-                className={`w-full py-2.5 rounded-2xl text-[12px] font-bold transition-all shadow-xl flex items-center justify-center gap-2 ${
-                  isFound
-                    ? 'bg-emerald-600 text-white'
-                    : 'bg-indigo-600 hover:bg-indigo-500 text-white active:scale-[0.99]'
-                }`}
-              >
-                <span>{isFound ? '✓' : '📌'}</span>
-                <span>{isFound ? 'Đã lưu chứng cứ này vào Sổ vụ án' : 'Ghim chứng cứ này vào Sổ vụ án'}</span>
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => {
+                onPin(inspectRecord.clueId, inspectRecord.clueLabel)
+              }}
+              className={`w-full py-2.5 rounded-2xl text-[12px] font-bold transition-all shadow-xl flex items-center justify-center gap-2 ${
+                isFound
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-indigo-600 hover:bg-indigo-500 text-white active:scale-[0.99]'
+              }`}
+            >
+              <span>{isFound ? '✓' : '📌'}</span>
+              <span>{isFound ? 'Đã lưu chứng cứ này vào Sổ vụ án' : 'Ghim chứng cứ này vào Sổ vụ án'}</span>
+            </button>
 
             <button
               type="button"
@@ -570,16 +374,13 @@ export function TrafficCameraSite({ caseId, found, onPin }: Props) {
           ) : (
             filtered.map((item) => {
               const isFound = item.clueId ? found.has(item.clueId) : false
-              const isLocked = Boolean(item.locked && !unlockedCams.has(item.id))
               const imgSrc = item.img ? `${import.meta.env.BASE_URL}${item.img.replace(/^\/+/, '')}` : null
 
               return (
                 <div
                   key={item.id}
                   className={`bg-slate-900/90 rounded-2xl border overflow-hidden shadow-xl transition-all flex flex-col w-full max-w-full group ${
-                    isLocked
-                      ? 'border-amber-500/50 bg-amber-950/10'
-                      : isFound
+                    isFound
                       ? 'border-emerald-500/80 ring-2 ring-emerald-500/30 bg-emerald-950/20'
                       : 'border-slate-800 hover:border-indigo-500/60 hover:shadow-2xl'
                   }`}
@@ -588,15 +389,13 @@ export function TrafficCameraSite({ caseId, found, onPin }: Props) {
                   <div
                     onClick={() => openInspector(item)}
                     className="relative aspect-video w-full max-w-full bg-black cursor-pointer overflow-hidden border-b border-slate-800"
-                    title={isLocked ? 'Bấm để giải mã mật khẩu trích xuất an ninh' : 'Bấm để phóng to và giám định hình ảnh'}
+                    title="Bấm để phóng to và giám định hình ảnh"
                   >
                     {imgSrc ? (
                       <img
                         src={imgSrc}
                         alt={item.camName}
-                        className={`h-full w-full object-cover group-hover:scale-105 transition-transform duration-300 ${
-                          isLocked ? 'filter blur-md opacity-30 select-none' : ''
-                        }`}
+                        className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
                         loading="lazy"
                       />
                     ) : (
@@ -606,23 +405,11 @@ export function TrafficCameraSite({ caseId, found, onPin }: Props) {
                       </div>
                     )}
 
-                    {/* Cyber Lock Overlay on thumbnail */}
-                    {isLocked && (
-                      <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-1 text-center p-2">
-                        <span className="text-2xl animate-pulse">🔒</span>
-                        <span className="text-[10px] font-bold text-amber-300 font-mono tracking-wider bg-black/75 px-2 py-0.5 rounded border border-amber-500/40">
-                          BĂNG GHI BỊ KHÓA AN NINH
-                        </span>
-                      </div>
-                    )}
-
                     {/* Top CCTV Overlay Metadata */}
                     <div className="absolute top-2 left-2 right-2 flex items-center justify-between text-[9px] font-mono font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] pointer-events-none">
                       <div className="flex items-center gap-1 bg-black/60 backdrop-blur-xs px-1.5 py-0.5 rounded border border-white/10">
-                        <span className={`h-1.5 w-1.5 rounded-full ${isLocked ? 'bg-amber-400' : 'bg-red-500 animate-pulse'}`} />
-                        <span className={isLocked ? 'text-amber-400' : 'text-red-400'}>
-                          {isLocked ? 'LOCKED' : 'REC'}
-                        </span>
+                        <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
+                        <span className="text-red-400">REC</span>
                         <span className="text-slate-300">{item.id}</span>
                       </div>
                       <div className="bg-black/60 backdrop-blur-xs px-1.5 py-0.5 rounded border border-white/10 text-emerald-400 font-mono">
@@ -635,12 +422,8 @@ export function TrafficCameraSite({ caseId, found, onPin }: Props) {
                       <span className="bg-black/75 backdrop-blur-xs text-slate-200 text-[9px] font-mono px-1.5 py-0.5 rounded border border-white/10 truncate max-w-[60%]">
                         📍 {item.camLocation}
                       </span>
-                      <span
-                        className={`text-white text-[9px] font-bold px-2 py-0.5 rounded shadow flex items-center gap-1 shrink-0 ${
-                          isLocked ? 'bg-amber-600' : 'bg-indigo-600'
-                        }`}
-                      >
-                        {isLocked ? '🔓 Mở khóa' : '🔍 Giám định'}
+                      <span className="bg-indigo-600 text-white text-[9px] font-bold px-2 py-0.5 rounded shadow flex items-center gap-1 shrink-0">
+                        🔍 Giám định
                       </span>
                     </div>
                   </div>
@@ -649,46 +432,28 @@ export function TrafficCameraSite({ caseId, found, onPin }: Props) {
                   <div className="p-3 flex-1 flex flex-col justify-between space-y-2.5 w-full max-w-full overflow-hidden">
                     <div className="w-full max-w-full overflow-hidden">
                       <div className="flex items-center justify-between gap-2">
-                        <h3 className="text-[12px] font-bold text-white tracking-wide truncate flex items-center gap-1">
-                          {isLocked && <span className="text-amber-400">🔒</span>}
-                          <span>{item.camName}</span>
-                        </h3>
+                        <h3 className="text-[12px] font-bold text-white tracking-wide truncate">{item.camName}</h3>
                         <span className="rounded bg-indigo-950 text-indigo-300 px-1.5 py-0.2 text-[9px] font-mono border border-indigo-800/60 shrink-0">
                           {item.id}
                         </span>
                       </div>
-
-                      {isLocked ? (
-                        <p className="mt-1.5 text-[11px] text-amber-300/80 italic leading-relaxed bg-slate-950/80 rounded-xl p-2.5 border border-amber-500/30 font-sans break-words">
-                          🔒 Băng ghi hình này được bảo mật an ninh. Bấm &quot;Mở khóa&quot; để nhập mã PIN trích xuất từ tài liệu vụ án.
-                        </p>
-                      ) : (
-                        <p className="mt-1.5 text-[11px] text-slate-300 leading-relaxed bg-slate-950/80 rounded-xl p-2.5 border border-slate-800/80 font-sans break-words">
-                          {item.description}
-                        </p>
-                      )}
+                      <p className="mt-1.5 text-[11px] text-slate-300 leading-relaxed bg-slate-950/80 rounded-xl p-2.5 border border-slate-800/80 font-sans break-words">
+                        {item.description}
+                      </p>
                     </div>
 
                     <div className="space-y-2 pt-1 w-full max-w-full overflow-hidden">
                       {/* Thẻ đối tượng nhận diện */}
                       <div className="flex flex-wrap items-center gap-1 max-w-full overflow-hidden">
-                        <span className="text-[9px] text-slate-400 font-semibold mr-0.5 uppercase font-mono shrink-0">
-                          {isLocked ? 'Trạng thái:' : 'Phát hiện:'}
-                        </span>
-                        {isLocked ? (
-                          <span className="rounded-lg bg-amber-950/50 text-amber-300 px-2 py-0.5 text-[9px] border border-amber-800/40 font-medium">
-                            🔒 Dữ liệu được bảo mật
+                        <span className="text-[9px] text-slate-400 font-semibold mr-0.5 uppercase font-mono shrink-0">Phát hiện:</span>
+                        {item.objectsObserved.map((obj, idx) => (
+                          <span
+                            key={idx}
+                            className="rounded-lg bg-indigo-950/70 text-indigo-200 px-2 py-0.5 text-[9px] border border-indigo-800/50 font-medium"
+                          >
+                            👁️ {obj}
                           </span>
-                        ) : (
-                          item.objectsObserved.map((obj, idx) => (
-                            <span
-                              key={idx}
-                              className="rounded-lg bg-indigo-950/70 text-indigo-200 px-2 py-0.5 text-[9px] border border-indigo-800/50 font-medium"
-                            >
-                              👁️ {obj}
-                            </span>
-                          ))
-                        )}
+                        ))}
                       </div>
 
                       {/* Nút hành động */}
@@ -696,37 +461,23 @@ export function TrafficCameraSite({ caseId, found, onPin }: Props) {
                         <button
                           type="button"
                           onClick={() => openInspector(item)}
-                          className={`text-[11px] font-bold transition-colors flex items-center gap-1 shrink-0 ${
-                            isLocked ? 'text-amber-400 hover:text-amber-300' : 'text-indigo-400 hover:text-indigo-300'
-                          }`}
+                          className="text-[11px] font-bold text-indigo-400 hover:text-indigo-300 transition-colors flex items-center gap-1 shrink-0"
                         >
-                          <span>{isLocked ? '🔓' : '🔍'}</span>
-                          <span>{isLocked ? 'Giải mã an ninh' : 'Giám định ảnh'}</span>
+                          <span>🔍</span> Giám định ảnh
                         </button>
 
-                        {isLocked ? (
-                          <button
-                            type="button"
-                            onClick={() => openInspector(item)}
-                            className="px-2.5 py-1 rounded-xl text-[10px] font-bold bg-amber-600/30 text-amber-300 border border-amber-500/40 hover:bg-amber-600/50 transition-all flex items-center gap-1 shrink-0"
-                          >
-                            <span>🔒</span>
-                            <span>Cần mã PIN</span>
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={() => onPin(item.clueId, item.clueLabel)}
-                            className={`px-2.5 py-1 rounded-xl text-[10px] font-bold transition-all shadow-md flex items-center gap-1 shrink-0 ${
-                              isFound
-                                ? 'bg-emerald-600 text-white'
-                                : 'bg-indigo-600 hover:bg-indigo-500 text-white active:scale-95'
-                            }`}
-                          >
-                            <span>{isFound ? '✓' : '📌'}</span>
-                            <span>{isFound ? 'Đã ghim' : 'Ghim bằng chứng'}</span>
-                          </button>
-                        )}
+                        <button
+                          type="button"
+                          onClick={() => onPin(item.clueId, item.clueLabel)}
+                          className={`px-2.5 py-1 rounded-xl text-[10px] font-bold transition-all shadow-md flex items-center gap-1 shrink-0 ${
+                            isFound
+                              ? 'bg-emerald-600 text-white'
+                              : 'bg-indigo-600 hover:bg-indigo-500 text-white active:scale-95'
+                          }`}
+                        >
+                          <span>{isFound ? '✓' : '📌'}</span>
+                          <span>{isFound ? 'Đã ghim' : 'Ghim bằng chứng'}</span>
+                        </button>
                       </div>
                     </div>
                   </div>
