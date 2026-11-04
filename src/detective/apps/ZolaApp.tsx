@@ -6,12 +6,13 @@ export interface Ctx {
   found: Set<string>
   find: (id: string) => void
   onOpenUrl?: (url: string) => void
+  viewedConvs?: Set<string>
+  onViewConv?: (id: string) => void
 }
 
-export function ZolaApp({ found, find, onOpenUrl }: Ctx) {
+export function ZolaApp({ found, find, onOpenUrl, viewedConvs, onViewConv }: Ctx) {
   const { convs: CONVS, case: caseMeta } = usePack()
   const [active, setActive] = useState<string | null>(null)
-  const [viewed, setViewed] = useState<Set<string>>(() => new Set(['group']))
   const prevActiveRef = useRef<string | null>(null)
   const [inspectToast, setInspectToast] = useState<{ text: string; success: boolean } | null>(null)
 
@@ -247,7 +248,7 @@ function getLinkPreview(text: string): LinkPreviewInfo | null {
               key={c.id}
               onClick={() => {
                 MacSound.click()
-                setViewed((v) => new Set(v).add(c.id))
+                if (onViewConv) onViewConv(c.id)
                 setActive(c.id)
               }}
               className="group flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-slate-100/80"
@@ -262,7 +263,7 @@ function getLinkPreview(text: string): LinkPreviewInfo | null {
                 <span className="flex items-center justify-between gap-2">
                   <span className="truncate text-[13px] font-bold text-[#1d1d1f] group-hover:text-blue-600 transition-colors flex items-center gap-1.5">
                     <span>{c.name}</span>
-                    {!viewed.has(c.id) && (
+                    {viewedConvs && !viewedConvs.has(c.id) && (
                       <span className="shrink-0 px-1.5 py-0.5 rounded-full bg-red-500 text-[9px] font-black text-white animate-pulse">
                         MỚI
                       </span>

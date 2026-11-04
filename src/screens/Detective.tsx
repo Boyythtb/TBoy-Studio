@@ -108,6 +108,17 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
     })
   }
 
+  const [viewedConvs, setViewedConvs] = useState<Set<string>>(() => {
+    const defaultOpen = pack.convs
+      .filter((c) => !c.requires || c.requires.length === 0)
+      .map((c) => c.id)
+    return new Set(defaultOpen)
+  })
+
+  const unreadZolaCount = pack.convs.filter(
+    (c) => (!c.requires || c.requires.every((r) => found.has(r))) && !viewedConvs.has(c.id)
+  ).length
+
   const [clueBanner, setClueBanner] = useState<{
     id: string
     title: string
@@ -414,9 +425,17 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
 
               {/* Window Content */}
               <div className="h-[calc(100%-2.5rem)] overflow-hidden flex flex-col min-h-0 select-text">
-                {app.id === 'zola' && <ZolaApp found={found} find={handleFindClue} onOpenUrl={handleOpenUrl} />}
+                {app.id === 'zola' && (
+                  <ZolaApp
+                    found={found}
+                    find={handleFindClue}
+                    onOpenUrl={handleOpenUrl}
+                    viewedConvs={viewedConvs}
+                    onViewConv={(cid) => setViewedConvs((v) => new Set(v).add(cid))}
+                  />
+                )}
                 {app.id === 'browser' && <BrowserApp found={found} find={handleFindClue} externalUrl={browserTargetUrl} />}
-                {app.id === 'notes' && <NotesApp found={found} />}
+                {app.id === 'notes' && <NotesApp found={found} onFindClue={handleFindClue} />}
                 {app.id === 'file' && (
                   <FileApp
                     found={found}
@@ -455,9 +474,9 @@ function CaseGame({ pack, onExit }: { pack: CasePack; onExit: () => void }) {
                   {a.id === 'zola' && (
                     <div className="relative">
                       <ZolaIcon size={dockIconSize} />
-                      {pack.convs.some((c) => c.requires && c.requires.length > 0 && c.requires.every((r) => found.has(r))) && (
+                      {unreadZolaCount > 0 && (
                         <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-black text-white shadow-[0_0_8px_#ef4444] animate-bounce">
-                          !
+                          {unreadZolaCount}
                         </span>
                       )}
                     </div>
