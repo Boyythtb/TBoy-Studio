@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { MacSound } from '../MacAudio'
-import { getCaseProfiles, getCaseStories, type FbComment, type FbPost } from '../caseSites'
+import { getCaseProfiles, getCaseStories, type FbPost } from '../caseSites'
 
 interface Props {
   caseId: string
@@ -22,10 +22,6 @@ export function FacebucSite({ caseId, currentUrl, found, onNavigate, onPin, onTo
   const [postReactions, setPostReactions] = useState<Record<string, string>>({})
   const [showReactionPicker, setShowReactionPicker] = useState<string | null>(null)
 
-  // Interactive Comments state: additional comments per post
-  const [extraComments, setExtraComments] = useState<Record<string, FbComment[]>>({})
-  const [commentInputs, setCommentInputs] = useState<Record<string, string>>({})
-  const [typingAuthors, setTypingAuthors] = useState<Record<string, string | null>>({})
 
   const urlSlug = currentUrl.includes('facebuc.vn/')
     ? currentUrl.split('facebuc.vn/')[1]?.split('/')[0]?.split('?')[0]
@@ -122,158 +118,6 @@ export function FacebucSite({ caseId, currentUrl, found, onNavigate, onPin, onTo
       }
     }
     setShowReactionPicker(null)
-  }
-
-  // Gợi ý câu hỏi thẩm vấn nhanh theo từng vụ án
-  const getSuggestedQuestions = () => {
-    if (caseId === 'hem42') {
-      return [
-        '❓ Lúc 21:35 bạn đang ở đâu?',
-        '🔍 Bóng xe trong kính cửa hàng lúc 21:58 là của ai?',
-        '⚠️ Bạn có thấy ai kéo xe xanh mint ra ngõ không?',
-      ]
-    }
-    if (caseId === 'tu-do' || caseId === 'cau-long') {
-      return [
-        '❓ Tại sao bạn lại đứng gần tủ đồ số 04?',
-        '🔍 Chiếc iPhone 14 Pro Max trên Chợ Tốt có phải của bạn?',
-        '⚠️ Khoản tiền cọc 5 triệu nhận lúc tối là từ đâu?',
-      ]
-    }
-    if (caseId === 'hoi-cho' || caseId === 'chua-phap-hoa') {
-      return [
-        '❓ Lúc 20:45 bạn ra cây ATM VietinBank nộp tiền gì?',
-        '🔍 Sao số tiền nộp lại trùng khớp 8 triệu thiếu hụt?',
-        '⚠️ Bạn có thấy ai bê hòm công đức ra cổng sau không?',
-      ]
-    }
-    if (caseId === 'chung-cu' || caseId === 'cong-ty-x') {
-      return [
-        '❓ Tại sao aptomat tầng 2 lại bị ngắt thủ công từ tủ BMS?',
-        '🔍 Ai đã dùng quyền admin đăng nhập hệ thống lúc 20:50?',
-        '⚠️ Chìa khoá và mã két sắt phụ căn 204 bàn giao cho ai?',
-      ]
-    }
-    if (caseId === 'an-mang' || caseId === 'biet-thu-x') {
-      return [
-        '❓ Ai đã bật ấm đun nước IOT-505 pha trà lúc 21:30?',
-        '🔍 Độc tố Aconitine trong chén trà từ đâu mà có?',
-        '⚠️ Đơn thuốc kịch độc ở Long Châu là ai đứng tên kê?',
-      ]
-    }
-    if (caseId === 'du-thuyen' || caseId === 'con-tin' || caseId === 'dau-gia') {
-      return [
-        '❓ Tại sao ca-nô lại nổ máy đón người ở phao số 04 lúc 21:50?',
-        '🔍 Hai chiếc vali nặng 45kg gửi trước ra bến có gì bên trong?',
-        '⚠️ Vé máy bay Bangkok chuyến 06:00 sáng mai là của ai?',
-      ]
-    }
-    return [
-      '❓ Bạn có thể xác nhận lại mốc thời gian lúc xảy ra vụ việc?',
-      '🔍 Có ai làm chứng cho bạn vào thời điểm đó không?',
-    ]
-  }
-
-  // Tự động phản hồi chất vấn của Điều tra viên
-  const handleSendComment = (postId: string, authorName: string, authorSlug: string, contentText?: string) => {
-    const text = (contentText || commentInputs[postId] || '').trim()
-    if (!text) return
-
-    MacSound.click()
-    const newCommentId = `det-c-${Date.now()}`
-    const detComment: FbComment = {
-      id: newCommentId,
-      user: 'Điều tra viên',
-      avatar: '🕵️',
-      time: 'Vừa xong',
-      content: text,
-    }
-
-    setExtraComments((prev) => ({
-      ...prev,
-      [postId]: [...(prev[postId] || []), detComment],
-    }))
-    setCommentInputs((prev) => ({ ...prev, [postId]: '' }))
-
-    // Hiển thị trạng thái đang soạn tin
-    setTypingAuthors((prev) => ({ ...prev, [postId]: authorName }))
-
-    setTimeout(() => {
-      MacSound.zolaPing()
-      setTypingAuthors((prev) => ({ ...prev, [postId]: null }))
-
-      // Tạo câu trả lời đối chất mang tính phòng thủ / lộ sơ hở
-      let replyContent = ''
-      const lower = text.toLowerCase()
-
-      if (caseId === 'hem42') {
-        if (authorSlug.includes('dung')) {
-          if (lower.includes('21:35') || lower.includes('kính') || lower.includes('xe') || lower.includes('bóng')) {
-            replyContent = 'Ủa gì? Tôi đã bảo là tôi về phòng trùm chăn ngủ từ 21:15 rồi, cái ảnh trước cửa hàng điện thoại chỉ là chụp bừa thôi! Làm gì có xe xanh nào, điều tra viên đừng có bới lông tìm vết vu khống tôi!'
-          } else {
-            replyContent = 'Tôi không biết gì đâu nhé! Mất xe thì tự đi mà check camera ngõ, réo tên shipper nghèo như tôi làm gì?!'
-          }
-        } else if (authorSlug.includes('vy')) {
-          replyContent = 'Dạ em sinh viên năm 2 đang lo trả tiền trọ mệt xỉu, em thề xe Asama đỏ em đăng bán từ 3 hôm trước là xe riêng của em, hoá đơn giấy tờ đầy đủ chứ em không bao giờ lấy trộm xe cô Lan đâu ạ!'
-        } else {
-          replyContent = 'Tôi chỉ biết quanh khung giờ đó ngõ nhộn nhịp lắm, camera ngã tư [Camera Phường](https://camera-phuong.gov.vn) chắc chắn ghi hình hết!'
-        }
-      } else if (caseId === 'tu-do' || caseId === 'cau-long') {
-        if (authorSlug.includes('son')) {
-          replyContent = 'Tôi vào phòng thay đồ rửa mặt cho đỡ buồn ngủ rồi ra ghế đá ngay! Vết xước trên tay tôi là do va quẹt cạnh bàn thôi, các người đừng có suy diễn lung tung!'
-        } else if (authorSlug.includes('hao')) {
-          replyContent = 'Tôi thi đấu liên tục với anh Tuấn HLV trên Sân số 2 suốt từ 20:30 đến 21:00, cả khán đài và trọng tài đều làm chứng cho tôi!'
-        } else {
-          replyContent = 'Lúc đó quầy đông khách lấy nước, tôi thấy anh Sơn đi lại khu tủ đồ số 04 mấy lượt rất đáng nghi.'
-        }
-      } else if (caseId === 'hoi-cho' || caseId === 'chua-phap-hoa') {
-        if (authorSlug.includes('tu')) {
-          replyContent = 'Tiền tôi nộp vào cây ATM VietinBank là tiền tôi gom thu nợ riêng, liên quan gì đến mấy đồng bạc lẻ trong hòm công đức chùa mà các người hỏi cung tôi?!'
-        } else if (authorSlug.includes('trang')) {
-          replyContent = 'Dạ em phụ trách phát đèn hoa đăng liên tục từ 20:15 đến 21:15, phật tử nhận đèn chụp ảnh chung với em đầy trên Bảng tin kìa ạ!'
-        } else {
-          replyContent = 'Hòm công đức niêm phong lúc 20:30, đến 21h thì phát hiện khóa bị cạy bung.'
-        }
-      } else if (caseId === 'chung-cu' || caseId === 'cong-ty-x') {
-        if (authorSlug.includes('dat')) {
-          replyContent = 'Aptomat tầng 2 quá tải thì rơ-le tự nhảy chứ ai mà rảnh đi ngắt điện! Nhật ký hệ thống [BMS](https://bms-building.vn) lưu đầy đủ, tôi làm việc đúng chức trách!'
-        } else {
-          replyContent = 'Lúc mất điện đèn hành lang tối om, chuông báo cháy giả réo vang khiến mọi người hoảng loạn chạy xuống sảnh.'
-        }
-      } else if (caseId === 'an-mang' || caseId === 'biet-thu-x') {
-        if (authorSlug.includes('vu')) {
-          replyContent = 'Tôi là bác sĩ riêng theo dõi sức khoẻ của Chủ tịch Khang 5 năm nay! Ấm trà tôi đun là trà thảo mộc an thần, làm sao có độc tính Aconitine được, các vị đừng có chụp mũ chuyên gia!'
-        } else {
-          replyContent = 'Khoảng 21h30 căn bếp bốc khói ấm siêu tốc réo to lắm, lúc đó chỉ có bác sĩ Vũ ở tầng trệt.'
-        }
-      } else if (caseId === 'du-thuyen' || caseId === 'con-tin' || caseId === 'dau-gia') {
-        if (authorSlug.includes('khang') || authorSlug.includes('my')) {
-          replyContent = 'Tính mạng con tin ngàn cân treo sợi tóc, gia đình đang gom tiền chuộc! Điều tra viên lo mà truy bắt kẻ bắt cóc đi, đừng có quấy rầy chuyện riêng của chúng tôi!'
-        } else {
-          replyContent = 'Lúc 21:50 radar phát hiện một chiếc ca-nô cao tốc cập mạn phao số 04 rồi phóng vút về phía cửa biển.'
-        }
-      } else {
-        replyContent = 'Tôi đã cung cấp tất cả những gì tôi biết cho cơ quan chức năng rồi!'
-      }
-
-      const suspectReply: FbComment = {
-        id: `reply-${Date.now()}`,
-        user: authorName,
-        avatar: profiles.find((p) => p.name === authorName)?.avatar || '👤',
-        time: 'Vừa xong',
-        content: replyContent,
-      }
-
-      setExtraComments((prev) => ({
-        ...prev,
-        [postId]: [...(prev[postId] || []), suspectReply],
-      }))
-
-      onToast({
-        text: `💬 ${authorName} vừa phản hồi chất vấn của bạn trên Facebúc!`,
-        success: true,
-      })
-    }, 900)
   }
 
   return (
@@ -796,8 +640,7 @@ export function FacebucSite({ caseId, currentUrl, found, onNavigate, onPin, onTo
     const isLiked = likedPosts[post.id]
     const effectiveLikes = (post.likes || 0) + (likeCounts[post.id] || 0)
     const reaction = postReactions[post.id] || '👍'
-    const allComments = [...post.comments, ...(extraComments[post.id] || [])]
-    const isTyping = typingAuthors[post.id]
+    const allComments = post.comments
 
     return (
       <div key={post.id} className="bg-white rounded-2xl border border-slate-200 p-4 shadow-2xs space-y-3">
@@ -1003,62 +846,6 @@ export function FacebucSite({ caseId, currentUrl, found, onNavigate, onPin, onTo
             )
           })}
 
-          {/* Typing Indicator if suspect is writing reply */}
-          {isTyping && (
-            <div className="flex items-center gap-2 pl-2 text-[11px] text-slate-500 italic animate-pulse">
-              <span>✍️</span>
-              <span>{isTyping} đang gõ phản hồi...</span>
-            </div>
-          )}
-
-          {/* Interactive Detective Comment Input & Quick Suggestion Chips */}
-          <div className="pt-2 border-t border-slate-100 space-y-2">
-            {/* Quick Suggestion Chips */}
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Hỏi nhanh:</span>
-              {getSuggestedQuestions().map((q, qIdx) => (
-                <button
-                  key={qIdx}
-                  type="button"
-                  onClick={() => handleSendComment(post.id, author.name, author.slug, q)}
-                  className="text-[11px] bg-slate-100 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/80 px-2 py-0.5 rounded-full transition-colors cursor-pointer text-slate-700 font-medium"
-                >
-                  {q}
-                </button>
-              ))}
-            </div>
-
-            {/* Input Form */}
-            <div className="flex items-center gap-2">
-              <span className="grid h-8 w-8 place-items-center rounded-full bg-blue-100 text-blue-700 text-sm shrink-0">
-                🕵️
-              </span>
-              <div className="flex-1 flex items-center bg-[#f0f2f5] rounded-full px-3 py-1.5 border border-transparent focus-within:border-blue-400 focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-500/20 transition-all">
-                <input
-                  id={`input-${post.id}`}
-                  type="text"
-                  value={commentInputs[post.id] || ''}
-                  onChange={(e) => setCommentInputs((prev) => ({ ...prev, [post.id]: e.target.value }))}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault()
-                      handleSendComment(post.id, author.name, author.slug)
-                    }
-                  }}
-                  placeholder={`Chất vấn hoặc hỏi ${author.name}...`}
-                  className="w-full bg-transparent outline-none text-[12px] text-slate-800 placeholder-slate-400"
-                />
-                <button
-                  type="button"
-                  onClick={() => handleSendComment(post.id, author.name, author.slug)}
-                  className="text-[#1877F2] font-bold text-sm px-1.5 hover:scale-110 active:scale-95 transition-transform cursor-pointer"
-                  title="Gửi câu hỏi chất vấn"
-                >
-                  ➤
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     )

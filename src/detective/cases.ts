@@ -343,7 +343,7 @@ export const CASES: CasePack[] = [
     id: 'chung-cu',
     difficulty: 'Siêu khó',
     maxTries: 3,
-    code: { value: '2042', hint: 'Mã số an ninh gồm 4 chữ số: Ghép Số phòng BQL (3 chữ số: 204) và Số tầng toà nhà (1 chữ số: 2)' },
+    code: { value: '2042', hint: 'Quy chuẩn mã bảo mật BMS: Ghép số phòng của Ban Quản Lý toà nhà với số tầng xảy ra sự cố điện để mở khoá.' },
     accomplice: 'tu',
     news: {
       title: 'Chung cư 42: Két sắt văn phòng mở toang, kỹ thuật viên bất tỉnh tại tầng hầm',
@@ -422,7 +422,7 @@ export const CASES: CasePack[] = [
     id: 'an-mang',
     difficulty: 'Siêu khó',
     maxTries: 3,
-    code: { value: '2128', hint: 'Mã số an ninh 4 chữ số: Mốc thời gian (giờ & phút) nạn nhân đun ấm trà lần 1 trên Smart Home IoT (21:28)' },
+    code: { value: '2128', hint: 'Xác thực hệ thống Smart Home: Nhập mốc thời gian (giờ và phút) khi ấm siêu tốc bắt đầu đun sôi nước trà trong bếp.' },
     accomplice: 'yen',
     news: {
       title: 'Kỳ án phòng trà Hẻm 42: Nhà sưu tầm cổ vật tử vong trong căn phòng khoá then cài bên trong',
@@ -512,7 +512,7 @@ export const CASES: CasePack[] = [
     id: 'du-thuyen',
     difficulty: 'Siêu hóc búa',
     maxTries: 3,
-    code: { value: '0450', hint: 'Mã vô tuyến hàng hải: Ghép [Số hiệu phao đón người (04)] và [Số phút ca-nô rời bến lúc 21:50 (50)]' },
+    code: { value: '0450', hint: 'Mã vô tuyến hàng hải: Ghép số hiệu phao cứu sinh đón người trên hải đồ với thời điểm ca-nô cao tốc cập mạn.' },
     accomplice: 'thao-my',
     news: {
       title: 'Bến du thuyền Sông Hồng chấn động: Ái nữ tập đoàn bất động sản mất tích giữa tiệc sinh nhật',
