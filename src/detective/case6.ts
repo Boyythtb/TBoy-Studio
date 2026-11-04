@@ -84,7 +84,7 @@ export const CLUES: Record<string, ClueDef> = {
     tag: 'file',
     title: 'Tệp điện tử PNR-7881: Lịch trình chuyến bay quốc tế TG561 đi Bangkok lúc 05:45',
     detail:
-      'Tệp PDF phục hồi từ thùng rác máy tính du thuyền: Hồ sơ đặt vé Thai Airways chuyến TG-561 khởi hành 05:45 sáng 29/10 đi Bangkok cho 02 hành khách mang tên "MR. KHANG / LE" và "MS. MY / NGUYEN", email xác nhận gửi về contact@horizon-event.asia.',
+      'Tệp PDF phục hồi từ thùng rác máy tính du thuyền: Xác nhận đặt vé Thai Airways chuyến TG-561 cất cánh 05:45 sáng 29/10 đi Bangkok cho 02 hành khách ẩn danh: "PAX 1: L. M. K. (Khách VIP)" và "PAX 2: N. T. M. (Khách VIP)". Phương thức thanh toán: Thẻ tín dụng Priority Diamond #9988, tài khoản xuất vé thuộc đối tác Horizon Event.',
   },
   'ma-phao-hai-dang': {
     id: 'ma-phao-hai-dang',
@@ -410,7 +410,7 @@ export const TRASH: TrashItem[] = [
     name: 'e_ticket_TG561_pnr_7881.pdf',
     kind: 'Tệp vé điện tử hàng không quốc tế',
     preview: 'Electronic Ticket Receipt · Thai Airways TG-561 Bangkok…',
-    detail: 'Hồ sơ đặt chỗ điện tử chuyến bay TG-561 đi Bangkok lúc 05:45 sáng 29/10 cho 02 hành khách viết tắt: "MR. KHANG / LE" và "MS. MY / NGUYEN", email xác nhận gửi về contact@horizon-event.asia.',
+    detail: 'Hồ sơ đặt chỗ điện tử PNR-7881 hãng Thai Airways: Chuyến bay TG-561 đi Bangkok lúc 05:45 sáng 29/10. Danh sách hành khách ẩn danh: "PAX 1: L. M. K." và "PAX 2: N. T. M.". Vé hạng thương gia, thanh toán qua thẻ Priority Diamond #9988, email nhận vé: contact@horizon-event.asia.',
     clue: 've-may-bay-bangkok',
   },
   {

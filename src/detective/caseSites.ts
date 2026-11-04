@@ -460,8 +460,6 @@ export function getCaseStories(caseId: string): FbStory[] {
         bgGradient: 'from-amber-950 via-slate-900 to-black',
         badgeText: 'LÚC 21:15',
         caption: 'Thưởng thức xì gà Cuba và ly rượu vang 1982 với các đối tác thương thuyền. Cuộc đời là những ván cờ sinh tử 🍸',
-        clueId: 've-may-bay-bangkok',
-        clueLabel: 'Bản kê tài chính: Hợp đồng sự kiện du thuyền đến hạn thanh toán',
         reactionsCount: 39,
       },
       {
@@ -485,7 +483,7 @@ export function getCaseStories(caseId: string): FbStory[] {
         time: '21:20 · 2 giờ trước',
         bgGradient: 'from-emerald-950 via-teal-950 to-black',
         badgeText: 'LÚC 21:20',
-        caption: 'Bưng khay cocktail phục vụ bàn VIP của tiểu thư Thảo My và anh Minh Khang. Thấy hai người thì thầm to nhỏ chuyện vé máy bay gì đó 🍷',
+        caption: 'Bưng khay cocktail phục vụ bàn VIP của tiểu thư Thảo My và anh Minh Khang. Thấy hai người thì thầm to nhỏ rất căng thẳng về việc phải rời đi trước khi trời sáng 🍷',
         clueId: 'nam-boi-ban-khai',
         clueLabel: 'Lời khai bồi bàn: Cuộc trò chuyện tại mạn thuyền tầng 3 lúc 21:20',
         reactionsCount: 23,
