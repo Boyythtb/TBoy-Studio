@@ -291,7 +291,7 @@ export const CONVS: Conv[] = [
         id: 'tr5',
         from: 'them',
         time: '21:39',
-        text: '...Trời ơi... xin các anh tha thứ cho em... Em nợ thẻ tín dụng đến hạn bị đe dọa siết đồ... Thấy mất điện tối om em quẫn trí lấy chìa mở hòm lấy tiền... Em xin nộp lại toàn bộ số tiền ạ...',
+        text: 'Khoản 8 triệu đó là tiền doanh thu tích luỹ bán bánh mì cả tuần qua và tiền em vay thêm mẹ em để nộp trả thẻ tín dụng! Em bán hàng vất vả kiếm từng đồng chứ đâu có ăn trộm! Chừng nào có người tận mắt thấy em mở hòm sắt thì hãy đến nói chuyện!',
         requires: ['chuyen-tien-trang'],
       },
     ],

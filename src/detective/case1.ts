@@ -414,7 +414,7 @@ export const CONVS: Conv[] = [
         id: 'd6',
         from: 'them',
         time: '22:04',
-        text: '...Trời ơi... sao các người lại soi ra được tấm kính phản chiếu... Tôi... tôi túng quẫn vì bị anh Hùng đòi nợ 5 triệu gắt gao quá...',
+        text: 'Áo khoác GiaoNhanh cả thành phố này hàng nghìn người mặc! Còn tấm kính phản chiếu bóng xe từ xa thì có chứng minh được gì đâu?! Các anh đừng có chụp mũ vu khống người lao động khi chưa có kết luận của cơ quan công an!',
         requires: ['anh-phan-chieu'],
       },
     ],

@@ -292,7 +292,7 @@ export const CONVS: Conv[] = [
         id: 's5',
         from: 'them',
         time: '20:52',
-        text: '...Tôi... tôi cùng đường rồi... Chủ nợ dí dữ quá, thấy khe tôn tủ 04 lỏng lẻo nên tôi mới đánh liều thò tay vào móc chiếc điện thoại... Xin các anh tha cho tôi...',
+        text: 'Tôi nói rồi, tay tôi bị xước là do va quẹt cọc lưới sắt lúc nhảy cứu cầu! Còn số IP Wi-Fi ở sân thì hàng chục người bắt chung, sao lại bảo tôi đăng tin Chợ Tốt?! Các anh không có bằng chứng thì đừng hòng ép cung tôi!',
         requires: ['tin-nhan-ban'],
       },
     ],

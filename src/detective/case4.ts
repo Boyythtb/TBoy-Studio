@@ -299,7 +299,7 @@ export const CONVS: Conv[] = [
         id: 'd5',
         from: 'them',
         time: '21:54',
-        text: '...Trời ơi... sao các người truy ra được cả khoản chuyển tiền trả nợ của tôi... Tôi nợ cờ bạc bị giang hồ dọa xử nên mới dựng màn kịch mất điện đổ tội cho Khải... Xin đừng tống tôi vào tù...',
+        text: 'Khoản tiền đó là tôi thu xếp vay mượn từ bạn bè kinh doanh để thanh toán nợ cá nhân, hoàn toàn không liên quan gì đến 200 triệu quỹ toà nhà! Là Trưởng ban quản lý, tôi yêu cầu các anh làm việc có căn cứ pháp lý rõ ràng!',
         requires: ['lenh-chuyen-200tr'],
       },
     ],
