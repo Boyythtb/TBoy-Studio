@@ -19,6 +19,21 @@ export interface FbPost {
   comments: FbComment[]
 }
 
+export interface FbStory {
+  id: string
+  authorName: string
+  authorAvatar: string
+  authorSlug: string
+  time: string
+  bgGradient: string
+  badgeText?: string
+  caption: string
+  img?: string
+  clueId?: string
+  clueLabel?: string
+  reactionsCount?: number
+}
+
 export interface FbProfile {
   id: string
   name: string
@@ -133,6 +148,308 @@ export interface TrafficCameraRecord {
   lockPrompt?: string
   lockHint?: string
   lockCodes?: string[]
+}
+
+
+/** 24H Stories / Reels Facebúc riêng biệt cho từng vụ án */
+export function getCaseStories(caseId: string): FbStory[] {
+  // Case 1: Hẻm 42
+  if (caseId === 'hem42') {
+    return [
+      {
+        id: 'st-dung-1',
+        authorName: 'Dũng Shipper',
+        authorAvatar: '🛵',
+        authorSlug: 'dung.ship42',
+        time: '21:58 · 2 giờ trước',
+        bgGradient: 'from-blue-900 via-slate-900 to-black',
+        badgeText: 'LÚC 21:58',
+        caption: 'Đứng chờ khách trước cửa hàng điện thoại số 88 phố Hàng Chai buốt cóng tay 🥶 Hẹn 21:55 mà giờ chưa thấy đâu. Giao nốt đơn này là về trùm chăn ngủ!',
+        img: 'detective/hien-truong-2158.jpg',
+        clueId: 'anh-phan-chieu',
+        clueLabel: 'Bóng xe xanh trong ảnh kính cửa hàng lúc 21:58',
+        reactionsCount: 14,
+      },
+      {
+        id: 'st-vy-1',
+        authorName: 'Vy Hàng Xóm',
+        authorAvatar: '👧',
+        authorSlug: 'vy.socute',
+        time: '21:35 · 2 giờ trước',
+        bgGradient: 'from-pink-900 via-purple-950 to-slate-900',
+        badgeText: 'LÚC 21:35',
+        caption: 'Vừa xuống sân vứt rác thì rơi mất chùm chìa khoá phòng trọ 😭 Lúc lom khom tìm ở góc sân, thấy bóng ai đó đang kéo chiếc xe đạp điện xanh mint ra cổng hẻm, cứ tưởng cô Lan nhờ đi sạc điện...',
+        clueId: 'vy-chung-kien',
+        clueLabel: 'Vy thấy Dũng dắt xe lúc 21:35',
+        reactionsCount: 29,
+      },
+      {
+        id: 'st-son-1',
+        authorName: 'Sơn Shipper',
+        authorAvatar: '🚴',
+        authorSlug: 'son.shipper.pro',
+        time: '21:44 · 2 giờ trước',
+        bgGradient: 'from-amber-900 via-orange-950 to-slate-900',
+        badgeText: 'LÚC 21:44',
+        caption: 'Bàn giao ly trà sữa nóng cho chị Hoa tại Hẻm 46 lúc 21:44! Khách boa thêm 20k ấm lòng người shipper NowFood trong đêm giá rét 🛵💨',
+        reactionsCount: 19,
+      },
+      {
+        id: 'st-lan-1',
+        authorName: 'Cô Lan Bán Chè',
+        authorAvatar: '👵',
+        authorSlug: 'lan.nguyen68',
+        time: '21:10 · 2 giờ trước',
+        bgGradient: 'from-emerald-900 via-teal-950 to-slate-900',
+        badgeText: 'LÚC 21:10',
+        caption: 'Dọn xong nồi chè cuối cùng, khoá cổ chiếc xe đạp điện xanh mint con gái tặng để ngay góc sân. Giờ vào nhà uống ngụm nước ấm rồi chợp mắt 🍵',
+        reactionsCount: 32,
+      },
+    ]
+  }
+
+  // Case 2: Sân cầu lông
+  if (caseId === 'tu-do' || caseId === 'cau-long') {
+    return [
+      {
+        id: 'st-hao-1',
+        authorName: 'Hào Smash',
+        authorAvatar: '🏸',
+        authorSlug: 'hao.smash.power',
+        time: '20:30 · 1 giờ trước',
+        bgGradient: 'from-blue-900 via-indigo-950 to-slate-900',
+        badgeText: 'LÚC 20:30',
+        caption: 'Khởi động vào Sân số 2 thi đấu set 1 gặp HLV Tuấn! Đánh mướt mồ hôi liên tục từ 20:30 đến 21:00 không hề rời sân một phút nào 🏸🔥 Quyết tâm giật cúp vô địch!',
+        clueId: 'hao-o-san-2',
+        clueLabel: 'Hào thi đấu trên sân 2 liên tục từ 20:30 đến 21:00',
+        reactionsCount: 42,
+      },
+      {
+        id: 'st-son-2',
+        authorName: 'Sơn Nhặt Cầu',
+        authorAvatar: '🧥',
+        authorSlug: 'son.badminton68',
+        time: '20:20 · 2 giờ trước',
+        bgGradient: 'from-red-950 via-rose-950 to-slate-900',
+        badgeText: 'LÚC 20:20',
+        caption: 'Tranh thủ giờ nghỉ lẻn vào phòng thay đồ rửa mặt cho tỉnh táo, mặc áo khoác đỏ chống rét... Nhìn dãy tủ đồ số 04 khoá chốt lỏng lẻo ghê 👀',
+        clueId: 'son-ao-do',
+        clueLabel: 'Sơn mặc áo khoác đỏ đứng sát tủ đồ lúc 20:20',
+        reactionsCount: 8,
+      },
+      {
+        id: 'st-linh-2',
+        authorName: 'Linh Quầy Nước',
+        authorAvatar: '🥤',
+        authorSlug: 'linh.drinks.court',
+        time: '20:42 · 1 giờ trước',
+        bgGradient: 'from-cyan-900 via-teal-950 to-slate-900',
+        badgeText: 'LÚC 20:42',
+        caption: 'Pha nước bù điện giải cho các cơ thủ. Anh Sơn vừa qua quầy mượn bấm móng tay rồi đi vội về phía cổng bãi đỗ xe 🥤',
+        reactionsCount: 15,
+      },
+      {
+        id: 'st-hanh-2',
+        authorName: 'Chị Hạnh Chủ Sân',
+        authorAvatar: '🔑',
+        authorSlug: 'hanh.badminton.boss',
+        time: '20:45 · 1 giờ trước',
+        bgGradient: 'from-purple-900 via-violet-950 to-slate-900',
+        badgeText: 'LÚC 20:45',
+        caption: 'Camera khu quầy lễ tân đang giám sát chặt chẽ. Nhắc nhở anh em tự bảo quản điện thoại ví tiền, không để hớ hênh trong tủ đồ!',
+        reactionsCount: 27,
+      },
+    ]
+  }
+
+  // Case 3: Hội chợ Chùa Pháp Hoa
+  if (caseId === 'hoi-cho' || caseId === 'chua-phap-hoa') {
+    return [
+      {
+        id: 'st-trang-3',
+        authorName: 'Trang Bán Bánh Mì',
+        authorAvatar: '🥖',
+        authorSlug: 'trang.banhmi.que',
+        time: '20:50 · 1 giờ trước',
+        bgGradient: 'from-amber-900 via-yellow-950 to-slate-900',
+        badgeText: 'LÚC 20:50',
+        caption: 'Gian hàng đèn hoa đăng Chùa Pháp Hoa đông nghẹt phật tử! Em đứng bán và phát đèn hoa sen liên tục từ 20:15 đến 21:15 mỏi nhừ tay không kịp uống nước 🪷🙏',
+        clueId: 'trang-alibi-phat-com',
+        clueLabel: 'Trang phát đèn hoa đăng và cơm chay suốt từ 20:15 đến 21:15',
+        reactionsCount: 65,
+      },
+      {
+        id: 'st-tu-3',
+        authorName: 'Tú Xăm Trổ',
+        authorAvatar: '🕶️',
+        authorSlug: 'tu.taichinh.den',
+        time: '20:40 · 1 giờ trước',
+        bgGradient: 'from-emerald-950 via-slate-900 to-black',
+        badgeText: 'LÚC 20:40',
+        caption: 'Tranh thủ ra ngoài cổng sau chùa hít thở không khí, tiện ghé cây ATM VietinBank ngã tư nộp tiền mặt vào thẻ... Hôm nay đầu tháng bội thu 💵🏦',
+        clueId: 'tu-tien-mat',
+        clueLabel: 'Tú ra cổng sau nộp tiền mặt rách góc vào ATM lúc 20:45',
+        reactionsCount: 11,
+      },
+      {
+        id: 'st-khoa-3',
+        authorName: 'Khoa Tình Nguyện',
+        authorAvatar: '🤝',
+        authorSlug: 'khoa.volunteer',
+        time: '20:30 · 2 giờ trước',
+        bgGradient: 'from-blue-900 via-sky-950 to-slate-900',
+        badgeText: 'LÚC 20:30',
+        caption: 'Cùng ban kiểm ngân niêm phong hòm công đức số 02 trước khi rước lễ chính điện. Mong bà con phật tử hoan hỉ giữ gìn trật tự!',
+        reactionsCount: 38,
+      },
+    ]
+  }
+
+  // Case 4: Chung cư SkyView / Công ty X
+  if (caseId === 'chung-cu' || caseId === 'cong-ty-x') {
+    return [
+      {
+        id: 'st-dat-4',
+        authorName: 'Quản Lý Đạt',
+        authorAvatar: '👔',
+        authorSlug: 'dat.manager.horizon',
+        time: '20:50 · 2 giờ trước',
+        bgGradient: 'from-indigo-950 via-slate-900 to-black',
+        badgeText: 'LÚC 20:50',
+        caption: 'Trực ca tối phòng điều khiển trung tâm BMS toà Horizon. Hệ thống ghi nhận mọi ngắt mạch tầng 2 bình thường 🖥️ Cư dân an tâm nghỉ ngơi.',
+        clueId: 'dat-bms-log',
+        clueLabel: 'Đạt dùng quyền admin can thiệp tủ điện BMS tầng 2 lúc 20:50',
+        reactionsCount: 18,
+      },
+      {
+        id: 'st-khai-4',
+        authorName: 'Khải Kỹ Thuật',
+        authorAvatar: '🔧',
+        authorSlug: 'khai.tech42',
+        time: '21:05 · 1 giờ trước',
+        bgGradient: 'from-red-950 via-rose-950 to-slate-900',
+        badgeText: 'LÚC 21:05',
+        caption: 'Đang xử lý van nước vỡ ở tầng hầm B2 thì nghe chuông báo cháy giả tầng 2 rú vang! Chạy lên kiểm tra thì bất ngờ bị tấn công từ phía sau...',
+        clueId: 'khai-bi-thuong',
+        clueLabel: 'Khải bị trói và thương tích ở phòng kỹ thuật lúc 21:05',
+        reactionsCount: 45,
+      },
+      {
+        id: 'st-lan-4',
+        authorName: 'Lan Kế Toán',
+        authorAvatar: '💼',
+        authorSlug: 'lan.accountant.42',
+        time: '20:35 · 2 giờ trước',
+        bgGradient: 'from-purple-900 via-slate-900 to-black',
+        badgeText: 'LÚC 20:35',
+        caption: 'Bàn giao chìa khoá dự phòng và mã số két sắt phụ căn 204 cho ban quản lý để phục vụ kiểm toán nội bộ sáng mai 🔑',
+        reactionsCount: 22,
+      },
+    ]
+  }
+
+  // Case 5: Biệt thự Hoàng Khang
+  if (caseId === 'an-mang' || caseId === 'biet-thu-x') {
+    return [
+      {
+        id: 'st-vu-5',
+        authorName: 'Bác Sĩ Vũ Hoàng',
+        authorAvatar: '🩺',
+        authorSlug: 'dr.vuhoang',
+        time: '21:15 · 1 giờ trước',
+        bgGradient: 'from-teal-950 via-emerald-950 to-black',
+        badgeText: 'LÚC 21:15',
+        caption: 'Hãm xong ấm trà Long Tỉnh thượng hạng cho Chủ tịch Khang bằng ấm siêu tốc IOT-505. Trà ấm giúp tinh thần thư thái, giấc ngủ sâu 🫖',
+        clueId: 'vu-pha-tra',
+        clueLabel: 'Bác sĩ Vũ tự tay hãm trà trong bếp lúc 21:15',
+        reactionsCount: 16,
+      },
+      {
+        id: 'st-yen-5',
+        authorName: 'Yến Giúp Việc',
+        authorAvatar: '🧹',
+        authorSlug: 'yen.housemaid42',
+        time: '21:25 · 1 giờ trước',
+        bgGradient: 'from-stone-900 via-neutral-950 to-black',
+        badgeText: 'LÚC 21:25',
+        caption: 'Dọn dẹp phòng ngủ lầu 3 cho bà chủ. Cả căn biệt thự im phăng phắc, chỉ nghe tiếng nước sôi réo từ bếp tầng 1 🧺',
+        clueId: 'yen-o-lau-3',
+        clueLabel: 'Yến dọn phòng trên lầu 3 liên tục từ 21:15 đến 21:40',
+        reactionsCount: 31,
+      },
+      {
+        id: 'st-ha-5',
+        authorName: 'Bà Hà Em Gái',
+        authorAvatar: '💎',
+        authorSlug: 'ha.livestream.pro',
+        time: '21:00 · 2 giờ trước',
+        bgGradient: 'from-pink-900 via-rose-950 to-slate-900',
+        badgeText: 'LÚC 21:00',
+        caption: 'Họp hội đồng cổ đông tranh cãi gay gắt về bản di chúc chia thừa kế khu đất vàng Ba Đình 📜 Ai nấy đều muốn phần hơn!',
+        reactionsCount: 52,
+      },
+    ]
+  }
+
+  // Case 6: Du thuyền Horizon
+  if (caseId === 'du-thuyen' || caseId === 'con-tin' || caseId === 'dau-gia') {
+    return [
+      {
+        id: 'st-my-6',
+        authorName: 'Thảo My',
+        authorAvatar: '💃',
+        authorSlug: 'thaomy.dongduong',
+        time: '21:30 · 1 giờ trước',
+        bgGradient: 'from-purple-950 via-indigo-950 to-slate-900',
+        badgeText: 'LÚC 21:30',
+        caption: 'Gió sông Sài Gòn lạnh se sắt. Nhẫn kim cương 5 carat toả sáng trên boong thượng du thuyền Horizon 💎✨ Sắp được tự do rồi!',
+        clueId: 'vong-tay-man-thuyen',
+        clueLabel: 'Thảo My tạo dáng trên boong VIP lúc 21:30 thảnh thơi không hề có dấu hiệu giằng co',
+        reactionsCount: 88,
+      },
+      {
+        id: 'st-khang-6',
+        authorName: 'Minh Khang',
+        authorAvatar: '🤵',
+        authorSlug: 'khang.invest',
+        time: '21:15 · 2 giờ trước',
+        bgGradient: 'from-amber-950 via-slate-900 to-black',
+        badgeText: 'LÚC 21:15',
+        caption: 'Thưởng thức xì gà Cuba và ly rượu vang 1982 với các đối tác thương thuyền. Cuộc đời là những ván cờ sinh tử 🍸',
+        clueId: 'minh-khang-dau-co',
+        clueLabel: 'Minh Khang nợ công ty mẹ 15 tỷ trước giờ du thuyền khởi hành',
+        reactionsCount: 39,
+      },
+      {
+        id: 'st-hai-6',
+        authorName: 'Thuyền Trưởng Hải',
+        authorAvatar: '⚓',
+        authorSlug: 'hai.captain.songhong',
+        time: '21:45 · 1 giờ trước',
+        bgGradient: 'from-cyan-950 via-blue-950 to-black',
+        badgeText: 'LÚC 21:45',
+        caption: 'Du thuyền Horizon chuẩn bị giảm tốc qua phao hoa tiêu số 04. Mọi thông số thuỷ triều và áp suất chân vịt ổn định ⚓',
+        clueId: 'hai-dieu-khien-tau',
+        clueLabel: 'Thuyền trưởng Hải trực buồng lái chuẩn bị qua phao số 04 lúc 21:45',
+        reactionsCount: 42,
+      },
+      {
+        id: 'st-nam-6',
+        authorName: 'Nam Bồi Bàn',
+        authorAvatar: '🤵',
+        authorSlug: 'nam.student.hust',
+        time: '21:20 · 2 giờ trước',
+        bgGradient: 'from-emerald-950 via-teal-950 to-black',
+        badgeText: 'LÚC 21:20',
+        caption: 'Bưng khay cocktail phục vụ bàn VIP của tiểu thư Thảo My và anh Minh Khang. Thấy hai người thì thầm to nhỏ chuyện vé máy bay gì đó 🍷',
+        clueId: 'nam-boi-ban-khai',
+        clueLabel: 'Nam bồi bàn nghe thấy My và Khang bàn về vé máy bay lúc 21:20',
+        reactionsCount: 23,
+      },
+    ]
+  }
+
+  return []
 }
 
 /** Dữ liệu Facebúc Profiles riêng biệt cho từng vụ án */
