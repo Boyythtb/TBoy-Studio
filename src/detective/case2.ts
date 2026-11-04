@@ -32,7 +32,7 @@ export const CLUES: Record<string, ClueDef> = {
   'tin-nhan-ban': {
     id: 'tin-nhan-ban',
     tag: 'web',
-    title: 'Tin đăng bán máy phát từ Wi-Fi sân cầu lông',
+    title: 'Tin đăng Chợ Tốt CT-201: Rao bán iPhone 14 Pro Max ghi SĐT của Hào Smash',
     detail:
       'Tin CT-201 trên Chợ Tốt đăng lúc 20:44 bán chiếc iPhone trùng số Serial máy chị Hạnh. Địa chỉ IP đăng tin trùng khớp với Wi-Fi bãi xe sân cầu lông, người đăng cố tình điền số điện thoại của Hào.',
   },
@@ -81,7 +81,7 @@ export const CLUES: Record<string, ClueDef> = {
   'anh-story': {
     id: 'anh-story',
     tag: 'photo',
-    title: 'Bóng người sau vách tôn trong ảnh story 20:29',
+    title: 'Hình ảnh Story quầy nước: Bóng người phía sau vách tôn tủ đồ lúc 20:29',
     detail:
       'Ảnh story của Linh đăng lúc 20:29: Mặt kính phản chiếu phía sau vách tôn dãy tủ có một bóng người đang cúi rạp người thò tay vào ngách.',
   },

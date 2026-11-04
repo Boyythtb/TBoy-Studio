@@ -545,36 +545,34 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
                 user: 'Vy Hàng Xóm',
                 avatar: '👧',
                 time: '22:18',
-                content: 'Ủa anh Dũng, lúc 21:35 em còn thấy anh dắt chiếc xe đạp điện màu xanh mint từ sân nhà cô Lan ra đầu hẻm mà? Em tưởng cô Lan nhờ anh dắt đi sạc điện chứ?',
+                content: 'Tối nay ngõ mất điện tối om sợ quá anh Dũng ơi, may mà em vừa về phòng trọ kịp. Lúc 21h35 em thấy có bóng người dắt xe ra cổng hẻm, cứ tưởng người thuê trọ!',
                 clueId: 'vy-chung-kien',
-                clueLabel: 'Vy thấy Dũng dắt xe lúc 21:35',
+                clueLabel: 'Lời khai nhân chứng: Thấy bóng người dắt xe ra cổng hẻm lúc 21:35',
               },
               {
                 id: 'c-dung-2',
-                user: 'Hùng Sửa Xe',
-                avatar: '🔧',
+                user: 'Hàng Xóm Hẻm 42',
+                avatar: '🏘️',
                 time: '22:25',
-                content: 'Dũng ơi, hạn chót trả 5 triệu tiền nợ sửa xe là hôm nay đấy. Đừng để anh phải sang tận phòng trọ đòi.',
-                clueId: 'hung-cho-vay',
-                clueLabel: 'Dũng nợ Hùng 5 triệu tiền sửa xe',
+                content: 'Tối nay ngõ mất điện hỗn loạn ghê, thấy con bé Vy với thằng Sơn lượn lờ suốt. Dũng chạy cả ngày mệt nghỉ sớm đi em.',
               },
             ],
           },
           {
             id: 'p-dung-2',
             time: '21:58 · Thứ Sáu',
-            content: 'Đứng chờ khách lấy đồ trước cửa hàng điện thoại số 88. Hẹn khách 21:55 mà giờ chưa thấy đâu, lạnh cóng tay 😤',
+            content: 'Đứng chờ khách lấy đồ trước cửa hàng điện thoại số 88 phố Hàng Chai. Hẹn khách 21:55 mà giờ chưa thấy đâu, lạnh buốt tay 😤',
             likes: 3,
             img: 'detective/hien-truong-2158.jpg',
             clueId: 'anh-phan-chieu',
-            clueLabel: 'Bóng xe xanh trong ảnh kính cửa hàng lúc 21:58',
+            clueLabel: 'Hình ảnh Story phố Hàng Chai: Tấm kính cửa hàng 88 phản chiếu bóng xe lúc 21:58',
             comments: [
               {
                 id: 'c-dung-3',
                 user: 'Tuấn Game Net',
                 avatar: '🎮',
                 time: '22:01',
-                content: 'Tấm kính cửa hàng phản chiếu cái xe xanh mint sau lưng kìa ông anh 😂',
+                content: 'Phố Hàng Chai đêm nay vắng tanh nhỉ, đứng đấy cẩn thận trộm cắp nhé anh zai!',
               },
             ],
           },
@@ -679,16 +677,16 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
                 user: 'Vy Hàng Xóm',
                 avatar: '👧',
                 time: '22:02',
-                content: 'Huhu cô Lan ơi, lúc 21h35 cháu xuống sân vứt rác thấy anh Dũng dắt chiếc xe xanh mint ra cổng hẻm, cháu tưởng cô nhờ anh ấy dắt đi sạc điện hộ! Chiều nay cháu túng tiền nên đăng bán chiếc xe Asama đỏ cũ của cháu trên [Chợ Tốt](https://chotot.vn) mà bị anh Hùng nghi oan là trộm xe cô, oan ức quá!',
+                content: 'Huhu cô Lan ơi, lúc 21h35 cháu xuống sân vứt rác thì thấy một bóng người mặc áo khoác gió trùm kín đầu dắt xe ra cổng hẻm! Chiều nay cháu túng tiền nên đăng bán chiếc xe Asama đỏ cũ của cháu trên [Chợ Tốt](https://chotot.vn) mà bị anh Hùng nghi oan là trộm xe cô, oan ức quá!',
                 clueId: 'vy-chung-kien',
-                clueLabel: 'Vy thấy Dũng dắt xe lúc 21:35',
+                clueLabel: 'Lời khai nhân chứng: Thấy bóng người dắt xe ra cổng hẻm lúc 21:35',
               },
               {
                 id: 'c-lan-4',
                 user: 'Hoàng Game Net',
                 avatar: '🎮',
                 time: '22:08',
-                content: 'Ủa lúc 21h47 em ngồi net Hùng thấy anh Dũng shipper bấm điện thoại nhận đơn hỏa tốc của [GiaoNhanh 24H](https://giaonhanh.vn) ngay trước cửa quán mà? App shipper nó lưu định vị GPS từng phút, bảo công an tra mã đơn GPS là biết anh Dũng đi đâu lúc 21h40 ngay chứ gì!',
+                content: 'Tối nay lúc mất điện tầm 21h40 quán net em mất mạng chập chờn, thấy mấy người chạy ra đầu ngõ gọi điện thoại. Anh Dũng thì bảo về phòng ngủ sớm từ 21h15 rồi mà?',
               },
               {
                 id: 'c-lan-5',
@@ -866,26 +864,22 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
           {
             id: 'p-son-1',
             time: '20:30 · Thứ Bảy',
-            content: 'Tối nay đánh xong từ 20h ngồi nguyên ở ghế đá ngoài sân uống nước buôn chuyện, không hề bước chân vào khu tủ đồ nhé mọi người!',
+            content: 'Tối nay ca nhặt cầu đông khách mệt lử, ngồi uống nước ở ghế đá nghỉ ngơi chờ đóng cửa sân.',
             likes: 3,
             comments: [
               {
                 id: 'c-son-1',
-                user: 'Hạnh Chủ Sân',
-                avatar: '🔑',
+                user: 'Anh Tuấn Khách Sân 3',
+                avatar: '🏸',
                 time: '20:38',
-                content: 'Sơn ơi, lúc 20:20 chị thấy em mặc áo khoác đỏ đứng sát vách khu tủ đồ số 4 ngó nghiêng gì đấy?',
-                clueId: 'son-ao-do',
-                clueLabel: 'Sơn mặc áo khoác đỏ đứng sát tủ đồ lúc 20:20',
+                content: 'Sơn ơi lát dọn sân nhặt hộ anh 2 quả cầu bay lên nóc lưới nhé.',
               },
               {
                 id: 'c-son-2',
-                user: 'Linh Quầy Nước',
-                avatar: '🥤',
+                user: 'Khách Đánh Cầu',
+                avatar: '🏃',
                 time: '20:42',
-                content: 'Anh Sơn ơi, khoản vay nợ tiền sân 6 triệu quá hạn 2 tuần rồi nhé, chị Hạnh giục đòi đấy!',
-                clueId: 'son-no-tien',
-                clueLabel: 'Sơn nợ 6 triệu tiền sân quá hạn',
+                content: 'Nãy vừa thấy anh Hào nhận tiền cọc bán vợt gì trên mạng kìa, SĐT Hào đăng trên Chợ Tốt rành rành!',
               },
             ],
           },
@@ -1057,7 +1051,7 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
           {
             id: 'p-trang-1',
             time: '21:40 · Thứ Bảy',
-            content: 'Hội chợ đông vui quá, vừa bán hết veo 200 chiếc bánh mì! Lúc mất điện tối om em chỉ đứng trông quầy bánh thôi nha.',
+            content: 'Hội chợ đông vui quá, vừa bán hết veo 200 chiếc bánh mì gây quỹ từ thiện! Cảm ơn bà con phật tử đã ủng hộ gian hàng ẩm thực ❤️',
             likes: 15,
             comments: [
               {
@@ -1065,9 +1059,7 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
                 user: 'Bác Bảo Vệ Chùa',
                 avatar: '👴',
                 time: '21:48',
-                content: 'Trang ơi, quầy bánh đổ bê tông khô ráo mà sao đôi giày bata trắng của cháu dính bùn đỏ dày cộp? Bùn đỏ chỉ có ở bãi cỏ trũng phía sau bệ hòm công đức thôi!',
-                clueId: 'trang-giay',
-                clueLabel: 'Giày trắng của Trang dính bùn đỏ đặc trưng sau bệ hòm quỹ',
+                content: 'Trang ơi, bánh mì hôm nay bán chạy ghê, gom góp được nhiều tiền ủng hộ các cháu mổ tim rồi đấy!',
               },
             ],
           },
@@ -1087,17 +1079,15 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
           {
             id: 'p-tu-1',
             time: '21:35 · Thứ Bảy',
-            content: 'Ting ting 8 củ khoai trong đêm! Phải sòng phẳng thế có phải êm đẹp cả đôi bên không em gái bánh mì.',
+            content: 'Ting ting 8 củ khoai trong đêm! Phải sòng phẳng thế có phải êm đẹp cả đôi bên không.',
             likes: 18,
             comments: [
               {
                 id: 'c-tu-1',
-                user: 'Trang Bán Bánh',
-                avatar: '🥖',
+                user: 'Khách Vay Hàng Chai',
+                avatar: '🤝',
                 time: '21:36',
-                content: 'Em đã chuyển khoản trả đủ 8 triệu rồi nhé anh Tú, xoá sổ nợ cho em!',
-                clueId: 'chuyen-tien-trang',
-                clueLabel: 'Lệnh chuyển khoản 8 triệu của Trang lúc 21:32 trả nợ Tú',
+                content: 'Đã thanh toán đủ tiền gốc và lãi tháng này cho anh Tú nhé, xóa sổ nợ giúp em!',
               },
             ],
           },
@@ -1203,7 +1193,7 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
           {
             id: 'p-dat-1',
             time: '21:35 · Thứ Bảy',
-            content: 'Vừa xử lý xong sự cố mất điện tầng hầm lúc 21:10. Khổ thân kỹ thuật Khải bị ngã bất tỉnh, may đưa đi viện kịp. Két sắt phòng quản lý bị mở mất 200 triệu!',
+            content: 'Ban quản lý đang phối hợp chặt chẽ với cơ quan công an để làm rõ sự cố mất điện và vụ mất trộm quỹ bảo trì tại văn phòng tầng 2. Cư dân toà nhà yên tâm giữ trật tự an ninh.',
             likes: 14,
             comments: [
               {
@@ -1211,9 +1201,7 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
                 user: 'Bác Bảy Dân Phòng',
                 avatar: '🏢',
                 time: '21:55',
-                content: 'Lúc 21:50 tài khoản anh vừa duyệt chuyển 200 triệu đi đâu thế Đạt? Trên [VietinBank](https://vietinbank.vn) lưu lệnh chuyển tiền rõ rành rành kìa!',
-                clueId: 'lenh-chuyen-200tr',
-                clueLabel: 'Lệnh chuyển khoản 200 triệu lúc 21:50 do Đạt ký duyệt',
+                content: 'Mong anh Đạt và BQL toà nhà sớm phối hợp với cơ quan công an làm rõ vụ việc, lấy lại quỹ bảo trì 200 triệu cho bà con cư dân!',
               },
               {
                 id: 'c-dat-2',
@@ -1386,7 +1374,7 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
           {
             id: 'p-vu-1',
             time: '22:30 · Thứ Sáu',
-            content: 'Tôi vừa đến biệt thự lúc 22:00 thì bác ruột đã qua đời gục trên bàn trà, chiếc đồng hồ vỡ 22:15 chứng minh thời điểm xảy ra sự việc! Mong công an sớm tìm ra chân tướng!',
+            content: 'Nhận được tin báo từ người giúp việc lúc 22h, tôi vội vã phóng xe từ phòng khám riêng về biệt thự nhưng tim bác đã ngừng đập... Đau đớn tột cùng trước sự ra đi đột ngột của bác ruột. Xin vĩnh biệt bác kính yêu 🕯️',
             likes: 29,
             comments: [
               {
@@ -1394,23 +1382,21 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
                 user: 'Kỹ Sư Smart Home',
                 avatar: '☕',
                 time: '22:35',
-                content: 'Bác sĩ Vũ ơi, hệ thống [Smart Home IoT](https://smarthome-vip.vn) ghi nhận ấm trà thông minh đun sôi 100°C lúc 21:30 và đã nguội ngắt 32°C từ trước 22:00 rồi! Đồng hồ 22:15 là do anh cố tình đập vỡ!',
-                clueId: 'nhiet-do-am-tra',
-                clueLabel: 'Nhật ký IoT: Ấm siêu tốc đạt đỉnh nhiệt độ lúc 21:28 và nguội dần',
+                content: 'Chia buồn sâu sắc cùng gia đình bác sĩ Vũ. Hệ thống thiết bị thông minh trong biệt thự tối nay vẫn lưu trữ nhật ký đầy đủ, sẵn sàng bàn giao cho cơ quan điều tra.',
               },
               {
                 id: 'c-vu-2',
                 user: 'Hàng Xóm Biệt Thự',
                 avatar: '🏘️',
                 time: '22:38',
-                content: 'Lúc 21h15 [Camera Giao Thông Ngã Tư Phố](https://camera-phuong.gov.vn) ghi rõ xe ô tô của bác sĩ Vũ rẽ vào cổng biệt thự trong trời mưa lớn!',
+                content: 'Bác sĩ Vũ tận tâm chăm sóc sức khỏe cho cụ Khang bao năm nay, ai ngờ đêm nay lại xảy ra đại họa...',
               },
               {
                 id: 'c-vu-3',
                 user: 'Quản Gia Biệt Thự',
                 avatar: '🍵',
                 time: '22:42',
-                content: 'Sổ xuất độc chất Aconitine lưu rành rành trên hệ thống [Nhà Thuốc Long Châu](https://nhathuoc-longchau42.vn) dưới tên phòng khám của anh Vũ!',
+                content: 'Khổ thân ông chủ quá, chiều nay ông Trọng buôn đồ cổ đập bàn đe dọa đòi nợ ghê gớm, mong công an điều tra làm rõ lão Trọng!',
               },
             ],
           },
@@ -1563,8 +1549,8 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
         posts: [
           {
             id: 'p-mk-1',
-            time: '20:30 · Hôm nay',
-            content: 'Chúc mừng sinh nhật tuổi 22 của công chúa Thảo My trên du thuyền Sông Hồng Princess! Trọn đời bên em ❤️',
+            time: '22:15 · Hôm nay',
+            content: 'My ơi em đang ở đâu?! Tôi xin treo thưởng 500 triệu đồng tiền túi cho bất kỳ ai cung cấp tung tích của Thảo My! Cầu xin kẻ bắt cóc đừng làm hại cô ấy, bao nhiêu tiền chuộc tôi và gia đình cũng sẽ thu xếp!',
             likes: 184,
             comments: [
               {
@@ -1593,7 +1579,7 @@ export function getCaseProfiles(caseId: string): FbProfile[] {
                 user: 'Cổ Đông Khang Holdings',
                 avatar: '💼',
                 time: '22:45',
-                content: 'Minh Khang vừa hối thúc gia đình chuyển 3 tỷ chuộc người vào tài khoản [VietinBank](https://vietinbank.vn) khả nghi lắm!',
+                content: 'Khang ơi bình tĩnh, anh em đối tác đang sẵn sàng hỗ trợ tài chính để gia đình đáp ứng yêu cầu của kẻ bắt cóc, cứu tiểu thư về an toàn!',
               },
             ],
           },
@@ -1874,12 +1860,12 @@ export function getDeliveryOrders(caseId: string): DeliveryOrder[] {
         driver: 'Nguyễn Văn Đạt (GiaoNhanh Đường Thủy)',
         driverPhone: '0912xxx883',
         time: '21:30',
-        pickup: 'Bến Du Thuyền Sông Hồng (Minh Khang đặt)',
-        drop: 'Phao Neo Đậu Số 4 (2 Vali hàng hiệu của Thảo My)',
+        pickup: 'Cầu tàu số 2 Bến Sông Hồng (Khách hàng Horizon Media)',
+        drop: 'Phao neo hàng hải số 4 (Kiện hàng tư trang bọc nylon chuyển lên ca nô)',
         fee: '120.000đ',
         status: 'Đã hoàn tất',
         clueId: 'vali-minh-khang',
-        clueLabel: 'Đơn GiaoNhanh GN-99801 chuyển 2 vali ra phao số 4 lúc 21:30',
+        clueLabel: 'Phiếu vận chuyển GN-99801: Giao 2 kiện hành lý ra ca nô tại phao số 4 lúc 21:30',
         timeline: [
           { time: '21:15', event: 'Tiếp nhận đơn vận chuyển đường sông' },
           { time: '21:30', event: 'Bốc 2 vali hành lý tại cầu tàu số 2' },
@@ -2193,7 +2179,7 @@ export function getBankTransactions(caseId: string): BankTransaction[] {
         content: 'Vu Hoang chuyen Yen giup viec tam ung sua nha',
         balanceAfter: '201.450.000 VND',
         clueId: 'vu-chuyen-yen-200tr',
-        clueLabel: 'Lệnh chuyển cọc 200 triệu từ Vũ Hoàng cho Yến giúp việc lúc 17:30',
+        clueLabel: 'Giao dịch VietinBank: Lệnh uỷ nhiệm chi 200 triệu cho Nguyễn Thị Yến lúc 17:30',
       },
       {
         id: 'TX-88135',
@@ -2233,7 +2219,7 @@ export function getBankTransactions(caseId: string): BankTransaction[] {
     ]
   }
 
-  // Vụ 6: Lệnh chuyển 3 tỷ tiền chuộc vào tài khoản Minh Khang lúc 22:45
+  // Vụ 6: Lệnh chuyển 3 tỷ tiền chuộc vào tài khoản Cty Horizon lúc 22:45
   if (caseId === 'du-thuyen' || caseId === 'con-tin' || caseId === 'dau-gia') {
     return [
       {
@@ -2241,13 +2227,35 @@ export function getBankTransactions(caseId: string): BankTransaction[] {
         time: '22:45:00 · Thứ Bảy',
         type: 'in',
         amount: '+3.000.000.000 VND',
-        accountName: 'LE MINH KHANG',
+        accountName: 'CTY CP TRUYEN THONG HORIZON',
         accountNo: '10889966xxxx',
         bank: 'VietinBank',
         balanceAfter: '3.045.200.000 VND',
-        content: 'CHUYEN TIEN CHUOC GIAI CUU CON GAI THAO MY THEO YEU CAU',
+        content: 'QUACH DINH PHU GIAI NGAN HOP DONG DU THUYEN THEO YEU CAU KHAN',
         clueId: 'vietinbank-chuyen-tien-chuoc',
-        clueLabel: 'Sao kê VietinBank: 3 tỷ tiền chuộc đổ vào tài khoản Minh Khang lúc 22:45',
+        clueLabel: 'Giao dịch VietinBank: Giải ngân 3 tỷ vào tài khoản Cty Sự Kiện Horizon lúc 22:45',
+      },
+      {
+        id: 'TX-77103',
+        time: '21:10:00 · Thứ Bảy',
+        type: 'in',
+        amount: '+50.000.000 VND',
+        accountName: 'NGUYEN HOANG NAM',
+        accountNo: '10668822xxxx',
+        bank: 'VietinBank iPay',
+        content: 'Vay nong lai ngay giai quyet viec gia dinh',
+        balanceAfter: '51.200.000 VND',
+      },
+      {
+        id: 'TX-77104',
+        time: '21:15:00 · Thứ Bảy',
+        type: 'in',
+        amount: '+50.000.000 VND',
+        accountName: 'DJ QUOC HUY',
+        accountNo: '10774411xxxx',
+        bank: 'VietinBank iPay',
+        content: 'Thanh toan truyen thong va am thanh du thuyen Horizon',
+        balanceAfter: '88.500.000 VND',
       },
       {
         id: 'TX-77108',
@@ -2504,7 +2512,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
         description: 'Một nam thanh niên mặc đồng phục giao hàng màu cam dắt bộ phương tiện hai bánh màu xanh mint từ hẻm 42 ra hướng mặt đường lớn.',
         objectsObserved: ['Người mặc đồng phục cam', 'Phương tiện màu xanh mint', 'Dắt bộ lúc trời mất điện'],
         clueId: 'vy-chung-kien',
-        clueLabel: 'Camera đầu ngõ ghi nhận Dũng dắt xe đạp điện xanh mint lúc 21:35',
+        clueLabel: 'Hình ảnh Camera đầu ngõ CAM-101: Người kéo xe đạp điện trùm bạt lúc 21:35',
       },
       {
         id: 'CAM-102',
@@ -2582,7 +2590,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
         description: 'Một phụ nữ đeo tạp dề vải, đi giày thể thao sáng màu di chuyển nhanh từ khu vực bãi cỏ phía sau bệ hòm quỹ ra lối ngách, tay mang theo túi xách cầm tay.',
         objectsObserved: ['Phụ nữ đeo tạp dề', 'Giày thể thao sáng màu', 'Khu vực bãi cỏ sau bệ quỹ'],
         clueId: 'trang-giay',
-        clueLabel: 'Camera ghi nhận Trang đi ra từ bãi cỏ sau hòm quỹ lúc 21:02',
+        clueLabel: 'Hình ảnh Camera Tam Quan CAM-302: Vết bùn đỏ trên giày thể thao lúc 21:02',
       },
     ]
   }
@@ -2610,7 +2618,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
         description: 'Nam nhân viên mặc sơ mi công sở di chuyển vội vã qua hành lang kỹ thuật, đưa một bọc nilon màu đen vào cửa họng xả rác số 1 rồi rời khỏi toà nhà.',
         objectsObserved: ['Nam nhân viên sơ mi công sở', 'Bọc nilon màu đen', 'Khu vực họng xả rác số 1'],
         clueId: 'hong-rac-bms',
-        clueLabel: 'Camera ngõ sau: Đối tượng bỏ kiện hàng bọc nilon đen vào họng rác lúc 21:30',
+        clueLabel: 'Hình ảnh Camera hẻm sau CAM-402: Người mang bọc nilon tại cửa xả rác lúc 21:19',
       },
     ]
   }
@@ -2627,7 +2635,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
         description: 'Xe máy tay ga SH màu xám đi vào lối cổng phụ biệt thự lúc 21:10 và rời đi theo hướng đường lớn lúc 21:22.',
         objectsObserved: ['Xe máy SH xám', 'Lối cổng phụ biệt thự', 'Mốc thời gian 21:10 - 21:22'],
         clueId: 'so-doc-duoc-vu',
-        clueLabel: 'Camera ngõ ghi nhận Vũ đi vào biệt thự lúc 21:10 mâu thuẫn lời khai',
+        clueLabel: 'Hình ảnh Camera ngõ CAM-501: Xe máy SH xám đi vào cổng phụ lúc 21:10',
       },
       {
         id: 'CAM-502',
@@ -2667,7 +2675,7 @@ export function getTrafficCameraRecords(caseId: string): TrafficCameraRecord[] {
         description: 'Một người vóc dáng thon gọn mặc áo mưa trùm kín đầu, chân đi giày thể thao trắng bước từ bậc thang mạn tàu xuống ca-nô cao tốc neo cạnh phao số 04 lúc 21:50.',
         objectsObserved: ['Người mặc áo mưa trùm kín đầu', 'Giày thể thao trắng', 'Ca-nô cao tốc mạn tàu', 'Phao định vị số 04'],
         clueId: 'camera-ben-thuyen',
-        clueLabel: 'Camera CAM-601: Thảo My trùm áo mưa tím bước xuống ca nô lúc 21:50',
+        clueLabel: 'Hình ảnh Camera CAM-601: Người mặc áo mưa tím bước xuống ca nô lúc 21:50',
       },
       {
         id: 'CAM-602',

@@ -26,7 +26,7 @@ export const CLUES: Record<string, ClueDef> = {
   'dong-ho-vo': {
     id: 'dong-ho-vo',
     tag: 'photo',
-    title: 'Mặt kính đồng hồ rạn nứt dừng ở mốc 22:15 là hiện trường giả',
+    title: 'Mặt kính đồng hồ sapphire rạn nứt dừng ở mốc 22:15',
     detail:
       'Đồng hồ trên cổ tay nạn nhân rạn vỡ, kim dừng ở 22:15. Tuy nhiên vết nứt bị đập vuông góc từ trên xuống bằng quả cầu chặn giấy pha lê trên bàn, không phải do va đập tự nhiên khi ngã. Nạn nhân thuận tay trái nhưng đồng hồ lại đeo ở tay trái!',
   },
@@ -40,7 +40,7 @@ export const CLUES: Record<string, ClueDef> = {
   'smart-kettle-wifi': {
     id: 'smart-kettle-wifi',
     tag: 'web',
-    title: 'Lệnh kích hoạt đun lại lúc 22:10 từ địa chỉ MAC điện thoại Yến',
+    title: 'Nhật ký SmartKettle: Lệnh đun sôi lại lúc 22:10 từ địa chỉ MAC di động',
     detail:
       'Máy chủ smarthome.iot: Lúc 22:10:02, ấm SmartKettle nhận lệnh Re-boil từ xa qua Wi-Fi nội bộ từ thiết bị mang địa chỉ MAC 4A:12:F8:33:B2:91 (Hostname: Galaxy-A52). Đối chiếu bài đăng Facebúc của người giúp việc Yến ngày hôm qua: Yến vừa khoe chiếc điện thoại Samsung Galaxy A52 được tặng!',
   },
@@ -68,14 +68,14 @@ export const CLUES: Record<string, ClueDef> = {
   'so-doc-duoc-vu': {
     id: 'so-doc-duoc-vu',
     tag: 'web',
-    title: 'Biên bản Viện Dược Liệu: Mẫu Aconitine 0502 xuất kho cho Bác sĩ L.Q.V',
+    title: 'Biên bản Viện Dược Liệu: Bàn giao 20ml hóa chất độc bảng A mã hiệu ĐC-098',
     detail:
       'Hồ sơ kiểm soát dược lý Viện Dược Liệu: Mẫu chuẩn độc chất Aconitine 20ml số 0502 xuất kho sáng 25/10 theo đề tài nghiên cứu của Bác sĩ L.Q.V - Khoa Hồi sức Tim mạch. Trong số các nghi phạm, chỉ duy nhất Bác sĩ Vũ có thẻ hành nghề và nghiên cứu chuyên sâu về hoạt chất ức chế cơ tim này.',
   },
   'vu-chuyen-yen-200tr': {
     id: 'vu-chuyen-yen-200tr',
     tag: 'web',
-    title: 'Sao kê VietinBank: Lệnh uỷ nhiệm chi 200 triệu từ Vũ cho Yến lúc 17:30',
+    title: 'Giao dịch VietinBank: Lệnh chuyển 200.000.000đ từ Lê Quốc Vũ cho Nguyễn Thị Yến',
     detail:
       'Sao kê VietinBank TX-88120 lúc 17:30 ngày 25/10: Tài khoản Lê Quốc Vũ chuyển 200.000.000 VNĐ cho Nguyễn Thị Yến với ghi chú "Thanh toan hop dong". Lời khai của Yến rằng "chỉ là tiền ứng lương 5 triệu" bị số liệu sao kê vạch trần mối quan hệ ăn chia tài chính mờ ám.',
   },

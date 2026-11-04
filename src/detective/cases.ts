@@ -246,7 +246,7 @@ export const CASES: CasePack[] = [
         content:
           'Trích xuất camera bãi đỗ xe CAM-201:\n- Mốc 20:25:30: Trần Sơn (nhân viên nhặt cầu) mặc áo thun xám lách người qua cửa ngách dẫn ra phía sau vách tôn dãy tủ đồ.\n- Mốc 20:36:10: Sơn quay trở lại khu vực quầy lễ tân, cổ tay phải quấn khăn vải trắng, dáng vẻ bồn chồn.',
         clue: 'son-vet-xuoc',
-        clueLabel: 'Lưu hình ảnh Sơn ra lối sau dãy tủ lúc 20:25',
+        clueLabel: 'Lưu hình ảnh Story quầy nước: Bóng người phía sau vách tôn lúc 20:29',
       },
     ],
     case: CASE2,
@@ -290,7 +290,7 @@ export const CASES: CasePack[] = [
         content:
           'Trích lục sao kê hệ thống VietinBank (vietinbank.vn):\n- Mã giao dịch: TX-99812 lúc 21:32:15\n- Tài khoản trích: 1088***992 (Nguyễn Thị Thu Trang)\n- Số tiền nạp tiền mặt tại quầy đại lý di động: +8.000.000 VNĐ\n- Lệnh chuyển khoản ngay sau đó lúc 21:33:00: Chuyển 8.000.000 VNĐ cho tài khoản chủ nợ tín dụng với nội dung “Trang tra xong no goc thang 8”.',
         clue: 'chuyen-khoan-trang',
-        clueLabel: 'Lưu lệnh chuyển khoản 8 triệu trả nợ của Trang lúc 21:32',
+        clueLabel: 'Lưu lệnh nộp 8.000.000đ tiền mặt tại quầy đại lý lúc 21:32',
       },
       {
         id: 'sr2',
@@ -301,7 +301,7 @@ export const CASES: CasePack[] = [
         content:
           'Trích xuất camera an ninh cổng Tam Quan (camera-phuong.gov.vn):\n- Mốc thời gian: 21:02:40 (trong khoảng thời gian mất điện)\n- Hình ảnh: Trang mặc tạp dề gian hàng bánh mì, di chuyển gấp gáp từ bãi đất xới sau đình về khu vực quầy nướng bánh.\n- Chi tiết đáng chú ý: Gấu tạp dề bên trái và viền đế giày thể thao dính bùn đất màu đỏ tươi.',
         clue: 'vet-bun-do',
-        clueLabel: 'Lưu hình ảnh Trang dính bùn đất đỏ lúc 21:02',
+        clueLabel: 'Lưu hình ảnh Camera Tam Quan: Vết bùn đất đỏ trên giày lúc 21:02',
       },
       {
         id: 'sr3',
@@ -390,7 +390,7 @@ export const CASES: CasePack[] = [
         content:
           'Hồ sơ bán lẻ LC-401 tại Nhà Thuốc Long Châu (nhathuoc-longchau42.vn):\n- Khách hàng: Trần Tuấn Đạt\n- Mặt hàng: 01 hộp găng tay cao su đen y tế không bột, 01 chai cồn sát khuẩn 90 độ, 01 cuộn băng dính xốp bản lớn\n- Hình thức thanh toán: Quẹt thẻ visa cá nhân lúc 17:32:10.',
         clue: 'gang-tay-dat',
-        clueLabel: 'Lưu hoá đơn Đạt mua găng tay cao su đen lúc chiều',
+        clueLabel: 'Lưu hoá đơn Long Châu LC-401 mua găng tay và băng dính lúc 17:32',
       },
       {
         id: 'sr4',
@@ -457,7 +457,7 @@ export const CASES: CasePack[] = [
         content:
           'Trích xuất máy chủ dịch vụ đám mây smarthome.iot:\n- Thiết bị: Ấm đun nước siêu tốc thông minh WiFi (Model: SmartKettle-Pro)\n- 21:28: Hoàn thành đun nước 100°C lần 1. Nhiệt độ ấm nguội xuống dưới 34°C trước 22:00.\n- 22:10:02: Nhận lệnh kích hoạt đun sôi lại (Re-boil) từ xa qua kết nối Wi-Fi nội bộ từ smartphone mang địa chỉ MAC 4A:12:F8:33:B2:91 (Hostname: Galaxy-A52).\n- Đối chiếu Facebúc: Nguyễn Thị Yến vừa đăng bài khoe điện thoại Samsung Galaxy A52!',
         clue: 'smart-kettle-wifi',
-        clueLabel: 'Lưu nhật ký điện thoại Galaxy A52 của Yến đun lại ấm trà lúc 22:10',
+        clueLabel: 'Lưu nhật ký SmartKettle: Lệnh đun sôi lại lúc 22:10 từ địa chỉ MAC di động',
       },
       {
         id: 'sr3',
@@ -479,7 +479,7 @@ export const CASES: CasePack[] = [
         content:
           'Trích xuất ngân hàng VietinBank (vietinbank.vn) mã TX-88120:\n- Thời gian: 17:30:22 ngày 25/10\n- Người gửi: Lê Quốc Vũ\n- Người nhận: Nguyễn Thị Yến (tài khoản cá nhân mở tại VietinBank Đống Đa)\n- Số tiền: 200.000.000 VNĐ\n- Nội dung giao dịch: “Vu gui tien ho tro gia dinh chi Yen”.',
         clue: 'vu-chuyen-yen-200tr',
-        clueLabel: 'Lưu sao kê Vũ chuyển 200 triệu cho Yến lúc chiều 25/10',
+        clueLabel: 'Lưu sao kê VietinBank: Lệnh uỷ nhiệm chi 200 triệu lúc 17:30',
       },
       {
         id: 'sr5',
@@ -535,7 +535,7 @@ export const CASES: CasePack[] = [
         content:
           'Trích xuất camera an ninh cảng sông (camera-phuong.gov.vn) CAM-601:\n- Mốc thời gian: 21:50:40\n- Hình ảnh: Một người mặc áo mưa cánh dơi trùm kín đầu, vóc dáng thon gọn bước từ sàn mạn phải du thuyền xuống ca-nô cao tốc đang nổ máy chờ sẵn.\n- Đáng chú ý: Động tác bước xuống hoàn toàn tự nhiên, không có dấu hiệu bị ép buộc, giằng co hay khống chế vũ lực.',
         clue: 'camera-ben-thuyen',
-        clueLabel: 'Lưu hình ảnh đối tượng bước xuống ca-nô tự nguyện lúc 21:50',
+        clueLabel: 'Lưu hình ảnh Camera CAM-601: Người mặc áo mưa rời mạn thuyền lúc 21:50',
       },
       {
         id: 'sr2',
@@ -557,7 +557,7 @@ export const CASES: CasePack[] = [
         content:
           'Lệnh phong toả khẩn cấp tài khoản ngân hàng điện tử VietinBank TX-77102:\n- Số tiền giao dịch: 3.000.000.000 VNĐ lúc 22:45:10\n- Tài khoản thụ hưởng: Công ty TNHH Truyền thông & Sự kiện Khang Event\n- Người đại diện pháp luật và nắm quyền chủ tài khoản: LÊ MINH KHANG (bạn trai của nạn nhân).\n- Lệnh rút tiền mặt tại cây ATM ven sông vừa bị chặn lại do nhập sai mã OTP 3 lần.',
         clue: 'vietinbank-chuyen-tien-chuoc',
-        clueLabel: 'Lưu lệnh phong toả tài khoản nhận 3 tỷ của Minh Khang',
+        clueLabel: 'Lưu giao dịch VietinBank: Lệnh giải ngân 3 tỷ vào tài khoản Cty Horizon',
       },
       {
         id: 'sr4',
@@ -568,7 +568,7 @@ export const CASES: CasePack[] = [
         content:
           'Hệ thống điều phối GiaoNhanh (giaonhanh.vn):\n- Mã vận đơn: GN-99801 lúc 21:30 ngày 28/10\n- Nội dung kiện hàng: 02 vali du lịch cỡ đại Rimowa màu bạc\n- Điểm đón: Khách sạn Sông Hồng View\n- Điểm trả: Cầu tàu phụ bến phao số 4 (nơi ca-nô cao tốc neo đậu)\n- Người nhận hàng: Lê Minh Khang.',
         clue: 'vali-minh-khang',
-        clueLabel: 'Lưu đơn chuyển 2 vali cá nhân ra ca-nô trước giờ bắt cóc',
+        clueLabel: 'Lưu vận đơn GiaoNhanh GN-99801 chuyển 2 kiện hành lý ra ca-nô lúc 21:30',
       },
       {
         id: 'sr5',

@@ -60,14 +60,14 @@ export const CLUES: Record<string, ClueDef> = {
   'trang-giay': {
     id: 'trang-giay',
     tag: 'photo',
-    title: 'Vết bùn đỏ trên giày của Trang lúc 21:02',
+    title: 'Hình ảnh Camera Tam Quan: Vết bùn đất đỏ bám trên giày thể thao lúc 21:02',
     detail:
       'Camera cổng Tam Quan ghi nhận Trang di chuyển lúc 21:02 với viền giày dính đầy bùn đỏ đất sét. Đất sét đỏ này chỉ có duy nhất ở khoảnh bãi trũng mới đào sau bệ hòm quỹ.',
   },
   'chuyen-tien-trang': {
     id: 'chuyen-tien-trang',
     tag: 'web',
-    title: 'Giao dịch nộp tiền mặt 8 triệu của Trang lúc 21:32',
+    title: 'Giao dịch VietinBank: Lệnh nộp 8.000.000đ tiền mặt tại quầy đại lý lúc 21:32',
     detail:
       'Sao kê VietinBank: 21:32:15 Trang nộp 8.000.000 VNĐ tiền mặt tại điểm giao dịch di động và chuyển khoản ngay để thanh toán dứt điểm khoản nợ cá nhân.',
   },

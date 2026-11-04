@@ -47,14 +47,14 @@ export const CLUES: Record<string, ClueDef> = {
   'camera-ben-thuyen': {
     id: 'camera-ben-thuyen',
     tag: 'web',
-    title: 'Camera CAM-601: Người mặc áo mưa tự nguyện bước xuống ca-nô lúc 21:50',
+    title: 'Hình ảnh Camera CAM-601: Người mặc áo mưa tím bước xuống ca-nô lúc 21:50',
     detail:
       'Camera an ninh hàng hải CAM-601 (camera-phuong.gov.vn): Lúc 21:50, camera ghi nhận một người vóc dáng thon gọn mặc áo mưa trùm kín đầu, chân đi giày thể thao trắng bước từ mạn du thuyền xuống ca-nô cao tốc neo tại phao số 4. Động tác bước xuống hoàn toàn tự nhiên, không hề có sự kháng cự hay khống chế vũ lực.',
   },
   'vietinbank-chuyen-tien-chuoc': {
     id: 'vietinbank-chuyen-tien-chuoc',
     tag: 'web',
-    title: 'Sao kê VietinBank: 3 tỷ tiền chuộc đổ vào Cty Sự kiện Horizon của Khang',
+    title: 'Giao dịch VietinBank: Lệnh giải ngân 3 tỷ vào tài khoản Cty Horizon',
     detail:
       'Sao kê VietinBank (vietinbank.vn) mã TX-77102 lúc 22:45: Gia đình chuyển khẩn cấp 3.000.000.000 VNĐ vào tài khoản pháp nhân Cty Cổ phần Sự kiện Horizon theo số tài khoản kẻ nặc danh chỉ định. Trích xuất Cổng thông tin đăng ký doanh nghiệp quốc gia xác nhận: Lê Minh Khang là Chủ tịch kiêm đại diện pháp luật sở hữu 100% vốn công ty này!',
   },
@@ -68,7 +68,7 @@ export const CLUES: Record<string, ClueDef> = {
   'vali-minh-khang': {
     id: 'vali-minh-khang',
     tag: 'web',
-    title: 'GiaoNhanh GN-99801: 2 vali lớn giao ra phao số 4 do mã "KM-88" ký nhận',
+    title: 'Vận đơn GiaoNhanh GN-99801: Giao 2 kiện hành lý ra ca-nô tại phao số 4 lúc 21:30',
     detail:
       'Hệ thống GiaoNhanh (giaonhanh.vn) mã GN-99801: Lúc 21:30 (trước khi My rời bàn 10 phút), 02 vali du lịch cỡ đại Rimowa được giao từ khách sạn ra bến ca-nô phao số 4. Người ký nhận ký bằng mật danh "KM-88" kèm số điện thoại 0938.xxx.888 — số hotline in trên danh thiếp của Minh Khang.',
   },
@@ -82,7 +82,7 @@ export const CLUES: Record<string, ClueDef> = {
   've-may-bay-bangkok': {
     id: 've-may-bay-bangkok',
     tag: 'file',
-    title: 'Hồ sơ vé máy bay TG-561 Bangkok chuyến 05:45 sáng mai trong thùng rác',
+    title: 'Tệp điện tử PNR-7881: Lịch trình chuyến bay quốc tế TG561 đi Bangkok lúc 05:45',
     detail:
       'Tệp PDF phục hồi từ thùng rác máy tính du thuyền: Hồ sơ đặt vé Thai Airways chuyến TG-561 khởi hành 05:45 sáng 29/10 đi Bangkok cho 02 hành khách mang tên "MR. KHANG / LE" và "MS. MY / NGUYEN", email xác nhận gửi về contact@horizon-event.asia.',
   },

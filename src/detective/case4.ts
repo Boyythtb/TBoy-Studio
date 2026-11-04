@@ -54,14 +54,14 @@ export const CLUES: Record<string, ClueDef> = {
   'lenh-chuyen-200tr': {
     id: 'lenh-chuyen-200tr',
     tag: 'web',
-    title: 'Sao kê VietinBank: Lệnh TX-4011 chuyển 200 triệu ký bởi User ADMIN_DAT',
+    title: 'Giao dịch VietinBank: Lệnh uỷ nhiệm chi TX-4011 duyệt bởi User ADMIN_DAT',
     detail:
       'Sao kê VietinBank TX-4011 lúc 21:50:44: Lệnh chuyển 200.000.000 VNĐ từ tài khoản công ty quản lý sang tài khoản Lê Văn Bảy (Bảy Ốc). Chữ ký số uỷ nhiệm chi được xác thực trực tiếp qua mã OTP thiết bị di động của User: ADMIN_DAT, đối lập hoàn toàn với lời khai "đã về nhà ngủ không dùng điện thoại".',
   },
   'gang-tay-dat': {
     id: 'gang-tay-dat',
     tag: 'web',
-    title: 'Mẩu găng tay cao su đen dính mực dấu đỏ trong họng rác hầm B2',
+    title: 'Mẩu găng tay cao su đen dính vết mực dấu đỏ thu giữ tại họng rác',
     detail:
       'Vật chứng thu giữ tại cửa xả họng rác: Mẩu găng tay cao su y tế màu đen bị rách ở đầu ngón trỏ, trên đầu ngón dính loại mực dấu đỏ chuyên dụng đóng mộc Trưởng ban quản lý toà nhà. Hoá đơn LC-401 tại Long Châu xác nhận số điện thoại của Đạt (0912.xxx.888) đã thanh toán hộp găng tay này lúc 17:32 chiều.',
   },
@@ -75,7 +75,7 @@ export const CLUES: Record<string, ClueDef> = {
   'camera-tu-canh-gioi': {
     id: 'camera-tu-canh-gioi',
     tag: 'web',
-    title: 'Camera CAM-401: Tư đón bọc hàng họng rác và cảnh giới dốc hầm lúc 21:19',
+    title: 'Hình ảnh Camera CAM-401: Tư điều khiển xe máy tại khu vực dốc hầm lúc 21:19',
     detail:
       'Trích xuất camera an ninh cổng hầm (camera-phuong.gov.vn) CAM-401: Lúc 21:19 (ngay sau khi họng rác rung chấn 21:18), Tư điều khiển xe máy số 29-X1 chạy lại cửa xả rác hẻm sau, cúi xuống nhặt một bọc hàng dày nhét vào cốp xe rồi nổ máy phóng ra chắn ngang dốc cửa hầm cảnh giới.',
   },

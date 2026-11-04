@@ -143,14 +143,14 @@ export const CLUES: Record<string, ClueDef> = {
   'vy-xe-do': {
     id: 'vy-xe-do',
     tag: 'web',
-    title: 'Vy rao bán xe Asama đỏ từ 3 hôm trước',
+    title: 'Tin đăng Chợ Tốt CT-101: Vy rao bán xe đạp điện Asama đỏ cũ giá 2.500.000đ',
     detail:
       'Tin đăng CT-101 trên Chợ Tốt cho thấy Vy rao bán chiếc xe Asama màu đỏ cũ của mình từ 18:02 ngày 09/9 (3 ngày trước) để đóng tiền trọ, không liên quan xe cô Lan.',
   },
   'anh-phan-chieu': {
     id: 'anh-phan-chieu',
     tag: 'photo',
-    title: 'Bóng phản chiếu xe xanh trong ảnh 21:58',
+    title: 'Hình ảnh Story phố Hàng Chai: Tấm kính cửa hàng 88 phản chiếu bóng xe lúc 21:58',
     detail:
       'Bức ảnh chụp trước cửa tiệm điện thoại lúc 21:58: Trên mặt kính phản chiếu rõ bóng một chiếc xe đạp điện màu xanh mint có gắn túi vải hoa văn ở giỏ xe.',
   },
