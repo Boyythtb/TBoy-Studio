@@ -14,7 +14,6 @@ export interface Msg {
   time?: string
   requires?: string[]
   clue?: string
-  /** ảnh/hoá đơn đính kèm, chỉ để hiển thị */
   card?: { title: string; sub: string; icon: string }
   senderName?: string
   senderAvatar?: string
@@ -32,8 +31,8 @@ export interface Conv {
 }
 
 export interface Hotspot {
-  x: number // % from left 0..100
-  y: number // % from top 0..100
+  x: number
+  y: number
   label: string
   hint?: string
   clue?: string
@@ -97,91 +96,91 @@ export const CASE = {
   place: 'Hẻm 42, phố Hàng Chai',
   time: '21:47 · thứ Sáu 12/9',
   brief:
-    'Xe đạp điện của cô Lan biến mất khỏi sân lúc 21:40. Cả hẻm đang xôn xao trên Zola, nghi ngờ lẫn nhau. Cần đối soát lời khai với dữ liệu định vị, camera và rao vặt để tìm ra chân tướng.',
+    'Chiếc xe đạp điện Nijia màu xanh mint của cô Lan dựng trong sân biến mất giữa khoảng 21:10 - 21:40 lúc ngõ mất điện. Nhiều đối tượng trong hẻm có động cơ và mâu thuẫn thời gian cần được điều tra đối soát.',
   culprit: 'dung',
   difficulty: 'Dễ',
   question: 'Ai đã lấy chiếc xe đạp điện của cô Lan?',
   solution:
-    'Dũng khai về phòng trọ ngủ từ 21:15, nhưng định vị GPS trên cổng GiaoNhanh (giaonhanh.vn) cho thấy Dũng nhận cuốc GN-88214 lúc 21:47 ngay tại Hẻm 42. Camera ngã tư (camera-phuong.gov.vn) ghi nhận Dũng phóng xe xanh mint qua phố lúc 21:49, và bức ảnh 21:58 ở tiệm điện thoại còn in bóng xe. Vy bị nghi ngờ vì bán xe trên Chợ Tốt (chotot.vn) nhưng thực chất là bán xe Asama đỏ cũ của mình từ 3 hôm trước.',
+    'Dũng khai về phòng trọ ngủ từ 21:15, nhưng máy chủ GiaoNhanh (giaonhanh.vn) ghi nhận Dũng nhận đơn GN-88214 lúc 21:47 ngay đầu Hẻm 42. Camera giao thông CAM-102 (camera-phuong.gov.vn) ghi nhận lúc 21:49 có người mặc áo shipper kéo theo xe đạp điện trùm bạt xanh mint, và tấm ảnh chụp lúc 21:58 trước cửa hàng điện thoại in bóng chiếc xe kèm túi vải hoa của cô Lan. Bản nháp tin nhắn trong máy Dũng cho thấy áp lực phải trả 5 triệu tiền nợ cho Hùng trước 22:00 đêm nay.',
 }
 
 export const CLUES: Record<string, ClueDef> = {
   'mat-xe': {
     id: 'mat-xe',
     tag: 'chat',
-    title: 'Xe mất lúc 21:40',
+    title: 'Xe mất trong khoảng 21:10 - 21:40',
     detail:
-      'Cô Lan khoá xe trong sân lúc 21:10. Đến 21:40 ra thì cổng mở, xe đã biến mất. Không có tiếng động lạ, không ai nghe thấy gì.',
+      'Cô Lan khoá xe trong sân lúc 21:10 rồi vào nhà xem thời sự. Đến 21:40 ra sân thì cổng hé mở, xe biến mất. Trời tối do đèn ngõ mất điện.',
   },
   'camera-hong': {
     id: 'camera-hong',
     tag: 'chat',
-    title: 'Camera hẻm hỏng từ 20:00',
+    title: 'Camera hẻm mất nguồn từ 20:00',
     detail:
-      'Ông Bảy quên cắm lại nguồn camera sau khi vệ sinh. Cả đoạn hẻm từ 20:00 đến 22:00 không có hình ảnh trực tiếp trong ngõ.',
+      'Bác Bảy bảo vệ rút phích cắm camera để cắm quạt lúc dọn bốt trực rồi quên cắm lại. Đoạn ngõ từ 20:00 đến 22:00 không có hình ảnh ghi nhận trực tiếp.',
   },
   'bill-vien': {
     id: 'bill-vien',
     tag: 'web',
-    title: 'Bác Bảy ở hiệu thuốc/viện lúc 21:20',
+    title: 'Biên lai mua thuốc của bác Bảy lúc 21:20',
     detail:
-      'Đơn thuốc cấp cứu tại Nhà Thuốc Long Châu chi nhánh Hẻm 42 lúc 21:20 thanh toán tiền thuốc hạ huyết áp cho vợ. Bác Bảy có alibi hoàn hảo.',
+      'Hoá đơn tại Nhà Thuốc Long Châu chi nhánh Hẻm 42 ghi nhận bác Bảy thanh toán thuốc hạ huyết áp lúc 21:20. Bác Bảy có bằng chứng ngoại phạm rõ ràng.',
   },
   'dung-khai-21h15': {
     id: 'dung-khai-21h15',
     tag: 'chat',
-    title: 'Dũng khai về nhà từ 21:15',
+    title: 'Dũng khai về phòng ngủ từ 21:15',
     detail:
-      'Dũng nói với cả nhóm và nhắn riêng: “Em về từ 21:15, đứng đầu hẻm từ 21:20, không thấy ai dắt xe ra.”',
+      'Dũng khẳng định trước nhóm cư dân: “Em chạy cuốc cả ngày mệt đứt hơi, về phòng trọ trùm chăn ngủ từ 21h15 đến giờ không bước chân ra ngoài.”',
   },
   'don-hang-2147': {
     id: 'don-hang-2147',
     tag: 'web',
-    title: 'Đơn GiaoNhanh lúc 21:47 tại hẻm 42',
+    title: 'Đơn hàng GiaoNhanh lúc 21:47 tại hẻm 42',
     detail:
-      'Mã đơn GN-88214 trên giaonhanh.vn: nhận hàng tại Hẻm 42 — Quán net Hùng lúc 21:47, giao hẻm 44, hoàn tất 21:52. Tài xế: Dũng. Vạch trần lời nói dối về phòng ngủ từ 21:15 của Dũng!',
+      'Máy chủ GiaoNhanh ghi nhận tài xế Dũng nhận cuốc GN-88214 lúc 21:47 ngay đầu Hẻm 42 và giao lúc 21:52. Dữ liệu này mâu thuẫn hoàn toàn với lời khai ngủ từ 21:15 của Dũng.',
   },
   'vy-xe-do': {
     id: 'vy-xe-do',
     tag: 'web',
-    title: 'Vy bán xe Asama đỏ từ 3 hôm trước',
+    title: 'Vy rao bán xe Asama đỏ từ 3 hôm trước',
     detail:
-      'Tin đăng CT-101 trên Chợ Tốt (chotot.vn): Vy đăng bán xe đạp điện Asama màu đỏ giá 2.5tr từ 3 ngày trước để đóng tiền trọ, không phải chiếc xe Nijia xanh mint của cô Lan bị mất.',
+      'Tin đăng CT-101 trên Chợ Tốt cho thấy Vy rao bán chiếc xe Asama màu đỏ cũ của mình từ 18:02 ngày 09/9 (3 ngày trước) để đóng tiền trọ, không liên quan xe cô Lan.',
   },
   'anh-phan-chieu': {
     id: 'anh-phan-chieu',
     tag: 'photo',
-    title: 'Bóng xe xanh trong ảnh 21:58',
+    title: 'Bóng phản chiếu xe xanh trong ảnh 21:58',
     detail:
-      'Ảnh Dũng đăng lúc 21:58 trước cửa hàng điện thoại đã đóng. Trong tấm kính có bóng một chiếc xe đạp điện màu xanh mint — đúng màu xe cô Lan, và có túi vải treo ở yên.',
+      'Bức ảnh chụp trước cửa tiệm điện thoại lúc 21:58: Trên mặt kính phản chiếu rõ bóng một chiếc xe đạp điện màu xanh mint có gắn túi vải hoa văn ở giỏ xe.',
   },
   'tin-nhan-nhap': {
     id: 'tin-nhan-nhap',
     tag: 'file',
-    title: 'Tin nhắn nháp xin trả xe',
+    title: 'Bản nháp tin nhắn xoay tiền trước 22h',
     detail:
-      'Trong thùng rác: “Cô Lan ơi, mai em trả xe, em thề, đừng nói với ai…” — tin nhắn nháp soạn từ điện thoại Dũng chưa từng được gửi.',
+      'File bản nháp tìm thấy trong máy: “Tối nay em giao xong một đơn đặc biệt là xoay đủ 5 triệu trả anh trước 22h, anh đừng sang phòng làm ầm lên” — soạn gửi cho Hùng Net.',
   },
   'vy-chung-kien': {
     id: 'vy-chung-kien',
     tag: 'chat',
-    title: 'Vy thấy Dũng dắt xe lúc 21:35',
+    title: 'Vy thấy bóng người dắt xe xanh lúc 21:35',
     detail:
-      'Vy kể: khoảng 21:35, cô xuống sân tìm chìa khóa rơi thì thấy Dũng dắt chiếc xe đạp điện màu xanh từ sân nhà cô Lan ra đầu hẻm. Camera ngã tư (camera-phuong.gov.vn) cũng ghi nhận điều này.',
+      'Vy kể: Khoảng 21:35 cô xuống sân vứt rác, thấy một người mặc áo khoác trùm đầu dắt chiếc xe màu xanh mint ra cổng. Do trời tối ngõ mất điện nên không nhìn rõ mặt.',
   },
   'hung-cho-vay': {
     id: 'hung-cho-vay',
     tag: 'chat',
-    title: 'Dũng nợ Hùng 5 triệu, hạn hôm nay',
+    title: 'Khoản nợ 5 triệu hẹn trả đêm 12/9',
     detail:
-      'Hùng nhắn: “Hạn chót hôm nay, 5 triệu, đừng để anh gọi mãi.” Dũng trả lời: “Tối nay em lo.” Dũng đang bị dồn vào bước đường cùng vì nợ.',
+      'Sổ nợ và tin nhắn tiệm sửa xe Hùng Motor: Khoản nợ phụ tùng 5 triệu của Dũng đến hạn chót thanh toán trước 22:00 đêm 12/9, nếu không sẽ bị giữ xe máy.',
   },
   'son-don-hang': {
     id: 'son-don-hang',
     tag: 'web',
-    title: 'Sơn đang giao đơn ở hẻm 46 lúc 21:44',
+    title: 'Sơn đang giao hàng ở hẻm 46 lúc 21:44',
     detail:
-      'Biên lai GiaoNhanh GN-88212 và camera ghi nhận Sơn giao trà sữa cho chị Hoa ở hẻm 46 lúc 21:44, cách xa hiện trường và không thể lấy xe.',
+      'Lịch sử đơn hàng GN-88212 và camera đối soát ghi nhận Sơn đang giao trà sữa tại hẻm 46 lúc 21:44, cách xa hiện trường vụ việc.',
   },
 }
 
@@ -189,37 +188,37 @@ export const SUSPECTS: Suspect[] = [
   {
     id: 'dung',
     name: 'Dũng',
-    role: 'Shipper GiaoNhanh',
+    role: 'Shipper GiaoNhanh · Phòng 203',
     avatar: '🛵',
-    note: 'Khai về ngủ từ 21:15. Bị chủ nợ Hùng đòi 5 triệu tiền sửa xe hạn chót đêm nay.',
+    note: 'Khai rằng chạy xe cả ngày mệt đứt hơi, về phòng trọ trùm chăn ngủ từ 21h15 không bước chân ra ngoài.',
   },
   {
     id: 'vy',
     name: 'Vy',
-    role: 'Sinh viên, phòng 402',
+    role: 'Sinh viên · Phòng 402',
     avatar: '🎧',
-    note: 'Nợ tiền trọ 2 tháng, rao bán xe điện trên Chợ Tốt. Có mặt ở sân lúc 21:35.',
+    note: 'Khai rằng chỉ xuống sân vứt rác lúc 21h35 rồi lên phòng học bài. Đang nợ tiền phòng trọ và rao bán xe trên mạng.',
   },
   {
     id: 'son',
     name: 'Sơn',
-    role: 'Shipper NowFood đối thủ',
+    role: 'Shipper đối thủ · Hẻm 46',
     avatar: '🚴',
-    note: 'Tranh địa bàn với Dũng. Từng bị thấy dắt xe vào hẻm lúc 21:38 mang theo kìm trong balo.',
+    note: 'Thường xuyên tranh giành địa bàn giao hàng với Dũng. Từng bị thấy dắt xe vào hẻm mang theo balo đồ nghề.',
   },
   {
     id: 'ong-bay',
     name: 'Ông Bảy',
-    role: 'Bảo vệ dân phòng',
+    role: 'Bảo vệ dân phòng hẻm 42',
     avatar: '🧹',
-    note: 'Quản lý camera ngõ nhưng rút phích cắm điện từ 20:00.',
+    note: 'Quản lý bốt trực đầu ngõ. Thừa nhận rút nhầm phích cắm camera lúc 20h dọn dẹp rồi quên cắm lại.',
   },
   {
     id: 'hung',
     name: 'Hùng',
-    role: 'Chủ quán net Hẻm 42',
+    role: 'Chủ tiệm sửa xe & net Hẻm 42',
     avatar: '🖥️',
-    note: 'Chủ nợ của Dũng. Thấy xe phóng qua ngõ lúc 21h30.',
+    note: 'Chủ nợ của Dũng. Khai rằng ngồi trông quán net suốt từ chiều tối đến nửa đêm.',
   },
 ]
 
@@ -230,7 +229,7 @@ export const CONVS: Conv[] = [
     avatar: '🏘️',
     isGroup: true,
     sub: '8 thành viên',
-    preview: 'Cô Lan: Cả nhà ơi cứu tôi với, xe mất rồi!',
+    preview: 'Cô Lan: Cả nhà ơi xe đạp điện của tôi mất rồi!',
     messages: [
       {
         id: 'g1',
@@ -238,7 +237,7 @@ export const CONVS: Conv[] = [
         senderName: 'Cô Lan',
         senderAvatar: '👵',
         time: '21:41',
-        text: 'Cả nhà ơi cứu tôi với!! Xe đạp điện Nijia xanh mint của tôi vừa khóa cổ để ngoài sân lúc 21h10, tôi vào nhà uống chén nước quay ra 21h40 đã mất hút rồi! Ai quanh hẻm thấy xe tôi đâu không?!',
+        text: 'Cả nhà ơi cứu tôi với! Chiếc xe đạp điện Nijia xanh mint của tôi khóa cổ để ở góc sân lúc 21h10, tôi vào nhà uống ngụm nước quay ra 21h40 đã không thấy đâu rồi!',
         clue: 'mat-xe',
       },
       {
@@ -247,7 +246,7 @@ export const CONVS: Conv[] = [
         senderName: 'Hùng Net',
         senderAvatar: '🖥️',
         time: '21:42',
-        text: 'Ủa cổng hẻm có khoá then cài mà cô? Tầm hơn 9 rưỡi em thấy mở cổng đón người ra vào. Bác Bảy bảo vệ đâu rồi, mở camera hẻm trích xuất xem đứa nào dắt ra chứ!',
+        text: 'Cổng hẻm có then cài mà cô? Lúc hơn 21h30 em thấy cổng mở toang. Bác Bảy bảo vệ đâu rồi, mở camera hẻm xem ai dắt ra chứ!',
       },
       {
         id: 'g3',
@@ -255,7 +254,7 @@ export const CONVS: Conv[] = [
         senderName: 'Ông Bảy (Bảo vệ)',
         senderAvatar: '🧹',
         time: '21:43',
-        text: 'Chết dở tôi rồi chị Lan ơi... Chiều tối nay tôi quét dọn bốt trực, rút phích cắm camera hẻm ra để cắm quạt rồi lú lẫn quên cắm lại mất! Camera hẻm bị ngắt nguồn từ 20h00 tối đến giờ rồi...',
+        text: 'Chết dở tôi rồi chị Lan ơi... Lúc 20h tôi quét dọn bốt, rút phích cắm camera ra cắm quạt rồi đãng trí quên cắm lại! Camera hẻm bị ngắt điện từ 20h tối đến giờ...',
         clue: 'camera-hong',
       },
       {
@@ -264,7 +263,7 @@ export const CONVS: Conv[] = [
         senderName: 'Cô Lan',
         senderAvatar: '👵',
         time: '21:44',
-        text: 'Ối giời đất ơi là giời! Xe con gái tích cóp tiền lương mua tặng cho tôi đi chợ, trong giỏ còn cuốn sổ ghi nợ bán hàng nữa! Tôi vừa đăng ảnh xe lên [bảng tin Facebúc](https://facebuc.vn) nhờ mọi người chia sẻ giùm, ai thấy nó dắt đi đâu xin chỉ giúp tôi với!',
+        text: 'Trời ơi! Xe con gái tích cóp tiền mua tặng, giỏ trước còn có cái túi vải hoa đựng sổ sách nữa! Ai quanh hẻm thấy tung tích gì xin báo giúp tôi với!',
       },
       {
         id: 'g5',
@@ -272,7 +271,8 @@ export const CONVS: Conv[] = [
         senderName: 'Vy (402)',
         senderAvatar: '🎧',
         time: '21:45',
-        text: 'Khổ thân cô Lan quá... Ban nãy tầm 21h35 em xuống sân vứt rác, hình như thấy có bóng người dắt xe xanh mint ra cổng hẻm nhưng em tưởng cô nhờ ai dắt đi sạc điện... À cẩn thận kẻ gian tẩu tán mang bán tháo qua mạng, mọi người thử lướt [Chợ Tốt](https://chotot.vn) xem có tin mới đăng không!',
+        text: 'Khoảng 21h35 em xuống sân vứt rác, có thấy bóng một người trùm mũ áo khoác kéo xe màu xanh mint ra cổng. Lúc đó tối om tưởng người nhà dắt xe đi sạc...',
+        clue: 'vy-chung-kien',
       },
       {
         id: 'g6',
@@ -280,7 +280,7 @@ export const CONVS: Conv[] = [
         senderName: 'Hùng Net',
         senderAvatar: '🖥️',
         time: '21:46',
-        text: 'Vy mày nói ai thế? Chiều nay bà chủ nhà trọ vừa sang quán tao kể mày nợ 2 tháng tiền phòng bị dọa đuổi kia kìa. Tao còn thấy mày đăng bán xe gì trên mạng ấy!',
+        text: 'Vy mày nói ai thế? Bà chủ nhà trọ vừa bảo mày nợ 2 tháng tiền trọ, tao còn thấy mày đăng bán xe gì trên Chợ Tốt kia kìa!',
       },
       {
         id: 'g7',
@@ -288,7 +288,8 @@ export const CONVS: Conv[] = [
         senderName: 'Vy (402)',
         senderAvatar: '🎧',
         time: '21:47',
-        text: 'Anh Hùng đừng có nói linh tinh! Em túng tiền nên đăng bán lại chiếc xe Asama đỏ cũ của em từ 3 hôm trước rồi, liên quan gì đến xe cô Lan đâu!',
+        text: 'Anh Hùng đừng có vu oan! Em bán xe Asama đỏ cũ của em từ 3 hôm trước để đóng tiền trọ, liên quan gì đến xe cô Lan!',
+        clue: 'vy-xe-do',
       },
       {
         id: 'g8',
@@ -296,7 +297,7 @@ export const CONVS: Conv[] = [
         senderName: 'Sơn (Shipper)',
         senderAvatar: '🚴',
         time: '21:48',
-        text: 'Đúng đấy, trong xóm tối nay ra vào nườm nượp, lúc nãy tôi thấy thằng Dũng shipper phóng xe máy vội vã lắm, balo cồng kềnh...',
+        text: 'Trong ngõ ra vào nườm nượp, lúc nãy tôi thấy shipper nào phóng xe máy ra vội vã lắm, kéo theo đồ phía sau...',
       },
       {
         id: 'g9',
@@ -304,7 +305,7 @@ export const CONVS: Conv[] = [
         senderName: 'Dũng (Shipper)',
         senderAvatar: '🛵',
         time: '21:49',
-        text: 'Anh Sơn đừng có vu khống nhé! Em chạy cuốc cả ngày mệt đứt hơi, về phòng trọ trùm chăn ngủ từ 21h15 đến giờ có biết trời đất gì đâu! Từ lúc 21h20 em thò đầu ra đầu hẻm ngóng gió có thấy ai dắt xe nào ra đâu.',
+        text: 'Mọi người đừng có réo tên tôi! Tôi chạy cuốc cả ngày mệt đứt hơi, về phòng trọ trùm chăn ngủ từ 21h15 đến giờ có biết trời đất gì đâu!',
         clue: 'dung-khai-21h15',
       },
     ],
@@ -314,55 +315,48 @@ export const CONVS: Conv[] = [
     name: 'Anh Tùng Công an',
     avatar: '👮',
     sub: 'Đội điều tra khu vực',
-    preview: 'Chỉ có 3 lượt cáo buộc thôi, thận trọng!',
+    preview: 'Cần đối soát bằng chứng khách quan, chớ đoán mò!',
     requires: ['mat-xe'],
     messages: [
       {
         id: 't1',
         from: 'them',
         time: '21:50',
-        text: 'Anh nhận được tin báo mất xe ở Hẻm 42 rồi. Vụ này thoạt nhìn khá rối vì bà con trong ngõ đang nghi kỵ đổ vạ lẫn nhau. Em phụ trách điều tra nhé: chỉ có 3 lượt cáo buộc thôi, tuyệt đối không được đoán mò.',
+        text: 'Anh nhận được tin báo mất xe ở Hẻm 42 rồi. Vụ này khá nhiều nghi vấn vì bà con đang nghi kỵ lẫn nhau. Em phụ trách điều tra nhé: chỉ có 3 lượt cáo buộc thôi, cần chứng cứ vững chắc.',
       },
       {
         id: 't2',
         from: 'them',
         time: '21:51',
-        text: 'Hẻm 42 là ngõ cụt. Camera trong ngõ mất điện thì kẻ gian muốn tẩu tán xe bắt buộc phải ra đường lớn. Em thử rà soát mạng xã hội xem bà con cư dân quanh phố có ai đăng bài hóng hớt hay thấy ai dắt xe khả nghi lúc hơn 21h30 không.',
+        text: 'Camera trong ngõ mất điện thì kẻ gian muốn tẩu tán xe bắt buộc phải ra đường lớn. Em thử rà soát camera giao thông các ngã tư xung quanh và dữ liệu hành trình các app giao vận xem có mốc giờ nào trùng khớp.',
         requires: ['camera-hong'],
       },
       {
         id: 't3',
         from: 'them',
         time: '21:52',
-        text: 'Lời khai của các nghi phạm đang mâu thuẫn chan chát. Người thì bảo ngủ từ 21h15, người thì bảo đi mua thuốc, người thì kêu bán xe... Em đối soát kỹ các alibi và hoạt động thực tế của họ xem ai nói dối.',
+        text: 'Đối soát kỹ lời khai của từng người với lịch sử giao dịch và định vị thực tế. Kẻ gian thường đưa ra bằng chứng ngoại phạm bằng lời nói nhưng dữ liệu số sẽ không biết nói dối.',
         requires: ['camera-hong'],
       },
       {
         id: 't4',
         from: 'them',
         time: '22:04',
-        text: 'Kẻ gian thường để lộ sơ hở trong những lần tương tác hoặc đăng ảnh khoe mẽ trên mạng. Em rà soát kỹ trang cá nhân của từng đối tượng xem có vật chứng nào vô tình lọt vào khung hình không.',
+        text: 'Hãy kiểm tra những bức ảnh hoặc thiết bị xuất hiện quanh khung giờ 21h45 - 22h00 xem có dấu vết nào vô tình lọt vào khung hình hay không.',
         requires: ['don-hang-2147'],
       },
       {
         id: 't5',
-        from: 'them',
-        time: '22:12',
-        text: 'Tốt lắm, các mắt xích đang dần sáng tỏ! Khi đã có đủ bằng chứng về động cơ, thời gian có mặt ở hiện trường và tang vật, em hãy mở hồ sơ kết tội để vạch mặt thủ phạm nhé.',
+        from: 'me',
+        time: '22:13',
+        text: 'Em đã đối soát chuỗi chứng cứ: định vị đơn hàng viễn thông, hình ảnh camera ngã tư và bóng phản chiếu trên kính cửa hàng.',
         requires: ['anh-phan-chieu'],
       },
       {
         id: 't6',
-        from: 'me',
-        time: '22:13',
-        text: 'Em đã đối soát chuỗi chứng cứ rồi anh Tùng: định vị hành trình, hình ảnh phản chiếu trên kính và bản nháp tin nhắn thú nhận.',
-        requires: ['anh-phan-chieu'],
-      },
-      {
-        id: 't7',
         from: 'them',
         time: '22:14',
-        text: 'Xuất sắc! Bằng chứng đanh thép không thể chối cãi. Em mở Hồ sơ vụ án, chỉ đích danh thủ phạm để anh cùng đội hình sự tóm gọn ngay!',
+        text: 'Rất sắc bén! Dữ liệu đã đủ để chứng minh ai có mặt tại hiện trường và ai nói dối. Em hãy mở Hồ sơ vụ án để tiến hành cáo buộc.',
         requires: ['anh-phan-chieu'],
       },
     ],
@@ -372,31 +366,38 @@ export const CONVS: Conv[] = [
     name: 'Dũng Ship',
     avatar: '🛵',
     sub: 'Hoạt động 5 phút trước',
-    preview: 'Em về từ 21h15 rồi mà.',
+    preview: 'Em ở trong phòng ngủ từ 21h15 mà anh chị...',
     requires: ['mat-xe'],
     messages: [
-      { id: 'd1', from: 'them', time: '21:52', text: 'Anh chị điều tra gì em thế? Em thề với anh chị là em chạy xe mệt quá, về phòng trọ trùm chăn ngủ từ 21h15 rồi mà!' },
-      { id: 'd2', from: 'them', time: '21:53', text: 'Trong hẻm thiếu gì người khả nghi! Con bé Vy nó nợ tiền trọ 2 tháng kìa, trên mạng nó đang rao bán xe điện ầm ầm sao anh chị không đi bắt nó?' },
+      { id: 'd1', from: 'them', time: '21:52', text: 'Anh chị hỏi em làm gì? Em mệt quá về phòng trọ trùm chăn ngủ say từ 21h15 rồi, có biết gì đâu!' },
+      { id: 'd2', from: 'them', time: '21:53', text: 'Con bé Vy nó nợ tiền phòng trọ mấy tháng nay kìa, trên mạng nó đang rao bán xe điện ầm ầm sao anh chị không kiểm tra?' },
       {
         id: 'd3',
-        from: 'them',
+        from: 'me',
         time: '22:01',
-        text: 'Cái đơn GN-88214 lúc 21h47 trên app GiaoNhanh... là do em ngủ quên, ngón tay vô tình quẹt trúng nút nhận đơn thôi chứ em không có chạy đâu...',
+        text: 'Dữ liệu máy chủ GiaoNhanh ghi nhận tài khoản của anh nhận đơn GN-88214 lúc 21h47 ngay đầu hẻm 42. Anh giải thích thế nào?',
         requires: ['don-hang-2147'],
       },
       {
         id: 'd4',
-        from: 'me',
+        from: 'them',
         time: '22:02',
-        text: 'Anh Dũng đừng quanh co nữa. Camera an ninh ngã tư ghi rõ xe đạp điện xanh mint chạy qua phố lúc 21h49, người cầm lái chính là anh!',
+        text: 'Ủa... chắc là máy em để trong túi quần bị cấn màn hình tự nhảy nhận đơn ảo chứ em đang nằm ngủ mà!',
         requires: ['don-hang-2147'],
       },
       {
         id: 'd5',
-        from: 'them',
+        from: 'me',
         time: '22:03',
-        text: '...Các người... các người theo dõi tôi đấy à?! Em... em chỉ mượn tạm xe cô Lan để đi giao cho kịp giờ khách thôi mà...',
-        requires: ['don-hang-2147'],
+        text: 'Camera ngã tư lúc 21h49 ghi rõ người mặc đồng phục GiaoNhanh kéo theo xe xanh mint, và tấm ảnh lúc 21h58 phản chiếu rõ túi hoa của cô Lan!',
+        requires: ['anh-phan-chieu'],
+      },
+      {
+        id: 'd6',
+        from: 'them',
+        time: '22:04',
+        text: '...Anh chị đừng có chụp mũ tôi! Có bằng chứng xác thực thì đưa ra đối chất!',
+        requires: ['anh-phan-chieu'],
       },
     ],
   },
@@ -405,94 +406,73 @@ export const CONVS: Conv[] = [
     name: 'Vy 402',
     avatar: '🎧',
     sub: 'Hoạt động 2 phút trước',
-    preview: 'Em bị oan thật mà anh chị ơi…',
+    preview: 'Em đăng bán xe đỏ cũ từ 3 hôm trước mà…',
     requires: ['mat-xe'],
     messages: [
-      { id: 'v1', from: 'them', time: '22:05', text: 'Anh chị ơi em bị oan thật sự luôn á! Chiếc xe em đăng bán trên Chợ Tốt là chiếc Asama màu đỏ cũ rích của em từ thời năm nhất, em đăng từ 3 hôm trước rồi ạ!' },
-      { id: 'v2', from: 'them', time: '22:06', text: 'Em có túng tiền nợ tiền phòng thật, nhưng bố mẹ em dạy đói cho sạch rách cho thơm, em không đời nào trộm đồ của người trong xóm đâu!', clue: 'vy-xe-do' },
+      { id: 'v1', from: 'them', time: '22:05', text: 'Anh chị ơi, chiếc xe em đăng bán trên Chợ Tốt là chiếc Asama màu đỏ của em từ năm nhất, em đăng từ 3 hôm trước rồi!' },
+      { id: 'v2', from: 'them', time: '22:06', text: 'Em đúng là đang túng tiền trọ thật, nhưng chiếc xe em bán có giấy tờ hoá đơn đàng hoàng, không phải xe cô Lan đâu ạ!', clue: 'vy-xe-do' },
       {
         id: 'v3',
         from: 'them',
-        time: '22:06',
-        text: 'Hồi 21h35 em xuống vứt rác, em thấy rõ ràng anh Dũng dắt chiếc xe Nijia xanh mint của cô Lan ra cổng hẻm. Lúc đó anh ấy đội mũ bảo hiểm trùm kín đầu, em còn chào mà anh ấy giật mình lảng đi không trả lời!',
+        time: '22:07',
+        text: 'Hồi 21h35 em xuống vứt rác, chỉ thấy một người trùm mũ áo khoác kéo chiếc xe màu xanh mint ra cổng, giỏ có treo túi hoa. Do ngõ tối mất điện nên em không dám nhìn lâu.',
         clue: 'vy-chung-kien',
-        requires: ['don-hang-2147'],
       },
-      { id: 'v4', from: 'me', time: '22:07', text: 'Cảm ơn Vy, thông tin của em rất quý giá và hoàn toàn khớp với dữ liệu camera.', requires: ['don-hang-2147'] },
-    ],
-  },
-  {
-    id: 'son',
-    name: 'Sơn Ship',
-    avatar: '🚴',
-    sub: 'Hoạt động 4 phút trước',
-    preview: 'Tôi có cuốc giao trà sữa hẻm 46.',
-    requires: ['mat-xe'],
-    messages: [
-      { id: 'sn1', from: 'them', time: '22:08', text: 'Tôi chạy đơn chân chính, anh em shipper với nhau đừng có gài tội tôi! Balo tôi có kìm sắt là vì cái phanh đĩa xe máy tôi bị kẹt chốt, tôi mang theo để nắn lại.' },
-      { id: 'sn2', from: 'them', time: '22:09', text: 'Thời điểm 21h44 tôi đang giao đơn trà sữa cho chị Hoa ở tít hẻm 46! Khách đã ký nhận và tôi có chụp ảnh giao hàng lưu trên [hệ thống GiaoNhanh](https://giaonhanh.vn), các anh cứ kiểm tra thoải mái!', clue: 'son-don-hang' },
-      { id: 'sn3', from: 'me', time: '22:10', text: 'Biên lai và định vị giao hàng lúc 21h44 xác nhận anh đang ở hẻm 46. Anh không liên quan tới vụ việc.' },
     ],
   },
   {
     id: 'hung',
     name: 'Hùng Net',
     avatar: '🖥️',
-    sub: 'Hoạt động 8 phút trước',
-    preview: 'Nó nợ tôi 5 triệu, hạn hôm nay.',
+    sub: 'Đang online',
+    preview: 'Tối nay tôi ngồi quán trông máy suốt…',
     requires: ['mat-xe'],
     messages: [
-      { id: 'h1', from: 'them', time: '21:52', text: 'Em nghi thằng Dũng từ đầu rồi! Chiều nay nó bảo em sửa xe máy hết 5 triệu, hẹn tối nay trả nợ để lấy xe. Em thấy tài khoản nó hết nhẵn tiền.' },
-      { id: 'h2', from: 'them', time: '21:53', text: 'Nãy em lên hệ thống kiểm tra, thấy nổ cuốc đơn ở ngay ngõ 42 lúc 21h47 do tài xế Dũng nhận, thế mà nó dám mở mồm bảo ngủ từ 21h15!', clue: 'don-hang-2147' },
+      { id: 'h1', from: 'them', time: '21:55', text: 'Tôi ngồi quán net từ chập tối tới giờ, khách ra vào chơi game liên tục. Ai nợ tiền ai tôi ghi sổ hết.' },
       {
-        id: 'h3',
+        id: 'h2',
         from: 'them',
-        time: '21:54',
-        text: 'Thằng Dũng nhắn cho em: "Tối nay em lo đủ tiền trả anh". Hoá ra nó túng quẫn làm liều đi dắt trộm xe cô Lan để giao hàng kiếm tiền gán nợ!',
+        time: '21:56',
+        text: 'Thằng Dũng nó nợ tôi 5 triệu tiền thay đồ xe máy hơn hai tuần nay. Nó hẹn tối nay trước 22h phải trả đủ cho tôi đấy.',
         clue: 'hung-cho-vay',
       },
     ],
   },
 ]
+
 export const ORDERS: Order[] = [
-  {
-    id: 'GN-88214',
-    time: '21:47',
-    pickup: 'Hẻm 42 — Quán net Hùng',
-    drop: 'Hẻm 44',
-    fee: '28.000đ',
-    status: 'Hoàn tất 21:52',
-    clue: 'don-hang-2147',
-  },
-  {
-    id: 'GN-88212',
-    time: '21:44',
-    pickup: 'Trà Sữa Hẻm 46',
-    drop: 'Hẻm 46 (Giao chị Hoa)',
-    fee: '25.000đ',
-    status: 'Hoàn tất 21:44',
-    clue: 'son-don-hang',
-  },
+  { id: 'GN-88210', time: '20:15', pickup: 'Phố Cửa Đông', drop: 'Hẻm 42 Hàng Chai', fee: '28.000đ', status: 'Hoàn tất' },
+  { id: 'GN-88212', time: '21:44', pickup: 'Trà sữa Phúc', drop: 'Hẻm 46 Hàng Chai', fee: '22.000đ', status: 'Hoàn tất (Tài xế Sơn)', clue: 'son-don-hang' },
+  { id: 'GN-88214', time: '21:47', pickup: 'Hẻm 42 — Net Hùng', drop: 'Hẻm 44 Hàng Chai', fee: '35.000đ', status: 'Hoàn tất (Tài xế Dũng)', clue: 'don-hang-2147' },
 ]
 
 export const PHOTOS: Photo[] = [
   {
     id: 'p1',
-    title: 'Cửa hàng điện thoại đóng cửa',
-    time: '21:58',
+    title: 'Hiện trường sân nhà cô Lan sáng hôm sau',
+    time: '07:30',
     scene: 'street',
-    img: 'detective/hien-truong-2158.jpg',
-    caption: 'Ảnh Dũng đăng lúc 21:58 trước cửa hàng điện thoại.',
+    caption: 'Vị trí chiếc xe đạp điện từng dựng trước thềm nhà cạnh cổng sắt.',
+    hotspots: [
+      { x: 30, y: 65, label: 'Vết lốp xe', hint: 'Dấu vết trên nền xi măng', detail: 'Vết lốp xe đạp điện hướng thẳng ra phía cổng hẻm.' },
+      { x: 75, y: 40, label: 'Phích cắm camera', hint: 'Bốt trực bảo vệ', clue: 'camera-hong', detail: 'Ổ cắm điện camera an ninh bị rút ra, thay bằng phích cắm quạt bàn.' },
+    ],
+  },
+  {
+    id: 'p2',
+    title: 'Ảnh chụp trước cửa hàng điện thoại',
+    time: '21:58',
+    scene: 'net',
+    caption: 'Ảnh chụp lúc 21:58 trên phố Hàng Chai.',
     clue: 'anh-phan-chieu',
     hotspots: [
       {
-        x: 68,
-        y: 45,
-        label: 'Tấm kính cửa hàng',
-        hint: 'Quan sát bóng phản chiếu trong tấm kính lớn',
+        x: 48,
+        y: 52,
+        label: 'Mặt kính phản chiếu',
+        hint: 'Soi kỹ bóng phản chiếu',
         clue: 'anh-phan-chieu',
-        detail:
-          'Trong tấm kính phản chiếu rõ chiếc xe đạp điện màu xanh mint có gắn túi vải treo ở yên — chính là chiếc xe của cô Lan!',
+        detail: 'Tấm kính phản chiếu rõ một người dắt chiếc xe đạp điện màu xanh mint có túi vải hoa ở giỏ.',
       },
     ],
   },
@@ -500,19 +480,18 @@ export const PHOTOS: Photo[] = [
 
 export const TRASH: TrashItem[] = [
   {
-    id: 'tr1',
-    name: 'tin-nhan-nhap.txt',
-    kind: 'Ghi chú nháp',
-    preview: 'Cô Lan ơi, mai em trả xe…',
-    detail: '“Cô Lan ơi, mai em trả xe, em thề, đừng nói với ai…” — Bản nháp trong điện thoại Dũng chưa kịp gửi.',
+    id: 't1',
+    name: 'draft_sms_2145.txt',
+    kind: 'Bản nháp tin nhắn',
+    preview: 'Tối nay em giao xong một đơn đặc biệt là xoay đủ 5 triệu trả anh trước 22h…',
+    detail: 'Bản nháp tin nhắn soạn lúc 21:45 gửi tới số của Hùng Net: “Tối nay em giao xong một đơn đặc biệt là xoay đủ 5 triệu trả anh trước 22h, anh đừng sang phòng làm ầm lên”.',
     clue: 'tin-nhan-nhap',
   },
   {
-    id: 'tr2',
-    name: 'bien-lai-sua-xe.jpg',
-    kind: 'Ảnh chụp',
-    preview: 'Biên lai sửa xe tiệm anh Hùng',
-    detail: 'Biên lai ghi nợ 5.000.000đ của tài xế Dũng tại tiệm Hùng Sửa Xe, hạn chót ngày 12/9.',
-    clue: 'hung-cho-vay',
+    id: 't2',
+    name: 've_gui_xe_hang_chai.png',
+    kind: 'Ảnh chụp vé xe',
+    preview: 'Vé gửi xe chợ đêm Hàng Chai số 118…',
+    detail: 'Vé gửi xe chợ đêm đề ngày 10/9 đã hết hạn sử dụng.',
   },
 ]
