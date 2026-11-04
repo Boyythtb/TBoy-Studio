@@ -117,6 +117,13 @@ export const SUSPECTS: Suspect[] = [
     note: 'Phụ trách quét dọn khu vực sân thi đấu và phòng thay đồ cuối ca.',
   },
   {
+    id: 'quan_hlv',
+    name: 'Quân Huấn Luyện Viên',
+    role: 'HLV dạy kèm riêng · Sân 1-2',
+    avatar: '💪',
+    note: 'Thường xuyên mượn chùm chìa khoá dự phòng tủ đồ để cất bao vợt chuyên nghiệp. Khai rằng đang bấm giờ cho học viên ở sân 1.',
+  },
+  {
     id: 'hanh',
     name: 'Chị Hạnh',
     role: 'Nạn nhân bị mất tài sản',
@@ -213,6 +220,14 @@ export const CONVS: Conv[] = [
         text: 'Sơn ơi, khoản nợ 6 triệu tiền sân quá hạn 2 tuần nay em chưa trả đấy nhé! Chị nhắc bao nhiêu lần trên [Facebúc Sơn](https://facebuc.vn/son.badminton68) rồi!',
         clue: 'son-no-tien',
       },
+      {
+        id: 'g10',
+        from: 'them',
+        senderName: 'Quân Huấn Luyện Viên',
+        senderAvatar: '💪',
+        time: '20:47',
+        text: 'Lúc 20h25 tôi vào phòng thay đồ lấy chai nước khoáng, thấy thằng Sơn cứ thập thò lấm lét sau lưng vách ngăn dãy tủ! Lúc tôi hỏi thì nó giật bắn mình giấu vội hai tay sau lưng!',
+      },
     ],
   },
   {
@@ -307,6 +322,28 @@ export const CONVS: Conv[] = [
     messages: [
       { id: 'l1', from: 'them', time: '20:43', text: 'Em trực quầy nước từ 18h đến giờ, từ 20h30 đến 20h45 em ngồi nghe điện thoại của mẹ ở quê gọi lên, camera quầy nước ghi rõ!' , clue: 'linh-goi-dien'},
       { id: 'l2', from: 'them', time: '20:44', text: 'Lúc 20h41 em có thao tác chuyển khoản 2 triệu trên [VietinBank](https://vietinbank.vn) để đóng học phí đại học, biên lai CK-8812 lưu rõ ràng chứ không liên quan gì đến tiền điện thoại đâu ạ!', clue: 'chuyen-khoan-linh' },
+    ],
+  },
+  {
+    id: 'quan_hlv',
+    name: 'Quân Huấn Luyện Viên',
+    avatar: '💪',
+    sub: 'Đang online',
+    preview: 'Tôi dạy kèm học viên sân 1 từ 19h30 đến 21h00…',
+    requires: ['mat-dt'],
+    messages: [
+      {
+        id: 'q1',
+        from: 'them',
+        time: '20:47',
+        text: 'Em điều tra viên ơi, anh dạy kèm đôi học viên ở sân 1 suốt từ 19h30 đến 21h00, học viên và phụ huynh ngồi ở khán đài xem suốt buổi làm chứng cho anh được!',
+      },
+      {
+        id: 'q2',
+        from: 'them',
+        time: '20:48',
+        text: 'Lúc 20h25 anh xin phép tạm dừng 2 phút vào phòng thay đồ lấy nước thì bắt gặp thằng Sơn đang khom người ghé mắt nhìn qua khe hở nóc tủ đồ, tay nó còn cầm cái móc kim loại!',
+      },
     ],
   },
 ]

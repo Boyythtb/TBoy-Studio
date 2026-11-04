@@ -214,6 +214,13 @@ export const SUSPECTS: Suspect[] = [
     note: 'Quản lý bốt trực đầu ngõ, phụ trách an ninh và giám sát người ra vào hẻm.',
   },
   {
+    id: 'hoang',
+    name: 'Bác Hoàng Tổ Trưởng',
+    role: 'Trưởng ban Dân phố · Nhà số 12',
+    avatar: '👴',
+    note: 'Thường xuyên đi tuần nhắc nhở trật tự hẻm. Từng cãi nhau gay gắt với cô Lan về việc để xe bừa bãi chắn lối đi chung sân.',
+  },
+  {
     id: 'hung',
     name: 'Hùng',
     role: 'Chủ tiệm sửa xe & net Hẻm 42',
@@ -325,6 +332,14 @@ export const CONVS: Conv[] = [
         senderAvatar: '🧹',
         time: '21:51',
         text: 'Camera trong ngõ mất điện nhưng camera ngã tư phố Hàng Chai [Camera Phường](https://camera-phuong.gov.vn) CAM-101 vẫn quay 24/7, xe muốn chở đi đâu cũng phải qua góc ngã tư đó!',
+      },
+      {
+        id: 'g12',
+        from: 'them',
+        senderName: 'Bác Hoàng Tổ Trưởng',
+        senderAvatar: '👴',
+        time: '21:54',
+        text: 'Tôi đã nhắc cô Lan bao nhiêu lần rồi! Xe để chình ình giữa sân chung chắn hết lối đi! Tối nay lúc 21h25 tôi đi kiểm tra ngõ còn thấy thằng Dũng đứng thập thò nghe điện thoại ở góc bốt điện, mặt mũi hốt hoảng!',
       },
     ],
   },
@@ -460,6 +475,28 @@ export const CONVS: Conv[] = [
     messages: [
       { id: 's1', from: 'them', time: '21:57', text: 'Anh chị ơi em chạy NowFood, thằng Dũng nó hay thù hằn em nên cứ réo tên em! Tối nay em có đơn giao trà sữa ở Hẻm 46 cho chị Hoa lúc 21:44, em đăng cả bài trên [Facebúc Sơn](https://facebuc.vn/son.shipper.pro) đây nè!' },
       { id: 's2', from: 'them', time: '21:58', text: 'Em chạy xe máy Wave đỏ, còn người dắt xe đạp điện xanh ra ngõ lúc hơn 21h30 mặc đồng phục cam của GiaoNhanh mà!', clue: 'son-don-hang' },
+    ],
+  },
+  {
+    id: 'hoang',
+    name: 'Bác Hoàng Tổ Trưởng',
+    avatar: '👴',
+    sub: 'Tổ trưởng dân phố',
+    preview: 'Tôi đi tuần từ 21h15 đến 21h30…',
+    requires: ['mat-xe'],
+    messages: [
+      {
+        id: 'bg1',
+        from: 'them',
+        time: '22:12',
+        text: 'Này cháu điều tra viên, tôi là cán bộ hưu trí gương mẫu! Việc tôi nhắc nhở cô Lan là vì trật tự chung chứ tôi thèm gì cái xe đạp cỏ ấy! Nhà tôi đi xe SH xịn đỗ trong gara!',
+      },
+      {
+        id: 'bg2',
+        from: 'them',
+        time: '22:13',
+        text: 'Lúc 21h25 tôi qua đầu ngõ thấy thằng Dũng đứng nghe điện thoại rất gay gắt, nó bảo người bên kia "đợi tí em kiếm đủ 5 triệu trả ngay trong đêm nay" rồi chạy vụt về phòng trọ!',
+      },
     ],
   },
 ]

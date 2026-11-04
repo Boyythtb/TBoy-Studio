@@ -117,6 +117,13 @@ export const SUSPECTS: Suspect[] = [
     note: 'Người giữ chìa khóa hòm ban đầu, giao lại chìa cho Trang lúc 20:30 để lên sân khấu điều phối văn nghệ.',
   },
   {
+    id: 'thanh_at',
+    name: 'Thành Kỹ Thuật',
+    role: 'Kỹ thuật viên âm thanh & ánh sáng',
+    avatar: '🎛️',
+    note: 'Phụ trách tủ điện tổng và dàn loa máy sân đình. Từng bị Trang phản ánh chậm bàn giao micro và có khoản nợ tiền thiết bị cần xoay xở gấp.',
+  },
+  {
     id: 'hung',
     name: 'Chú Hùng',
     role: 'Bảo vệ dân phòng tuần tra',
@@ -213,6 +220,14 @@ export const CONVS: Conv[] = [
         time: '21:30',
         text: 'Camera an ninh cổng Tam Quan [Camera Phường](https://camera-phuong.gov.vn) CAM-302 soi rõ từng người đi qua bãi cỏ sau đình, công an đang trích xuất dữ liệu rồi!',
       },
+      {
+        id: 'g10',
+        from: 'them',
+        senderName: 'Thành Kỹ Thuật',
+        senderAvatar: '🎛️',
+        time: '21:31',
+        text: 'Tôi phụ trách bàn âm thanh ở góc sân đình! Lúc 20h55 sập cầu dao tổng tôi chạy ra tủ điện thì thấy bóng người mặc tạp dề hoa chạy thục mạng từ phía hòm quỹ về quầy bánh, tay còn giấu bọc nilon đen!',
+      },
     ],
   },
   {
@@ -306,6 +321,28 @@ export const CONVS: Conv[] = [
     messages: [
       { id: 'k1', from: 'them', time: '21:38', text: 'Chú Hùng nhìn thấy em nhặt áp-phích lúc 20h48 nhưng lúc 20h40 em bị nước sôi bắn vào cổ tay bỏng rát, phải chạy vội ra nhà thuốc [Long Châu](https://nhathuoc-longchau42.vn) ngã ba sơ cứu!' },
       { id: 'k2', from: 'them', time: '21:39', text: 'Bác sĩ ở nhà thuốc băng bó cố định bàn tay cho em từ 20h42 đến tận 21h20 mới xong, đơn thuốc điện tử lưu đầy đủ trên máy chủ phòng khám đấy ạ!', clue: 'khoa-bi-thuong' },
+    ],
+  },
+  {
+    id: 'thanh_at',
+    name: 'Thành Kỹ Thuật',
+    avatar: '🎛️',
+    sub: 'Đang online',
+    preview: 'Sự cố nhảy Aptomat lúc 20h55 là do quá tải lò nướng…',
+    requires: ['mat-quy'],
+    messages: [
+      {
+        id: 'tat1',
+        from: 'them',
+        time: '21:32',
+        text: 'Anh điều tra viên ơi, lúc 20h55 aptomat tổng nhảy là do quầy bánh của chị Trang cắm cùng lúc 3 cái lò nướng công suất lớn gây quá tải đường dây!',
+      },
+      {
+        id: 'tat2',
+        from: 'them',
+        time: '21:33',
+        text: 'Lúc tôi cầm đèn pin chạy ra tủ điện khắc phục thì thấy chị Trang chạy vội từ hướng hậu trường hòm quỹ về quầy bánh, tay còn giấu bọc nilon đen!',
+      },
     ],
   },
 ]
