@@ -525,8 +525,127 @@ export function BrowserApp({ found, find, externalUrl }: Ctx & { externalUrl?: s
                 )}
               </div>
 
+              {/* Lối tắt truy cập nhanh các trang của vụ án (Bookmarks) */}
+              <div className="pt-2">
+                <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-3">
+                  Lối tắt thường dùng · Vụ án hiện tại
+                </p>
+                <div className="grid grid-cols-4 sm:grid-cols-6 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => navigateTo('https://facebuc.vn')}
+                    className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-white/80 hover:shadow-xs transition-all group"
+                  >
+                    <span className="grid h-12 w-12 place-items-center rounded-2xl bg-blue-600 text-white text-xl shadow-xs group-hover:scale-105 transition-transform">
+                      📘
+                    </span>
+                    <span className="text-[11px] font-semibold text-slate-700 truncate w-full text-center">Facebúc</span>
+                  </button>
+
+                  {(pack.id === 'hem42' || pack.id === 'du-thuyen' || pack.id === 'con-tin' || pack.id === 'dau-gia') && (
+                    <button
+                      type="button"
+                      onClick={() => navigateTo('https://giaonhanh.vn')}
+                      className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-white/80 hover:shadow-xs transition-all group"
+                    >
+                      <span className="grid h-12 w-12 place-items-center rounded-2xl bg-amber-500 text-white text-xl shadow-xs group-hover:scale-105 transition-transform">
+                        ⚡
+                      </span>
+                      <span className="text-[11px] font-semibold text-slate-700 truncate w-full text-center">GiaoNhanh</span>
+                    </button>
+                  )}
+
+                  {(pack.id === 'hem42' || pack.id === 'tu-do' || pack.id === 'cau-long' || pack.id === 'du-thuyen' || pack.id === 'con-tin' || pack.id === 'dau-gia') && (
+                    <button
+                      type="button"
+                      onClick={() => navigateTo('https://chotot.vn')}
+                      className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-white/80 hover:shadow-xs transition-all group"
+                    >
+                      <span className="grid h-12 w-12 place-items-center rounded-2xl bg-orange-500 text-white text-xl shadow-xs group-hover:scale-105 transition-transform">
+                        🛍️
+                      </span>
+                      <span className="text-[11px] font-semibold text-slate-700 truncate w-full text-center">Chợ Tốt</span>
+                    </button>
+                  )}
+
+                  {pack.id !== 'hem42' && (
+                    <button
+                      type="button"
+                      onClick={() => navigateTo('https://vietinbank.vn')}
+                      className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-white/80 hover:shadow-xs transition-all group"
+                    >
+                      <span className="grid h-12 w-12 place-items-center rounded-2xl bg-red-600 text-white text-xl shadow-xs group-hover:scale-105 transition-transform">
+                        🏦
+                      </span>
+                      <span className="text-[11px] font-semibold text-slate-700 truncate w-full text-center">VietinBank</span>
+                    </button>
+                  )}
+
+                  {(pack.id === 'hoi-cho' || pack.id === 'chung-cu' || pack.id === 'an-mang' || pack.id === 'du-thuyen' || pack.id === 'con-tin' || pack.id === 'dau-gia') && (
+                    <button
+                      type="button"
+                      onClick={() => navigateTo('https://nhathuoc-longchau42.vn')}
+                      className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-white/80 hover:shadow-xs transition-all group"
+                    >
+                      <span className="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-600 text-white text-xl shadow-xs group-hover:scale-105 transition-transform">
+                        💊
+                      </span>
+                      <span className="text-[11px] font-semibold text-slate-700 truncate w-full text-center">Long Châu</span>
+                    </button>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => navigateTo('https://camera-phuong.gov.vn')}
+                    className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-white/80 hover:shadow-xs transition-all group"
+                  >
+                    <span className="grid h-12 w-12 place-items-center rounded-2xl bg-cyan-700 text-white text-xl shadow-xs group-hover:scale-105 transition-transform">
+                      📹
+                    </span>
+                    <span className="text-[11px] font-semibold text-slate-700 truncate w-full text-center">Camera Phường</span>
+                  </button>
+
+                  {(pack.id === 'chung-cu' || pack.id === 'cong-ty-x') && (
+                    <button
+                      type="button"
+                      onClick={() => navigateTo('https://bms-building.vn')}
+                      className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-white/80 hover:shadow-xs transition-all group"
+                    >
+                      <span className="grid h-12 w-12 place-items-center rounded-2xl bg-indigo-600 text-white text-xl shadow-xs group-hover:scale-105 transition-transform">
+                        🏢
+                      </span>
+                      <span className="text-[11px] font-semibold text-slate-700 truncate w-full text-center">BMS Tòa Nhà</span>
+                    </button>
+                  )}
+
+                  {(pack.id === 'an-mang' || pack.id === 'biet-thu-x') && (
+                    <button
+                      type="button"
+                      onClick={() => navigateTo('https://smarthome.iot')}
+                      className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-white/80 hover:shadow-xs transition-all group"
+                    >
+                      <span className="grid h-12 w-12 place-items-center rounded-2xl bg-violet-600 text-white text-xl shadow-xs group-hover:scale-105 transition-transform">
+                        🫖
+                      </span>
+                      <span className="text-[11px] font-semibold text-slate-700 truncate w-full text-center">SmartHome IoT</span>
+                    </button>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => navigateTo('coccoc://trash')}
+                    className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-white/80 hover:shadow-xs transition-all group"
+                  >
+                    <span className="grid h-12 w-12 place-items-center rounded-2xl bg-slate-600 text-white text-xl shadow-xs group-hover:scale-105 transition-transform">
+                      🗑️
+                    </span>
+                    <span className="text-[11px] font-semibold text-slate-700 truncate w-full text-center">Thùng Rác</span>
+                  </button>
+                </div>
+              </div>
+
               <p className="text-[11px] text-slate-400">
-                Gợi ý: Tìm kiếm các manh mối được nhắc tới trong tin nhắn hội thoại hoặc hồ sơ vụ án
+                Gợi ý: Nhấp vào lối tắt hoặc gõ từ khoá tìm kiếm các manh mối được nhắc tới trong hội thoại
               </p>
             </div>
           </div>

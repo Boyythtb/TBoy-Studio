@@ -166,7 +166,7 @@ export const CONVS: Conv[] = [
         senderName: 'Bà Phương',
         senderAvatar: '👵',
         time: '22:10',
-        text: 'Đúng đấy! Thằng bồi bàn Nam kia nợ học phí sắp bị đuổi học! Tư bảo vệ lục soát người nó ngay, trong túi tạp dề nó đang giấu chiếc điện thoại sim rác tống tiền kìa!',
+        text: 'Đúng đấy! Thằng bồi bàn Nam kia nợ học phí sắp bị đuổi học! Tư bảo vệ lục soát người nó ngay, trong túi tạp dề nó đang giấu chiếc điện thoại sim rác tống tiền kìa! Nói chuyện riêng với [Nam Bồi Bàn](zola://chat/nam_boi_ban) xem nó chối cãi thế nào!',
       },
       {
         id: 'g4',
@@ -199,7 +199,7 @@ export const CONVS: Conv[] = [
         id: 't1',
         from: 'them',
         time: '22:18',
-        text: 'Chiếc vòng tay kim cương rơi ở mạn thuyền nhưng không hề có vết trượt chân hay dấu hiệu giằng co vật lộn. Mọi người đang đổ dồn nghi ngờ vào bồi bàn Nam, nhưng hãy cẩn trọng trước khả năng đây là màn kịch tự dàn dựng.',
+        text: 'Chiếc vòng tay kim cương rơi ở mạn thuyền nhưng không hề có vết trượt chân hay dấu hiệu giằng co vật lộn. Mọi người đang đổ dồn nghi ngờ vào bồi bàn Nam, nhưng hãy cẩn trọng trước khả năng đây là màn kịch tự dàn dựng. Đội kỹ thuật hãy lục soát ngay máy tính du thuyền tại [Thùng rác du thuyền](coccoc://trash) để kiểm tra các tài liệu và hồ sơ hàng hải bị xoá phi tang!',
         clue: 'vong-tay-man-thuyen',
       },
       {
@@ -220,8 +220,8 @@ export const CONVS: Conv[] = [
         id: 't4',
         from: 'them',
         time: '22:36',
-        text: 'Tài liệu vô tuyến hàng hải trên tàu bị mã hoá bằng quy chuẩn tín hiệu hoa tiêu: hãy đối chiếu giữa số hiệu phao định vị đón người trên hải đồ với thời điểm ca-nô cao tốc cập mạn để giải mã.',
-        requires: ['ma-phao-hai-dang'],
+        text: 'Tài liệu vô tuyến hàng hải trong [Thùng rác du thuyền](coccoc://trash) ghi lại toạ độ phao cứu sinh và mốc thời gian ca-nô rời bến. Mã an ninh giải mã chính là ghép số hiệu phao đón người và số phút ca-nô rời bến (0450)!',
+        requires: ['vali-minh-khang'],
       },
     ],
   },
@@ -275,7 +275,7 @@ export const CONVS: Conv[] = [
     avatar: '🤵',
     sub: 'Đang run rẩy',
     preview: 'Em bị ai đó lén nhét điện thoại vào túi tạp dề…',
-    requires: ['sim-rac-tap-de'],
+    requires: ['cuoc-goi-tong-tien'],
     messages: [
       {
         id: 'n1',
