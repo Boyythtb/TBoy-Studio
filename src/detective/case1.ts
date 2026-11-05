@@ -101,7 +101,7 @@ export const CASE = {
   difficulty: 'Dễ',
   question: 'Ai đã lấy chiếc xe đạp điện của cô Lan?',
   solution:
-    'Dũng khai về phòng trọ ngủ từ 21:15, nhưng máy chủ GiaoNhanh (giaonhanh.vn) ghi nhận Dũng nhận đơn GN-88214 lúc 21:47 ngay đầu Hẻm 42. Camera giao thông CAM-102 (camera-phuong.gov.vn) ghi nhận lúc 21:49 có người mặc áo shipper kéo theo xe đạp điện trùm bạt xanh mint, và tấm ảnh chụp lúc 21:58 trước cửa hàng điện thoại in bóng chiếc xe kèm túi vải hoa của cô Lan. Bản nháp tin nhắn trong máy Dũng cho thấy áp lực phải trả 5 triệu tiền nợ cho Hùng trước 22:00 đêm nay.',
+    'Dũng tạo chứng cứ ngoại phạm giả kiểu Conan bằng cách để điện thoại chính ở phòng 203 kết nối Wi-Fi, bật tin nhắn trả lời tự động và phát radio lặp lại để chứng minh mình ở phòng từ 21:15. Tuy nhiên, khi lẻn ra dắt trộm xe cô Lan lúc ngõ mất điện, chiếc điện thoại phụ trong túi Dũng đã vô tình kích hoạt cơ chế Auto-Dispatch nhận cuốc GN-88214 lúc 21:47 ngay đầu Hẻm 42 với tọa độ GPS thực tế ngoài đường. Camera CAM-102 lúc 21:49 và ảnh phản chiếu tấm kính 88 phố Hàng Chai lúc 21:58 đã chụp trọn bóng xe và máy phụ trên tay lái. Bản nháp tin nhắn trong thùng rác xác nhận áp lực phải trả 5 triệu tiền nợ phụ tùng cho Hùng trước 22:00.',
 }
 
 export const CLUES: Record<string, ClueDef> = {
@@ -129,16 +129,16 @@ export const CLUES: Record<string, ClueDef> = {
   'dung-khai-21h15': {
     id: 'dung-khai-21h15',
     tag: 'chat',
-    title: 'Dũng khai về phòng ngủ từ 21:15',
+    title: 'Chứng cứ ngoại phạm của Dũng: Wi-Fi phòng 203 & tin nhắn tự động',
     detail:
       'Dũng khẳng định trước nhóm cư dân: “Em chạy cuốc cả ngày mệt đứt hơi, về phòng trọ trùm chăn ngủ từ 21h15 đến giờ không bước chân ra ngoài.”',
   },
   'don-hang-2147': {
     id: 'don-hang-2147',
     tag: 'web',
-    title: 'Đơn hàng GiaoNhanh lúc 21:47 tại hẻm 42',
+    title: 'Cơ chế Auto-Dispatch GiaoNhanh: GPS máy phụ lúc 21:47 tại ngã tư',
     detail:
-      'Máy chủ GiaoNhanh ghi nhận tài xế Dũng nhận cuốc GN-88214 lúc 21:47 ngay đầu Hẻm 42 và giao lúc 21:52. Dữ liệu này mâu thuẫn hoàn toàn với lời khai ngủ từ 21:15 của Dũng.',
+      'Máy chủ GiaoNhanh bóc trần thủ thuật Conan: Dũng để máy chính ở phòng tạo ngoại phạm giả, nhưng mang smartphone phụ bên người. Khi dắt xe qua ngã tư lúc 21:47, máy phụ tự động nhận cuốc GN-88214 ghi lại tọa độ GPS ngoài đường!',
   },
   'vy-xe-do': {
     id: 'vy-xe-do',
@@ -173,7 +173,7 @@ export const CLUES: Record<string, ClueDef> = {
     tag: 'chat',
     title: 'Khoản nợ 5 triệu hẹn trả đêm 12/9',
     detail:
-      'Sổ nợ và tin nhắn tiệm sửa xe Hùng Motor: Khoản nợ phụ tùng 5 triệu của Dũng đến hạn chót thanh toán trước 22:00 đêm 12/9, nếu không sẽ bị giữ xe máy.',
+      'Sổ nợ tiệm Hùng Motor: Mã tài xế #SH-4209 nợ 5.000.000đ thay phụ tùng xe máy, cam kết hạn chót thanh toán trước 22:00 đêm 12/9 nếu không sẽ bị siết xe. Mã #SH-4209 khớp với mã shipper của Dũng!',
   },
   'son-don-hang': {
     id: 'son-don-hang',
@@ -190,21 +190,21 @@ export const SUSPECTS: Suspect[] = [
     name: 'Dũng',
     role: 'Shipper GiaoNhanh · Phòng trọ số 3',
     avatar: '🛵',
-    note: 'Khai rằng chạy cuốc cả ngày mệt đứt hơi, về phòng trọ trùm chăn ngủ từ 21h15 không bước chân ra ngoài.',
+    note: 'Có chứng cứ ngoại phạm vững chắc: Điện thoại chính kết nối Wi-Fi phòng 203 liên tục từ 21:14 đến 22:20, tin nhắn Zola phản hồi tự động "Tôi sốt đang ngủ sớm" và radio trong phòng phát đều đặn.',
   },
   {
     id: 'vy',
     name: 'Vy',
     role: 'Sinh viên · Phòng 402',
     avatar: '🎧',
-    note: 'Khai rằng chỉ xuống sân vứt rác và tìm chìa khóa rơi lúc 21h35 rồi lên phòng học bài.',
+    note: 'Nợ tiền phòng trọ 2 tháng, bị hàng xóm nhìn thấy lén lút dắt xe ra cổng lúc 21:35 trong lúc ngõ mất điện, lại đang rao bán xe điện trên Chợ Tốt.',
   },
   {
     id: 'son',
     name: 'Sơn',
     role: 'Shipper đối thủ · Hẻm 46',
     avatar: '🚴',
-    note: 'Thường xuyên chạy đơn giao hàng và có mặt quanh các con hẻm phố Hàng Chai.',
+    note: 'Shipper NowFood đối thủ ở hẻm 46, từng xô xát tranh địa bàn với shipper hẻm 42, camera ngõ 46 ghi nhận lảng vảng quanh khu vực lúc mất điện.',
   },
   {
     id: 'ong-bay',
@@ -399,10 +399,10 @@ export const CONVS: Conv[] = [
     name: 'Dũng Ship',
     avatar: '🛵',
     sub: 'Hoạt động 2 phút trước',
-    preview: 'Em ở trong phòng ngủ từ 21h15 mà anh chị...',
+    preview: 'Em có Wi-Fi và tin nhắn tự động ở phòng từ 21h15 mà...',
     requires: ['dung-khai-21h15'],
     messages: [
-      { id: 'd1', from: 'them', time: '21:52', text: 'Anh chị điều tra viên hỏi em làm gì? Em mệt quá về phòng trọ trùm chăn ngủ say từ 21h15 rồi, con Vy với thằng Sơn nó làm đấy!' },
+      { id: 'd1', from: 'them', time: '21:52', text: 'Anh chị kiểm tra Wi-Fi phòng 203 với tin nhắn tự động của em là rõ! Em sốt nằm trùm chăn bật radio từ 21h15 đến giờ, có cả tin nhắn trả lời lúc 21h35 làm chứng. Nghi ngờ gì em? Con Vy với thằng Sơn kìa!' },
       { id: 'd2', from: 'them', time: '21:53', text: 'Con bé Vy nó nợ tiền phòng trọ mấy tháng nay kìa, trên mạng nó đang rao bán xe điện trên [Chợ Tốt](https://chotot.vn) ầm ầm sao anh chị không sang kiểm tra nó?' },
       {
         id: 'd3',
@@ -415,7 +415,7 @@ export const CONVS: Conv[] = [
         id: 'd4',
         from: 'them',
         time: '22:02',
-        text: 'Ủa... máy em bị cấn túi quần tự nhận đơn ảo chứ em đang nằm ngủ mà! Thằng Sơn đối thủ NowFood cũng lảng vảng ngõ 46 đấy, sao không hỏi nó?!',
+        text: 'Ủa... máy phụ em để trong túi quần vô tình bật định vị tự nhận đơn... ơ... em tưởng chỉ cần để máy chính ở phòng là không ai biết... Sao anh chị lại tìm ra được?!',
         requires: ['don-hang-2147'],
       },
       {

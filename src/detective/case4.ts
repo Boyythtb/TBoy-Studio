@@ -12,7 +12,7 @@ export const CASE = {
   difficulty: 'Siêu khó',
   question: 'Ai là kẻ chủ mưu mở két, và ai là đồng phạm tiếp tay tại tầng hầm?',
   solution:
-    'Đạt (Trưởng ban quản lý) là chủ mưu đang bị chủ nợ Bảy Ốc xiết nợ 200 triệu đến hạn chót 22:00. Đạt lập mưu đổi mã két sắt thành 2042 chiều 20/10 viện cớ an toàn định kỳ, mua găng tay cao su đen cách điện tại Long Châu, rồi câu kết với Tư (bảo vệ ca đêm). Lúc 21:05, Đạt gọi điện nội bộ lừa Khải xuống hầm B1. Khi Khải vừa tới nơi lúc 21:10, Tư dùng chìa tủ điện độc quyền ngắt Aptomat tổng gây mất điện toàn hầm và camera, đồng thời đánh lén sau gáy Khải khiến Khải ngất xỉu rồi nhét máy bẻ khoá còn nguyên seal vào balo Khải để vu oan. Lợi dụng bóng tối, Đạt dùng mã 2042 mở két lấy 200 triệu, nhét vào bao tải ném xuống họng rác thông tầng lúc 21:18 (cảm biến BMS ghi nhận vật nặng 12kg rơi). Tư ở dưới hầm cửa xả đón lấy bọc tiền, giấu vào cốp xe máy rồi giao cho Đạt mang đi nộp ATM chuyển khoản trả nợ Bảy lúc 21:50.',
+    'Đạt (Trưởng ban quản lý) là chủ mưu câu kết với Tú (bảo vệ ca đêm). Đạt tạo chứng cứ ngoại phạm công nghệ hoàn hảo kiểu Conan: Viết script Python macro tự động ping và giả lập gõ phím trên terminal BMS máy chủ B1 mỗi 180s, đồng thời hẹn giờ ngắt aptomat tầng 2 lúc 20:50. Khi hệ thống tự ngắt điện, Đạt dùng thang hàng điểm mù (nơi Tú dùng chìa cơ tắt camera cảm biến) vọt lên tầng 2 mở két lấy 200 triệu rồi ném xuống họng rác B1 lúc 21:18. Tú ở dưới đón bao tiền, nhét vào cốp xe. Găng tay cách điện dính muội than tủ điện vứt ở họng rác, lệnh giải ngân 200 triệu từ IP nội bộ máy chủ 192.168.1.100 và camera gương cầu lồi bắt quả tang Tú tắt điện đã lột trần màn kịch.',
 }
 
 export const CLUES: Record<string, ClueDef> = {
@@ -94,28 +94,28 @@ export const SUSPECTS: Suspect[] = [
     name: 'Quản Lý Đạt',
     role: 'Trưởng ban quản lý toà nhà',
     avatar: '👨‍💼',
-    note: 'Nắm toàn quyền quản trị hệ thống toà nhà BMS và mật mã két sắt văn phòng. Khai rằng về nhà với gia đình từ 19h tối.',
+    note: 'Có chứng cứ ngoại phạm công nghệ: Toàn bộ nhật ký hệ thống BMS ghi nhận tài khoản admin_dat liên tục nhập lệnh điều áp và kiểm tra thông gió tại phòng máy chủ B1 cứ mỗi 180 giây từ 20:30 đến 21:15.',
   },
   {
     id: 'tu_bv',
     name: 'Tư Bảo Vệ',
     role: 'Bảo vệ ca đêm hầm B1',
     avatar: '👮',
-    note: 'Trực chốt dốc hầm, là người duy nhất giữ chìa khóa tủ điện cơ học suốt ca trực đêm.',
+    note: 'Bảo vệ ca đêm dốc hầm, camera chốt gác ghi hình ngồi canh barie từ 20:45 đến 21:20 không rời vị trí.',
   },
   {
     id: 'khai',
     name: 'Khải Kỹ Thuật',
     role: 'Kỹ thuật viên điện nước',
     avatar: '🔧',
-    note: 'Bị phát hiện bất tỉnh cạnh tủ điện hầm B1 do bị đánh lén sau gáy, đang được điều trị tại phòng y tế.',
+    note: 'Kỹ thuật viên điện nước, bị phát hiện ngất xỉu trói gập tay cạnh tủ điện B1 với chiếc máy bẻ khóa trong balo, bị nghi tự biên tự diễn để chiếm đoạt 200 triệu.',
   },
   {
     id: 'lan',
     name: 'Lan Kế Toán',
     role: 'Kế toán trưởng toà nhà',
     avatar: '👩‍💻',
-    note: 'Người phụ trách sổ sách thu chi quỹ bảo trì toà nhà, khai rằng rời văn phòng về nhà từ 19:55.',
+    note: 'Kế toán trưởng tòa nhà, vừa bị phát hiện làm thất thoát hóa đơn tài chính 500 triệu, có dấu hiệu tẩu tán tài sản trước giờ thanh tra.',
   },
   {
     id: 'tuyet',
@@ -302,7 +302,7 @@ export const CONVS: Conv[] = [
         id: 'd1',
         from: 'them',
         time: '21:50',
-        text: 'Điều tra viên cần hỏi gì tôi? Tôi là quản lý toà nhà, thằng Khải nó cần tiền nên nó làm liều chứ ai vào đây nữa!',
+        text: 'Điều tra viên cần hỏi gì tôi? Hệ thống BMS-TERM-01 ghi rõ nhật ký bàn phím tôi ngồi trực phòng máy B1 gõ lệnh điều áp liên tục mỗi 3 phút từ 20h30 đến 21h15, làm sao rời đi được? Thằng Khải bị bắt quả tang máy bẻ khóa trong balo kìa!',
       },
       {
         id: 'd2',

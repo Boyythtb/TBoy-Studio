@@ -101,7 +101,7 @@ export const SUSPECTS: Suspect[] = [
     name: 'Bác sĩ Vũ',
     role: 'Cháu ruột · Bác sĩ gia đình',
     avatar: '👨‍⚕️',
-    note: 'Chăm sóc sức khoẻ cho nạn nhân. Khai rằng rời phòng trà lúc 21h15 để về phòng khám riêng trực ca đêm.',
+    note: 'Có chứng cứ ngoại phạm bất khả xâm phạm: Đã rời biệt thự từ 21:15. Lúc 21:25 - 21:33 (thời điểm nạn nhân chết theo giám định ban đầu), đang gọi video call 8 phút với dược sĩ tại nhà thuốc cách hiện trường 8km.',
   },
   {
     id: 'yen',
@@ -115,7 +115,7 @@ export const SUSPECTS: Suspect[] = [
     name: 'Trọng Cổ Vật',
     role: 'Đối tác buôn bán cổ vật',
     avatar: '🏺',
-    note: 'Từng có tranh chấp hợp đồng mua bán đồ cổ với nạn nhân, có mặt tại biệt thự vào buổi chiều.',
+    note: 'Cháu trai cờ bạc, vừa bị Chủ tịch Khang gạch tên khỏi di chúc thừa kế lúc 19:30, camera ngõ CAM-501 quay thấy Trọng cãi nhau to rồi phóng xe bỏ đi lúc 20:30.',
   },
   {
     id: 'ha',
@@ -129,7 +129,7 @@ export const SUSPECTS: Suspect[] = [
     name: 'Bảo Trâm Người Mẫu',
     role: 'Vợ sắp cưới 26 tuổi của nạn nhân',
     avatar: '👠',
-    note: 'Người mẫu tự do, vừa được ông Khang đưa tên vào hợp đồng thụ hưởng bảo hiểm nhân thọ 5 tỷ tuần trước. Có mặt ăn tối tại biệt thự đến 21:00 mới rời đi.',
+    note: 'Người mẫu tự do, vừa được ông Khang đưa tên vào hợp đồng bảo hiểm 5 tỷ và đòi chia 50 tỷ khi ly hôn, thản nhiên nghe nhạc khi chồng chết.',
   },
   {
     id: 'tuan_bv',
@@ -243,7 +243,7 @@ export const CONVS: Conv[] = [
         id: 'v1',
         from: 'them',
         time: '22:45',
-        text: 'Tôi là bác sĩ riêng của bác Khang bao năm nay, tối nay tôi qua thăm khám huyết áp rồi về phòng khám riêng trực từ trước 22h, camera phòng khám có thể chứng minh! Ông Trọng cổ vật mới là kẻ có động cơ hại bác!',
+        text: 'Tôi rời biệt thự từ 21h15, lúc 21h25 - 21h33 tôi đang ở nhà thuốc Thảo Điền cách 8km thực hiện cuộc gọi video call dài 8 phút với Dược sĩ Mai có GPS nhà mạng ghi nhận, bác Khang chết lúc 21h30 thì sao tôi có mặt được? Thằng Trọng cãi nhau to đòi thừa kế kia kìa!',
       },
       {
         id: 'v2',

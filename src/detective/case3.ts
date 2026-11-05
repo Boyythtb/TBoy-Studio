@@ -93,21 +93,21 @@ export const SUSPECTS: Suspect[] = [
     name: 'Trang Bán Bánh',
     role: 'Thủ quỹ kiêm gian hàng ẩm thực',
     avatar: '🥖',
-    note: 'Được giao quản lý chìa khóa hòm quỹ từ 20:30. Khai rằng bận rộn nướng bánh tại quầy suốt thời gian hội chợ.',
+    note: 'Có chứng cứ ngoại phạm sắt đá: Là trưởng nhóm thiện nguyện, Trang liên tục đứng phát cơm chay và hoa đăng tại sảnh Tam Quan trước sự chứng kiến của hơn 200 Phật tử từ 20:15 đến 21:15.',
   },
   {
     id: 'tu',
     name: 'Tú Tài Chính',
     role: 'Nhân viên giám sát gây quỹ',
     avatar: '💼',
-    note: 'Có mặt tại hội chợ để theo dõi hoạt động quyên góp. Khai rằng ngồi uống nước ở quán trà đối diện cổng đình.',
+    note: 'Có mặt tại hội chợ để theo dõi hoạt động quyên góp, từng có tiền án trộm cắp và bị phát hiện nộp tiền mặt rách góc vào ATM lúc 20:45.',
   },
   {
     id: 'khoa',
     name: 'Khoa Tình Nguyện',
     role: 'Tình nguyện viên đoàn thanh niên',
     avatar: '🧤',
-    note: 'Hỗ trợ công tác hậu cần và nước nôi. Tay phải bị quấn băng trắng do sơ suất bị bỏng nước sôi.',
+    note: 'Cúi nhặt đồ gần bệ hòm lúc 20:48, tay phải quấn băng trắng do bị bỏng nước sôi tại bếp lúc 20:42, bị nghi vờ bỏng để làm hỏng ổ khóa.',
   },
   {
     id: 'oanh',
@@ -280,7 +280,7 @@ export const CONVS: Conv[] = [
     preview: 'Em bận nướng bánh ở quầy suốt mà…',
     requires: ['mat-quy'],
     messages: [
-      { id: 'tr1', from: 'them', time: '21:35', text: 'Chị Oanh đưa chìa khóa cho em lúc 20h30, em cất kỹ trong túi tạp dề, em bận nướng bánh suốt có đi đâu đâu!' },
+      { id: 'tr1', from: 'them', time: '21:35', text: 'Em là trưởng nhóm thiện nguyện, đứng phát cơm chay và hoa đăng ở cổng Tam Quan suốt từ 20h15 đến 21h15 trước hàng trăm Phật tử, camera CAM-302 ghi hình liên tục! Em đi đâu được mà nghi ngờ em? Anh Tú với anh Khoa lảng vảng gần hòm quỹ kìa!' },
       {
         id: 'tr2',
         from: 'me',

@@ -67,7 +67,7 @@ export const CLUES: Record<string, ClueDef> = {
   'son-vet-xuoc': {
     id: 'son-vet-xuoc',
     tag: 'photo',
-    title: 'Vết trầy xước kim loại trên cổ tay Sơn',
+    title: 'Vết trầy xước kim loại trên cổ tay Sơn & áo khoác đỏ bỏ lại',
     detail:
       'Cổ tay phải của Sơn có một vết cứa sâu rớm máu dán băng dính y tế. Sơn nói dối bị quẹt vào lưới cầu lông, nhưng lưới dù mềm không thể gây vết cắt kim loại sắc nhọn.',
   },
@@ -93,21 +93,21 @@ export const SUSPECTS: Suspect[] = [
     name: 'Sơn Nhặt Cầu',
     role: 'Nhân viên nhặt cầu · Quản lý tủ',
     avatar: '🧥',
-    note: 'Thường xuyên ra vào phòng thay đồ dọn dẹp các ngăn tủ và hỗ trợ khách bảo quản tư trang.',
+    note: 'Có chứng cứ ngoại phạm vững chắc: Camera toàn cảnh sân số 2 ghi nhận một người mặc áo khoác nỉ thể thao màu đỏ số 09 đặc trưng của Sơn ngồi tại khu vực kỹ thuật sân 3 trong suốt hiệp đấu 20:30 - 21:00.',
   },
   {
     id: 'hao',
     name: 'Hào Smash',
     role: 'Khách chơi phong trào',
     avatar: '🏸',
-    note: 'Sử dụng tủ số 07 ngay cạnh tủ của chị Hạnh để cất túi vợt thi đấu.',
+    note: 'Mở tủ đồ số 07 ngay cạnh tủ số 04 lúc 20:28 với thái độ cáu kỉnh sau set 1, số điện thoại của Hào xuất hiện trong tin rao bán iPhone trên Chợ Tốt.',
   },
   {
     id: 'linh',
     name: 'Linh Quầy Nước',
     role: 'Nhân viên quầy giải khát',
     avatar: '🥤',
-    note: 'Giữ chìa khóa dự phòng dãy tủ đồ và phụ trách quầy nước giải khát.',
+    note: 'Giữ chìa khóa vạn năng dãy tủ đồ, có biến động chuyển khoản ngân hàng lúc 20:41 và bị tố giác nợ tiền học phí cần đóng gấp.',
   },
   {
     id: 'mai',
@@ -281,7 +281,7 @@ export const CONVS: Conv[] = [
     preview: 'Tay tôi bị quẹt vào lưới rách da thôi…',
     requires: ['mat-dt'],
     messages: [
-      { id: 's1', from: 'them', time: '20:48', text: 'Tôi chỉ làm công việc nhặt cầu thôi, anh Hào mới là người đáng nghi nhất!' },
+      { id: 's1', from: 'them', time: '20:48', text: 'Camera sân số 2 quay rõ mồn một tôi mặc áo khoác đỏ số 09 ngồi ở hàng ghế kỹ thuật sân 3 suốt từ 20:30 đến 21:00 xem thi đấu, cả chục khán giả làm chứng! Sao tôi lấy được? Anh Hào mở tủ số 07 ngay cạnh kìa!' },
       {
         id: 's2',
         from: 'me',

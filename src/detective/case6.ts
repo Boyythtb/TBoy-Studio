@@ -12,7 +12,7 @@ export const CASE = {
   difficulty: 'Siêu hóc búa',
   question: 'Ai là kẻ chủ mưu dàn dựng vụ bắt cóc tống tiền, và ai là đồng phạm phối hợp?',
   solution:
-    'Minh Khang (vị hôn phu) là kẻ chủ mưu phối hợp cùng chính "nạn nhân" Thảo My dàn dựng vụ bắt cóc giả mạo nhằm chiếm đoạt 3 tỷ đồng từ bố của My. Khang bị vỡ nợ chứng khoán phái sinh 12 tỷ, trong khi My bị bố cấm cưới và cắt thẻ tín dụng. Cả hai lên kế hoạch tẩu thoát sang Bangkok trên chuyến bay 06:00 sáng hôm sau (đã đặt vé sẵn). Chiều 28/10, My tự đến Nhà Thuốc Long Châu mua thuốc nhuộm tóc đen và thuốc an thần để thay đổi nhân dạng. Lúc 21:30, Khang đặt đơn GiaoNhanh chuyển 2 vali Rimowa chứa tư trang ra ca-nô cao tốc neo tại phao số 4. Lúc 21:40, My vứt vòng kim cương ở mạn thuyền tạo hiện trường giả bị ngã xuống sông rồi thay giày thể thao trắng, trùm áo mưa tím tự nguyện bước xuống ca-nô cao tốc lúc 21:50 (camera bến sông CAM-601 ghi nhận không hề có sự kháng cự hay khống chế). Khang dùng sim rác phát đi tin nhắn tống tiền 3 tỷ lúc 22:00, sau đó lén nhét điện thoại vào túi tạp dề của nhân viên bồi bàn Nam lúc 22:05 để vu oan, rồi điều phối nhận 3 tỷ tiền chuộc vào tài khoản công ty sự kiện của mình lúc 22:45.',
+    'Minh Khang (vị hôn phu) là chủ mưu phối hợp cùng chính "nạn nhân" Thảo My dàn dựng vụ bắt cóc tống tiền 3 tỷ từ bố My. Khang tạo chứng cứ ngoại phạm công khai kiểu Conan: Tiếp khách liên tục tại sảnh tiệc tầng 2 trước 50 quan khách và DJ từ 21:30 đến 22:15; khi tin nhắn tống tiền gửi đến lúc 22:00, Khang đang đứng cạnh bố My. Chiều 28/10, My dùng thẻ VIP Diamond #9988 mua thuốc nhuộm tóc và thuốc ngủ cải trang. Lúc 21:40 My vứt vòng ngọc trai ở mạn thuyền tạo hiện trường giả rơi xuống sông rồi trùm áo mưa trèo xuống ca-nô tại phao số 4 lúc 21:50. Sim rác tống tiền được cài hẹn giờ phát sóng từ khoang VIP tầng 3. Đến 22:05, Khang xuống quầy bar vờ chen lấn va mạnh vào bồi bàn Nam để nhét sim rác vào tạp dề nhằm giá họa. Vé máy bay Thai Airways PNR-7881 đi Bangkok lúc 05:45 cho 2 khách ẩn danh "PAX 1: L. M. K." & "PAX 2: N. T. M.", lệnh nhận 3 tỷ vào Cty Horizon và đơn chuyển vali GN-99801 ra ca-nô đã lột trần toàn bộ màn kịch.',
 }
 
 export const CLUES: Record<string, ClueDef> = {
@@ -101,35 +101,35 @@ export const SUSPECTS: Suspect[] = [
     name: 'Minh Khang',
     role: 'Vị hôn phu · Trưởng ban tổ chức',
     avatar: '🤵',
-    note: 'Đảm nhận điều phối sự kiện sinh nhật trên du thuyền Horizon. Khai rằng đang tiếp khách ở khoang VIP khi sự việc xảy ra.',
+    note: 'Có chứng cứ ngoại phạm công khai: Suốt từ 21:30 đến 22:15, Khang liên tục đứng ở sảnh tiệc tầng 2 tiếp đãi đối tác thương thuyền, nâng ly và chụp ảnh trước hàng chục quan khách. Lúc nhận tin nhắn tống tiền 22:00, Khang đang đứng cạnh bố nạn nhân.',
   },
   {
     id: 'thao-my',
     name: 'Tiểu thư Thảo My',
     role: 'Ái nữ tập đoàn Đông Dương',
     avatar: '💃',
-    note: 'Chủ nhân bữa tiệc sinh nhật. Rời khoang VIP lúc 21:40 ra mạn thuyền hóng gió rồi biến mất bí ẩn.',
+    note: 'Nạn nhân bị bắt cóc: Rơi chiếc vòng tay ngọc trai ở lan can boong VIP lúc 21:35, gia đình nhận được tin nhắn tống tiền 3 tỷ kèm ảnh chụp bị trói.',
   },
   {
     id: 'nam',
     name: 'Nam Bồi Bàn',
     role: 'Nhân viên phục vụ quầy bar',
     avatar: '🤵',
-    note: 'Sinh viên làm thêm bán thời gian trên du thuyền. Bị phát hiện mang một chiếc điện thoại sim rác trong túi tạp dề.',
+    note: 'Nhân viên phục vụ quầy bar, bị phát hiện mang một chiếc điện thoại sim rác trong túi tạp dề lúc 22:05, đang nợ tiền học phí và bán xe cũ.',
   },
   {
     id: 'hai',
     name: 'Thuyền Trưởng Hải',
     role: 'Thuyền trưởng du thuyền Horizon',
     avatar: '⚓',
-    note: 'Chịu trách nhiệm buồng lái và lộ trình du thuyền trên sông Sài Gòn theo đúng hải trình được cấp phép.',
+    note: 'Thuyền trưởng du thuyền Horizon, bị nghi cố tình giảm tốc và tắt đèn mạn thuyền lúc 21:45 khi qua phao số 4.',
   },
   {
     id: 'quoc_huy',
     name: 'DJ Quốc Huy',
     role: 'DJ âm thanh ánh sáng · Bạn trai cũ',
     avatar: '🎧',
-    note: 'Phụ trách bàn mixer và đèn sân khấu khoang VIP. Đang nợ Thảo My 500 triệu và có cuộc cãi vã lớn lúc 20:00.',
+    note: 'DJ âm thanh ánh sáng, bạn trai cũ của Thảo My, đang nợ My 500 triệu và có cuộc cãi vã lớn trước tiệc.',
   },
   {
     id: 'mai_lan',
@@ -258,7 +258,7 @@ export const CONVS: Conv[] = [
         id: 'mk1',
         from: 'them',
         time: '22:25',
-        text: 'Tôi yêu My thật lòng, gia đình đã đồng ý chi 3 tỷ tiền chuộc rồi, xin các anh đừng manh động làm nguy hiểm đến tính mạng My!',
+        text: 'Suốt từ 21h30 đến 22h15 tôi đứng tiếp khách ở sảnh tiệc tầng 2 cùng hàng chục doanh nhân và DJ Quốc Huy, lúc 22h tin nhắn tống tiền đến máy bác Hoàng tôi còn đang đứng ngay cạnh bác cùng đọc tin! Chiếc điện thoại sim rác tống tiền tìm thấy trong túi tạp dề thằng Nam bồi bàn kia kìa, sao lại nghi ngờ tôi?!',
       },
       {
         id: 'mk2',
