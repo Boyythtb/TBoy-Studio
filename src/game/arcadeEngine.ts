@@ -364,7 +364,7 @@ export function initArcadeState(
       vx: (Math.random() - 0.5) * 15,
       vy: (Math.random() - 0.5) * 15,
       heldBy: null,
-      penIndex: undefined,
+      penIndex: 0,
     }))
   }
 
@@ -448,8 +448,9 @@ export async function arcadeStartGame(
   existingScores: Record<string, number> = {},
   round = 1,
 ) {
-  const state = initArcadeState(players, gameType, existingScores, round)
-  await store.set(paths.arcade(code), state)
+  const rawState = initArcadeState(players, gameType, existingScores, round)
+  const safeState = JSON.parse(JSON.stringify(rawState))
+  await store.set(paths.arcade(code), safeState)
 }
 
 export async function arcadeSendInput(

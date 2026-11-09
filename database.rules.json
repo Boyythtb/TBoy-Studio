@@ -87,6 +87,10 @@
         "catan": {
           ".read": "auth != null",
           ".write": "auth != null"
+        },
+        "arcade": {
+          ".read": "auth != null",
+          ".write": "auth != null"
         }
       }
     }

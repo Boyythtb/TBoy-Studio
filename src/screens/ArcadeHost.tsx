@@ -12,6 +12,7 @@ import { joinUrl, joinRoom, deleteRoom, addBotPlayer, removeBotPlayer } from '..
 import { sfx } from '../lib/sfx'
 import {
   arcadeStartGame,
+  initArcadeState,
   ARCADE_COLORS,
   ARCADE_GAMES_INFO,
   type ArcadeGameType,
@@ -56,7 +57,7 @@ export default function ArcadeHost() {
   const [selectedGame, setSelectedGame] = useState<ArcadeGameType>('bomb-tag')
   const [isStarting, setIsStarting] = useState(false)
   const [tournamentMode, setTournamentMode] = useState(false)
-  const [showQrModal, setShowQrModal] = useState(false)
+  const [lobbyTab, setLobbyTab] = useState<'players' | 'games'>('players')
   const [toast, setToast] = useState<{ message: string; type: 'info' | 'error' | 'success' } | null>(null)
 
   // Simulation physics refs for 60fps canvas loop
@@ -86,7 +87,6 @@ export default function ArcadeHost() {
     }, 3000)
   }
 
-  // Spawn visual particles
   const addParticles = (x: number, y: number, color: string, count = 12, speed = 80) => {
     for (let i = 0; i < count; i++) {
       const angle = Math.random() * Math.PI * 2
@@ -105,7 +105,6 @@ export default function ArcadeHost() {
     }
   }
 
-  // Trigger screen shake
   const shakeScreen = (amount = 8) => {
     screenShakeRef.current = Math.max(screenShakeRef.current, amount)
   }
@@ -1023,7 +1022,8 @@ export default function ArcadeHost() {
 
   const handleStartGame = async () => {
     if (order.length < 2) {
-      showToast('Cần ít nhất 2 đấu thủ để mở màn đấu trường! Bạn có thể bấm "+ Thêm Bot" để vào trận ngay.', 'error')
+      showToast('Cần ít nhất 2 đấu thủ để mở màn đấu trường! Bạn có thể thêm Bot máy để vào trận ngay.', 'error')
+      setLobbyTab('players')
       return
     }
     setIsStarting(true)
@@ -1034,7 +1034,15 @@ export default function ArcadeHost() {
         gameToPlay = ALL_GAME_KEYS[Math.floor(Math.random() * ALL_GAME_KEYS.length)]
         setSelectedGame(gameToPlay)
       }
+      // 1. Immediately launch locally so canvas starts without waiting for network roundtrip
+      const nextState = initArcadeState(players, gameToPlay, state?.scores || {})
+      setState(nextState)
+      stateRef.current = nextState
+
+      // 2. Sync to Firebase
       await arcadeStartGame(code, gameToPlay, players, state?.scores || {})
+    } catch (err) {
+      showToast('Lỗi: ' + (err as Error).message, 'error')
     } finally {
       setIsStarting(false)
     }
@@ -1076,76 +1084,42 @@ export default function ArcadeHost() {
     showToast('Đã sao chép liên kết vào phòng!', 'success')
   }
 
+  const activeGameInfo = ARCADE_GAMES_INFO[selectedGame]
+
   return (
     <Stage>
-      {/* Toast Banner */}
+      {/* Toast Notification */}
       <Toast message={toast?.message ?? null} type={toast?.type} onClose={() => setToast(null)} />
 
-      {/* QR Code Modal */}
-      <AnimatePresence>
-        {showQrModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="midnight-card max-w-sm w-full p-6 text-center border border-slate-700"
-            >
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-                <span className="text-sm font-bold text-white">📱 Quét mã để kết nối</span>
-                <button
-                  onClick={() => setShowQrModal(false)}
-                  className="text-slate-400 hover:text-white text-base font-bold p-1"
-                >
-                  ✕
-                </button>
-              </div>
-
-              <div className="flex justify-center my-6">
-                <div className="bg-white p-3 rounded-2xl shadow-2xl">
-                  <Qr value={url} size={180} />
-                </div>
-              </div>
-
-              <div className="text-xs text-slate-400 mb-2">Đường link vào phòng:</div>
-              <div className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono text-cyan-400 select-all break-all mb-4">
-                {url}
-              </div>
-
-              <button
-                onClick={handleCopyLink}
-                className="btn btn-primary btn-md w-full text-xs font-bold bg-pink-600 hover:bg-pink-500 border-none"
-              >
-                📋 Sao chép liên kết
-              </button>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      <div className="mx-auto flex min-h-dvh max-w-6xl flex-col px-4 py-4 sm:px-6">
-        {/* RESPONSIVE TOP HEADER */}
+      <div className="mx-auto flex min-h-dvh max-w-5xl flex-col px-4 py-4 sm:px-6">
+        {/* SLEEK CONSOLE HEADER */}
         <header className="pb-4 border-b border-slate-800/80">
-          <div className="flex items-center justify-between gap-2">
-            {/* Left: Brand */}
-            <div className="flex items-center gap-2.5">
-              <Link
-                to="/party-arcade"
-                className="grid h-9 w-9 place-items-center rounded-xl bg-pink-500/20 border border-pink-500/30 text-xl hover:scale-105 transition-transform"
-              >
+          <div className="flex items-center justify-between gap-3">
+            <Link
+              to="/party-arcade"
+              className="flex items-center gap-2.5 text-slate-400 hover:text-white transition-colors group"
+            >
+              <div className="grid h-9 w-9 place-items-center rounded-xl bg-pink-500/20 border border-pink-500/30 text-xl group-hover:scale-105 transition-transform">
                 🕹️
-              </Link>
-              <div>
-                <h1 className="text-sm sm:text-base font-bold text-white tracking-wide flex items-center gap-2">
-                  <span>Party Arcade</span>
-                  <span className="text-[0.62rem] font-bold px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-400 border border-pink-500/30">
-                    10 Game Bloop
-                  </span>
-                </h1>
               </div>
-            </div>
+              <div className="text-left">
+                <div className="text-sm font-bold text-white tracking-wide">Party Arcade</div>
+                <div className="text-[0.65rem] text-pink-400 font-medium">Bloop Đấu Trường</div>
+              </div>
+            </Link>
 
-            {/* Right: Quick Toolbar */}
+            {/* Room Code Pill */}
+            <button
+              onClick={handleCopyLink}
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-xs font-bold text-slate-200 transition-all shadow-sm"
+              title="Sao chép link mời"
+            >
+              <span className="text-slate-400 text-[0.68rem] tracking-wider uppercase">MÃ:</span>
+              <span className="text-pink-400 font-mono text-sm tracking-widest">{code}</span>
+              <span className="text-slate-400 text-xs">📋</span>
+            </button>
+
+            {/* Controls */}
             <div className="flex items-center gap-2">
               <SfxToggle />
               <button
@@ -1153,231 +1127,302 @@ export default function ArcadeHost() {
                   void deleteRoom(code)
                   navigate('/party-arcade')
                 }}
-                className="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-red-950/60 text-slate-400 hover:text-red-300 border border-slate-800 text-xs font-semibold transition-colors"
+                className="px-2.5 py-1.5 rounded-xl bg-slate-900/80 hover:bg-red-950/60 text-slate-400 hover:text-red-300 border border-slate-800 text-xs font-semibold transition-colors"
                 title="Đóng phòng"
               >
-                Đóng phòng
+                ✕ Thoát
               </button>
             </div>
-          </div>
-
-          {/* Sub Header Bar: Room Code Pill & Mode Switch */}
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-800/50">
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleCopyLink}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-slate-200 transition-colors shadow-sm"
-                title="Bấm để sao chép link"
-              >
-                <span className="text-slate-400 text-[0.7rem] uppercase">MÃ PHÒNG:</span>
-                <span className="text-pink-400 font-mono text-sm tracking-widest">{code}</span>
-                <span className="text-slate-400">📋</span>
-              </button>
-
-              <button
-                onClick={() => setShowQrModal(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors"
-              >
-                <span>📱 Mã QR</span>
-              </button>
-            </div>
-
-            {/* Tournament Mode Pill */}
-            <button
-              onClick={() => {
-                sfx.tap()
-                setTournamentMode(!tournamentMode)
-                showToast(
-                  !tournamentMode
-                    ? 'Đã bật Chế độ Đấu Giải: Tự động đổi ngẫu nhiên các mini-game!'
-                    : 'Đã tắt Đấu Giải: Bạn có thể tự chọn từng trò chơi yêu thích.',
-                  'info'
-                )
-              }}
-              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold border transition-all ${
-                tournamentMode
-                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.3)]'
-                  : 'bg-slate-900/90 text-slate-400 border-slate-800 hover:border-slate-700'
-              }`}
-            >
-              <span>{tournamentMode ? '🏆' : '🎲'}</span>
-              <span>{tournamentMode ? 'Đấu Giải Ngẫu Nhiên: BẬT' : 'Đấu Giải Party: TẮT'}</span>
-            </button>
           </div>
         </header>
 
-        {/* LOBBY VIEW */}
+        {/* LOBBY: CLEAN 2-STAGE INTERFACE */}
         {(!state || state.status === 'lobby') && (
-          <div className="flex-1 flex flex-col gap-6 py-5">
-            {/* SECTION 1: PLAYER SLOTS (SIGNATURE BLOOP PARTY STYLE) */}
-            <div className="rounded-3xl border border-slate-800/90 bg-slate-900/70 p-4 sm:p-5 backdrop-blur-md">
-              <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-                <div>
-                  <h2 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                    <span>👥 Đấu Thủ Trong Phòng</span>
-                    <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 text-xs font-mono">
-                      {order.length}/8
-                    </span>
-                  </h2>
-                  <p className="text-[0.72rem] text-slate-400 mt-0.5">
-                    Quét mã QR bằng điện thoại hoặc thêm Bot máy để bắt đầu.
-                  </p>
-                </div>
+          <div className="flex-1 flex flex-col justify-between py-6 max-w-3xl mx-auto w-full">
+            {/* Top Navigation Tabs between Players & Game Selector */}
+            <div>
+              <div className="flex items-center justify-center gap-3 p-1 rounded-2xl bg-slate-900/90 border border-slate-800 max-w-md mx-auto mb-6 shadow-inner">
+                <button
+                  onClick={() => {
+                    sfx.tap()
+                    setLobbyTab('players')
+                  }}
+                  className={`flex-1 py-2 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+                    lobbyTab === 'players'
+                      ? 'bg-pink-600 text-white shadow-[0_0_15px_rgba(236,72,153,0.4)]'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <span>👥</span>
+                  <span>1. Đấu Thủ ({order.length}/8)</span>
+                </button>
 
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={handleAddBot}
-                    disabled={order.length >= 8}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-pink-600/20 hover:bg-pink-600/30 border border-pink-500/40 text-pink-300 text-xs font-bold shadow-sm transition-all active:scale-95 disabled:opacity-40"
-                  >
-                    <span>🤖</span>
-                    <span>+ Thêm Bot Máy</span>
-                  </button>
-
-                  {!isHostPlaying && (
-                    <button
-                      onClick={handleHostJoin}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold transition-all"
-                    >
-                      <span>🎮 Host Chơi Luôn</span>
-                    </button>
-                  )}
-                </div>
+                <button
+                  onClick={() => {
+                    sfx.tap()
+                    setLobbyTab('games')
+                  }}
+                  className={`flex-1 py-2 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+                    lobbyTab === 'games'
+                      ? 'bg-pink-600 text-white shadow-[0_0_15px_rgba(236,72,153,0.4)]'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <span>🎮</span>
+                  <span>2. Chọn Trò Chơi</span>
+                </button>
               </div>
 
-              {/* 8 SLOTS GRID */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                {Array.from({ length: 8 }).map((_, idx) => {
-                  const pid = order[idx]
-                  const p = pid ? players[pid] : null
-                  const isBot = pid?.startsWith('bot-')
-                  const color = ARCADE_COLORS[idx % ARCADE_COLORS.length]
+              {/* TAB 1: SẢNH NGƯỜI CHƠI (PLAYERS ONLY) */}
+              {lobbyTab === 'players' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="space-y-6"
+                >
+                  {/* QR & Quick Action Bar */}
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-3xl bg-slate-900/60 border border-slate-800">
+                    <div className="flex items-center gap-4">
+                      <div className="bg-white p-2 rounded-2xl shadow-xl shrink-0">
+                        <Qr value={url} size={90} />
+                      </div>
+                      <div className="text-left">
+                        <div className="text-xs font-bold text-white">Quét mã bằng điện thoại</div>
+                        <div className="text-[0.72rem] text-slate-400 mt-0.5">
+                          Hoặc truy cập: <b className="text-cyan-400 font-mono">/join</b> và nhập{' '}
+                          <b className="text-pink-400 font-mono">{code}</b>
+                        </div>
+                      </div>
+                    </div>
 
-                  if (p) {
-                    return (
-                      <div
-                        key={pid}
-                        className="flex items-center justify-between p-2.5 rounded-2xl bg-slate-950/80 border border-slate-800 shadow-sm relative group overflow-hidden"
+                    <div className="flex items-center gap-2.5 w-full sm:w-auto">
+                      <button
+                        onClick={handleAddBot}
+                        disabled={order.length >= 8}
+                        className="flex-1 sm:flex-initial px-4 py-2.5 rounded-2xl bg-pink-600/20 hover:bg-pink-600/30 border border-pink-500/40 text-pink-300 text-xs font-bold transition-all shadow-sm active:scale-95 disabled:opacity-40 flex items-center justify-center gap-2"
                       >
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <Avatar index={p.avatar} size={36} ring />
-                          <div className="min-w-0 truncate">
-                            <div className="text-xs font-bold text-white truncate flex items-center gap-1.5">
+                        <span>🤖</span>
+                        <span>+ Thêm Bot Máy</span>
+                      </button>
+
+                      {!isHostPlaying && (
+                        <button
+                          onClick={handleHostJoin}
+                          className="flex-1 sm:flex-initial px-4 py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold transition-all flex items-center justify-center gap-2"
+                        >
+                          <span>🎮</span>
+                          <span>Host Chơi Luôn</span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* 8 SLOTS BLOOP CHARACTER CARDS */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {Array.from({ length: 8 }).map((_, idx) => {
+                      const pid = order[idx]
+                      const p = pid ? players[pid] : null
+                      const isBot = pid?.startsWith('bot-')
+                      const color = ARCADE_COLORS[idx % ARCADE_COLORS.length]
+
+                      if (p) {
+                        return (
+                          <div
+                            key={pid}
+                            className="flex flex-col items-center justify-center p-4 rounded-3xl bg-slate-900/80 border border-slate-800 shadow-lg relative group transition-transform hover:-translate-y-0.5"
+                          >
+                            <Avatar index={p.avatar} size={48} ring />
+                            <div className="mt-2 text-xs font-bold text-white text-center truncate max-w-full flex items-center gap-1.5">
                               <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: color }} />
                               <span className="truncate">{p.name}</span>
                             </div>
-                            <div className="text-[0.65rem] text-slate-400 font-medium">
-                              {pid === uid ? 'Chủ phòng' : isBot ? 'Bot Máy' : 'Điện thoại'}
-                            </div>
+                            <span className="text-[0.62rem] text-slate-400 font-medium mt-0.5">
+                              {pid === uid ? 'Chủ phòng' : isBot ? 'Bot Máy' : 'Người chơi'}
+                            </span>
+
+                            {isBot && (
+                              <button
+                                onClick={() => handleRemoveBot(pid)}
+                                className="absolute top-2 right-2 text-slate-500 hover:text-red-400 text-xs p-1"
+                                title="Xóa Bot"
+                              >
+                                ✕
+                              </button>
+                            )}
                           </div>
-                        </div>
+                        )
+                      }
 
-                        {isBot && (
-                          <button
-                            onClick={() => handleRemoveBot(pid)}
-                            className="text-slate-500 hover:text-red-400 p-1 text-xs transition-colors"
-                            title="Xóa Bot"
-                          >
-                            ✕
-                          </button>
-                        )}
+                      // Empty Slot: Click to add Bot!
+                      return (
+                        <button
+                          key={idx}
+                          onClick={handleAddBot}
+                          className="flex flex-col items-center justify-center p-4 rounded-3xl border border-dashed border-slate-800/80 hover:border-pink-500/50 bg-slate-950/40 hover:bg-pink-500/10 text-slate-500 hover:text-pink-300 transition-all text-xs font-semibold group h-28"
+                        >
+                          <span className="text-xl group-hover:scale-110 transition-transform mb-1 opacity-60 group-hover:opacity-100">
+                            🤖
+                          </span>
+                          <span>+ Thêm Bot</span>
+                        </button>
+                      )
+                    })}
+                  </div>
+                </motion.div>
+              )}
+
+              {/* TAB 2: CHỌN TRÒ CHƠI (GAMES ONLY) */}
+              {lobbyTab === 'games' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="space-y-6"
+                >
+                  {/* Mode Selector Toggle */}
+                  <div className="flex items-center justify-between p-4 rounded-3xl bg-slate-900/60 border border-slate-800">
+                    <div className="text-left">
+                      <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                        <span>🏆</span>
+                        <span>Đấu Giải Party Tự Động (Tournament)</span>
                       </div>
-                    )
-                  }
+                      <div className="text-[0.68rem] text-slate-400 mt-0.5">
+                        Hệ thống tự động xoay tua ngẫu nhiên qua các mini-game và cộng dồn điểm.
+                      </div>
+                    </div>
 
-                  // Empty slot: Click to add Bot directly!
-                  return (
                     <button
-                      key={idx}
-                      onClick={handleAddBot}
-                      className="flex items-center justify-center gap-2 p-3 rounded-2xl border border-dashed border-slate-800 hover:border-pink-500/60 bg-slate-950/30 hover:bg-pink-500/10 text-slate-400 hover:text-pink-300 transition-all text-xs font-semibold group"
-                    >
-                      <span className="group-hover:scale-110 transition-transform">🤖</span>
-                      <span>+ Thêm Bot</span>
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* SECTION 2: 10 MINI-GAMES CARDS */}
-            <div className="rounded-3xl border border-slate-800/90 bg-slate-900/70 p-4 sm:p-5 backdrop-blur-md">
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                  <span>🎮 Chọn Đấu Trường Thi Đấu</span>
-                  <span className="text-[0.68rem] text-pink-400 font-normal">
-                    ({ALL_GAME_KEYS.length} trò chơi)
-                  </span>
-                </h2>
-                {tournamentMode && (
-                  <span className="text-xs font-bold text-amber-400 flex items-center gap-1 animate-pulse">
-                    <span>🏆</span> Đang chọn ngẫu nhiên
-                  </span>
-                )}
-              </div>
-
-              {/* COMPACT RESPONSIVE GRID OF 10 GAMES */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 max-h-[380px] overflow-y-auto pr-1">
-                {ALL_GAME_KEYS.map((key) => {
-                  const g = ARCADE_GAMES_INFO[key]
-                  const isSel = selectedGame === key && !tournamentMode
-                  return (
-                    <button
-                      key={key}
                       onClick={() => {
                         sfx.tap()
-                        setSelectedGame(key)
-                        setTournamentMode(false)
+                        setTournamentMode(!tournamentMode)
                       }}
-                      className={`text-left p-3 rounded-2xl border transition-all flex items-start gap-3 ${
-                        isSel
-                          ? 'border-pink-500 bg-pink-500/20 shadow-[0_0_18px_rgba(236,72,153,0.3)] ring-1 ring-pink-500/60 scale-[1.01]'
-                          : 'border-slate-800 bg-slate-950/60 hover:border-slate-700'
+                      className={`px-3.5 py-1.5 rounded-xl text-xs font-bold border transition-all ${
+                        tournamentMode
+                          ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-[0_0_12px_rgba(245,158,11,0.3)]'
+                          : 'bg-slate-800 text-slate-400 border-slate-700'
                       }`}
                     >
-                      <span className="text-2xl shrink-0 mt-0.5">{g.icon}</span>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center justify-between gap-1">
-                          <span className="text-xs font-bold text-white truncate">{g.name}</span>
-                          <span className="text-[0.62rem] font-semibold text-pink-400 shrink-0">
-                            {g.duration}
-                          </span>
-                        </div>
-                        <p className="text-[0.68rem] text-slate-400 mt-1 line-clamp-2 leading-relaxed">
-                          {g.desc}
-                        </p>
-                      </div>
+                      {tournamentMode ? 'BẬT' : 'TẮT'}
                     </button>
-                  )
-                })}
-              </div>
+                  </div>
+
+                  {/* Hero Showcase of the Selected Mini-game */}
+                  {!tournamentMode && (
+                    <div className="p-5 rounded-3xl bg-gradient-to-br from-pink-950/40 via-slate-900/90 to-slate-900 border border-pink-500/40 shadow-2xl relative overflow-hidden">
+                      <div className="flex items-start gap-4">
+                        <span className="text-5xl shrink-0 p-3 rounded-2xl bg-pink-500/20 border border-pink-500/40 shadow-lg">
+                          {activeGameInfo.icon}
+                        </span>
+                        <div className="text-left flex-1">
+                          <div className="flex items-center justify-between">
+                            <h3 className="text-base sm:text-lg font-black text-white">
+                              {activeGameInfo.name}
+                            </h3>
+                            <span className="px-2.5 py-1 rounded-full bg-pink-500/20 text-pink-300 text-xs font-bold">
+                              {activeGameInfo.duration}
+                            </span>
+                          </div>
+                          <p className="text-xs text-pink-400 font-semibold mt-1">
+                            {activeGameInfo.tagline}
+                          </p>
+                          <p className="text-xs text-slate-300 mt-2 leading-relaxed font-normal">
+                            {activeGameInfo.desc}
+                          </p>
+                          <div className="mt-3 inline-flex items-center gap-1.5 text-[0.68rem] text-slate-400 px-2.5 py-1 rounded-xl bg-slate-950/60 border border-slate-800">
+                            <span>🎮 Điều khiển:</span>
+                            <b className="text-slate-200">{activeGameInfo.control}</b>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 10 Mini-games Compact Grid */}
+                  <div>
+                    <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 text-left">
+                      Danh Sách 10 Mini-Games Bloop
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+                      {ALL_GAME_KEYS.map((key) => {
+                        const g = ARCADE_GAMES_INFO[key]
+                        const isSel = selectedGame === key && !tournamentMode
+                        return (
+                          <button
+                            key={key}
+                            onClick={() => {
+                              sfx.tap()
+                              setSelectedGame(key)
+                              setTournamentMode(false)
+                            }}
+                            className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center justify-center gap-1.5 ${
+                              isSel
+                                ? 'border-pink-500 bg-pink-500/25 shadow-[0_0_15px_rgba(236,72,153,0.35)] scale-105 ring-2 ring-pink-400'
+                                : 'border-slate-800 bg-slate-950/60 hover:border-slate-700'
+                            }`}
+                          >
+                            <span className="text-3xl">{g.icon}</span>
+                            <span className="text-[0.72rem] font-bold text-white truncate w-full">
+                              {g.name}
+                            </span>
+                            <span className="text-[0.6rem] text-slate-400">{g.duration}</span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
             </div>
 
-            {/* SECTION 3: LAUNCH BAR */}
-            <div className="sticky bottom-3 z-20">
-              {order.length < 2 ? (
+            {/* BOTTOM ACTION BAR (SLEEK & INTUITIVE) */}
+            <div className="pt-6">
+              {lobbyTab === 'players' ? (
                 <button
-                  onClick={handleAddBot}
-                  className="w-full py-4 rounded-2xl font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2 bg-gradient-to-r from-amber-600 to-pink-600 text-white shadow-[0_8px_25px_rgba(245,158,11,0.35)] border border-amber-400/40 hover:brightness-110 active:scale-[0.99] transition-all"
+                  onClick={() => {
+                    sfx.tap()
+                    if (order.length < 2) {
+                      handleAddBot()
+                    } else {
+                      setLobbyTab('games')
+                    }
+                  }}
+                  className="w-full py-4 rounded-2xl font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2 bg-gradient-to-r from-pink-600 via-rose-600 to-amber-500 text-white shadow-[0_8px_30px_rgba(236,72,153,0.45)] border border-white/20 hover:brightness-110 active:scale-[0.99] transition-all"
                 >
-                  <span>🤖</span>
-                  <span>Bấm Vào Đây Để Thêm Bot (Cần Ít Nhất 2 Người Để Chiến)</span>
+                  {order.length < 2 ? (
+                    <>
+                      <span>🤖</span>
+                      <span>Thêm Bot Máy Để Sẵn Sàng (Hiện có {order.length}/2 người)</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>👉</span>
+                      <span>Tiếp Tục: Chọn Đấu Trường Thi Đấu ({order.length} người) →</span>
+                    </>
+                  )}
                 </button>
               ) : (
-                <button
-                  onClick={handleStartGame}
-                  disabled={isStarting}
-                  className="w-full py-4 rounded-2xl font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2 bg-gradient-to-r from-pink-600 via-rose-600 to-amber-500 text-white shadow-[0_8px_30px_rgba(236,72,153,0.45)] border border-pink-400/40 hover:brightness-110 active:scale-[0.99] transition-all"
-                >
-                  <span>{tournamentMode ? '🏆' : '▶️'}</span>
-                  <span>
-                    {isStarting
-                      ? 'Đang chuẩn bị sàn đấu...'
-                      : tournamentMode
-                        ? 'BẮT ĐẦU VÒNG ĐẤU GIẢI PARTY NGẪU NHIÊN!'
-                        : `BẮT ĐẦU: ${ARCADE_GAMES_INFO[selectedGame].name}!`}
-                  </span>
-                </button>
+                <div className="flex flex-col sm:flex-row items-center gap-3">
+                  <button
+                    onClick={() => setLobbyTab('players')}
+                    className="w-full sm:w-auto px-5 py-4 rounded-2xl text-xs font-bold text-slate-300 bg-slate-900 border border-slate-700 hover:bg-slate-800 transition-colors"
+                  >
+                    ← Đấu Thủ ({order.length})
+                  </button>
+
+                  <button
+                    onClick={handleStartGame}
+                    disabled={isStarting || order.length < 2}
+                    className="flex-1 w-full py-4 rounded-2xl font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2 bg-gradient-to-r from-pink-600 via-rose-600 to-amber-500 text-white shadow-[0_8px_30px_rgba(236,72,153,0.5)] border border-white/20 hover:brightness-110 active:scale-[0.99] transition-all disabled:opacity-50"
+                  >
+                    <span>{tournamentMode ? '🏆' : '⚡'}</span>
+                    <span>
+                      {isStarting
+                        ? 'Đang chuẩn bị sàn đấu...'
+                        : tournamentMode
+                          ? 'BẮT ĐẦU VÒNG ĐẤU GIẢI PARTY NGẪU NHIÊN!'
+                          : `KHỞI TRANH: ${activeGameInfo.name.toUpperCase()}!`}
+                    </span>
+                  </button>
+                </div>
               )}
             </div>
           </div>
@@ -1493,6 +1538,7 @@ export default function ArcadeHost() {
                           const nextState = { ...state, status: 'lobby' as const }
                           setState(nextState)
                           void store.set(paths.arcade(code), nextState)
+                          setLobbyTab('games')
                         }}
                         className="btn btn-ghost btn-md text-xs font-semibold"
                       >
