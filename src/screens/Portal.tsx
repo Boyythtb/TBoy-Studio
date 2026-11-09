@@ -6,6 +6,18 @@ import { useTitle } from '../lib/useTitle'
 
 const GAMES = [
   {
+    to: '/party-arcade',
+    icon: '🕹️',
+    name: 'Party Arcade',
+    tag: 'Bloop Party · Đấu trường Mini-game',
+    players: '2–8 người',
+    time: '1–3 phút',
+    desc: 'Biến TV thành sàn đấu, điện thoại thành tay cầm không dây. Chuyền bom nổ chậm, đấu đài Sumo và kéo co đập nút.',
+    accent: '#ec4899',
+    badgeColor: '#f472b6',
+    glow: 'rgba(236, 72, 153, 0.35)',
+  },
+  {
     to: '/ma-soi',
     icon: '🐺',
     name: 'Ma Sói',

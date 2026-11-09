@@ -27,6 +27,8 @@ const MonopolyLanding = lazy(() => import('./screens/MonopolyLanding'))
 const MonopolyHost = lazy(() => import('./screens/MonopolyHost'))
 const CatanLanding = lazy(() => import('./screens/CatanLanding'))
 const CatanHost = lazy(() => import('./screens/CatanHost'))
+const ArcadeLanding = lazy(() => import('./screens/ArcadeLanding'))
+const ArcadeHost = lazy(() => import('./screens/ArcadeHost'))
 
 function Splash() {
   return (
@@ -60,6 +62,8 @@ export default function App() {
           <Route path="/monopoly/host/:code" element={<MonopolyHost />} />
           <Route path="/catan" element={<CatanLanding />} />
           <Route path="/catan/host/:code" element={<CatanHost />} />
+          <Route path="/party-arcade" element={<ArcadeLanding />} />
+          <Route path="/party-arcade/host/:code" element={<ArcadeHost />} />
           <Route path="/play/:code" element={<PlayGate />} />
           <Route path="*" element={<Portal />} />
         </Routes>

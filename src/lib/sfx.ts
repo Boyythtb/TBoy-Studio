@@ -75,4 +75,21 @@ export const sfx = {
       tone({ freq: f, dur: 0.32, type: 'sine', gain: 0.07, delay: i * 0.11 }),
     )
   },
+  boom() {
+    tone({ freq: 140, to: 30, dur: 0.8, type: 'sawtooth', gain: 0.15 })
+    tone({ freq: 80, to: 20, dur: 1.0, type: 'triangle', gain: 0.12, delay: 0.05 })
+  },
+  laser() {
+    tone({ freq: 880, to: 220, dur: 0.18, type: 'sawtooth', gain: 0.08 })
+  },
+  jump() {
+    tone({ freq: 320, to: 640, dur: 0.15, type: 'sine', gain: 0.07 })
+  },
+  collect() {
+    tone({ freq: 659, dur: 0.08, type: 'triangle', gain: 0.06 })
+    tone({ freq: 880, dur: 0.12, type: 'sine', gain: 0.07, delay: 0.06 })
+  },
+  buzz() {
+    tone({ freq: 150, dur: 0.25, type: 'square', gain: 0.09 })
+  },
 }

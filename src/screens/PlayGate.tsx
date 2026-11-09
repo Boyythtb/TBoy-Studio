@@ -10,6 +10,7 @@ const BattlePlayer = lazy(() => import('./BattlePlayer'))
 const TruthOrDarePlayer = lazy(() => import('./TruthOrDarePlayer'))
 const MonopolyPlayer = lazy(() => import('./MonopolyPlayer'))
 const CatanPlayer = lazy(() => import('./CatanPlayer'))
+const ArcadePlayer = lazy(() => import('./ArcadePlayer'))
 
 export default function PlayGate() {
   const { code = '' } = useParams()
@@ -27,9 +28,11 @@ export default function PlayGate() {
             ? 'Cờ Tỷ Phú · TBOY Studio'
             : game === 'catan'
               ? 'Đảo Catan · TBOY Studio'
-              : game === 'ma-soi'
-                ? 'Ma Sói · TBOY Studio'
-                : 'TBOY Studio',
+              : game === 'party-arcade'
+                ? 'Party Arcade · TBOY Studio'
+                : game === 'ma-soi'
+                  ? 'Ma Sói · TBOY Studio'
+                  : 'TBOY Studio',
   )
 
   useEffect(() => {
@@ -76,5 +79,6 @@ export default function PlayGate() {
   if (game === 'sea-battle') return <BattlePlayer />
   if (game === 'monopoly') return <MonopolyPlayer />
   if (game === 'catan') return <CatanPlayer />
+  if (game === 'party-arcade') return <ArcadePlayer />
   return <PlayerScreen />
 }

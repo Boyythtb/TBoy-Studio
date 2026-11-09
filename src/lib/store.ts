@@ -269,4 +269,7 @@ export const paths = {
   monopoly: (code: string) => `rooms/${code}/monopoly`,
   /* ---------------------------------------------------------------- catan */
   catan: (code: string) => `rooms/${code}/catan`,
+  /* --------------------------------------------------------- party arcade */
+  arcade: (code: string) => `rooms/${code}/arcade`,
+  arcadeInput: (code: string, uid: string) => `rooms/${code}/arcade/inputs/${uid}`,
 }
