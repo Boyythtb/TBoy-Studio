@@ -82,8 +82,8 @@ export default function CatanHost() {
     try {
       sfx.tap()
       await addBotPlayer(code)
-    } catch (e: unknown) {
-      alert(e instanceof Error ? e.message : 'Không thể thêm bot')
+    } catch {
+      // ignore
     }
   }
 

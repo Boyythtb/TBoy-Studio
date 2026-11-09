@@ -5,6 +5,7 @@ import { Stage } from '../ui/Stage'
 import { Avatar } from '../ui/Avatar'
 import { Qr } from '../ui/Qr'
 import { SfxToggle } from '../ui/SfxToggle'
+import { Toast } from '../ui/Toast'
 import { useGameRoom } from '../hooks/useGameRoom'
 import { paths, store } from '../lib/store'
 import { joinUrl, joinRoom, deleteRoom, addBotPlayer, removeBotPlayer } from '../lib/room'
@@ -54,8 +55,9 @@ export default function ArcadeHost() {
   const [state, setState] = useState<ArcadeState | null>(null)
   const [selectedGame, setSelectedGame] = useState<ArcadeGameType>('bomb-tag')
   const [isStarting, setIsStarting] = useState(false)
-  const [hostName, setHostName] = useState('')
   const [tournamentMode, setTournamentMode] = useState(false)
+  const [showQrModal, setShowQrModal] = useState(false)
+  const [toast, setToast] = useState<{ message: string; type: 'info' | 'error' | 'success' } | null>(null)
 
   // Simulation physics refs for 60fps canvas loop
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -76,6 +78,13 @@ export default function ArcadeHost() {
     [players]
   )
   const isHostPlaying = Boolean(uid && players[uid])
+
+  const showToast = (message: string, type: 'info' | 'error' | 'success' = 'info') => {
+    setToast({ message, type })
+    setTimeout(() => {
+      setToast((prev) => (prev?.message === message ? null : prev))
+    }, 3000)
+  }
 
   // Spawn visual particles
   const addParticles = (x: number, y: number, color: string, count = 12, speed = 80) => {
@@ -123,7 +132,6 @@ export default function ArcadeHost() {
         store.sub<ArcadeInput>(paths.arcadeInput(code, pid), (inp) => {
           if (inp) {
             inputsRef.current[pid] = inp
-            // Handle real-time doodle strokes sync
             if (inp.stroke && stateRef.current?.doodleDrawings) {
               const list = stateRef.current.doodleDrawings[pid] || []
               stateRef.current.doodleDrawings[pid] = [...list, inp.stroke]
@@ -212,13 +220,11 @@ export default function ArcadeHost() {
             updatedAt: Date.now(),
           }
         } else if (g === 'laser-dodge') {
-          // AI jumps when close to center or when laser sweeps
           const shouldJump = Math.random() < 0.25
           const dx = (Math.random() - 0.5) * 2
           const dy = (Math.random() - 0.5) * 2
           inputsRef.current[botId] = { dx, dy, jump: shouldJump, updatedAt: Date.now() }
         } else if (g === 'big-fish') {
-          // Move towards nearest food
           if (curState.foods && curState.foods.length > 0) {
             const f = curState.foods[Math.floor(Math.random() * curState.foods.length)]
             const dx = f.x > bot.x ? 1 : -1
@@ -226,9 +232,7 @@ export default function ArcadeHost() {
             inputsRef.current[botId] = { dx, dy, updatedAt: Date.now() }
           }
         } else if (g === 'chicken-catch') {
-          // Chase chickens or deliver back to pen
           if ((bot.chickensHeld || 0) > 0) {
-            // Return to pen
             const penX = bot.penIndex === 1 || bot.penIndex === 3 ? 85 : 15
             const penY = bot.penIndex === 2 || bot.penIndex === 3 ? 82 : 18
             const dx = penX > bot.x ? 1 : -1
@@ -246,12 +250,10 @@ export default function ArcadeHost() {
           if (curState.redLightDollState === 'green') {
             inputsRef.current[botId] = { dx: 0, dy: -1, isHoldingRun: true, updatedAt: Date.now() }
           } else {
-            // Stop
             inputsRef.current[botId] = { dx: 0, dy: 0, isHoldingRun: false, updatedAt: Date.now() }
           }
         } else if (g === 'moving-day') {
           if (bot.carryingItem) {
-            // Move to truck at top (50, 15)
             const dx = 50 > bot.x ? 1 : -1
             const dy = 15 > bot.y ? 1 : -1
             inputsRef.current[botId] = { dx, dy, updatedAt: Date.now() }
@@ -281,7 +283,7 @@ export default function ArcadeHost() {
       if (now >= (curState.redLightNextSwitchAt || 0)) {
         if (curState.redLightDollState === 'green') {
           curState.redLightDollState = 'turning'
-          curState.redLightNextSwitchAt = now + 900 // warning time
+          curState.redLightNextSwitchAt = now + 900
           curState.lastEventText = '⚠️ Búp bê sắp quay lại! Chuẩn bị DỪNG!'
           sfx.vote()
         } else if (curState.redLightDollState === 'turning') {
@@ -333,7 +335,7 @@ export default function ArcadeHost() {
     }
   }, [state?.status, state?.activeGame])
 
-  // Physics and Canvas Rendering for All 10 Mini-games
+  // Physics and Canvas Rendering
   const renderAndPhysics = (
     ctx: CanvasRenderingContext2D,
     width: number,
@@ -346,7 +348,6 @@ export default function ArcadeHost() {
     const entities = entitiesRef.current
     const uids = Object.keys(entities)
 
-    // Apply Screen Shake
     ctx.save()
     if (screenShakeRef.current > 0) {
       const dx = (Math.random() - 0.5) * screenShakeRef.current
@@ -357,17 +358,15 @@ export default function ArcadeHost() {
 
     ctx.clearRect(0, 0, width, height)
 
-    // THEMED ARENA BACKGROUND DRAWING
+    // THEMED ARENA DRAWING
     if (gameType === 'sumo') {
       const cx = width / 2
       const cy = height / 2
       const radius = Math.min(width, height) * 0.42
 
-      // Lava bubbling bg
       ctx.fillStyle = '#1c0a0a'
       ctx.fillRect(0, 0, width, height)
 
-      // Ring glow
       const grad = ctx.createRadialGradient(cx, cy, radius * 0.5, cx, cy, radius)
       grad.addColorStop(0, '#334155')
       grad.addColorStop(0.85, '#1e293b')
@@ -381,7 +380,6 @@ export default function ArcadeHost() {
       ctx.strokeStyle = '#f59e0b'
       ctx.stroke()
     } else if (gameType === 'snowball') {
-      // Ice Arena
       ctx.fillStyle = '#0f172a'
       ctx.fillRect(0, 0, width, height)
 
@@ -402,7 +400,6 @@ export default function ArcadeHost() {
       ctx.strokeStyle = '#bae6fd'
       ctx.stroke()
     } else if (gameType === 'laser-dodge') {
-      // Cyber Neon Matrix
       ctx.fillStyle = '#060814'
       ctx.fillRect(0, 0, width, height)
 
@@ -421,7 +418,6 @@ export default function ArcadeHost() {
         ctx.stroke()
       }
 
-      // Draw Rotating Lasers
       if (curState.lasers) {
         const cx = width / 2
         const cy = height / 2
@@ -441,7 +437,6 @@ export default function ArcadeHost() {
           ctx.shadowBlur = 0
         })
 
-        // Center Laser Emitter Core
         ctx.beginPath()
         ctx.arc(cx, cy, 18, 0, Math.PI * 2)
         ctx.fillStyle = '#ec4899'
@@ -451,14 +446,12 @@ export default function ArcadeHost() {
         ctx.stroke()
       }
     } else if (gameType === 'big-fish') {
-      // Deep Ocean Reef
       const oceanGrad = ctx.createLinearGradient(0, 0, 0, height)
       oceanGrad.addColorStop(0, '#0c4a6e')
       oceanGrad.addColorStop(1, '#082f49')
       ctx.fillStyle = oceanGrad
       ctx.fillRect(0, 0, width, height)
 
-      // Draw Food dots
       if (curState.foods) {
         curState.foods.forEach((f) => {
           const fx = (f.x / 100) * width
@@ -470,11 +463,9 @@ export default function ArcadeHost() {
         })
       }
     } else if (gameType === 'chicken-catch') {
-      // Farm Meadow
       ctx.fillStyle = '#14532d'
       ctx.fillRect(0, 0, width, height)
 
-      // 4 Pens in corners
       const pens = [
         { x: 0, y: 0, w: width * 0.25, h: height * 0.25, color: ARCADE_COLORS[0] },
         { x: width * 0.75, y: 0, w: width * 0.25, h: height * 0.25, color: ARCADE_COLORS[1] },
@@ -493,7 +484,6 @@ export default function ArcadeHost() {
         ctx.fillText(`Chuồng #${idx + 1}`, p.x + 10, p.y + 20)
       })
 
-      // Draw Chickens
       if (curState.chickens) {
         curState.chickens.forEach((ch) => {
           ch.x += ch.vx * dt
@@ -510,17 +500,14 @@ export default function ArcadeHost() {
         })
       }
     } else if (gameType === 'doodle-duel') {
-      // Art Gallery Studio
       ctx.fillStyle = '#1e1b4b'
       ctx.fillRect(0, 0, width, height)
 
-      // Title & Prompt
       ctx.font = 'bold 22px sans-serif'
       ctx.fillStyle = '#f472b6'
       ctx.textAlign = 'center'
       ctx.fillText(`🎨 Triển Lãm Đấu Phác Họa: "${curState.doodlePrompt || 'Tranh vẽ'}"`, width / 2, 35)
 
-      // Draw Each Player's Canvas
       const cols = Math.min(4, Math.max(1, uids.length))
       const boxW = (width - 40) / cols
       const boxH = height * 0.65
@@ -529,14 +516,12 @@ export default function ArcadeHost() {
         const by = 60 + Math.floor(idx / cols) * (boxH + 30)
         const p = entities[pid]
 
-        // Canvas easel frame
         ctx.fillStyle = '#0f172a'
         ctx.fillRect(bx, by, boxW - 16, boxH)
         ctx.strokeStyle = p.color
         ctx.lineWidth = 3
         ctx.strokeRect(bx, by, boxW - 16, boxH)
 
-        // Draw Player's Strokes
         const drawings = curState.doodleDrawings?.[pid] || []
         drawings.forEach((st) => {
           if (!st.points || st.points.length < 2) return
@@ -553,17 +538,14 @@ export default function ArcadeHost() {
           ctx.stroke()
         })
 
-        // Artist Name tag
         ctx.font = 'bold 12px sans-serif'
         ctx.fillStyle = '#fff'
         ctx.fillText(p.name, bx + (boxW - 16) / 2, by + boxH + 18)
       })
     } else if (gameType === 'red-light') {
-      // Squid Game Style Track
       ctx.fillStyle = '#1e293b'
       ctx.fillRect(0, 0, width, height)
 
-      // Finish Line at Top
       ctx.fillStyle = 'rgba(34, 197, 94, 0.25)'
       ctx.fillRect(0, 40, width, 50)
       ctx.strokeStyle = '#22c55e'
@@ -575,7 +557,6 @@ export default function ArcadeHost() {
       ctx.textAlign = 'center'
       ctx.fillText('🏁 VẠCH ĐÍCH CHIẾN THẮNG 🏁', width / 2, 70)
 
-      // Giant Doll at Center Top
       const dollY = 25
       ctx.font = '36px sans-serif'
       ctx.fillText(
@@ -584,11 +565,9 @@ export default function ArcadeHost() {
         dollY
       )
     } else if (gameType === 'moving-day') {
-      // Road & Moving Truck
       ctx.fillStyle = '#1e293b'
       ctx.fillRect(0, 0, width, height)
 
-      // Moving Truck at Top
       ctx.fillStyle = '#3b82f6'
       ctx.fillRect(width * 0.35, 10, width * 0.3, 60)
       ctx.strokeStyle = '#fff'
@@ -600,7 +579,6 @@ export default function ArcadeHost() {
       ctx.textAlign = 'center'
       ctx.fillText('🚚 XE TẢI CHUYỂN NHÀ', width / 2, 45)
 
-      // Draw scattered furnitures
       if (curState.furnitures) {
         curState.furnitures.forEach((fn) => {
           if (fn.delivered) return
@@ -613,7 +591,6 @@ export default function ArcadeHost() {
         })
       }
     } else if (gameType === 'tug-war') {
-      // Tug of war field
       ctx.fillStyle = '#0f172a'
       ctx.fillRect(0, 0, width, height)
 
@@ -626,13 +603,11 @@ export default function ArcadeHost() {
       ctx.stroke()
       ctx.setLineDash([])
 
-      // Red & Blue side glow
       ctx.fillStyle = 'rgba(239, 68, 68, 0.1)'
       ctx.fillRect(0, 0, width / 2, height)
       ctx.fillStyle = 'rgba(59, 130, 246, 0.1)'
       ctx.fillRect(width / 2, 0, width / 2, height)
 
-      // Rope
       let teamATaps = 0
       let teamBTaps = 0
       uids.forEach((uid) => {
@@ -658,7 +633,6 @@ export default function ArcadeHost() {
       ctx.lineCap = 'round'
       ctx.stroke()
 
-      // Marker
       ctx.beginPath()
       ctx.arc(markerX, ropeY, 18, 0, Math.PI * 2)
       ctx.fillStyle = '#fbbf24'
@@ -675,7 +649,6 @@ export default function ArcadeHost() {
         }
       }
     } else {
-      // Bomb Tag Arena Grid
       ctx.fillStyle = '#090d16'
       ctx.fillRect(0, 0, width, height)
 
@@ -699,7 +672,7 @@ export default function ArcadeHost() {
       ctx.strokeRect(10, 10, width - 20, height - 20)
     }
 
-    // UPDATE PHYSICS & GAMEPLAY LOGIC
+    // UPDATE PHYSICS
     uids.forEach((uid) => {
       const p = entities[uid]
       if (!p.alive) return
@@ -722,7 +695,6 @@ export default function ArcadeHost() {
       }
       if (p.dashCooldown > 0) p.dashCooldown -= dt
 
-      // Laser jump handling
       if (inp.jump && !p.isJumping) {
         p.isJumping = true
         p.jumpHeight = 35
@@ -738,13 +710,11 @@ export default function ArcadeHost() {
         }
       }
 
-      // Red Light Movement & Elimination
       if (gameType === 'red-light') {
         const isHolding = Boolean(inp.isHoldingRun)
         if (isHolding) {
           p.y -= 25 * dt
           if (curState.redLightDollState === 'red') {
-            // Elimination by laser!
             p.alive = false
             shakeScreen(10)
             addParticles((p.x / 100) * width, (p.y / 100) * height, '#ef4444', 20)
@@ -756,7 +726,6 @@ export default function ArcadeHost() {
           endRound(null, p.uid, `🏆 ${p.name} đã cán đích chiến thắng Đèn Xanh Đèn Đỏ!`)
         }
       } else {
-        // Standard motion
         const targetVx = inp.dx * speed
         const targetVy = inp.dy * speed
         const friction = gameType === 'snowball' ? 4 : 8
@@ -766,7 +735,6 @@ export default function ArcadeHost() {
         p.y += p.vy * dt
       }
 
-      // Circular Ring Bounds (Sumo / Snowball)
       if (gameType === 'sumo' || gameType === 'snowball') {
         const distToCenter = Math.hypot(p.x - 50, p.y - 50)
         if (distToCenter > 38) {
@@ -785,7 +753,6 @@ export default function ArcadeHost() {
         p.y = Math.max(8, Math.min(92, p.y))
       }
 
-      // Big Fish Food Eating Check
       if (gameType === 'big-fish' && curState.foods) {
         curState.foods = curState.foods.filter((food) => {
           const dist = Math.hypot(p.x - food.x, p.y - food.y)
@@ -799,7 +766,6 @@ export default function ArcadeHost() {
         })
       }
 
-      // Chicken Catching Check
       if (gameType === 'chicken-catch' && curState.chickens) {
         curState.chickens.forEach((ch) => {
           if (!ch.heldBy) {
@@ -816,7 +782,6 @@ export default function ArcadeHost() {
         })
       }
 
-      // Moving Day Item Pickup & Delivery
       if (gameType === 'moving-day' && curState.furnitures) {
         curState.furnitures.forEach((fn) => {
           if (!fn.delivered) {
@@ -830,7 +795,6 @@ export default function ArcadeHost() {
             } else if (fn.heldBy === p.uid) {
               fn.x = p.x
               fn.y = p.y
-              // Check delivery at truck (top)
               if (p.y <= 18 && p.x >= 35 && p.x <= 65) {
                 fn.delivered = true
                 fn.heldBy = null
@@ -925,7 +889,6 @@ export default function ArcadeHost() {
         return
       }
 
-      // Jump Shadow
       if (p.isJumping) {
         ctx.beginPath()
         ctx.ellipse(px, (p.y / 100) * height, r * 0.8, r * 0.35, 0, 0, Math.PI * 2)
@@ -933,7 +896,6 @@ export default function ArcadeHost() {
         ctx.fill()
       }
 
-      // Bomb tag fire aura
       if (p.hasBomb) {
         ctx.beginPath()
         ctx.arc(px, py, r * 1.6, 0, Math.PI * 2)
@@ -946,7 +908,6 @@ export default function ArcadeHost() {
         ctx.fillText('💣', px, py - r * 1.6)
       }
 
-      // Player circle body
       ctx.beginPath()
       ctx.arc(px, py, r, 0, Math.PI * 2)
       ctx.fillStyle = p.color
@@ -955,14 +916,12 @@ export default function ArcadeHost() {
       ctx.strokeStyle = p.hasBomb ? '#ef4444' : '#ffffff'
       ctx.stroke()
 
-      // Emoji Avatar
       const av = avatarOf(p.avatar)
       ctx.font = `${r * 1.1}px sans-serif`
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
       ctx.fillText(av.emoji, px, py + 1)
 
-      // Name & Stat Badge
       ctx.font = 'bold 12px sans-serif'
       ctx.fillStyle = '#ffffff'
       ctx.shadowColor = 'rgba(0,0,0,0.8)'
@@ -995,7 +954,7 @@ export default function ArcadeHost() {
       return pt.life < pt.maxLife
     })
 
-    // Host Timer Countdown Check for Bomb Tag & Timed Games
+    // Host Timer Countdown Check
     if (isHost && curState.status === 'playing') {
       const remaining = Math.max(0, Math.ceil((curState.roundEndsAt - Date.now()) / 1000))
       roundTimerSec.current = remaining
@@ -1018,7 +977,6 @@ export default function ArcadeHost() {
       }
     }
 
-    // Sync high-level state to Firebase every 800ms
     const now = Date.now()
     if (isHost && now - lastSyncTime.current > 800) {
       lastSyncTime.current = now
@@ -1033,7 +991,6 @@ export default function ArcadeHost() {
     ctx.restore()
   }
 
-  // End round helper
   const endRound = (teamWin: 'A' | 'B' | null, userWin: string | null, message: string) => {
     if (!state) return
     const curScores = { ...state.scores }
@@ -1066,7 +1023,7 @@ export default function ArcadeHost() {
 
   const handleStartGame = async () => {
     if (order.length < 2) {
-      alert('Cần ít nhất 2 người chơi (hoặc thêm Bot) để bắt đầu.')
+      showToast('Cần ít nhất 2 đấu thủ để mở màn đấu trường! Bạn có thể bấm "+ Thêm Bot" để vào trận ngay.', 'error')
       return
     }
     setIsStarting(true)
@@ -1074,7 +1031,6 @@ export default function ArcadeHost() {
     try {
       let gameToPlay = selectedGame
       if (tournamentMode) {
-        // Pick random mini-game from list
         gameToPlay = ALL_GAME_KEYS[Math.floor(Math.random() * ALL_GAME_KEYS.length)]
         setSelectedGame(gameToPlay)
       }
@@ -1088,8 +1044,9 @@ export default function ArcadeHost() {
     try {
       sfx.tap()
       await addBotPlayer(code)
+      showToast('Đã thêm 1 Bot máy vào phòng!', 'success')
     } catch (e) {
-      alert((e as Error).message)
+      showToast((e as Error).message, 'error')
     }
   }
 
@@ -1097,211 +1054,331 @@ export default function ArcadeHost() {
     try {
       sfx.tap()
       await removeBotPlayer(code, botUid)
+      showToast('Đã xóa Bot khỏi phòng', 'info')
     } catch (e) {
-      alert((e as Error).message)
+      showToast((e as Error).message, 'error')
     }
   }
 
   const handleHostJoin = async () => {
-    const trimmed = hostName.trim() || 'Chủ phòng'
     try {
-      await joinRoom(code, trimmed, Math.floor(Math.random() * 8))
-      setHostName('')
+      sfx.tap()
+      await joinRoom(code, 'Chủ phòng', Math.floor(Math.random() * 8))
+      showToast('Chủ phòng đã tham gia vào danh sách đấu thủ!', 'success')
     } catch (e) {
-      alert((e as Error).message)
+      showToast((e as Error).message, 'error')
     }
+  }
+
+  const handleCopyLink = () => {
+    navigator.clipboard?.writeText(url)
+    sfx.tap()
+    showToast('Đã sao chép liên kết vào phòng!', 'success')
   }
 
   return (
     <Stage>
-      <div className="mx-auto flex min-h-dvh max-w-7xl flex-col px-4 py-5 sm:px-6">
-        {/* Header */}
-        <header className="flex items-center justify-between pb-4 border-b border-slate-800">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="grid h-10 w-10 place-items-center rounded-2xl bg-pink-500/20 border border-pink-500/30 text-2xl hover:scale-105 transition-transform">
-              🕹️
-            </Link>
-            <div>
-              <div className="text-base font-bold text-white flex items-center gap-2">
-                <span>Party Arcade</span>
-                <span className="text-[0.65rem] font-bold px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-400 border border-pink-500/30">
-                  10 Đấu Trường Bloop
-                </span>
+      {/* Toast Banner */}
+      <Toast message={toast?.message ?? null} type={toast?.type} onClose={() => setToast(null)} />
+
+      {/* QR Code Modal */}
+      <AnimatePresence>
+        {showQrModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="midnight-card max-w-sm w-full p-6 text-center border border-slate-700"
+            >
+              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                <span className="text-sm font-bold text-white">📱 Quét mã để kết nối</span>
+                <button
+                  onClick={() => setShowQrModal(false)}
+                  className="text-slate-400 hover:text-white text-base font-bold p-1"
+                >
+                  ✕
+                </button>
               </div>
-              <div className="text-xs text-slate-400">
-                Mã phòng: <b className="text-pink-400 font-mono text-sm tracking-widest">{code}</b>
+
+              <div className="flex justify-center my-6">
+                <div className="bg-white p-3 rounded-2xl shadow-2xl">
+                  <Qr value={url} size={180} />
+                </div>
               </div>
+
+              <div className="text-xs text-slate-400 mb-2">Đường link vào phòng:</div>
+              <div className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono text-cyan-400 select-all break-all mb-4">
+                {url}
+              </div>
+
+              <button
+                onClick={handleCopyLink}
+                className="btn btn-primary btn-md w-full text-xs font-bold bg-pink-600 hover:bg-pink-500 border-none"
+              >
+                📋 Sao chép liên kết
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      <div className="mx-auto flex min-h-dvh max-w-6xl flex-col px-4 py-4 sm:px-6">
+        {/* RESPONSIVE TOP HEADER */}
+        <header className="pb-4 border-b border-slate-800/80">
+          <div className="flex items-center justify-between gap-2">
+            {/* Left: Brand */}
+            <div className="flex items-center gap-2.5">
+              <Link
+                to="/party-arcade"
+                className="grid h-9 w-9 place-items-center rounded-xl bg-pink-500/20 border border-pink-500/30 text-xl hover:scale-105 transition-transform"
+              >
+                🕹️
+              </Link>
+              <div>
+                <h1 className="text-sm sm:text-base font-bold text-white tracking-wide flex items-center gap-2">
+                  <span>Party Arcade</span>
+                  <span className="text-[0.62rem] font-bold px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-400 border border-pink-500/30">
+                    10 Game Bloop
+                  </span>
+                </h1>
+              </div>
+            </div>
+
+            {/* Right: Quick Toolbar */}
+            <div className="flex items-center gap-2">
+              <SfxToggle />
+              <button
+                onClick={() => {
+                  void deleteRoom(code)
+                  navigate('/party-arcade')
+                }}
+                className="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-red-950/60 text-slate-400 hover:text-red-300 border border-slate-800 text-xs font-semibold transition-colors"
+                title="Đóng phòng"
+              >
+                Đóng phòng
+              </button>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setTournamentMode(!tournamentMode)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${
-                tournamentMode
-                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-[0_0_12px_rgba(245,158,11,0.3)]'
-                  : 'bg-slate-800 text-slate-400 border-slate-700'
-              }`}
-            >
-              {tournamentMode ? '🏆 Chế độ Đấu Giải Ngẫu Nhiên: BẬT' : '🎲 Đấu Giải Party: TẮT'}
-            </button>
-            <SfxToggle />
+          {/* Sub Header Bar: Room Code Pill & Mode Switch */}
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-800/50">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleCopyLink}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-slate-200 transition-colors shadow-sm"
+                title="Bấm để sao chép link"
+              >
+                <span className="text-slate-400 text-[0.7rem] uppercase">MÃ PHÒNG:</span>
+                <span className="text-pink-400 font-mono text-sm tracking-widest">{code}</span>
+                <span className="text-slate-400">📋</span>
+              </button>
+
+              <button
+                onClick={() => setShowQrModal(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors"
+              >
+                <span>📱 Mã QR</span>
+              </button>
+            </div>
+
+            {/* Tournament Mode Pill */}
             <button
               onClick={() => {
-                if (confirm('Bạn có chắc muốn đóng phòng đấu trường?')) {
-                  void deleteRoom(code)
-                  navigate('/party-arcade')
-                }
+                sfx.tap()
+                setTournamentMode(!tournamentMode)
+                showToast(
+                  !tournamentMode
+                    ? 'Đã bật Chế độ Đấu Giải: Tự động đổi ngẫu nhiên các mini-game!'
+                    : 'Đã tắt Đấu Giải: Bạn có thể tự chọn từng trò chơi yêu thích.',
+                  'info'
+                )
               }}
-              className="btn btn-ghost btn-sm text-xs text-red-400 hover:text-red-300"
+              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold border transition-all ${
+                tournamentMode
+                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.3)]'
+                  : 'bg-slate-900/90 text-slate-400 border-slate-800 hover:border-slate-700'
+              }`}
             >
-              Đóng phòng
+              <span>{tournamentMode ? '🏆' : '🎲'}</span>
+              <span>{tournamentMode ? 'Đấu Giải Ngẫu Nhiên: BẬT' : 'Đấu Giải Party: TẮT'}</span>
             </button>
           </div>
         </header>
 
         {/* LOBBY VIEW */}
         {(!state || state.status === 'lobby') && (
-          <div className="grid flex-1 items-start gap-8 py-8 lg:grid-cols-[1.15fr_0.85fr]">
-            {/* Left Column: Game Selection Grid of 10 Games */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <h2 className="text-xl font-bold text-white">Chọn 1 Trong 10 Đấu Trường</h2>
-                <span className="text-xs text-pink-400 font-semibold">10 Mini-games cực đã</span>
-              </div>
-              <p className="text-xs text-slate-400 mb-6">
-                Chọn trò chơi đối kháng trực tiếp để bắt đầu ngay:
-              </p>
-
-              <div className="grid gap-3 sm:grid-cols-2 max-h-[520px] overflow-y-auto pr-2">
-                {ALL_GAME_KEYS.map((key) => {
-                  const g = ARCADE_GAMES_INFO[key]
-                  const isSel = selectedGame === key
-                  return (
-                    <button
-                      key={key}
-                      onClick={() => {
-                        sfx.tap()
-                        setSelectedGame(key)
-                      }}
-                      className={`text-left p-4 rounded-3xl border transition-all ${
-                        isSel
-                          ? 'border-pink-500 bg-pink-500/15 shadow-[0_0_20px_rgba(236,72,153,0.3)] scale-[1.02]'
-                          : 'border-slate-800 bg-slate-900/60 hover:border-slate-700'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="text-3xl">{g.icon}</span>
-                        <div>
-                          <div className="text-sm font-bold text-white">{g.name}</div>
-                          <div className="text-[0.68rem] text-pink-400 font-semibold">{g.duration}</div>
-                        </div>
-                      </div>
-                      <div className="text-[0.7rem] text-slate-400 mt-2 line-clamp-2">{g.desc}</div>
-                    </button>
-                  )
-                })}
-              </div>
-
-              {/* Action Button */}
-              <div className="mt-6">
-                <button
-                  onClick={handleStartGame}
-                  disabled={isStarting || order.length < 2}
-                  className="btn btn-primary btn-xl w-full text-base font-bold bg-pink-600 hover:bg-pink-500 border-none shadow-[0_8px_30px_rgba(236,72,153,0.4)] disabled:opacity-50"
-                >
-                  {isStarting
-                    ? 'Đang chuẩn bị sàn đấu...'
-                    : tournamentMode
-                      ? '🏆 BẮT ĐẦU VÒNG ĐẤU GIẢI PARTY NGẪU NHIÊN'
-                      : `▶️ BẮT ĐẦU: ${ARCADE_GAMES_INFO[selectedGame].name}`}
-                </button>
-                {order.length < 2 && (
-                  <p className="text-center text-xs text-amber-400 mt-2">
-                    ⚠️ Cần ít nhất 2 người chơi. Bấm nút <b>"+ Thêm Bot Máy"</b> bên phải để đấu ngay!
+          <div className="flex-1 flex flex-col gap-6 py-5">
+            {/* SECTION 1: PLAYER SLOTS (SIGNATURE BLOOP PARTY STYLE) */}
+            <div className="rounded-3xl border border-slate-800/90 bg-slate-900/70 p-4 sm:p-5 backdrop-blur-md">
+              <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                <div>
+                  <h2 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                    <span>👥 Đấu Thủ Trong Phòng</span>
+                    <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 text-xs font-mono">
+                      {order.length}/8
+                    </span>
+                  </h2>
+                  <p className="text-[0.72rem] text-slate-400 mt-0.5">
+                    Quét mã QR bằng điện thoại hoặc thêm Bot máy để bắt đầu.
                   </p>
-                )}
-              </div>
-            </div>
-
-            {/* Right Column: QR Code & Connected Players */}
-            <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <span>📱 Quét mã để kết nối điện thoại</span>
-                </h3>
-                <span className="text-xs text-slate-400">{order.length}/8 Đấu thủ</span>
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-center gap-6 p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80">
-                <div className="bg-white p-2.5 rounded-2xl shadow-xl">
-                  <Qr value={url} size={130} />
                 </div>
-                <div className="flex-1 text-center sm:text-left">
-                  <div className="text-xs text-slate-400">Địa chỉ vào nhanh:</div>
-                  <div className="text-xs font-mono text-cyan-400 break-all select-all mt-0.5">
-                    {url}
-                  </div>
-                  <div className="mt-3 flex flex-wrap gap-2 justify-center sm:justify-start">
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleAddBot}
+                    disabled={order.length >= 8}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-pink-600/20 hover:bg-pink-600/30 border border-pink-500/40 text-pink-300 text-xs font-bold shadow-sm transition-all active:scale-95 disabled:opacity-40"
+                  >
+                    <span>🤖</span>
+                    <span>+ Thêm Bot Máy</span>
+                  </button>
+
+                  {!isHostPlaying && (
                     <button
-                      onClick={handleAddBot}
-                      className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 transition-colors"
+                      onClick={handleHostJoin}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold transition-all"
                     >
-                      🤖 + Thêm Bot Máy
+                      <span>🎮 Host Chơi Luôn</span>
                     </button>
-                    {!isHostPlaying && (
-                      <button
-                        onClick={handleHostJoin}
-                        className="px-3 py-1.5 rounded-xl bg-pink-500/20 hover:bg-pink-500/30 text-xs font-semibold text-pink-300 border border-pink-500/40 transition-colors"
-                      >
-                        🎮 Host Tham Gia
-                      </button>
-                    )}
-                  </div>
+                  )}
                 </div>
               </div>
 
-              {/* Player Grid */}
-              <div className="mt-6">
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">
-                  Danh Sách Đấu Thủ Sẵn Sàng
-                </div>
-                <div className="grid grid-cols-2 gap-2.5 max-h-64 overflow-y-auto pr-1">
-                  {order.map((pid, idx) => {
-                    const p = players[pid]
-                    const isBot = pid.startsWith('bot-')
-                    const color = ARCADE_COLORS[idx % ARCADE_COLORS.length]
+              {/* 8 SLOTS GRID */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                {Array.from({ length: 8 }).map((_, idx) => {
+                  const pid = order[idx]
+                  const p = pid ? players[pid] : null
+                  const isBot = pid?.startsWith('bot-')
+                  const color = ARCADE_COLORS[idx % ARCADE_COLORS.length]
+
+                  if (p) {
                     return (
                       <div
                         key={pid}
-                        className="flex items-center justify-between p-2.5 rounded-2xl bg-slate-900 border border-slate-800"
+                        className="flex items-center justify-between p-2.5 rounded-2xl bg-slate-950/80 border border-slate-800 shadow-sm relative group overflow-hidden"
                       >
                         <div className="flex items-center gap-2.5 min-w-0">
-                          <Avatar index={p.avatar} size={34} ring />
-                          <div className="truncate">
+                          <Avatar index={p.avatar} size={36} ring />
+                          <div className="min-w-0 truncate">
                             <div className="text-xs font-bold text-white truncate flex items-center gap-1.5">
-                              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-                              {p.name}
+                              <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: color }} />
+                              <span className="truncate">{p.name}</span>
                             </div>
-                            <div className="text-[0.65rem] text-slate-400">
+                            <div className="text-[0.65rem] text-slate-400 font-medium">
                               {pid === uid ? 'Chủ phòng' : isBot ? 'Bot Máy' : 'Điện thoại'}
                             </div>
                           </div>
                         </div>
+
                         {isBot && (
                           <button
                             onClick={() => handleRemoveBot(pid)}
-                            className="text-xs text-slate-500 hover:text-red-400 p-1"
-                            title="Xóa bot"
+                            className="text-slate-500 hover:text-red-400 p-1 text-xs transition-colors"
+                            title="Xóa Bot"
                           >
                             ✕
                           </button>
                         )}
                       </div>
                     )
-                  })}
-                </div>
+                  }
+
+                  // Empty slot: Click to add Bot directly!
+                  return (
+                    <button
+                      key={idx}
+                      onClick={handleAddBot}
+                      className="flex items-center justify-center gap-2 p-3 rounded-2xl border border-dashed border-slate-800 hover:border-pink-500/60 bg-slate-950/30 hover:bg-pink-500/10 text-slate-400 hover:text-pink-300 transition-all text-xs font-semibold group"
+                    >
+                      <span className="group-hover:scale-110 transition-transform">🤖</span>
+                      <span>+ Thêm Bot</span>
+                    </button>
+                  )
+                })}
               </div>
+            </div>
+
+            {/* SECTION 2: 10 MINI-GAMES CARDS */}
+            <div className="rounded-3xl border border-slate-800/90 bg-slate-900/70 p-4 sm:p-5 backdrop-blur-md">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                  <span>🎮 Chọn Đấu Trường Thi Đấu</span>
+                  <span className="text-[0.68rem] text-pink-400 font-normal">
+                    ({ALL_GAME_KEYS.length} trò chơi)
+                  </span>
+                </h2>
+                {tournamentMode && (
+                  <span className="text-xs font-bold text-amber-400 flex items-center gap-1 animate-pulse">
+                    <span>🏆</span> Đang chọn ngẫu nhiên
+                  </span>
+                )}
+              </div>
+
+              {/* COMPACT RESPONSIVE GRID OF 10 GAMES */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 max-h-[380px] overflow-y-auto pr-1">
+                {ALL_GAME_KEYS.map((key) => {
+                  const g = ARCADE_GAMES_INFO[key]
+                  const isSel = selectedGame === key && !tournamentMode
+                  return (
+                    <button
+                      key={key}
+                      onClick={() => {
+                        sfx.tap()
+                        setSelectedGame(key)
+                        setTournamentMode(false)
+                      }}
+                      className={`text-left p-3 rounded-2xl border transition-all flex items-start gap-3 ${
+                        isSel
+                          ? 'border-pink-500 bg-pink-500/20 shadow-[0_0_18px_rgba(236,72,153,0.3)] ring-1 ring-pink-500/60 scale-[1.01]'
+                          : 'border-slate-800 bg-slate-950/60 hover:border-slate-700'
+                      }`}
+                    >
+                      <span className="text-2xl shrink-0 mt-0.5">{g.icon}</span>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-1">
+                          <span className="text-xs font-bold text-white truncate">{g.name}</span>
+                          <span className="text-[0.62rem] font-semibold text-pink-400 shrink-0">
+                            {g.duration}
+                          </span>
+                        </div>
+                        <p className="text-[0.68rem] text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                          {g.desc}
+                        </p>
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* SECTION 3: LAUNCH BAR */}
+            <div className="sticky bottom-3 z-20">
+              {order.length < 2 ? (
+                <button
+                  onClick={handleAddBot}
+                  className="w-full py-4 rounded-2xl font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2 bg-gradient-to-r from-amber-600 to-pink-600 text-white shadow-[0_8px_25px_rgba(245,158,11,0.35)] border border-amber-400/40 hover:brightness-110 active:scale-[0.99] transition-all"
+                >
+                  <span>🤖</span>
+                  <span>Bấm Vào Đây Để Thêm Bot (Cần Ít Nhất 2 Người Để Chiến)</span>
+                </button>
+              ) : (
+                <button
+                  onClick={handleStartGame}
+                  disabled={isStarting}
+                  className="w-full py-4 rounded-2xl font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2 bg-gradient-to-r from-pink-600 via-rose-600 to-amber-500 text-white shadow-[0_8px_30px_rgba(236,72,153,0.45)] border border-pink-400/40 hover:brightness-110 active:scale-[0.99] transition-all"
+                >
+                  <span>{tournamentMode ? '🏆' : '▶️'}</span>
+                  <span>
+                    {isStarting
+                      ? 'Đang chuẩn bị sàn đấu...'
+                      : tournamentMode
+                        ? 'BẮT ĐẦU VÒNG ĐẤU GIẢI PARTY NGẪU NHIÊN!'
+                        : `BẮT ĐẦU: ${ARCADE_GAMES_INFO[selectedGame].name}!`}
+                  </span>
+                </button>
+              )}
             </div>
           </div>
         )}
@@ -1310,29 +1387,29 @@ export default function ArcadeHost() {
         {state && (state.status === 'playing' || state.status === 'round-over') && (
           <div className="flex-1 flex flex-col items-center py-2">
             {/* Top Game Bar */}
-            <div className="w-full flex items-center justify-between px-6 py-3 bg-slate-900/90 rounded-2xl border border-slate-800 mb-4 shadow-lg">
-              <div className="flex items-center gap-3">
-                <span className="text-3xl">{ARCADE_GAMES_INFO[state.activeGame].icon}</span>
+            <div className="w-full flex items-center justify-between px-4 sm:px-6 py-2.5 bg-slate-900/90 rounded-2xl border border-slate-800 mb-3 shadow-lg">
+              <div className="flex items-center gap-2.5">
+                <span className="text-2xl">{ARCADE_GAMES_INFO[state.activeGame].icon}</span>
                 <div>
-                  <h2 className="text-base font-bold text-white">
+                  <h2 className="text-xs sm:text-sm font-bold text-white">
                     {ARCADE_GAMES_INFO[state.activeGame].name}
                   </h2>
-                  <p className="text-xs text-pink-400 font-medium">
+                  <p className="text-[0.68rem] text-pink-400 font-medium">
                     {state.lastEventText || ARCADE_GAMES_INFO[state.activeGame].tagline}
                   </p>
                 </div>
               </div>
 
               {/* Middle Timer */}
-              <div className="flex items-center gap-2 px-4 py-1.5 rounded-2xl bg-slate-950 border border-slate-800">
-                <span className="text-lg">⏱️</span>
-                <span className="text-xl font-black font-mono text-pink-400">
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-950 border border-slate-800">
+                <span className="text-sm">⏱️</span>
+                <span className="text-base font-black font-mono text-pink-400">
                   {state.timerSeconds}s
                 </span>
               </div>
 
               {/* Live Scores */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 overflow-x-auto max-w-[200px] sm:max-w-none">
                 {order.map((pid, idx) => {
                   const p = players[pid]
                   const sc = state.scores?.[pid] ?? 0
@@ -1340,11 +1417,11 @@ export default function ArcadeHost() {
                   return (
                     <div
                       key={pid}
-                      className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-950 border border-slate-800"
+                      className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-slate-950 border border-slate-800 shrink-0"
                     >
-                      <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: color }} />
-                      <span className="text-xs font-bold text-slate-200">{p?.name.slice(0, 8)}</span>
-                      <span className="text-xs font-mono font-black text-pink-400">{sc}</span>
+                      <span className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
+                      <span className="text-[0.68rem] font-bold text-slate-200">{p?.name.slice(0, 6)}</span>
+                      <span className="text-[0.68rem] font-mono font-black text-pink-400">{sc}</span>
                     </div>
                   )
                 })}
@@ -1375,8 +1452,7 @@ export default function ArcadeHost() {
                       {state.lastEventText}
                     </p>
 
-                    {/* Leaderboard Table */}
-                    <div className="mt-6 w-full max-w-sm rounded-2xl bg-slate-900 border border-slate-800 p-4">
+                    <div className="mt-5 w-full max-w-sm rounded-2xl bg-slate-900 border border-slate-800 p-4">
                       <div className="text-xs font-bold text-slate-400 uppercase mb-2">Bảng Xếp Hạng Điểm</div>
                       <div className="space-y-2">
                         {order
@@ -1405,7 +1481,7 @@ export default function ArcadeHost() {
                       </div>
                     </div>
 
-                    <div className="mt-6 flex gap-3">
+                    <div className="mt-5 flex gap-3">
                       <button
                         onClick={handleStartGame}
                         className="btn btn-primary btn-md font-bold bg-pink-600 hover:bg-pink-500 border-none shadow-lg"

@@ -79,7 +79,7 @@ export default function MonopolyHost() {
       sfx.tap()
       await addBotPlayer(code)
     } catch (e: unknown) {
-      alert(e instanceof Error ? e.message : 'Không thể thêm bot')
+      // silently ignore limit error
     }
   }
 

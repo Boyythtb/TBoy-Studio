@@ -169,7 +169,6 @@ export default function TruthOrDare() {
 
   const removePlayer = (id: string) => {
     if (players.length <= 2) {
-      alert('Cần ít nhất 2 người để chơi!')
       return
     }
     setPlayers((prev) => prev.filter((p) => p.id !== id))
